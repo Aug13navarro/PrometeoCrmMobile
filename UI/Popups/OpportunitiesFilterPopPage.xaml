@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+    <Popup:BasePopupPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UI.Popups.OpportunitiesFilterPopPage"
+             xmlns:Popup="clr-namespace:UI.Popups">
+    <ContentPage.Content>
+
+        <AbsoluteLayout>
+            <AbsoluteLayout.Padding>
+                <OnPlatform x:TypeArguments="Thickness"
+                		iOS="15, 50, 15, 30"
+                		Android="28, 35, 17, 70">
+                </OnPlatform>
+            </AbsoluteLayout.Padding>
+
+            <Frame BorderColor="Black" Margin="0,0,15,0"
+               HeightRequest="450" WidthRequest="290" HorizontalOptions="StartAndExpand">
+                <StackLayout BackgroundColor="White" 
+                     VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="x:Static resources:AppResources.FilterBy}" FontSize="Medium"  TextColor="Black"
+                           VerticalOptions="Start" HorizontalOptions="StartAndExpand"
+                           HorizontalTextAlignment="Start" Margin="7"/>
+
+                        <Label Text="x:Static resources:AppResources.ResetFilters}" FontSize="Small" TextColor="IndianRed"
+                           HorizontalOptions="EndAndExpand" HorizontalTextAlignment="End" Margin="5">
+                            <!--<Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ResetFiltersCommand}"/>
+                            </Label.GestureRecognizers>-->
+                        </Label>
+                    </StackLayout>
+
+                    <Grid RowSpacing="3" ColumnSpacing="5" 
+                          RowDefinitions="Auto,Auto,Auto,*"
+                          ColumnDefinitions="50*,50*">
+
+                        <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Horizontal" >
+                                <StackLayout Orientation="Vertical" Spacing="0" HorizontalOptions="StartAndExpand">
+                                    <Label Text="x:Static resources:AppResources.Since}"/>
+                                    <DatePicker Date="{Binding BeginDate}"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Vertical" Spacing="0" HorizontalOptions="EndAndExpand">
+                                    <Label Text="x:Static resources:AppResources.Until}"/>
+                                    <DatePicker Date="{Binding EndDate}"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="1" Grid.Column="0" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="x:Static resources:AppResources.State}" FontSize="Small"/>
+                                <Picker ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status}"
+                            ItemDisplayBinding="{Binding}"/>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="x:Static resources:AppResources.Customer}" FontSize="Small"/>
+                                <Picker ItemsSource="{Binding Customers}" SelectedItem="{Binding Customer}"
+                            ItemDisplayBinding="{Binding Abbreviature}"/>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="0" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="x:Static resources:AppResources.Product}" FontSize="Small"/>
+                                <Picker ItemsSource="{Binding Products}" SelectedItem="{Binding Product}"
+                            />
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.Column="1" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="x:Static resources:AppResources.Price}" FontSize="Small"/>
+                                <Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
+                            />
+                            </StackLayout>
+                        </Frame>
+
+                        <Button Grid.Row="3" Grid.ColumnSpan="2" Text="x:Static resources:AppResources.Accept}"
+                            Style="{StaticResource DefaultBtn}" Command="{Binding ApplyFiltersCommand}"/>
+                    </Grid>
+
+
+                </StackLayout>
+            </Frame>
+
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</Popup:BasePopupPage>

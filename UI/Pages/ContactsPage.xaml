@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:ContactsViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      x:Class="UI.Pages.ContactsPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Controls:BackIconToolbar />
+            <Entry Placeholder="Buscar contacto" Text="{Binding Query}"
+                   TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />
+            <Image Source="ic_search.png">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NewContactsSearchCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+            <Button Text="Crear" Command="{Binding GoToCreateContactCommand}" Style="{StaticResource MenuButton}" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <StackLayout Spacing="0">
+        <Label Text="Ocurrió un error al obtener los contactos. Compruebe su conexión a internet."
+               IsVisible="{Binding Error}"
+               VerticalOptions="CenterAndExpand"
+               HorizontalTextAlignment="Center"
+               Style="{StaticResource ErrorLabel}" />
+
+        <Label Text="No se encontraron contactos."
+               Mvx:Bi.nd="IsVisible And(Contacts.Count == 0, !Error, !IsSearchInProgress)"
+               VerticalOptions="CenterAndExpand"
+               HorizontalTextAlignment="Center"
+               Style="{StaticResource LoadingLabel}" />
+
+        <ListView x:Name="contactsList"
+                  ItemsSource="{Binding Contacts}"
+                  Mvx:Bi.nd="IsVisible And(Contacts.Count > 0, !Error)"
+                  ItemAppearing="OnContactsListItemAppearing"
+                  CachingStrategy="RecycleElement"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  SeparatorColor="Transparent">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Frame Style="{StaticResource CardFrame}">
+                            <StackLayout Spacing="5">
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Nombre: " FontAttributes="Bold" />
+                                            <Span Text="{Binding FullName}" TextColor="{StaticResource PrimaryColor}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Email: " FontAttributes="Bold" />
+                                            <Span Text="{Binding Email}" TextColor="{StaticResource PrimaryColor}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Teléfono fijo: " FontAttributes="Bold" />
+                                            <Span Text="{Binding Landline, Converter={StaticResource MissingValueStringConverter}}"
+                                                  TextColor="{StaticResource PrimaryColor}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Teléfono móvil: " FontAttributes="Bold" />
+                                            <Span Text="{Binding Cellphone, Converter={StaticResource MissingValueStringConverter}}"
+                                                  TextColor="{StaticResource PrimaryColor}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label>
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Cliente: " FontAttributes="Bold" />
+                                            <Span Text="El cliente!!" TextColor="{StaticResource PrimaryColor}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </StackLayout>
+                        </Frame>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <ActivityIndicator IsVisible="{Binding IsSearchInProgress}"
+                           IsRunning="{Binding IsSearchInProgress}"
+                           VerticalOptions="CenterAndExpand" />
+    </StackLayout>
+</Views:MvxContentPage>

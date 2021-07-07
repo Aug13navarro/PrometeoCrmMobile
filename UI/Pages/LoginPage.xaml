@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:LoginViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      x:Class="UI.Pages.LoginPage"
+                      xmlns:resources="clr-namespace:UI.LangResources"
+                      NavigationPage.HasNavigationBar="false">
+    <ContentPage.Content>
+        <StackLayout Margin="20" VerticalOptions="Center">
+            <Image Source="ic_logo_navbar.png" HeightRequest="100" />
+
+            <StackLayout Orientation="Horizontal"
+                         Spacing="0">
+                <Image Source="ic_person.png" />
+
+                <Entry Placeholder="{x:Static resources:AppResources.User}" 
+                       Margin="0,0,35,0"
+                       Text="{Binding UserName}"
+                       TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="FillAndExpand">
+                    <Entry.Keyboard>
+                        <Keyboard x:FactoryMethod="Create">
+                            <x:Arguments>
+                                <KeyboardFlags>None</KeyboardFlags>
+                            </x:Arguments>
+                        </Keyboard>
+                    </Entry.Keyboard>
+                </Entry>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal"
+                         Spacing="0">
+                <Image Source="ic_lock.png" />
+
+                <Entry x:Name="passwordEntry" 
+                       Placeholder="{x:Static resources:AppResources.Password}"
+                       Text="{Binding Password}"
+                       IsPassword="True"
+                       TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="FillAndExpand" />
+
+                <Image x:Name="eyeImage" Source="pw_eye_not.png" HeightRequest="30" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,8,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="RevealPasswordTapped" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+
+            <Button Text="{x:Static resources:AppResources.Enter}"
+                    Command="{Binding LoginCommand}"
+                    Mvx:Bi.nd="IsEnabled !IsLogging"
+                    Style="{StaticResource PrimaryButton}" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNullOrEmptyBoolConverter}}"
+                   Style="{StaticResource ErrorLabel}"
+                   HorizontalTextAlignment="Center" />
+            <Label Text="{x:Static resources:AppResources.Loggin}"
+                   IsVisible="{Binding IsLogging}"
+                   Style="{StaticResource LoadingLabel}"
+                   HorizontalTextAlignment="Center" />
+        </StackLayout>
+    </ContentPage.Content>
+</Views:MvxContentPage>

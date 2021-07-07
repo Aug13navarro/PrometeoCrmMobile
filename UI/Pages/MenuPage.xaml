@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:MenuViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      x:Class="UI.Pages.MenuPage"
+                      Title="Menú Principal">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout BackgroundColor="AliceBlue" HeightRequest="150" Margin="10,0,0,0" Padding="0,0,0,10">
+                <Image Source="ic_person_pin.png" HorizontalOptions="Start" HeightRequest="100" WidthRequest="100" />
+                <Label Text="{Binding LoggedUser.FullName}" FontAttributes="Bold" />
+                <Label Text="{Binding LoggedUser.Email}" FontAttributes="Bold" />
+            </StackLayout>
+            <ListView ItemsSource="{Binding MenuItems}"
+                      ItemTapped="OnMenuItemTapped"
+                      SelectionMode="None"
+                      BackgroundColor="#FFFFFF"
+                      VerticalOptions="FillAndExpand"
+                      x:Name="menuList">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Margin="5,0,0,0">
+                                <Image Source="{Binding Icon}" />
+                                <Label Text="{Binding Description}" Margin="5,0,0,0" LineBreakMode="TailTruncation" VerticalOptions="Center" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</Views:MvxContentPage>

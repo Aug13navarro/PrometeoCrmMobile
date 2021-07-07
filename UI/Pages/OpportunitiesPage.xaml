@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:OpportunitiesViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      xmlns:resources="clr-namespace:UI.LangResources"
+                      x:Class="UI.Pages.OpportunitiesPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Controls:BackIconToolbar />
+            <!--<Entry Placeholder="{x:Static resources:AppResources.SearchOpportunity}" Text="{Binding OpportunitiesQuery}"
+                   TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />-->
+            <!--<Image Source="ic_search.png">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NewOpportunitiesSearchCommand}" />
+                </Image.GestureRecognizers>
+            </Image>-->
+            <Image Source="ic_search.png">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="FilterOpportunities"/>
+                </Image.GestureRecognizers>
+            </Image>
+            <!--<Button ImageSource="ic_edit" CornerRadius="40" Command="{Binding CreateOpportunityCommand}" Style="{StaticResource OutlinePrimaryButton}" />-->
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <AbsoluteLayout x:Name="absLayout" VerticalOptions="FillAndExpand">
+        <StackLayout VerticalOptions="FillAndExpand" 
+                     HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" 
+                     Mvx:Bi.nd="IsVisible Opportunities.Count > 0">
+            <ListView x:Name="opportunitiesList" 
+                  ItemsSource="{Binding Opportunities}"
+                  ItemAppearing="OnOpportunitiesListItemAppearing"
+                  CachingStrategy="RecycleElement"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  SeparatorColor="Transparent">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame Style="{StaticResource CardFrame}">
+                                <StackLayout Spacing="5">
+                                    <StackLayout Orientation="Horizontal" Spacing="0" Margin="0" Padding="0">
+                                        <Label Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold"
+                                           HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+
+                                        <!--<Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"
+                                               TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{x:Static resources:AppResources.Customer}" FontAttributes="Bold" />
+                                                    <Span Text=": " FontAttributes="Bold" />
+                                                    <Span Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>-->
+
+                                        <Image Source="ic_more_vert.png">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OptionsIconTapped" CommandParameter="{Binding .}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </StackLayout>
+
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{x:Static resources:AppResources.Date}" FontAttributes="Bold" />
+                                                <Span Text=": " FontAttributes="Bold" />
+                                                <Span Text="{Binding Date, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{x:Static resources:AppResources.State}" FontAttributes="Bold" />
+                                                <Span Text=": " FontAttributes="Bold" />
+                                                <Span Text="{Binding Status, Converter={StaticResource EnumDisplayDescriptionConverter}}"
+                                                  TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <!--<Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{x:Static resources:AppResources.BranchOffice}" FontAttributes="Bold" />
+                                                <Span Text=": " FontAttributes="Bold" />
+                                                <Span Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>-->
+
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{x:Static resources:AppResources.Products}" FontAttributes="Bold" />
+                                                <Span Text=": " FontAttributes="Bold" />
+                                                <Span Text="{Binding ProductsDescription}" TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Total: " FontAttributes="Bold" />
+                                                <Span Mvx:Bi.nd="Text Format('${0:0.##}', Total)" TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <StackLayout Orientation="Horizontal" Margin="12,0,5,5" Spacing="5">
+                <Label TextColor="Black">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{x:Static resources:AppResources.Opportunities}" FontSize="16" />
+                            <Span Text=": " />
+                            <Span Text="{Binding Opportunities.Count}" FontSize="16" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label TextColor="Black" HorizontalOptions="EndAndExpand" Margin="0,0,10,0">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{x:Static resources:AppResources.TotalAmount}" FontSize="16" />
+                            <Span Text=": " />
+                            <Span Text="{Binding TotalOfAllOportunities}" FontSize="16" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OpportunietesPerStatus" CommandParameter="{Binding .}"/>
+                </StackLayout.GestureRecognizers>
+            </StackLayout>
+        </StackLayout>
+
+        <ImageButton Source="ic_edit_hdpi.png"
+            BackgroundColor="WhiteSmoke" CornerRadius="50"
+            AbsoluteLayout.LayoutFlags="PositionProportional"  
+            AbsoluteLayout.LayoutBounds=".96,.90,60,57" 
+            Command="{Binding CreateOpportunityCommand}"/>
+
+        <StackLayout VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible Opportunities.Count == 0">
+            <Image Source="ic_no_oportunidad.png" />
+            <Label Text="{x:Static resources:AppResources.NoOpportunitiesFound}" TextColor="#969696" HorizontalOptions="Center" FontSize="Medium" />
+        </StackLayout>
+    </AbsoluteLayout>
+    
+</Views:MvxContentPage>

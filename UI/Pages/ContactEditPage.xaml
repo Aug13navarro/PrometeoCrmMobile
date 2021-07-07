@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:ContactEditViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      x:Class="UI.Pages.ContactEditPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Controls:BackIconToolbar />
+            <Label Text="Agregar Contacto" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />
+            <Button Text="Agregar" Command="{Binding SaveContactCommand}" Style="{StaticResource OutlinePrimaryButton}" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <StackLayout Spacing="0">
+        <ScrollView>
+            <StackLayout Padding="15">
+                <Label Text="Cliente" Style="{StaticResource DefaultLabel}" />
+
+                <StackLayout Orientation="Horizontal">
+                    <Entry Text="{Binding Customer.CompanyName}" Style="{StaticResource DefaultEntry}"
+                           HorizontalOptions="FillAndExpand" IsReadOnly="True" />
+                    <Button Text="Seleccionar" Mvx:Bi.nd="IsVisible !IsCreatingFromNewClient"
+                            Command="{Binding SelectClientCommand}" Style="{StaticResource OutlineSecondaryButton}" />
+                </StackLayout>
+
+                <Label Text="Nombre" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese nombre" Text="{Binding NewContact.Name}" Style="{StaticResource DefaultEntry}" MaxLength="50" />
+
+                <Label Text="Apellido" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese apellido" Text="{Binding NewContact.LastName}" Style="{StaticResource DefaultEntry}" MaxLength="50" />
+
+                <Label Text="Teléfono fijo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese teléfono fijo" Text="{Binding NewContact.Landline}" Style="{StaticResource DefaultEntry}" MaxLength="13" />
+
+                <Label Text="Teléfono móvil" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese teléfono móvil" Text="{Binding NewContact.Cellphone}" Style="{StaticResource DefaultEntry}"
+                       MaxLength="15" />
+
+                <Label Text="Email" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese email" Text="{Binding NewContact.Email}" Style="{StaticResource DefaultEntry}" MaxLength="30" />
+
+                <Label Text="Dirección" FontSize="Large" Margin="0,20,0,0" HorizontalOptions="StartAndExpand" />
+                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+                <Label Text="Dirección" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese dirección" Text="{Binding NewContact.Address}" Style="{StaticResource DefaultEntry}" MaxLength="30" />
+
+                <Label Text="Código postal" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese código postal" Text="{Binding NewContact.Cp}" Style="{StaticResource DefaultEntry}" MaxLength="7" />
+
+                <Label Text="Ciudad" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese ciudad" Text="{Binding NewContact.City}" Style="{StaticResource DefaultEntry}" MaxLength="30" />
+
+                <Label Text="Provincia" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="Seleccione provincia" ItemsSource="{Binding Provinces}"
+                        SelectedItem="{Binding NewContact.Province}" Style="{StaticResource DefaultPicker}" />
+            </StackLayout>
+        </ScrollView>
+
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                           IsRunning="{Binding IsLoading}"
+                           VerticalOptions="CenterAndExpand" />
+    </StackLayout>
+</Views:MvxContentPage>

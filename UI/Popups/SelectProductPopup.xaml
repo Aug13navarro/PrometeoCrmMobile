@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
+                      xmlns:Behavior="clr-namespace:UI.Behavior;assembly=UI"
+                      x:Class="UI.Popups.SelectProductPopup">
+    <Frame BorderColor="Gray" CornerRadius="10" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label FontSize="Medium" TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="StartAndExpand" VerticalOptions="Center" x:Name="descriptionLabel" />
+                <Image Source="ic_close.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="CancelButtonClicked" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+
+            <BoxView BackgroundColor="LightGray" HeightRequest="1" Margin="0,0,0,15" />
+
+            <Grid Margin="0,0,0,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Precio de venta" Grid.Row="0" Grid.Column="0" TextColor="{StaticResource PrimaryColor}" />
+                <Label Text="Cantidad" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource PrimaryColor}" />
+                <Label Text="% Desc." Grid.Row="0" Grid.Column="2" TextColor="{StaticResource PrimaryColor}" />
+
+                <Entry Style="{StaticResource DefaultEntry}" x:Name="priceInput" Grid.Row="1" Grid.Column="0" TextChanged="PriceInputTextChanged">
+                    <Entry.Behaviors>
+                        <Behavior:NumericValidationBehavior />
+                    </Entry.Behaviors>
+                </Entry>
+                <Entry Keyboard="Numeric" Style="{StaticResource DefaultEntry}" Grid.Row="1" Grid.Column="1"
+                       x:Name="quantityInput" TextChanged="QuantityInputTextChanged" />
+                <Entry Keyboard="Numeric" Style="{StaticResource DefaultEntry}" Grid.Row="1" Grid.Column="2"
+                       x:Name="discountInput" TextChanged="DiscountInputTextChanged" />
+            </Grid>
+
+            <Label Text="Subtotal" TextColor="{StaticResource PrimaryColor}" />
+            <StackLayout Orientation="Horizontal">
+                <Label TextColor="{StaticResource SecondaryColor}" FontSize="Medium"
+                       HorizontalOptions="StartAndExpand" VerticalOptions="Center" x:Name="subtotalInput" />
+                <Button Text="Aceptar" Style="{StaticResource OutlineSecondaryButton}" Clicked="OkButtonClicked" />
+            </StackLayout>
+
+            <!--<Label Text="Precio ($)" Style="{StaticResource DefaultLabel}" Margin="0,0,0,0" />
+            <Entry Style="{StaticResource DefaultEntry}" x:Name="priceInput">
+                <Entry.Behaviors>
+                    <Behavior:NumericValidationBehavior />
+                </Entry.Behaviors>
+            </Entry>
+
+            <Label Text="Cantidad" Style="{StaticResource DefaultLabel}" Margin="0,0,0,0" />
+            <Entry Keyboard="Numeric" Style="{StaticResource DefaultEntry}" x:Name="quantityInput" />
+
+            <Label Text="Descuento (%)" Style="{StaticResource DefaultLabel}" Margin="0,0,0,0" />
+            <Entry Keyboard="Numeric" Style="{StaticResource DefaultEntry}" x:Name="discountInput" />
+
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Aceptar" Style="{StaticResource OutlinePrimaryButton}" Clicked="OkButtonClicked" />
+                <Button Text="Cancelar" Style="{StaticResource OutlinePrimaryButton}" Clicked="CancelButtonClicked" />
+            </StackLayout>-->
+        </StackLayout>
+    </Frame>
+</Popups:BasePopupPage>

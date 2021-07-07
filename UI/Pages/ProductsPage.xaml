@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:ProductsViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      x:Class="UI.Pages.ProductsPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Controls:BackIconToolbar />
+            <Label Text="Productos" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <StackLayout Spacing="0">
+        <ListView x:Name="productsList"
+                  ItemsSource="{Binding Products}"
+                  CachingStrategy="RecycleElement"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  SeparatorColor="Transparent">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout>
+                            <StackLayout Padding="10">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={x:Reference productsList}, Path=BindingContext.SelectProductCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </StackLayout.GestureRecognizers>
+
+                                <Label Text="{Binding Description}" TextColor="{StaticResource PrimaryColor}" 
+                                   FontSize="Medium" FontAttributes="Bold"></Label>
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="STOCK DISPONIBLE" HorizontalOptions="StartAndExpand"></Label>
+                                    <Label TextColor="#255E00">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Stock}" />
+                                                <Span Text=" UNIDADES" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="PRECIO DE LISTA" HorizontalOptions="StartAndExpand"></Label>
+                                    <Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" TextColor="{StaticResource PrimaryColor}"></Label>
+                                </StackLayout>
+                            </StackLayout>
+                            
+                            <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</Views:MvxContentPage>

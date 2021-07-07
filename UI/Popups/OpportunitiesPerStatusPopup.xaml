@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
+             xmlns:resources="clr-namespace:UI.LangResources"
+             x:Class="UI.Popups.OpportunitiesPerStatusPopup">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <AbsoluteLayout.Padding>
+                <OnPlatform x:TypeArguments="Thickness"
+                		iOS="15, 50, 15, 30"
+                		Android="28, 35, 17, 70">
+                </OnPlatform>
+            </AbsoluteLayout.Padding>
+            <StackLayout Orientation="Vertical" HeightRequest="420" WidthRequest="300" BackgroundColor="White"
+                     HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                <Label Text="{x:Static resources:AppResources.OpportunitiesPerState}" Margin="10"
+                   HorizontalOptions="CenterAndExpand" 
+                   HorizontalTextAlignment="Center" 
+                   FontSize="Medium" 
+                   TextColor="Black"/>
+
+                <!--<Frame
+               BorderColor="Gray" CornerRadius="10" 
+               HorizontalOptions="CenterAndExpand" 
+               VerticalOptions="CenterAndExpand">-->
+                <ListView x:Name="stateList"
+                  ItemsSource="{Binding opps}"
+                  CachingStrategy="RecycleElement"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  SeparatorColor="Transparent">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame Style="{StaticResource CardFrame}" Margin="20,10">
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding opportunityStatus}" FontAttributes="Bold" />
+                                                <Span Text=": " FontAttributes="Bold" />
+                                                <Span Text="{Binding Amount}" TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--</Frame>-->
+                <!--<Button Text="Aceptar" 
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="FillAndExpand" 
+                        Margin="10" 
+                        BackgroundColor=""
+                        />-->
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</Popups:BasePopupPage>

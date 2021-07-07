@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ValueConverters="clr-namespace:UI.ValueConverters;assembly=UI"
+             x:Class="UI.FormsApp">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Constants -->
+            <x:Int32 x:Key="MenuHeight">50</x:Int32>
+
+            <!-- Colors -->
+            <Color x:Key="PrimaryColor">#2B0048</Color>
+            <Color x:Key="SecondaryColor">#FF1463</Color>
+            <Color x:Key="PanelColor">#F2F2F2</Color>
+            <Color x:Key="ErrorColor">Red</Color>
+            <Color x:Key="EntryColor">#494949</Color>
+
+            <!-- Buttons -->
+            <Style x:Key="PrimaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style TargetType="{x:Type Button}" x:Key="DefaultBtn">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="CornerRadius" Value="30"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="VerticalOptions" Value="EndAndExpand"/>
+                <Setter Property="Margin" Value="20"/>
+            </Style>
+
+            <Style x:Key="OutlinePrimaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PanelColor}" />
+                <Setter Property="TextColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource PrimaryColor}" />
+            </Style>
+
+            <Style x:Key="MenuButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="White" />
+            </Style>
+
+            <Style x:Key="OutlineSecondaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="TextColor" Value="{StaticResource SecondaryColor}" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="BorderColor" Value="{StaticResource SecondaryColor}" />
+            </Style>
+
+            <!-- Labels -->
+            <Style x:Key="ErrorLabel" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource ErrorColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="LoadingLabel" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource SecondaryColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="DefaultLabel" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <!-- Entries -->
+            <Style x:Key="DefaultEntry" TargetType="Entry">
+                <Setter Property="TextColor" Value="{StaticResource EntryColor}" />
+            </Style>
+
+            <!-- Editors -->
+            <Style x:Key="DefaultEditor" TargetType="Editor">
+                <Setter Property="TextColor" Value="{StaticResource EntryColor}" />
+            </Style>
+
+            <!-- Pickers -->
+            <Style x:Key="DefaultPicker" TargetType="Picker">
+                <Setter Property="TextColor" Value="{StaticResource EntryColor}" />
+            </Style>
+
+            <!-- Frames -->
+            <Style x:Key="CardFrame" TargetType="Frame">
+                <Setter Property="BorderColor" Value="DarkGray" />
+                <Setter Property="CornerRadius" Value="20" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="Margin" Value="1" />
+                <Setter Property="HasShadow" Value="True" />
+            </Style>
+
+            <Style x:Key="filterFrame" TargetType="Frame">
+                <Setter Property="BorderColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="5" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="HasShadow" Value="True" />
+            </Style>
+            
+            <!-- Font Awesome -->
+            <OnPlatform x:TypeArguments="x:String" x:Key="FontAwesomeBrands">
+                <On Platform="Android" Value="FontAwesome5BrandsRegular400.otf#Regular" />
+                <!--<On Platform="iOS" Value="FontAwesome5Brands-Regular" />
+                <On Platform="UWP" Value="/Assets/FontAwesome5Brands.otf#Font Awesome 5 Brands" />-->
+            </OnPlatform>
+
+            <OnPlatform x:TypeArguments="x:String" x:Key="FontAwesomeSolid">
+                <On Platform="Android" Value="FontAwesome5FreeSolid900.otf#Regular" />
+                <!--<On Platform="iOS" Value="FontAwesome5Free-Solid" />
+                <On Platform="UWP" Value="/Assets/FontAwesome5Solid.otf#Font Awesome 5 Free" />-->
+            </OnPlatform>
+
+            <OnPlatform x:TypeArguments="x:String" x:Key="FontAwesomeRegular">
+                <On Platform="Android" Value="FontAwesome5FreeRegular400.otf#Regular" />
+                <!--<On Platform="iOS" Value="FontAwesome5Free-Regular" />
+                <On Platform="UWP" Value="/Assets/FontAwesome5Regular.otf#Font Awesome 5 Free" />-->
+            </OnPlatform>
+
+            <!-- Converters -->
+            <ValueConverters:StringNullOrEmptyBoolConverter x:Key="StringNullOrEmptyBoolConverter" />
+            <ValueConverters:UpperCaseConverter x:Key="UpperCaseConverter" />
+            <ValueConverters:MissingValueStringConverter x:Key="MissingValueStringConverter" />
+            <ValueConverters:ValueConverterGroup x:Key="UpperCaseAndMissingValueStringConverter">
+                <ValueConverters:UpperCaseConverter />
+                <ValueConverters:MissingValueStringConverter />
+            </ValueConverters:ValueConverterGroup>
+            <ValueConverters:EnumDisplayDescriptionConverter x:Key="EnumDisplayDescriptionConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

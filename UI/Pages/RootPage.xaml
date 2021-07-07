@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxMasterDetailPage x:TypeArguments="ViewModels:RootViewModel"
+                           xmlns="http://xamarin.com/schemas/2014/forms"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                           xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                           xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                           x:Class="UI.Pages.RootPage">
+</Views:MvxMasterDetailPage>

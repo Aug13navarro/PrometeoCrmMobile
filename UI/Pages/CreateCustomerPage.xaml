@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:CreateCustomerViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      xmlns:Behavior="clr-namespace:UI.Behavior;assembly=UI"
+                      x:Class="UI.Pages.CreateCustomerPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Controls:BackIconToolbar />
+            <Label Text="Crear Cliente" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />
+            <Button Text="Guardar" Command="{Binding SaveCustomerCommand}" Style="{StaticResource OutlinePrimaryButton}" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <StackLayout Spacing="0">
+        <ScrollView Mvx:Bi.nd="IsVisible !IsLoading">
+            <StackLayout Padding="15" Spacing="0">
+                <Label Text="Cliente" FontSize="Large" />
+                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+                <Label Text="Nombre" Style="{StaticResource DefaultLabel}" Margin="0,20,0,0" />
+                <Entry Placeholder="Ingrese nombre de empresa" Text="{Binding NewCustomer.CompanyName}"
+                       Style="{StaticResource DefaultEntry}" MaxLength="50" TextChanged="OnCompanyNameTextChanged" />
+
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Tipo de Cliente" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
+                    <Image Source="ic_add_box.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AddCustomerTypeCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+                <Picker Title="Agregar tipo de cliente" ItemsSource="{Binding CustomerTypes}"
+                        ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedCustomerType}" Style="{StaticResource DefaultPicker}" />
+                <Controls:Repeater ItemsSource="{Binding SelectedCustomerTypes}"
+                                   Mvx:Bi.nd="IsVisible And(SelectedCustomerTypes != null, SelectedCustomerTypes.Count > 0)"
+                                   x:Name="customerTypesList">
+                    <Controls:Repeater.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView>
+                                <StackLayout Orientation="Horizontal">
+                                    <Image Source="ic_remove_circle.png">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference customerTypesList}, Path=BindingContext.RemoveCustomerTypeCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <Label Text="{Binding Name}" VerticalOptions="Center" />
+                                </StackLayout>
+                            </ContentView>
+                        </DataTemplate>
+                    </Controls:Repeater.ItemTemplate>
+                </Controls:Repeater>
+
+                <Label Text="Razón Social" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese razón social" Text="{Binding NewCustomer.BusinessName}"
+                       Style="{StaticResource DefaultEntry}" MaxLength="50" />
+
+                <Label Text="Abreviatura" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese abreviatura" Text="{Binding NewCustomer.Abbreviature}"
+                       Style="{StaticResource DefaultEntry}" x:Name="abbreavitureInput" />
+
+                <Label Text="Tipo de ID" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="Seleccione tipo de ID" ItemsSource="{Binding DocumentTypes}" ItemDisplayBinding="{Binding DocumentName}"
+                        SelectedItem="{Binding SelectedDocumentType}" Style="{StaticResource DefaultPicker}" />
+
+                <Label Text="Número de ID" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="Ingrese número de ID" Text="{Binding NewCustomer.IdNumber}"
+                       Style="{StaticResource DefaultEntry}" MaxLength="10" />
+
+                <Label Text="Cliente Corporativo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="Seleccione una empresa corporativa" ItemsSource="{Binding CorporativeCustomers}"
+                        ItemDisplayBinding="{Binding CompanyName}" SelectedItem="{Binding SelectedCorporativeCustomer}"
+                        Style="{StaticResource DefaultPicker}" />
+
+                <Label Text="Condición Tributaria" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="Seleccione una condición" ItemsSource="{Binding TaxConditions}"
+                        ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedTaxCondition}"
+                        Style="{StaticResource DefaultPicker}" />
+
+                <Label Text="Propietario de la cuenta" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Text="{Binding AccountOwner}" Style="{StaticResource DefaultEntry}" IsReadOnly="True" />
+
+                <Label Text="Empresa usuario" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="Seleccione un usuario" ItemsSource="{Binding Companies}"
+                        ItemDisplayBinding="{Binding BusinessName}" SelectedItem="{Binding SelectedCompany}"
+                        Style="{StaticResource DefaultPicker}" />
+
+                <Label Text="Cuenta Corriente" FontSize="Large" Margin="0,20,0,0" />
+                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+                <Label Text="Saldo US$" Style="{StaticResource DefaultLabel}" Margin="0,20,0,0" />
+                <Entry Text="{Binding NewCustomer.DollarBalance}" Placeholder="Ingrese saldo US$" Style="{StaticResource DefaultEntry}">
+                    <Entry.Behaviors>
+                        <Behavior:NumericValidationBehavior />
+                    </Entry.Behaviors>
+                </Entry>
+
+                <Label Text="Saldo AR$" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Text="{Binding NewCustomer.PesosBalance}" Placeholder="Ingrese saldo AR$" Style="{StaticResource DefaultEntry}">
+                    <Entry.Behaviors>
+                        <Behavior:NumericValidationBehavior />
+                    </Entry.Behaviors>
+                </Entry>
+
+                <Label Text="Saldo Unidades" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Text="{Binding NewCustomer.UnitBalance}" Placeholder="Ingrese saldo unidades" Style="{StaticResource DefaultEntry}">
+                    <Entry.Behaviors>
+                        <Behavior:NumericValidationBehavior />
+                    </Entry.Behaviors>
+                </Entry>
+
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Direcciones" FontSize="Large" Margin="0,20,0,0" HorizontalOptions="StartAndExpand" />
+                    <Image Source="ic_add_box.png" WidthRequest="50">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AddAddressCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+                <Controls:Repeater ItemsSource="{Binding NewCustomer.Addresses}"
+                                   Mvx:Bi.nd="IsVisible And(NewCustomer.Addresses != null, NewCustomer.Addresses.Count > 0)"
+                                   Margin="0,10,0,0" x:Name="addressesList">
+                    <Controls:Repeater.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView>
+                                <StackLayout Orientation="Horizontal">
+                                    <Image Source="ic_remove_circle.png">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference addressesList}, Path=BindingContext.RemoveAddressCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <Label VerticalOptions="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding Address}" />
+                                                <Span Text=", " />
+                                                <Span Text="{Binding City}" />
+                                                <Span Text=", " />
+                                                <Span Text="{Binding Province}" />
+                                                <Span Text=", " />
+                                                <Span Text="{Binding Cp}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                            </ContentView>
+                        </DataTemplate>
+                    </Controls:Repeater.ItemTemplate>
+                </Controls:Repeater>
+                <Label Text="No hay direcciones" Mvx:Bi.nd="IsVisible Or(!NewCustomer.Addresses, NewCustomer.Addresses.Count == 0)"
+                       Margin="0,10,0,0" HorizontalOptions="Center" />
+
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Contactos" FontSize="Large" Margin="0,20,0,0" HorizontalOptions="StartAndExpand" />
+                    <Image Source="ic_add_box.png" WidthRequest="50">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AddContactCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+                <Controls:Repeater ItemsSource="{Binding NewCustomer.Contacts}"
+                                   Mvx:Bi.nd="IsVisible And(NewCustomer.Contacts != null, NewCustomer.Contacts.Count > 0)"
+                                   Margin="0,10,0,0" x:Name="contactsList">
+                    <Controls:Repeater.ItemTemplate>
+                        <DataTemplate>
+                            <ContentView>
+                                <StackLayout Orientation="Horizontal">
+                                    <Image Source="ic_remove_circle.png">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference contactsList}, Path=BindingContext.RemoveContactCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <Label VerticalOptions="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding FullName}" />
+                                                <Span Text=" " />
+                                                <Span Text="{Binding Email}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </StackLayout>
+                            </ContentView>
+                        </DataTemplate>
+                    </Controls:Repeater.ItemTemplate>
+                </Controls:Repeater>
+                <Label Text="No hay contactos" Mvx:Bi.nd="IsVisible Or(!NewCustomer.Contacts, NewCustomer.Contacts.Count == 0)"
+                       Margin="0,10,0,0" HorizontalOptions="Center" />
+
+                <Label Text="Descripción" FontSize="Large" Margin="0,20,0,0" />
+                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+                <Editor Placeholder="Ingrese descripción" Style="{StaticResource DefaultEditor}"
+                        AutoSize="TextChanges" Text="{Binding NewCustomer.Descriptions}" MaxLength="300" Margin="0,10,0,0" />
+            </StackLayout>
+        </ScrollView>
+
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                           IsRunning="{Binding IsLoading}"
+                           VerticalOptions="CenterAndExpand" />
+    </StackLayout>
+</Views:MvxContentPage>

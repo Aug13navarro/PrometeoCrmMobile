@@ -1,0 +1,320 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BA0E18CA-74D6-429E-996A-2ABE769C14CF}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TemplateGuid>{c9e5eea5-ca05-42a1-839b-61506e0a37df}</TemplateGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PrometeoCrmMobile.Droid</RootNamespace>
+    <AssemblyName>Droid</AssemblyName>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
+    <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <BundleAssemblies>false</BundleAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidManagedSymbols>true</AndroidManagedSymbols>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <BundleAssemblies>false</BundleAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="Mono.Android.Export" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Rg.Plugins.Popup" Version="1.2.0.223" />
+    <PackageReference Include="Xamarin.Android.Arch.Core.Common">
+      <Version>1.1.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.Common">
+      <Version>1.1.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Arch.Lifecycle.ViewModel">
+      <Version>1.1.1.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.Annotations">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.Collections">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.Compat">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.Core.UI">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.CursorAdapter">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.Interpolator">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.Loader">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.Media.Compat">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.v7.RecyclerView">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Android.Support.VersionedParcelable">
+      <Version>28.0.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1821" />
+    <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.3" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CustomMasterDetailPageRenderer.cs" />
+    <Compile Include="MainActivity.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ToastDroidService.cs" />
+    <Compile Include="SplashActivity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Assets\AboutAssets.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_add_box.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_arrow_back.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_bell.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_bell_on.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_close.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_keyboard_backspace.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_logo_navbar.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu_contactos.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu_cuentas.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu_cuentasic_menu_oportunidades.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_more_vert.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_no_oportunidad.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_person_pin.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_remove_circle.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_search.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\splash.jpg" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_add_box.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_arrow_back.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_bell.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_bell_on.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_close.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_edit_mdpi.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_keyboard_backspace.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_logo_navbar.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_menu_contactos.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_menu_cuentas.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_menu_cuentasic_menu_oportunidades.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_more_vert.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_no_oportunidad.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_person_pin.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_remove_circle.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_search.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\splash.jpg" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_add_box.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_arrow_back.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_bell.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_bell_on.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_close.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_edit.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_keyboard_backspace.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_logo_navbar.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_menu_contactos.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_menu_cuentas.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_menu_cuentasic_menu_oportunidades.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_more_vert.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_no_oportunidad.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_person_pin.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_remove_circle.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_search.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\splash.jpg" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_add_box.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_arrow_back.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_bell.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_bell_on.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_close.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_edit.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_keyboard_backspace.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_logo_navbar.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu_contactos.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu_cuentas.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu_cuentasic_menu_oportunidades.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_more_vert.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_no_oportunidad.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_person_pin.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_remove_circle.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_search.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\splash.jpg" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_add_box.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_arrow_back.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_bell.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_bell_on.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_close.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_edit.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_keyboard_backspace.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_logo_navbar.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_menu.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_menu_contactos.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_menu_cuentas.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_menu_cuentasic_menu_oportunidades.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_more_vert.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_no_oportunidad.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_person_pin.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_remove_circle.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_search.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_sprinkler.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\splash.jpg" />
+    <AndroidResource Include="Resources\drawable\ic_status_analisis.png" />
+    <AndroidResource Include="Resources\layout\Tabbar.xml" />
+    <AndroidResource Include="Resources\layout\Toolbar.xml" />
+    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher.xml" />
+    <AndroidResource Include="Resources\mipmap-anydpi-v26\ic_launcher_round.xml" />
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_foreground.png" />
+    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher_round.png" />
+    <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
+    <AndroidResource Include="Resources\values\styles.xml" />
+    <AndroidResource Include="Resources\values\colors.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\pw_eye.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{218f7c61-6810-4221-9973-7324c9e78f10}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UI\UI.csproj">
+      <Project>{f96e69ce-7d25-4c07-b9c5-b80e6d95f93f}</Project>
+      <Name>UI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_person.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_person.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_person.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\ic_person.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_person.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_lock.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_lock.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_lock.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\ic_lock.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_lock.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\FontAwesome5BrandsRegular400.otf" />
+    <AndroidAsset Include="Assets\FontAwesome5FreeRegular400.otf" />
+    <AndroidAsset Include="Assets\FontAwesome5FreeSolid900.otf" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-mdpi\pw_eye_not.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_edit_hdpi.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties XamarinHotReloadUnhandledDeviceExceptionDroidHideInfoBar="True" XamarinHotReloadXFormsNugetUpgradeInfoBarDroidHideInfoBar="True" TriggeredFromHotReload="False" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

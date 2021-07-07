@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:NotificationsViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      x:Class="UI.Pages.NotificationsPage">
+    <Page.Resources>
+        <Style x:Key="NotificationIcon" TargetType="Label">
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="BackgroundColor" Value="LightBlue" />
+            <Setter Property="HeightRequest" Value="20" />
+            <Setter Property="WidthRequest" Value="20" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+        </Style>
+    </Page.Resources>
+    <ContentPage.Content>
+        <StackLayout Spacing="0">
+            <Label Text="Ocurrió un error al obtener las notificaciones. Compruebe su conexión a internet."
+                   IsVisible="{Binding Error}"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalTextAlignment="Center"
+                   Style="{StaticResource ErrorLabel}" />
+
+            <ListView x:Name="notificationList"
+                      ItemsSource="{Binding Notifications}"
+                      IsGroupingEnabled="True"
+                      Mvx:Bi.nd="IsVisible And(Notifications.Count > 0, !Error)"
+                      ItemAppearing="OnNotificationListItemAppearing"
+                      SelectionMode="None"
+                      HasUnevenRows="True"
+                      SeparatorColor="Transparent">
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ContentView BackgroundColor="{StaticResource PrimaryColor}" Padding="10">
+                                <Label Text="{Binding Heading}" TextColor="White" FontAttributes="Bold" FontSize="Medium" />
+                            </ContentView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame Style="{StaticResource CardFrame}" Mvx:Bi.nd="BackgroundColor If(Viewed, '', '#DDF8FF')">
+                                <StackLayout Spacing="5">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding InsertDate, StringFormat='{0:dd/MM/yyyy hh:mm:ss}'}"
+                                               FontAttributes="Bold" HorizontalOptions="StartAndExpand" />
+                                        <Label Text="Marcar Leída" Mvx:Bi.nd="IsVisible !Viewed"
+                                               HorizontalOptions="End" TextDecorations="Underline" TextColor="CornflowerBlue">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Command="{Binding Source={x:Reference notificationList}, Path=BindingContext.MarkNotificacionAsReadCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </StackLayout>
+
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="&#xf043;" FontFamily="{StaticResource FontAwesomeSolid}"
+                                               Mvx:Bi.nd="IsVisible Name == 'ALERTA BAJO NIVEL AGUA'"
+                                               Style="{StaticResource NotificationIcon}" />
+
+                                        <Label Text="&#xf575;" FontFamily="{StaticResource FontAwesomeSolid}"
+                                               Mvx:Bi.nd="IsVisible Name == 'ALERTA BIDON VACIO'"
+                                               Style="{StaticResource NotificationIcon}" />
+
+                                        <Label Text="&#xf3fd;" FontFamily="{StaticResource FontAwesomeSolid}"
+                                               Mvx:Bi.nd="IsVisible Name == 'ALERTA FUERA RANGO PRESION'"
+                                               Style="{StaticResource NotificationIcon}" />
+
+                                        <Label Text="&#xf55c;" FontFamily="{StaticResource FontAwesomeSolid}"
+                                               Mvx:Bi.nd="IsVisible Name == 'ALERTA DOSIFICADOR SIN LIQUIDO'"
+                                               Style="{StaticResource NotificationIcon}" />
+
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="Red" />
+                                    </StackLayout>
+
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Dispositivo: " FontAttributes="Bold" />
+                                                <Span Mvx:Bi.nd="Text Assignment.Device.Code + ' - ' + GrdId"
+                                                      TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Text="{Binding Assignment.PointApplications[0].Location}" />
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <ActivityIndicator IsVisible="{Binding IsLoadingInProgress}"
+                               IsRunning="{Binding IsLoadingInProgress}"
+                               VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</Views:MvxContentPage>

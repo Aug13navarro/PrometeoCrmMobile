@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:AddressEditViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      xmlns:Behavior="clr-namespace:UI.Behavior;assembly=UI"
+                      x:Class="UI.Pages.AddressEditPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Controls:BackIconToolbar />
+            <Label Text="Agregar Dirección" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />
+            <Button Text="Agregar" Command="{Binding SaveAddressCommand}" Style="{StaticResource OutlinePrimaryButton}" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <StackLayout Padding="15">
+        <Label Text="Dirección" Style="{StaticResource DefaultLabel}" />
+        <Entry Placeholder="Ingrese dirección" Text="{Binding NewAddress.Address}" Style="{StaticResource DefaultEntry}" MaxLength="30" />
+
+        <Label Text="Código postal" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+        <Entry Placeholder="Ingrese código postal" Text="{Binding NewAddress.Cp}" Style="{StaticResource DefaultEntry}" MaxLength="7" />
+
+        <Label Text="Ciudad" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+        <Entry Placeholder="Ingrese ciudad" Text="{Binding NewAddress.City}" Style="{StaticResource DefaultEntry}" MaxLength="30" />
+
+        <Label Text="Provincia" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+        <Entry Placeholder="Ingrese provincia" Text="{Binding NewAddress.Province}" Style="{StaticResource DefaultEntry}" MaxLength="30" />
+    </StackLayout>
+</Views:MvxContentPage>

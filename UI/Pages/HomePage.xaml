@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Views:MvxContentPage x:TypeArguments="ViewModels:HomeViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      xmlns:resources="clr-namespace:UI.LangResources"
+                      xmlns:local="clr-namespace:UI.ValueConverters"
+                      x:Class="UI.Pages.HomePage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:LoggedUserToHelloTitleConverter x:Key="TitleConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Controls:MenuIconToolbar />
+            <Image Source="ic_logo_navbar.png" />
+            <!--<Label Mvx:Bi.nd="Text 'Hola, ' + LoggedUser.FullName" TextColor="White" VerticalOptions="Center" FontSize="Medium" />-->
+            <Label Text="{Binding LoggedUser.FullName, Converter={StaticResource TitleConverter}}" TextColor="White" VerticalOptions="Center" FontSize="Medium" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <StackLayout BackgroundColor="White">
+        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToCustomersCommand}" />
+            </StackLayout.GestureRecognizers>
+            <Image Source="ic_menu_cuentas.png" />
+            <Label Text="{x:Static resources:AppResources.Accounts}" FontSize="Medium" TextColor="#FF1463" VerticalOptions="Center" />
+        </StackLayout>
+
+        <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToContactsCommand}" />
+            </StackLayout.GestureRecognizers>
+
+            <Image Source="ic_menu_contactos.png" />
+            <Label Text="{x:Static resources:AppResources.Contacts}" FontSize="Medium" TextColor="#2BB348" VerticalOptions="Center" />
+        </StackLayout>
+
+        <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToOpportunitiesCommand}" />
+            </StackLayout.GestureRecognizers>
+
+            <Image Source="ic_menu_cuentasic_menu_oportunidades.png" />
+            <Label Text="{x:Static resources:AppResources.Opportunities}" FontSize="Medium" TextColor="#4045A2" VerticalOptions="Center" />
+        </StackLayout>
+
+        <BoxView BackgroundColor="#F5F5F5" VerticalOptions="FillAndExpand" />
+    </StackLayout>
+</Views:MvxContentPage>

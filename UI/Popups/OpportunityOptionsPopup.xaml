@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
+                      x:Class="UI.Popups.OpportunityOptionsPopup">
+    <Frame WidthRequest="160" BorderColor="Gray" CornerRadius="10" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <StackLayout>
+            <StackLayout Orientation="Horizontal" Spacing="20">
+                <!-- <Image Source="ic_tachometer.png" BackgroundColor="SteelBlue" /> -->
+                <Label Text="Editar" TextColor="{StaticResource PrimaryColor}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="EditLabelTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <BoxView BackgroundColor="LightGray" HeightRequest="1" Margin="0,6,0,6" />
+
+            <StackLayout Orientation="Horizontal" Spacing="20">
+                <!-- <Image Source="ic_tachometer.png" BackgroundColor="SteelBlue" /> -->
+                <Label Text="Generar Propuesta" TextColor="{StaticResource PrimaryColor}" HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="GeneratePropositionLabelTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <!--<BoxView BackgroundColor="LightGray" HeightRequest="1" Margin="0,6,0,6"/>
+            
+            <Label Text="Tratamiento" TextColor="{StaticResource PrimaryColor}" HorizontalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="DashboardLabelTapped" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <BoxView BackgroundColor="LightGray" HeightRequest="1" Margin="0,6,0,6"/>
+
+            <Label Text="Producto" TextColor="{StaticResource PrimaryColor}" HorizontalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="DashboardLabelTapped" />
+                </Label.GestureRecognizers>
+            </Label>-->
+        </StackLayout>
+    </Frame>
+</Popups:BasePopupPage>
