@@ -15,6 +15,7 @@ namespace Core.ViewModels
     public class CreateOpportunityViewModel : MvxViewModel<Opportunity>
     {
         // Properties
+
         private bool isLoading;
         public bool IsLoading
         {
