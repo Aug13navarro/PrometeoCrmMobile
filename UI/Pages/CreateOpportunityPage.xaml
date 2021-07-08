@@ -12,118 +12,150 @@
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
             <Label Mvx:Bi.nd="Text If(Opportunity.Id == 0, 'Crear Oportunidad', 'Editar Oportunidad')"
-                   TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />
-            <Button Text="Guardar" Command="{Binding SaveOpportunityCommand}" Style="{StaticResource OutlinePrimaryButton}" />
+                   TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+            <ImageButton Source="editar_blanco" Command="{Binding SaveOpportunityCommand}"
+                         BackgroundColor="Transparent" WidthRequest="24">
+                
+            </ImageButton>
+            <!--Command="{Binding SaveOpportunityCommand}" Style="{StaticResource OutlinePrimaryButton}" -->
         </StackLayout>
     </NavigationPage.TitleView>
 
     <StackLayout Spacing="0">
-        <ScrollView Mvx:Bi.nd="IsVisible !IsLoading">
-            <StackLayout Padding="15" Spacing="0">
-                <Label Text="Cliente" Style="{StaticResource DefaultLabel}" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+            <ScrollView Mvx:Bi.nd="IsVisible !IsLoading"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2">
+                <StackLayout Padding="15" Spacing="0">
+                    <Label Text="Cliente" Style="{StaticResource DefaultLabel}" />
 
-                    <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
                            Grid.Row="0" Grid.Column="0" />
-                    <Button Text="Seleccionar" Command="{Binding SelectClientCommand}"
+                        <Button Text="Seleccionar" Command="{Binding SelectClientCommand}"
                             HorizontalOptions="End" Style="{StaticResource OutlineSecondaryButton}"
                             Grid.Row="0" Grid.Column="1" />
-                </Grid>
+                    </Grid>
 
-                <Label Text="Estado" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Picker Title="Picker" ItemsSource="{Binding StatusesDescription}"
+                    <Label Text="Estado" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                    <Picker Title="Picker" ItemsSource="{Binding StatusesDescription}"
                         SelectedItem="{Binding SelectedStatus}" Style="{StaticResource DefaultPicker}" />
-                <Image Source="ic_status_analisis.png"></Image>
+                    <Image Source="ic_status_analisis.png"></Image>
 
-                <Label Text="Motivo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0"
+                    <Label Text="Motivo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0"
                        Mvx:Bi.nd="IsVisible SelectedStatus == 'Cerrada Perdida'" />
-                <Picker Title="Picker" ItemsSource="{Binding ClosedLostStatusCausesDescription}"
+                    <Picker Title="Picker" ItemsSource="{Binding ClosedLostStatusCausesDescription}"
                         Mvx:Bi.nd="IsVisible SelectedStatus == 'Cerrada Perdida'"
                         SelectedItem="{Binding SelectedClosedLostStatusCause}" Style="{StaticResource DefaultPicker}" />
 
-                <Label Text="Fecha" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <DatePicker Date="{Binding Opportunity.Date}" />
+                    <Label Text="Fecha" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                    <DatePicker Date="{Binding Opportunity.Date}" />
 
-                <Label Text="Descripción" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Editor Placeholder="Ingrese descripción" Style="{StaticResource DefaultEditor}"
+                    <Label Text="Descripción" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                    <Editor Placeholder="Ingrese descripción" Style="{StaticResource DefaultEditor}"
                         AutoSize="TextChanges" Text="{Binding Opportunity.Description}" MaxLength="300" />
 
-                <StackLayout Orientation="Horizontal">
-                    <Label Text="Productos Asociados" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
-                    <Image Source="ic_add_box.png">
-                        <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding AddProductCommand}" />
-                        </Image.GestureRecognizers>
-                    </Image>
-                </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Productos Asociados" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
+                        <Image Source="ic_add_box.png">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding AddProductCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </StackLayout>
 
-                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+                    <BoxView BackgroundColor="LightGray" HeightRequest="1" />
 
-                <Controls:Repeater ItemsSource="{Binding Opportunity.Details}"
+                    <Controls:Repeater ItemsSource="{Binding Opportunity.Details}"
                                    Mvx:Bi.nd="IsVisible And(Opportunity.Details.Count > 0)"
                                    Margin="0,10,0,0" x:Name="detailsList">
-                    <Controls:Repeater.ItemTemplate>
-                        <DataTemplate>
-                            <ContentView>
-                                <StackLayout>
-                                    <StackLayout Orientation="Horizontal" Spacing="0">
-                                        <Label Text="{Binding Description}" TextColor="{StaticResource SecondaryColor}"
+                        <Controls:Repeater.ItemTemplate>
+                            <DataTemplate>
+                                <ContentView>
+                                    <StackLayout>
+                                        <StackLayout Orientation="Horizontal" Spacing="0">
+                                            <Label Text="{Binding Description}" TextColor="{StaticResource SecondaryColor}"
                                                FontAttributes="Bold" FontSize="Medium" Margin="0,8,0,5" HorizontalOptions="StartAndExpand" />
-                                        <Image Source="ic_edit.png">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer
+                                            <Image Source="ic_edit.png">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer
                                                     Command="{Binding Source={x:Reference detailsList}, Path=BindingContext.EditProductCommand}"
                                                     CommandParameter="{Binding .}" />
-                                            </Image.GestureRecognizers>
-                                        </Image>
-                                        <Image Source="ic_remove_circle.png">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                            <Image Source="ic_remove_circle.png">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer
                                                     Command="{Binding Source={x:Reference detailsList}, Path=BindingContext.RemoveProductCommand}"
                                                     CommandParameter="{Binding .}" />
-                                            </Image.GestureRecognizers>
-                                        </Image>
-                                    </StackLayout>
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                        </StackLayout>
 
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="Precio de venta" HorizontalOptions="StartAndExpand" />
-                                        <Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" />
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Precio de venta" HorizontalOptions="StartAndExpand" />
+                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" />
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Cantidad" HorizontalOptions="StartAndExpand" />
+                                            <Label Mvx:Bi.nd="Text Format('{0} U', Quantity)" />
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Descuento" HorizontalOptions="StartAndExpand" />
+                                            <Label Mvx:Bi.nd="Text Format('{0} %', Discount)" />
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Subtotal" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
+                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', Total)" TextColor="{StaticResource PrimaryColor}" />
+                                        </StackLayout>
+                                        <BoxView BackgroundColor="LightGray" HeightRequest="1" />
                                     </StackLayout>
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="Cantidad" HorizontalOptions="StartAndExpand" />
-                                        <Label Mvx:Bi.nd="Text Format('{0} U', Quantity)" />
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="Descuento" HorizontalOptions="StartAndExpand" />
-                                        <Label Mvx:Bi.nd="Text Format('{0} %', Discount)" />
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label Text="Subtotal" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
-                                        <Label Mvx:Bi.nd="Text Format('${0:0.##}', Total)" TextColor="{StaticResource PrimaryColor}" />
-                                    </StackLayout>
-                                    <BoxView BackgroundColor="LightGray" HeightRequest="1" />
-                                </StackLayout>
-                            </ContentView>
-                        </DataTemplate>
-                    </Controls:Repeater.ItemTemplate>
-                </Controls:Repeater>
+                                </ContentView>
+                            </DataTemplate>
+                        </Controls:Repeater.ItemTemplate>
+                    </Controls:Repeater>
 
-                <Label Text="No hay productos asociados." Mvx:Bi.nd="IsVisible Opportunity.Details.Count == 0" Margin="0,10,0,0" />
+                    <Label Text="No hay productos asociados." Mvx:Bi.nd="IsVisible Opportunity.Details.Count == 0" Margin="0,10,0,0" />
 
-                <Label Text="TOTAL" Margin="0,20,0,0" Mvx:Bi.nd="IsVisible Opportunity.Details.Count > 0"
-                       HorizontalOptions="End" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" />
+                </StackLayout>
+            </ScrollView>
+
+            <StackLayout
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal"
+                BackgroundColor="LightGray"
+                Padding="10,0,0,0"
+                HeightRequest="40">
+                
+                <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Opportunity.Details.Count > 0"
+                       TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                <!--HorizontalOptions="End"  Margin="0,20,0,0" -->
                 <Label Mvx:Bi.nd="Text Format('${0:0.##}', Total); IsVisible Opportunity.Details.Count > 0"
-                       HorizontalOptions="End" TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="Medium" />
+                       TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="Medium" VerticalTextAlignment="Center" />
+                <!--HorizontalOptions="End" -->
             </StackLayout>
-        </ScrollView>
+        </Grid>
 
         <ActivityIndicator IsVisible="{Binding IsLoading}"
                            IsRunning="{Binding IsLoading}"

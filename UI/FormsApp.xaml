@@ -89,7 +89,7 @@
                 <Setter Property="BorderColor" Value="DarkGray" />
                 <Setter Property="CornerRadius" Value="20" />
                 <Setter Property="Padding" Value="10" />
-                <Setter Property="Margin" Value="1" />
+                <Setter Property="Margin" Value="10,5" />
                 <Setter Property="HasShadow" Value="True" />
             </Style>
 

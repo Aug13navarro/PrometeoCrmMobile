@@ -11,7 +11,7 @@
                       x:Class="UI.Pages.OpportunitiesPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
-            <Controls:BackIconToolbar />
+            <Controls:BackIconToolbar HorizontalOptions="Start"/>
             <!--<Entry Placeholder="{x:Static resources:AppResources.SearchOpportunity}" Text="{Binding OpportunitiesQuery}"
                    TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />-->
             <!--<Image Source="ic_search.png">
@@ -19,36 +19,54 @@
                     <TapGestureRecognizer Command="{Binding NewOpportunitiesSearchCommand}" />
                 </Image.GestureRecognizers>
             </Image>-->
-            <Image Source="ic_search.png">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="FilterOpportunities"/>
-                </Image.GestureRecognizers>
-            </Image>
+            <StackLayout
+                Orientation="Horizontal"
+                HorizontalOptions="EndAndExpand">
+                <Image Source="ic_search.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="FilterOpportunities"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <ImageButton
+                Source="filtro_vacio"
+                BackgroundColor="Transparent"
+                WidthRequest="24">
+
+                </ImageButton>
+
+            </StackLayout>
             <!--<Button ImageSource="ic_edit" CornerRadius="40" Command="{Binding CreateOpportunityCommand}" Style="{StaticResource OutlinePrimaryButton}" />-->
         </StackLayout>
     </NavigationPage.TitleView>
 
     <AbsoluteLayout x:Name="absLayout" VerticalOptions="FillAndExpand">
-        <StackLayout VerticalOptions="FillAndExpand" 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackLayout VerticalOptions="FillAndExpand" 
                      HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" 
-                     Mvx:Bi.nd="IsVisible Opportunities.Count > 0">
-            <ListView x:Name="opportunitiesList" 
+                     Mvx:Bi.nd="IsVisible Opportunities.Count > 0" 
+                         Grid.Row="0">
+                <ListView x:Name="opportunitiesList" 
                   ItemsSource="{Binding Opportunities}"
                   ItemAppearing="OnOpportunitiesListItemAppearing"
                   CachingStrategy="RecycleElement"
                   SelectionMode="None"
                   HasUnevenRows="True"
                   SeparatorColor="Transparent">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Frame Style="{StaticResource CardFrame}">
-                                <StackLayout Spacing="5">
-                                    <StackLayout Orientation="Horizontal" Spacing="0" Margin="0" Padding="0">
-                                        <Label Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold"
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame Style="{StaticResource CardFrame}">
+                                    <StackLayout Spacing="5">
+                                        <StackLayout Orientation="Horizontal" Spacing="0" Margin="0" Padding="0">
+                                            <Label Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold"
                                            HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
 
-                                        <!--<Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"
+                                            <!--<Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"
                                                TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold">
                                             <Label.FormattedText>
                                                 <FormattedString>
@@ -59,35 +77,35 @@
                                             </Label.FormattedText>
                                         </Label>-->
 
-                                        <Image Source="ic_more_vert.png">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer Tapped="OptionsIconTapped" CommandParameter="{Binding .}" />
-                                            </Image.GestureRecognizers>
-                                        </Image>
-                                    </StackLayout>
+                                            <Image Source="ic_more_vert.png">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OptionsIconTapped" CommandParameter="{Binding .}" />
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                        </StackLayout>
 
-                                    <Label>
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{x:Static resources:AppResources.Date}" FontAttributes="Bold" />
-                                                <Span Text=": " FontAttributes="Bold" />
-                                                <Span Text="{Binding Date, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{x:Static resources:AppResources.Date}" FontAttributes="Bold" />
+                                                    <Span Text=": " FontAttributes="Bold" />
+                                                    <Span Text="{Binding Date, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
-                                    <Label>
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{x:Static resources:AppResources.State}" FontAttributes="Bold" />
-                                                <Span Text=": " FontAttributes="Bold" />
-                                                <Span Text="{Binding Status, Converter={StaticResource EnumDisplayDescriptionConverter}}"
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{x:Static resources:AppResources.State}" FontAttributes="Bold" />
+                                                    <Span Text=": " FontAttributes="Bold" />
+                                                    <Span Text="{Binding Status, Converter={StaticResource EnumDisplayDescriptionConverter}}"
                                                   TextColor="{StaticResource PrimaryColor}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
-                                    <!--<Label>
+                                        <!--<Label>
                                         <Label.FormattedText>
                                             <FormattedString>
                                                 <Span Text="{x:Static resources:AppResources.BranchOffice}" FontAttributes="Bold" />
@@ -97,33 +115,38 @@
                                         </Label.FormattedText>
                                     </Label>-->
 
-                                    <Label>
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{x:Static resources:AppResources.Products}" FontAttributes="Bold" />
-                                                <Span Text=": " FontAttributes="Bold" />
-                                                <Span Text="{Binding ProductsDescription}" TextColor="{StaticResource PrimaryColor}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{x:Static resources:AppResources.Products}" FontAttributes="Bold" />
+                                                    <Span Text=": " FontAttributes="Bold" />
+                                                    <Span Text="{Binding ProductsDescription}" TextColor="{StaticResource PrimaryColor}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
 
-                                    <Label>
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="Total: " FontAttributes="Bold" />
-                                                <Span Mvx:Bi.nd="Text Format('${0:0.##}', Total)" TextColor="{StaticResource PrimaryColor}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </StackLayout>
-                            </Frame>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Total: " FontAttributes="Bold" />
+                                                    <Span Mvx:Bi.nd="Text Format('${0:0.##}', Total)" TextColor="{StaticResource PrimaryColor}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-            <StackLayout Orientation="Horizontal" Margin="12,0,5,5" Spacing="5">
-                <Label TextColor="Black">
+
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Margin="12,0,5,5" Spacing="5"
+                         HeightRequest="40" VerticalOptions="Center" BackgroundColor="LightGray"
+                         Grid.Row="1">
+                <Label TextColor="Black" VerticalTextAlignment="Center">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="{x:Static resources:AppResources.Opportunities}" FontSize="16" />
@@ -132,7 +155,7 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Label TextColor="Black" HorizontalOptions="EndAndExpand" Margin="0,0,10,0">
+                <Label TextColor="Black" HorizontalOptions="EndAndExpand" Margin="0,0,10,0" VerticalTextAlignment="Center">
                     <Label.FormattedText>
                         <FormattedString>
                             <Span Text="{x:Static resources:AppResources.TotalAmount}" FontSize="16" />
@@ -145,7 +168,7 @@
                     <TapGestureRecognizer Tapped="OpportunietesPerStatus" CommandParameter="{Binding .}"/>
                 </StackLayout.GestureRecognizers>
             </StackLayout>
-        </StackLayout>
+        </Grid>
 
         <ImageButton Source="ic_edit_hdpi.png"
             BackgroundColor="WhiteSmoke" CornerRadius="50"
