@@ -11,7 +11,14 @@
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
-            <Label Text="Productos" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />
+            <!--<Label Text="Productos" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />-->
+            <Frame
+                Margin="0" Padding="0"
+                CornerRadius="20">
+                <SearchBar
+                BackgroundColor="White"
+                    Placeholder="Buscar..."></SearchBar>
+            </Frame>
         </StackLayout>
     </NavigationPage.TitleView>
 
