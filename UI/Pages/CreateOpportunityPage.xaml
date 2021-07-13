@@ -51,15 +51,42 @@
 
                         <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
                            Grid.Row="0" Grid.Column="0" />
-                        <Button Text="Seleccionar" Command="{Binding SelectClientCommand}"
-                            HorizontalOptions="End" Style="{StaticResource OutlineSecondaryButton}"
-                            Grid.Row="0" Grid.Column="1" />
+                        <ImageButton Source="clientes.png" Command="{Binding SelectClientCommand}"
+                            HorizontalOptions="End"
+                            Grid.Row="0" Grid.Column="1"
+                                     BackgroundColor="Transparent"/>
+                        <!-- Style="{StaticResource OutlineSecondaryButton}"-->
                     </Grid>
 
-                    <Label Text="Estado" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                    <Picker Title="Picker" ItemsSource="{Binding StatusesDescription}"
-                        SelectedItem="{Binding SelectedStatus}" Style="{StaticResource DefaultPicker}" />
-                    <Image Source="ic_status_analisis.png"></Image>
+                    <Label Text="Estado" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" />
+                    <!--<Picker Title="Picker" ItemsSource="{Binding StatusesDescription}"
+                        SelectedItem="{Binding SelectedStatus}" Style="{StaticResource DefaultPicker}" />-->
+                    
+                    <Grid
+                        HorizontalOptions="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <ImageButton
+                            Source="{Binding IconAnalisis}"
+                            Grid.Column="0"
+                            BackgroundColor="Transparent"></ImageButton>
+                        <ImageButton 
+                            Source="{Binding IconPropuesta}"
+                            Grid.Column="1"
+                            BackgroundColor="Transparent"></ImageButton>
+                        <ImageButton
+                            Source="{Binding IconNegociacion}"
+                            Grid.Column="2"
+                            BackgroundColor="Transparent"></ImageButton>
+                        <ImageButton
+                            Source="{Binding IconCerrada}"
+                            Grid.Column="3"
+                            BackgroundColor="Transparent"></ImageButton>
+                    </Grid>
 
                     <Label Text="Motivo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0"
                        Mvx:Bi.nd="IsVisible SelectedStatus == 'Cerrada Perdida'" />

@@ -3,6 +3,7 @@ using Core.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
+using System;
 using UI.Popups;
 
 namespace UI.Pages
@@ -13,6 +14,7 @@ namespace UI.Pages
         public CreateOpportunityPage()
         {
             InitializeComponent();
+
         }
 
         protected override void OnViewModelSet()

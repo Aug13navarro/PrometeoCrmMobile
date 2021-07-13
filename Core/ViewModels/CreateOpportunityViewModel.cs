@@ -16,6 +16,33 @@ namespace Core.ViewModels
     {
         // Properties
 
+        private string iconAnalisis;
+        private string iconPropuesta;
+        private string iconNegociacion;
+        private string iconCerrada;
+
+        public string IconAnalisis
+        {
+            get => iconAnalisis;
+            set => SetProperty(ref iconAnalisis, value);
+        }
+        public string IconPropuesta
+        {
+            get => iconPropuesta;
+            set => SetProperty(ref iconPropuesta, value);
+        }
+        public string IconNegociacion
+        {
+            get => iconNegociacion;
+            set => SetProperty(ref iconNegociacion, value);
+        }
+        public string IconCerrada
+        {
+            get => iconCerrada;
+            set => SetProperty(ref iconCerrada, value);
+        }
+
+
         private bool isLoading;
         public bool IsLoading
         {
@@ -95,6 +122,16 @@ namespace Core.ViewModels
             RemoveProductCommand = new Command<OpportunityDetail>(RemoveProduct);
             EditProductCommand = new Command<OpportunityDetail>(EditProduct);
             SaveOpportunityCommand = new Command(async () => await SaveOpportunity());
+
+            CargarIconosEstados();
+        }
+
+        private void CargarIconosEstados()
+        {
+            IconAnalisis = "ic_tab_1_gris.png";
+            IconPropuesta = "ic_tab_2_gris.png";
+            IconNegociacion = "ic_tab_3_gris.png";
+            IconCerrada = "ic_tab_4_gris.png";
         }
 
         public override void Prepare(Opportunity theOpportunity)
