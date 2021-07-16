@@ -25,6 +25,7 @@
     <StackLayout Spacing="0">
         <ListView x:Name="productsList"
                   ItemsSource="{Binding Products}"
+                  ItemAppearing="productsList_ItemAppearing"
                   CachingStrategy="RecycleElement"
                   SelectionMode="None"
                   HasUnevenRows="True"
@@ -75,5 +76,9 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <ActivityIndicator IsVisible="{Binding IsSearchInProgress}"
+                           IsRunning="{Binding IsSearchInProgress}"
+                           VerticalOptions="CenterAndExpand" />
     </StackLayout>
 </Views:MvxContentPage>

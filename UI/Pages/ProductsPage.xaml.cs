@@ -56,5 +56,24 @@ namespace UI.Pages
 
             await PopupNavigation.Instance.PushAsync(popup);
         }
+
+        private void productsList_ItemAppearing(object sender, Xamarin.Forms.ItemVisibilityEventArgs e)
+        {
+            if(ViewModel.IsSearchInProgress ||
+                ViewModel.Products == null ||
+                ViewModel.Products.Count == 0 ||
+                ViewModel.CurrentPage == ViewModel.TotalPages)
+            {
+                return;
+            }
+
+            var currentProducts = (Product)e.Item;
+            Product LastProduct = ViewModel.Products[ViewModel.Products.Count - 1];
+
+            if(currentProducts.Id == LastProduct.Id)
+            {
+                ViewModel.LoadMorePruductsCommand.Execute(null);
+            }
+        }
     }
 }

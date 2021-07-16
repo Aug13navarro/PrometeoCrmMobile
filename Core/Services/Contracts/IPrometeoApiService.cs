@@ -24,7 +24,7 @@ namespace Core.Services.Contracts
         Task<PaginatedList<CustomerContact>> SearchCustomerContacts(ContactsPaginatedRequest requestData);
         Task<Customer> GetCustomer(int id);
         Task UpdateCustomer(Customer customer);
-        Task<ProductList> GetAvailableProducts(int currentPage, int companyId);
+        Task<ProductList> GetAvailableProducts(ProductList productList);
         Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData);
         Task SaveOpportunityCommand(Opportunity opportunity);
 

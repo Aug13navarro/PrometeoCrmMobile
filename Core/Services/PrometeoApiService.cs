@@ -418,19 +418,13 @@ namespace Core.Services
             }
         }
 
-        public async Task<ProductList> GetAvailableProducts(int currentPage, int companyId)
+        public async Task<ProductList> GetAvailableProducts(ProductList productList)
         {
             try
             {
                 string url = $"/api/Product/SearchCompanyProductPresentation";
 
-                var Dtos = new
-                {
-                    companyId,
-                    currentPage,
-                };
-
-                var content = JsonConvert.SerializeObject(Dtos);
+                var content = JsonConvert.SerializeObject(productList);
 
                 HttpContent httpContent = new StringContent(content, Encoding.UTF8);
 
