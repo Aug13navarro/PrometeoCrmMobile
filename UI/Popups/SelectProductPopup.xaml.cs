@@ -25,9 +25,9 @@ namespace UI.Popups
             CloseWhenBackgroundIsClicked = true;
             this.product = product;
 
-            descriptionLabel.Text = product.Description;
-            priceInput.Text = product.Price.ToString(CultureInfo.InvariantCulture);
-            quantityInput.Text = isEditing ? product.Stock.ToString() : "1";
+            descriptionLabel.Text = product.name;
+            priceInput.Text = product.price.ToString(CultureInfo.InvariantCulture);
+            quantityInput.Text = isEditing ? product.stock.ToString() : "1";
             discountInput.Text = isEditing ? product.Discount.ToString() : "0";
         }
 

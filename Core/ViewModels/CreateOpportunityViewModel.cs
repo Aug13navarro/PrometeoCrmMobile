@@ -205,9 +205,9 @@ namespace Core.ViewModels
         {
             var product = new Product()
             {
-                Description = detail.Description,
-                Price = detail.Price,
-                Stock = detail.Quantity,
+                name = detail.Description,
+                price = detail.Price,
+                stock = detail.Quantity,
                 Discount = detail.Discount,
             };
 

@@ -39,7 +39,8 @@ namespace Core.ViewModels
         public override async Task Initialize()
         {
             await base.Initialize();
-            Products = await prometeoApiService.GetAvailableProducts();
+            var listProducts = await prometeoApiService.GetAvailableProducts(1,7);
+            Products = listProducts.results;
         }
 
         public async Task Close(OpportunityDetail opportunityDetail)

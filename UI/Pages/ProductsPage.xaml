@@ -40,7 +40,7 @@
                                         CommandParameter="{Binding .}" />
                                 </StackLayout.GestureRecognizers>
 
-                                <Label Text="{Binding Description}" TextColor="{StaticResource PrimaryColor}" 
+                                <Label Text="{Binding name}" TextColor="{StaticResource PrimaryColor}" 
                                    FontSize="Medium" FontAttributes="Bold"></Label>
 
                                 <StackLayout Orientation="Horizontal">
@@ -48,7 +48,7 @@
                                     <Label TextColor="#255E00">
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding Stock}" />
+                                                <Span Text="{Binding stock}" />
                                                 <Span Text=" UNIDADES" />
                                             </FormattedString>
                                         </Label.FormattedText>
@@ -57,7 +57,15 @@
 
                                 <StackLayout Orientation="Horizontal">
                                     <Label Text="PRECIO DE LISTA" HorizontalOptions="StartAndExpand"></Label>
-                                    <Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" TextColor="{StaticResource PrimaryColor}"></Label>
+                                    <Label TextColor="#255E00">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="$" />
+                                                <Span Text="{Binding price}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <!--<Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" TextColor="{StaticResource PrimaryColor}"></Label>-->
                                 </StackLayout>
                             </StackLayout>
                             

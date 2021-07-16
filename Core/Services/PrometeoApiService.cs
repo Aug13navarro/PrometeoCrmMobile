@@ -23,10 +23,10 @@ namespace Core.Services
 
         private static readonly List<Product> Products = new List<Product>()
         {
-            new Product() {Id = 1, Description = "Producto 1", Price = 2500, Stock = 100, Discount = 0},
-            new Product() {Id = 2, Description = "Producto 2", Price = 3600, Stock = 250, Discount = 0},
-            new Product() {Id = 3, Description = "Producto 3", Price = 5000, Stock = 1000, Discount = 0},
-            new Product() {Id = 4, Description = "Producto 4", Price = 150, Stock = 25, Discount = 0},
+            new Product() {Id = 1, name = "Producto 1", price = 2500, stock = 100, Discount = 0},
+            new Product() {Id = 2, name = "Producto 2", price = 3600, stock = 250, Discount = 0},
+            new Product() {Id = 3, name = "Producto 3", price = 5000, stock = 1000, Discount = 0},
+            new Product() {Id = 4, name = "Producto 4", price = 150, stock = 25, Discount = 0},
         };
 
         private static readonly List<Opportunity> Opportunities = new List<Opportunity>()
@@ -42,12 +42,12 @@ namespace Core.Services
                 {
                     new OpportunityDetail()
                     {
-                        Id = 1, Description = Products[0].Description, Price = Products[0].Price,
+                        Id = 1, Description = Products[0].name, Price = Products[0].price,
                         Discount = 0, Quantity = 1, ProductId = Products[0].Id,
                     },
                     new OpportunityDetail()
                     {
-                        Id = 2, Description = Products[1].Description, Price = Products[1].Price,
+                        Id = 2, Description = Products[1].name, Price = Products[1].price,
                         Discount = 10, Quantity = 5, ProductId = Products[1].Id,
                     },
                 }
@@ -63,17 +63,17 @@ namespace Core.Services
                 {
                     new OpportunityDetail()
                     {
-                        Id = 1, Description = Products[0].Description, Price = Products[0].Price,
+                        Id = 1, Description = Products[0].name, Price = Products[0].price,
                         Discount = 0, Quantity = 1, ProductId = Products[0].Id,
                     },
                     new OpportunityDetail()
                     {
-                        Id = 2, Description = Products[1].Description, Price = Products[1].Price,
+                        Id = 2, Description = Products[1].name, Price = Products[1].price,
                         Discount = 10, Quantity = 5, ProductId = Products[1].Id,
                     },
                     new OpportunityDetail()
                     {
-                        Id = 3, Description = Products[2].Description, Price = Products[2].Price,
+                        Id = 3, Description = Products[2].name, Price = Products[2].price,
                         Discount = 25, Quantity = 10, ProductId = Products[2].Id,
                     },
                 }
@@ -89,17 +89,17 @@ namespace Core.Services
                 {
                     new OpportunityDetail()
                     {
-                        Id = 1, Description = Products[0].Description, Price = Products[0].Price,
+                        Id = 1, Description = Products[0].name, Price = Products[0].price,
                         Discount = 0, Quantity = 8, ProductId = Products[0].Id,
                     },
                     new OpportunityDetail()
                     {
-                        Id = 2, Description = Products[1].Description, Price = Products[1].Price,
+                        Id = 2, Description = Products[1].name, Price = Products[1].price,
                         Discount = 10, Quantity = 3, ProductId = Products[1].Id,
                     },
                     new OpportunityDetail()
                     {
-                        Id = 3, Description = Products[2].Description, Price = Products[2].Price,
+                        Id = 3, Description = Products[2].name, Price = Products[2].price,
                         Discount = 40, Quantity = 2, ProductId = Products[2].Id,
                     },
                 }
@@ -115,17 +115,17 @@ namespace Core.Services
                 {
                     new OpportunityDetail()
                     {
-                        Id = 1, Description = Products[0].Description, Price = Products[0].Price,
+                        Id = 1, Description = Products[0].name, Price = Products[0].price,
                         Discount = 0, Quantity = 8, ProductId = Products[0].Id,
                     },
                     new OpportunityDetail()
                     {
-                        Id = 2, Description = Products[1].Description, Price = Products[1].Price,
+                        Id = 2, Description = Products[1].name, Price = Products[1].price,
                         Discount = 10, Quantity = 3, ProductId = Products[1].Id,
                     },
                     new OpportunityDetail()
                     {
-                        Id = 3, Description = Products[2].Description, Price = Products[2].Price,
+                        Id = 3, Description = Products[2].name, Price = Products[2].price,
                         Discount = 40, Quantity = 2, ProductId = Products[2].Id,
                     },
                 }
@@ -418,17 +418,47 @@ namespace Core.Services
             }
         }
 
-        public Task<List<Product>> GetAvailableProducts()
+        public async Task<ProductList> GetAvailableProducts(int currentPage, int companyId)
         {
-            var products = new List<Product>()
+            try
             {
-                new Product() {Id = 1, Description = "Producto 1", Price = 2500, Stock = 25},
-                new Product() {Id = 2, Description = "Producto 2", Price = 5000, Stock = 10},
-                new Product() {Id = 3, Description = "Producto 3", Price = 1200, Stock = 5},
-                new Product() {Id = 4, Description = "Producto 4", Price = 1500, Stock = 3},
-            };
+                string url = $"/api/Product/SearchCompanyProductPresentation";
 
-            return Task.FromResult(products);
+                var Dtos = new
+                {
+                    companyId,
+                    currentPage,
+                };
+
+                var content = JsonConvert.SerializeObject(Dtos);
+
+                HttpContent httpContent = new StringContent(content, Encoding.UTF8);
+
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+                var objeto = await client.PostAsync(string.Format(url), httpContent);
+
+                var resultado = await objeto.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<ProductList>(resultado);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+
+
+            //var products = new List<Product>()
+            //{
+            //    new Product() {Id = 1, Description = "Producto 1", Price = 2500, Stock = 25},
+            //    new Product() {Id = 2, Description = "Producto 2", Price = 5000, Stock = 10},
+            //    new Product() {Id = 3, Description = "Producto 3", Price = 1200, Stock = 5},
+            //    new Product() {Id = 4, Description = "Producto 4", Price = 1500, Stock = 3},
+            //};
+
+            //return Task.FromResult(products);
         }
 
         public Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData)

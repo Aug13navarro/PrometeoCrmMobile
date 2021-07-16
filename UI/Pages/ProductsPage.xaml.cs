@@ -45,7 +45,7 @@ namespace UI.Pages
                 var detail = new OpportunityDetail()
                 {
                     ProductId = product.Id,
-                    Description = product.Description,
+                    Description = product.name,
                     Price = price,
                     Discount = discount,
                     Quantity = quantity,
