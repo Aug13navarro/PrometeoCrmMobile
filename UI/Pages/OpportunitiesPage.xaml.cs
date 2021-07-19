@@ -52,7 +52,7 @@ namespace UI.Pages
 
             if (opportunity.Id == lastOpportunityInList.Id)
             {
-                ViewModel.LoadMoreOpportunitiesCommand.Execute(null);
+                //ViewModel.LoadMoreOpportunitiesCommand.Execute(null);
             }
         }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Model.Enums;
 using MvvmCross.ViewModels;
@@ -9,33 +10,43 @@ namespace Core.Model
     {
         public int Id { get; set; }
 
-        private Customer customer;
-        public Customer Customer
-        {
-            get => customer;
-            set => SetProperty(ref customer, value);
-        }
+        //private Customer customer;
+        //public Customer Customer
+        //{
+        //    get => customer;
+        //    set => SetProperty(ref customer, value);
+        //}
 
-        private OpportunityStatus status;
-        public OpportunityStatus Status
-        {
-            get => status;
-            set => SetProperty(ref status, value);
-        }
+        public Customer  customer { get; set; }
 
-        private DateTime date;
-        public DateTime Date
-        {
-            get => date;
-            set => SetProperty(ref date, value);
-        }
+        //private OpportunityStatus status;
+        //public OpportunityStatus Status
+        //{
+        //    get => status;
+        //    set => SetProperty(ref status, value);
+        //}
 
-        private string description;
-        public string Description
-        {
-            get => description;
-            set => SetProperty(ref description, value);
-        }
+        public OpportunityStatus opportunityStatus { get; set; }
+
+        //private DateTime date;
+        //public DateTime Date
+        //{
+        //    get => date;
+        //    set => SetProperty(ref date, value);
+        //}
+
+        public DateTime closedDate { get; set; }
+
+        public List<OpportunityProducts> opportunityProducts { get; set; }
+
+        //private string description;
+        //public string Description
+        //{
+        //    get => description;
+        //    set => SetProperty(ref description, value);
+        //}
+
+        public string descripction { get; set; }
 
         private ClosedLostStatusCause closedLostStatusCause;
         public ClosedLostStatusCause ClosedLostStatusCause
@@ -44,35 +55,37 @@ namespace Core.Model
             set => SetProperty(ref closedLostStatusCause, value);
         }
 
-        private decimal total;
-        public decimal Total
-        {
-            get => total;
-            private set => SetProperty(ref total, value);
-        }
+        //private decimal total;
+        //public decimal Total
+        //{
+        //    get => total;
+        //    private set => SetProperty(ref total, value);
+        //}
 
-        private string productsDescription;
-        public string ProductsDescription
-        {
-            get => productsDescription;
-            private set => SetProperty(ref productsDescription, value);
-        }
+        public double totalPrice { get; set; }
 
-        public MvxObservableCollection<OpportunityDetail> Details { get; } = new MvxObservableCollection<OpportunityDetail>();
+        //private string productsDescription;
+        public string ProductsDescription => string.Join(", ", opportunityProducts.Select(x => x.product.name));
+        //{
+        //    get => productsDescription;
+        //    private set => SetProperty(ref productsDescription, value);
+        //}
+
+        public MvxObservableCollection<OpportunityProducts> Details { get; set; } = new MvxObservableCollection<OpportunityProducts>();
 
         public Opportunity()
         {
             Details.CollectionChanged += (sender, args) =>
             {
                 ComputeTotal();
-                ProductsDescription = string.Join(", ", Details.Select(d => d.Description));
+                //ProductsDescription = string.Join(", ", Details.Select(d => d.product.name));
             };
         }
 
-        public decimal ComputeTotal()
+        public double ComputeTotal()
         {
-            Total = Details.Sum(d => d.Total);
-            return total;
+            totalPrice = (double)Details.Sum(d => d.product.price);
+            return totalPrice;
         }
     }
 }

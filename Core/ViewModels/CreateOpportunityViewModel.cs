@@ -78,15 +78,15 @@ namespace Core.ViewModels
             set => SetProperty(ref selectedCustomer, value);
         }
 
-        private decimal total;
-        public decimal Total
+        private double total;
+        public double Total
         {
             get => total;
             set => SetProperty(ref total, value);
         }
 
-        public List<string> StatusesDescription { get; } =
-            ((OpportunityStatus[])Enum.GetValues(typeof(OpportunityStatus))).Select(v => v.GetEnumDescription()).ToList();
+        //public List<string> StatusesDescription { get; } =
+            //((OpportunityStatus[])Enum.GetValues(typeof(OpportunityStatus))).Select(v => v.GetEnumDescription()).ToList();
 
         public List<string> ClosedLostStatusCausesDescription { get; } =
             ((ClosedLostStatusCause[])Enum.GetValues(typeof(ClosedLostStatusCause))).Select(v => v.GetEnumDescription()).ToList();
@@ -103,7 +103,7 @@ namespace Core.ViewModels
         public Command SaveOpportunityCommand { get; }
 
         // Fields
-        private OpportunityDetail editingOpportunityDetail;
+        private OpportunityProducts editingOpportunityDetail;
 
         // Services
         private readonly IMvxNavigationService navigationService;
@@ -119,11 +119,13 @@ namespace Core.ViewModels
 
             SelectClientCommand = new Command(async () => await SelectClientAsync());
             AddProductCommand = new Command(async () => await AddProductAsync());
-            RemoveProductCommand = new Command<OpportunityDetail>(RemoveProduct);
-            EditProductCommand = new Command<OpportunityDetail>(EditProduct);
+            RemoveProductCommand = new Command<OpportunityProducts>(RemoveProduct);
+            EditProductCommand = new Command<OpportunityProducts>(EditProduct);
             SaveOpportunityCommand = new Command(async () => await SaveOpportunity());
 
             CargarIconosEstados();
+
+
         }
 
         private void CargarIconosEstados()
@@ -138,9 +140,10 @@ namespace Core.ViewModels
         {
             Opportunity = theOpportunity;
 
-            SelectedStatus = Opportunity.Status.GetEnumDescription();
+            //SelectedStatus = Opportunity.Status.GetEnumDescription();
+
             selectedClosedLostStatusCause = Opportunity.ClosedLostStatusCause.GetEnumDescription();
-            SelectedCustomer = Opportunity.Customer;
+            SelectedCustomer = Opportunity.customer;
             Total = Opportunity.ComputeTotal();
         }
 
@@ -151,9 +154,9 @@ namespace Core.ViewModels
                 throw new InvalidOperationException("No hay ningún detalle para editar. No debería pasar esto.");
             }
 
-            editingOpportunityDetail.Price = args.Price;
-            editingOpportunityDetail.Quantity = args.Quantity;
-            editingOpportunityDetail.Discount = args.Discount;
+            editingOpportunityDetail.product.price = args.Price;
+            //editingOpportunityDetail.product.quantity = args.Quantity;
+            editingOpportunityDetail.product.Discount = args.Discount;
 
             editingOpportunityDetail = null;
             Total = Opportunity.ComputeTotal();
@@ -185,30 +188,30 @@ namespace Core.ViewModels
 
         private async Task AddProductAsync()
         {
-            OpportunityDetail detail = await navigationService.Navigate<ProductsViewModel, OpportunityDetail>();
+            OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
             if (detail != null)
             {
-                detail.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.Id) + 1 : 1;
+                detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
                 Opportunity.Details.Add(detail);
 
                 Total = Opportunity.ComputeTotal();
             }
         }
 
-        private void RemoveProduct(OpportunityDetail detail)
+        private void RemoveProduct(OpportunityProducts detail)
         {
             Opportunity.Details.Remove(detail);
             Total = Opportunity.ComputeTotal();
         }
 
-        private void EditProduct(OpportunityDetail detail)
+        private void EditProduct(OpportunityProducts detail)
         {
             var product = new Product()
             {
-                name = detail.Description,
-                price = detail.Price,
-                stock = detail.Quantity,
-                Discount = detail.Discount,
+                name = detail.product.name,
+                price = detail.product.price,
+                stock = detail.product.stock,
+                Discount = detail.product.Discount,
             };
 
             editingOpportunityDetail = detail;
@@ -217,9 +220,10 @@ namespace Core.ViewModels
 
         private async Task SaveOpportunity()
         {
-            Opportunity.Status = GetOpportunityStatusDescriptionFromEnum(SelectedStatus);
+            //Opportunity.Status = GetOpportunityStatusDescriptionFromEnum(SelectedStatus);
+            Opportunity.opportunityStatus = new OpportunityStatus{ Id = 1};
             Opportunity.ClosedLostStatusCause = GetOpportunityClosedLostCauseDescriptionFromEnum(selectedClosedLostStatusCause);
-            Opportunity.Customer = SelectedCustomer;
+            Opportunity.customer = SelectedCustomer;
 
             string error = ValidateOpportunity(Opportunity);
             if (!string.IsNullOrWhiteSpace(error))
@@ -237,10 +241,10 @@ namespace Core.ViewModels
             NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
         }
 
-        private OpportunityStatus GetOpportunityStatusDescriptionFromEnum(string value)
-        {
-            return ((OpportunityStatus[])Enum.GetValues(typeof(OpportunityStatus))).Single(v => v.GetEnumDescription() == value);
-        }
+        //private OpportunityStatus GetOpportunityStatusDescriptionFromEnum(string value)
+        //{
+        //    //return ((OpportunityStatus[])Enum.GetValues(typeof(OpportunityStatus))).Single(v => v.GetEnumDescription() == value);
+        //}
 
         private ClosedLostStatusCause GetOpportunityClosedLostCauseDescriptionFromEnum(string value)
         {
@@ -249,7 +253,7 @@ namespace Core.ViewModels
 
         private string ValidateOpportunity(Opportunity theOpportunity)
         {
-            if (theOpportunity.Customer == null)
+            if (theOpportunity.customer == null)
             {
                 return "Debe seleccionar un cliente.";
             }
@@ -259,7 +263,7 @@ namespace Core.ViewModels
                 return "Debe asociar algún producto.";
             }
 
-            if (string.IsNullOrWhiteSpace(theOpportunity.Description))
+            if (string.IsNullOrWhiteSpace(theOpportunity.descripction))
             {
                 return "Debe ingresar una descripción.";
             }

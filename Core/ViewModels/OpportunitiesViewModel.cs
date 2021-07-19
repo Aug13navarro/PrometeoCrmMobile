@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Core.Model;
 using Core.Model.Common;
 using Core.Model.Enums;
+using Core.Services;
 using Core.Services.Contracts;
 using MvvmCross.IoC;
 using MvvmCross.Navigation;
@@ -15,6 +17,7 @@ namespace Core.ViewModels
 {
     public class OpportunitiesViewModel : MvxViewModel
     {
+        private ApplicationData data;
         // Properties
         private bool isLoading;
         public bool IsLoading
@@ -30,10 +33,10 @@ namespace Core.ViewModels
             set => SetProperty(ref opportunitiesQuery, value);
         }
 
-        private decimal totalOfAllOportunities;
-        public decimal TotalOfAllOportunities
+        private double totalOfAllOportunities;
+        public double TotalOfAllOportunities
         {
-            get => Opportunities.Sum(x => x.Total);
+            get => Opportunities.Sum(x => x.totalPrice);
             set
             {
                 SetProperty(ref totalOfAllOportunities, value);
@@ -61,6 +64,8 @@ namespace Core.ViewModels
 
         public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IToastService toastService)
         {
+            data = new ApplicationData();
+
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
             this.toastService = toastService;
@@ -72,7 +77,7 @@ namespace Core.ViewModels
 
             Opportunities.CollectionChanged += (sender, arg) =>
             {
-                TotalOfAllOportunities = Opportunities.Sum(x => x.Total);
+                TotalOfAllOportunities = Opportunities.Sum(x => x.totalPrice);
             };
 
             MessagingCenter.Subscribe<FilterOpportunitiesViewModel, OpportunitiesViewModel>(this, "filtered", (sender, model) =>
@@ -99,23 +104,29 @@ namespace Core.ViewModels
         {
             try
             {
-                IsLoading = true;
+                var user = data.LoggedUser;
 
-                PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);
+                IsLoading = true;
+                
+                var request = new ProductList();
+
+                //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
+                var opportunities = await prometeoApiService.GetOp(requestData, "https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", user.Token);
 
                 if (newSearch)
                 {
                     Opportunities.Clear();
                 }
 
-                Opportunities.AddRange(opportunities.Results);
+                Opportunities.AddRange(opportunities);
 
-                CurrentPage = opportunities.CurrentPage;
-                TotalPages = opportunities.TotalPages;
+                //CurrentPage = opportunities.CurrentPage;
+                //TotalPages = opportunities.TotalPages;
+
             }
             catch (Exception ex)
             {
-                toastService.ShowError("Error cargando oportunidades. Compruebe su conexión a internet.");
+                toastService.ShowError($"{ex.Message}");
             }
             finally
             {
@@ -144,13 +155,13 @@ namespace Core.ViewModels
                 Query = OpportunitiesQuery,
             };
 
-            await GetOpportunitiesAsync(requestData, true);
+            await GetOpportunitiesAsync(requestData,true);
         }
 
         private async Task CreateOpportunityAsync()
         {
             var createOpportunityViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOpportunityViewModel>();
-            var opportunity = new Opportunity() { Status = OpportunityStatus.Analysis, Date = DateTime.Now };
+            var opportunity = new Opportunity() { opportunityStatus = new OpportunityStatus { Id = 1}, closedDate = DateTime.Now };
 
             createOpportunityViewModel.NewOpportunityCreated += async (sender, args) => await NewOpportunitiesSearchAsync();
             await navigationService.Navigate(createOpportunityViewModel, opportunity);

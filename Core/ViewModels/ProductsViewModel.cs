@@ -10,7 +10,7 @@ using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
-    public class ProductsViewModel : MvxViewModelResult<OpportunityDetail>
+    public class ProductsViewModel : MvxViewModelResult<OpportunityProducts>
     {
         // Properties
         private bool isSearchInProgress;
@@ -86,7 +86,7 @@ namespace Core.ViewModels
             //Products = new MvxObservableCollection<Product>(listProducts.results);
         }
 
-        public async Task Close(OpportunityDetail opportunityDetail)
+        public async Task Close(OpportunityProducts opportunityDetail)
         {
             await navigationService.Close(this, opportunityDetail);
         }

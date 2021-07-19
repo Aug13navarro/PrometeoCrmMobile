@@ -24,17 +24,17 @@ namespace UI.Popups
 
             try
             {
-                List<OpportunityStatus> status = opportunities.Select(x => x.Status).Distinct().ToList();
+                //List<OpportunityStatus> status = opportunities.Select(x => x.Status).Distinct().ToList();
 
-                foreach (OpportunityStatus item in status)
-                {
-                    opps.Add(
-                        new OpportunitiesPerStatusVM()
-                        {
-                            opportunityStatus = item,
-                            Amount = opportunities.Where(x => x.Status == item).Count()
-                        });
-                }
+                //foreach (OpportunityStatus item in status)
+                //{
+                //    opps.Add(
+                //        new OpportunitiesPerStatusVM()
+                //        {
+                //            opportunityStatus = item,
+                //            Amount = opportunities.Where(x => x.Status == item).Count()
+                //        });
+                //}
 
                 stateList.ItemsSource = opps;
             }

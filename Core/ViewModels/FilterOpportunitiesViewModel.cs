@@ -57,7 +57,7 @@ namespace Core.ViewModels
         public IList<OpportunityStatus> OpportunityStatuses { get; set; }
         public IList<Customer> Customers { get; set; }
         public IList<Product> Products { get; set; }
-        public IList<Decimal> Totals { get; set; }
+        public IList<double> Totals { get; set; }
 
         public OpportunitiesViewModel OpportunitiesViewModel { get; set; }
 
@@ -67,43 +67,43 @@ namespace Core.ViewModels
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
         {
             this.OpportunitiesViewModel = opportunitiesViewModel;
-            Customers = opportunitiesViewModel.Opportunities.Select(x => x.Customer).Distinct().ToList();
+            Customers = opportunitiesViewModel.Opportunities.Select(x => x.customer).Distinct().ToList();
             OpportunityStatuses = Enum.GetValues(typeof(OpportunityStatus)).OfType<OpportunityStatus>().ToList();
-            var ProdIds = opportunitiesViewModel.Opportunities.Select(x => x.Details.Select(y => y.ProductId)).ToList();
+            var ProdIds = opportunitiesViewModel.Opportunities.Select(x => x.Details.Select(y => y.productId)).ToList();
 
-            Totals = opportunitiesViewModel.Opportunities.Select(x => x.Total).ToList();
-            ApplyFiltersCommand = new Command(() => ApplyFilters());
+            Totals = opportunitiesViewModel.Opportunities.Select(x => x.totalPrice).ToList();
+            //ApplyFiltersCommand = new Command(() => ApplyFilters());
             //ResetFiltersCommand = new Command(() => ResetFilters());
         }
 
-        private void ApplyFilters()
-        {
-            List<Opportunity> Opportunities = OpportunitiesViewModel.Opportunities.ToList();
+        //private void ApplyFilters()
+        //{
+        //    List<Opportunity> Opportunities = OpportunitiesViewModel.Opportunities.ToList();
 
-            if (Customer != null)
-            {
-                Opportunities = Opportunities.Where(x => x.Customer?.Id == Customer.Id).ToList();
-                //OpportunitiesViewModel = Customer;
-            }
+        //    if (Customer != null)
+        //    {
+        //        Opportunities = Opportunities.Where(x => x.Customer?.Id == Customer.Id).ToList();
+        //        //OpportunitiesViewModel = Customer;
+        //    }
 
-            if (Status != null)
-            {
-                Opportunities = Opportunities.Where(x => x.Status == Status).ToList();
-                //  ShipmentViewModel.Destination = Destination;
-            }
+        //    if (Status != null)
+        //    {
+        //        Opportunities = Opportunities.Where(x => x.Status == Status).ToList();
+        //        //  ShipmentViewModel.Destination = Destination;
+        //    }
 
-            //if (Ship != null)
-            //{
-            //    shipments = shipments.Where(x => x.Ship?.Id == Ship.Id).ToList();
-            //    ShipmentViewModel.Ship = Ship;
-            //}
+        //    //if (Ship != null)
+        //    //{
+        //    //    shipments = shipments.Where(x => x.Ship?.Id == Ship.Id).ToList();
+        //    //    ShipmentViewModel.Ship = Ship;
+        //    //}
 
 
-            OpportunitiesViewModel.Opportunities.Clear();
-            OpportunitiesViewModel.Opportunities.AddRange(Opportunities);
+        //    OpportunitiesViewModel.Opportunities.Clear();
+        //    OpportunitiesViewModel.Opportunities.AddRange(Opportunities);
 
-            MessagingCenter.Send(this, "filtered", OpportunitiesViewModel);
-        }
+        //    MessagingCenter.Send(this, "filtered", OpportunitiesViewModel);
+        //}
 
         //private void ResetFilters()
         //{

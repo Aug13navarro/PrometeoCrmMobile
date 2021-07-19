@@ -63,7 +63,7 @@
                                 <Frame Style="{StaticResource CardFrame}">
                                     <StackLayout Spacing="5">
                                         <StackLayout Orientation="Horizontal" Spacing="0" Margin="0" Padding="0">
-                                            <Label Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold"
+                                            <Label Text="{Binding customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold"
                                            HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
 
                                             <!--<Label HorizontalOptions="StartAndExpand" VerticalOptions="Center"
@@ -89,7 +89,7 @@
                                                 <FormattedString>
                                                     <Span Text="{x:Static resources:AppResources.Date}" FontAttributes="Bold" />
                                                     <Span Text=": " FontAttributes="Bold" />
-                                                    <Span Text="{Binding Date, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
+                                                    <Span Text="{Binding closedDate, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -99,7 +99,7 @@
                                                 <FormattedString>
                                                     <Span Text="{x:Static resources:AppResources.State}" FontAttributes="Bold" />
                                                     <Span Text=": " FontAttributes="Bold" />
-                                                    <Span Text="{Binding Status, Converter={StaticResource EnumDisplayDescriptionConverter}}"
+                                                    <Span Text="{Binding opportunityStatus.name}"
                                                   TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
@@ -129,7 +129,8 @@
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Total: " FontAttributes="Bold" />
-                                                    <Span Mvx:Bi.nd="Text Format('${0:0.##}', Total)" TextColor="{StaticResource PrimaryColor}" />
+                                                    <Span Text="{Binding totalPrice}" TextColor="{StaticResource PrimaryColor}" />
+                                                    <!--Mvx:Bi.nd="Text Format('${0:0.##}', Total)"-->
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -176,10 +177,11 @@
             AbsoluteLayout.LayoutBounds=".96,.90,60,57" 
             Command="{Binding CreateOpportunityCommand}"/>
 
-        <StackLayout VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible Opportunities.Count == 0">
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible Opportunities.Count == 0">
             <Image Source="ic_no_oportunidad.png" />
             <Label Text="{x:Static resources:AppResources.NoOpportunitiesFound}" TextColor="#969696" HorizontalOptions="Center" FontSize="Medium" />
         </StackLayout>
+        
     </AbsoluteLayout>
     
 </Views:MvxContentPage>

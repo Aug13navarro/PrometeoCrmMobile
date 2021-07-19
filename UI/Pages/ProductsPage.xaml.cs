@@ -42,13 +42,16 @@ namespace UI.Pages
                 await PopupNavigation.Instance.PopAsync(false);
 
                 (decimal price, int quantity, int discount) = args;
-                var detail = new OpportunityDetail()
+                var detail = new OpportunityProducts()
                 {
-                    ProductId = product.Id,
-                    Description = product.name,
-                    Price = price,
-                    Discount = discount,
-                    Quantity = quantity,
+                    productId = product.Id,
+                    product = new Product
+                    {
+                        name = product.name,
+                        price = price,
+                        Discount = discount,
+                        //Quantity = quantity,
+                    }
                 };
 
                 await ViewModel.Close(detail);
