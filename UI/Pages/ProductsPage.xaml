@@ -14,9 +14,12 @@
             <!--<Label Text="Productos" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />-->
             <Frame
                 Margin="0" Padding="0"
-                CornerRadius="20">
-                <SearchBar
-                BackgroundColor="White"
+                CornerRadius="20"
+                HorizontalOptions="Center">
+                <SearchBar 
+                    SearchCommand="{Binding SearchQueryCommand}"
+                    Text="{Binding Query, Mode=TwoWay}"
+                    BackgroundColor="White"
                     Placeholder="Buscar..."></SearchBar>
             </Frame>
         </StackLayout>

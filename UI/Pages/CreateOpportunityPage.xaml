@@ -34,10 +34,9 @@
 
             <ScrollView Mvx:Bi.nd="IsVisible !IsLoading"
                         Grid.Row="0"
-                        Grid.RowSpan="2"
                         Grid.Column="0"
                         Grid.ColumnSpan="2">
-                <StackLayout Padding="15" Spacing="0">
+                <StackLayout Padding="15,15,15,0" Spacing="0">
                     <Label Text="Cliente" Style="{StaticResource DefaultLabel}" />
 
                     <Grid>
@@ -61,15 +60,10 @@
                     <Label Text="Estado" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" />
                     <!--<Picker Title="Picker" ItemsSource="{Binding StatusesDescription}"
                         SelectedItem="{Binding SelectedStatus}" Style="{StaticResource DefaultPicker}" />-->
-                    
+
                     <Grid
-                        HorizontalOptions="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"></ColumnDefinition>
-                            <ColumnDefinition Width="auto"></ColumnDefinition>
-                            <ColumnDefinition Width="auto"></ColumnDefinition>
-                            <ColumnDefinition Width="auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
+                        HorizontalOptions="Center"
+                        ColumnDefinitions="auto,auto,auto,auto">
                         <ImageButton
                             Source="{Binding IconAnalisis}"
                             Grid.Column="0"
@@ -99,7 +93,7 @@
 
                     <Label Text="Descripción" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
                     <Editor Placeholder="Ingrese descripción" Style="{StaticResource DefaultEditor}"
-                        AutoSize="TextChanges" Text="{Binding Opportunity.Description}" MaxLength="300" />
+                        AutoSize="TextChanges" Text="{Binding Opportunity.descripction}" MaxLength="300" />
 
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Productos Asociados" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
@@ -120,7 +114,7 @@
                                 <ContentView>
                                     <StackLayout>
                                         <StackLayout Orientation="Horizontal" Spacing="0">
-                                            <Label Text="{Binding Description}" TextColor="{StaticResource SecondaryColor}"
+                                            <Label Text="{Binding product.name}" TextColor="{StaticResource SecondaryColor}"
                                                FontAttributes="Bold" FontSize="Medium" Margin="0,8,0,5" HorizontalOptions="StartAndExpand" />
                                             <Image Source="ic_edit.png">
                                                 <Image.GestureRecognizers>

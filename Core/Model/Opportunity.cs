@@ -84,7 +84,7 @@ namespace Core.Model
 
         public double ComputeTotal()
         {
-            totalPrice = (double)Details.Sum(d => d.product.price);
+            totalPrice = (double)Details.Sum(d => d.Total);
             return totalPrice;
         }
     }

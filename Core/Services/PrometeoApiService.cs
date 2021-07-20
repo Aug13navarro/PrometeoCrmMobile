@@ -455,52 +455,28 @@ namespace Core.Services
             //return Task.FromResult(products);
         }
 
-        public Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData)
-        {
-            try
-            {
-                List<Opportunity> opportunities = Opportunities
-                                                  .Where(o => string.IsNullOrWhiteSpace(requestData.Query) ||
-                                                              o.descripction.ToLower().Contains(requestData.Query.ToLower()))
-                                                  .Skip(requestData.CurrentPage - 1 * requestData.PageSize).Take(requestData.PageSize).ToList();
+        //public Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData)
+        //{
+        //    try
+        //    {
+        //        List<Opportunity> opportunities = Opportunities
+        //                                          .Where(o => string.IsNullOrWhiteSpace(requestData.Query) ||
+        //                                                      o.descripction.ToLower().Contains(requestData.Query.ToLower()))
+        //                                          .Skip(requestData.CurrentPage - 1 * requestData.PageSize).Take(requestData.PageSize).ToList();
 
-                return Task.FromResult(new PaginatedList<Opportunity>(requestData.PageSize, requestData.CurrentPage, opportunities, Opportunities.Count));
+        //        return Task.FromResult(new PaginatedList<Opportunity>(requestData.PageSize, requestData.CurrentPage, opportunities, Opportunities.Count));
 
-                //var lista = new List<Opportunity>();
 
-                //var content = JsonConvert.SerializeObject(requestData);
-
-                //HttpContent httpContent = new StringContent(content);
-
-                //httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                //var response = await client.GetStringAsync($"{cadena}");
-
-                //if (response != null)
-                //{
-                //    lista = JsonConvert.DeserializeObject<List<Opportunity>>(response);
-                //}
-
-                //return lista;
-
-            }
-            catch ( Exception e)
-            {
-                throw;
-            }
-        }
+        //    }
+        //    catch ( Exception e)
+        //    {
+        //        throw;
+        //    }
+        //}
         public async Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData,string cadena, string token)
         {
             try
             {
-                //List<Opportunity> opportunities = Opportunities
-                //                                  .Where(o => string.IsNullOrWhiteSpace(requestData.Query) ||
-                //                                              o.Description.ToLower().Contains(requestData.Query.ToLower()))
-                //                                  .Skip(requestData.CurrentPage - 1 * requestData.PageSize).Take(requestData.PageSize).ToList();
-
-                //return Task.FromResult(new PaginatedList<Opportunity>(requestData.PageSize, requestData.CurrentPage, opportunities, Opportunities.Count));
-
                 var lista = new List<Opportunity>();
 
                 var content = JsonConvert.SerializeObject(requestData);
@@ -519,6 +495,7 @@ namespace Core.Services
 
                 return lista;
 
+
             }
             catch (Exception e)
             {
@@ -526,14 +503,39 @@ namespace Core.Services
             }
         }
 
-        public async Task SaveOpportunityCommand(Opportunity opportunity)
+        public async Task SaveOpportunityCommand(Opportunity opportunity, string token)
         {
-            if (opportunity.Id == 0)
-            {
-                opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
-            }
+            var cadena = "https://neophos-testing-api.azurewebsites.net/api/Opportunity";
 
-            Opportunities.Add(opportunity);
+            var dto = new
+            {
+                customerId = opportunity.customer.Id,
+                branchOfficeId = 1,
+                opportunityStatusId = opportunity.opportunityStatus.Id,
+                opportunityProducts = opportunity.Details,
+                totalPrice = opportunity.totalPrice,
+                closedDate = opportunity.closedDate,
+                description = opportunity.descripction
+            };
+
+            var objeto = JsonConvert.SerializeObject(dto);
+
+            HttpContent httpContent = new StringContent(objeto);
+
+            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+
+            //if (opportunity.Id == 0)
+            //{
+            //    opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
+            //}
+
+            Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
             await Task.FromResult(0);
         }
     }

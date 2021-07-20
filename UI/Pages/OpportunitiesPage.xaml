@@ -23,9 +23,9 @@
                 Orientation="Horizontal"
                 HorizontalOptions="EndAndExpand">
                 <Image Source="ic_search.png">
-                    <Image.GestureRecognizers>
+                    <!--<Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="FilterOpportunities"/>
-                    </Image.GestureRecognizers>
+                    </Image.GestureRecognizers>-->
                 </Image>
                 <ImageButton
                 Source="filtro_vacio"
@@ -46,7 +46,7 @@
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
 
-            <StackLayout VerticalOptions="FillAndExpand" 
+            <StackLayout VerticalOptions="StartAndExpand" 
                      HeightRequest="{Binding Path=Height, Source={x:Reference absLayout}}" 
                      Mvx:Bi.nd="IsVisible Opportunities.Count > 0" 
                          Grid.Row="0">

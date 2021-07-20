@@ -13,6 +13,7 @@ namespace UI.Pages
         public ProductsPage()
         {
             InitializeComponent();
+
         }
 
         protected override void OnViewModelSet()
@@ -49,9 +50,13 @@ namespace UI.Pages
                     {
                         name = product.name,
                         price = price,
-                        Discount = discount,
-                        //Quantity = quantity,
-                    }
+                        //Discount = discount,
+                        //quantity = quantity,
+
+                    },
+                    Price = price,
+                    Discount = discount,
+                    Quantity = quantity,
                 };
 
                 await ViewModel.Close(detail);

@@ -14,6 +14,7 @@ namespace Core.ViewModels
 {
     public class CreateOpportunityViewModel : MvxViewModel<Opportunity>
     {
+        private ApplicationData data;
         // Properties
 
         private string iconAnalisis;
@@ -113,6 +114,8 @@ namespace Core.ViewModels
         public CreateOpportunityViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
                                           IToastService toastService)
         {
+            data = new ApplicationData(); 
+
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
             this.toastService = toastService;
@@ -130,8 +133,8 @@ namespace Core.ViewModels
 
         private void CargarIconosEstados()
         {
-            IconAnalisis = "ic_tab_1_gris.png";
-            IconPropuesta = "ic_tab_2_gris.png";
+            IconAnalisis = "ic_tab_1_violeta.png";
+            IconPropuesta = "ic_tab_2_violeta.png";
             IconNegociacion = "ic_tab_3_gris.png";
             IconCerrada = "ic_tab_4_gris.png";
         }
@@ -155,7 +158,7 @@ namespace Core.ViewModels
             }
 
             editingOpportunityDetail.product.price = args.Price;
-            //editingOpportunityDetail.product.quantity = args.Quantity;
+            editingOpportunityDetail.product.quantity = args.Quantity;
             editingOpportunityDetail.product.Discount = args.Discount;
 
             editingOpportunityDetail = null;
@@ -220,6 +223,8 @@ namespace Core.ViewModels
 
         private async Task SaveOpportunity()
         {
+            var user = data.LoggedUser;
+
             //Opportunity.Status = GetOpportunityStatusDescriptionFromEnum(SelectedStatus);
             Opportunity.opportunityStatus = new OpportunityStatus{ Id = 1};
             Opportunity.ClosedLostStatusCause = GetOpportunityClosedLostCauseDescriptionFromEnum(selectedClosedLostStatusCause);
@@ -234,7 +239,7 @@ namespace Core.ViewModels
 
             if (Opportunity.Id == 0)
             {
-                await prometeoApiService.SaveOpportunityCommand(Opportunity);
+                await prometeoApiService.SaveOpportunityCommand(Opportunity, user.Token);
             }
 
             await navigationService.Close(this);

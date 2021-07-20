@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Model;
@@ -31,7 +30,14 @@ namespace Core.ViewModels
         public string Query
         {
             get => query;
-            set => SetProperty(ref query, value);
+            set
+            {
+                SetProperty(ref query, value);
+                if(this.query == "")
+                {
+                    SearchQueryAsync();
+                }
+            }
         }
 
         //private List<Product> products;
@@ -52,6 +58,8 @@ namespace Core.ViewModels
         // Commands
         public Command LoadMorePruductsCommand { get; }
         public Command SelectProductCommand { get; }
+        public Command SearchQueryCommand { get; }
+
 
         //Constant
         private const int PageSize = 10;
@@ -62,12 +70,62 @@ namespace Core.ViewModels
 
         public ProductsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)
         {
+            Query = "";
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
 
             LoadMorePruductsCommand = new Command(async () => await LoadMoreProductsAsync());
             SelectProductCommand = new Command<Product>(SelectProduct);
+            SearchQueryCommand = new Command(async () => await SearchQueryAsync());
         }
+
+        private async Task SearchQueryAsync()
+        {
+            if (Query != null)
+            {
+                var requestData = new ProductList
+                {
+                    companyId = 7,
+                    currentPage = 1,
+                    pageSize = 50,
+                    query = Query,
+                    sort = null,
+                };
+
+                //if (Query == "")
+                //{
+                //    await SearchProductsAsync(requestData);
+                //}
+                //else
+                //{
+                    await SearchProductsAsync(requestData, true);
+                //}
+            }
+        }
+
+        //private async void SearchQueryAsync()
+        //{
+        //    if (Query != null)
+        //    {
+        //        var requestData = new ProductList
+        //        {
+        //            companyId = 7,
+        //            currentPage = 50,
+        //            pageSize = 1,
+        //            query = Query,
+        //            sort = null,
+        //        };
+
+        //        if (Query == "")
+        //        {
+        //            await SearchProductsAsync(requestData);
+        //        }
+        //        else
+        //        {
+        //            await SearchProductsAsync(requestData, true);
+        //        }
+        //    }
+        //}
 
         public override async Task Initialize()
         {
@@ -78,7 +136,7 @@ namespace Core.ViewModels
                 companyId = 7,
                 currentPage = CurrentPage,
                 pageSize = PageSize,
-                //Name = Query,
+                query = Query,
             };
 
             await SearchProductsAsync(requestData);
@@ -102,7 +160,7 @@ namespace Core.ViewModels
                 companyId = 7,
                 currentPage = CurrentPage + 1,
                 pageSize = PageSize,
-                //Name = Query,
+                query = Query,
             };
 
             await SearchProductsAsync(requestData);

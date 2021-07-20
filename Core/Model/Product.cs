@@ -7,6 +7,6 @@ namespace Core.Model
         public decimal price { get; set; }
         public int stock { get; set; }
         public int Discount { get; set; }
-        public string count { get; set; }
+        public int quantity { get; set; }
     }
 }

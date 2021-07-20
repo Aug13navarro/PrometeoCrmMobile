@@ -11,5 +11,7 @@ namespace Core.Model
         public List<Product> results { get; set; }
         public int totalPages { get; set; }
         public int pageSize { get; set; }
+        public string query { get; set; }
+        public object sort { get; set; }
     }
 }
