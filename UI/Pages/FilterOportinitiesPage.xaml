@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Views:MvxContentPage 
+    x:TypeArguments="ViewModels:FilterOpportunitiesViewModel"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+             x:Class="UI.Pages.FilterOportinitiesPage">
+    <NavigationPage.TitleView>
+        <StackLayout
+            Orientation="Horizontal">
+            <Label
+                HorizontalOptions="FillAndExpand"
+                Text="Filtrar Oportunidad"
+                TextColor="White"
+                FontSize="Medium">
+                
+            </Label>
+            <Label
+                Padding="0,0,10,0"
+                Text="Limpiar"
+                TextColor="White"
+                FontSize="Medium">
+                
+            </Label>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <AbsoluteLayout>
+        <Frame BorderColor="Black" Margin="5" 
+               HorizontalOptions="StartAndExpand">
+            <ScrollView>
+                <StackLayout BackgroundColor="White" 
+                     VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                    <StackLayout Orientation="Horizontal">
+                        <!--<Label Text="Filtrar Oportunidad" FontSize="Medium" TextColor="Black"
+                           VerticalOptions="Start" HorizontalOptions="StartAndExpand"
+                           HorizontalTextAlignment="Start" Margin="7"/>-->
+
+                        <!--<Label Text="Limpiar Filtro" FontSize="Small" TextColor="IndianRed"
+                           HorizontalOptions="EndAndExpand" HorizontalTextAlignment="End" Margin="5">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ResetFiltersCommand}"/>
+                            </Label.GestureRecognizers>
+                        </Label>-->
+                    </StackLayout>
+
+                    <Grid RowSpacing="3" ColumnSpacing="5" 
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                              ColumnDefinitions=".5*,.5*">
+
+                        <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Horizontal" >
+                                <Grid ColumnDefinitions=".5*,.5*" HorizontalOptions="FillAndExpand">
+                                    <StackLayout Grid.Column="0" Orientation="Vertical" Spacing="0">
+                                        <Label Text="Fecha Desde" HorizontalTextAlignment="Center"/>
+                                        <DatePicker Date="{Binding BeginDate}" HorizontalOptions="Center"/>
+                                    </StackLayout>
+                                    <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="0">
+                                        <Label Text="Fecha Hasta" HorizontalTextAlignment="Center"/>
+                                        <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}"/>
+                                    </StackLayout>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Picker Title="Estados" ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status}"
+                                            ItemDisplayBinding="{Binding name}"/>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Horizontal" HeightRequest="40">
+                                <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="Cliente" IsReadOnly="True" Text="{Binding Customer.CompanyName}">
+                                </Entry>
+                                <ImageButton Source="clientes.png" Command="{Binding SelectClientCommand}"
+                                             HorizontalOptions="End"
+                                             BackgroundColor="Transparent"/>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Horizontal"  HeightRequest="40">
+                                <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="Producto" IsReadOnly="True" Text="{Binding Product.name}">
+                                </Entry>
+                                <ImageButton Source="producto_rosa.png" Command="{Binding SelectProductCommand}"
+                                             HorizontalOptions="End"
+                                             BackgroundColor="Transparent"/>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="4" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="Precio Desde" FontSize="Small"/>
+                                <Entry Keyboard="Numeric" Text="{Binding TotalDesde}"></Entry>
+                                <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
+                            />-->
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="4" Grid.Column="1" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="Precio Hasta" FontSize="Small"/>
+                                <Entry Keyboard="Numeric" Text="{Binding TotalHasta}"></Entry>
+                                <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
+                            />-->
+                            </StackLayout>
+                        </Frame>
+
+                        <Button Grid.Row="5" Grid.ColumnSpan="2" Text="Aceptar" Padding="0"
+                            Style="{StaticResource DefaultBtn}" Command="{Binding ApplyFiltersCommand}"/>
+                    </Grid>
+
+
+                </StackLayout>
+
+            </ScrollView>
+        </Frame>
+    </AbsoluteLayout>
+</Views:MvxContentPage>

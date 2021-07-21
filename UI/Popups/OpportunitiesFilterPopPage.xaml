@@ -63,11 +63,12 @@
 
                             <Frame Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                                 <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding SelectClientCommand}"></TapGestureRecognizer>
+                                    <TapGestureRecognizer Tapped="SelectCustomer"></TapGestureRecognizer>
+                                    <!--<TapGestureRecognizer Tapped="SelectCustomer"></TapGestureRecognizer>-->
                                 </Frame.GestureRecognizers>
                                 <StackLayout Orientation="Vertical" Spacing="0">
                                     <!--<Label Text="Cliente" FontSize="Small"/>-->
-                                    <Entry IsReadOnly="True"
+                                    <Entry IsEnabled="False"
                                         ></Entry>
                                     <!--<Picker Title="Clientes" ItemsSource="{Binding Customers}" SelectedItem="{Binding Customer}"
                                             ItemDisplayBinding="{Binding Abbreviature}"/>-->

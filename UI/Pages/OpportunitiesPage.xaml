@@ -24,7 +24,7 @@
                 HorizontalOptions="EndAndExpand">
                 <Image Source="ic_search.png">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="FilterOpportunities"/>
+                        <TapGestureRecognizer Command="{Binding FilterOportunities}"/>
                     </Image.GestureRecognizers>
                 </Image>
                 <!--<ImageButton

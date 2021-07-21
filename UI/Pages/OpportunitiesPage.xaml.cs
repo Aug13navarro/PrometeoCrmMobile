@@ -84,15 +84,15 @@ namespace UI.Pages
             PopupNavigation.Instance.PushAsync(popup);
         }
 
-        private void FilterOpportunities(object sender, EventArgs e)
-        {
-            var btn = (Image)sender;
-            //var parameter = btn.CommandParameter as OpportunitiesViewModel;
-            var parameter = BindingContext.DataContext as OpportunitiesViewModel;
+        //private void FilterOpportunities(object sender, EventArgs e)
+        //{
+        //    var btn = (Image)sender;
+        //    //var parameter = btn.CommandParameter as OpportunitiesViewModel;
+        //    var parameter = BindingContext.DataContext as OpportunitiesViewModel;
 
-            var popup = new OpportunitiesFilterPopPage(parameter);
+        //    var popup = new OpportunitiesFilterPopPage(parameter);
 
-            PopupNavigation.Instance.PushAsync(popup);
-        }
+        //    PopupNavigation.Instance.PushAsync(popup);
+        //}
     }
 }

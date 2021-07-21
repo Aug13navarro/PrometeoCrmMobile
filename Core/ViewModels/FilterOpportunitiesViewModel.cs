@@ -11,11 +11,19 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using MvvmCross;
+using Core.ViewModels.Model;
 
 namespace Core.ViewModels
 {
-    public class FilterOpportunitiesViewModel : MvxViewModel
+    public class FilterOpportunitiesViewModel : MvxViewModelResult<FilterOportunityModel>
     {
+        private DateTime maximumDate;
+        public DateTime MaximumDate
+        {
+            get => maximumDate;
+            set => SetProperty(ref maximumDate, value);
+        }
+
         private DateTime beginDate;
         public DateTime BeginDate
         {
@@ -73,7 +81,8 @@ namespace Core.ViewModels
 
         //COMANDOS
         public Command SelectClientCommand { get; }
-        public ICommand ApplyFiltersCommand { get; }
+        public Command SelectProductCommand { get; }
+        public Command ApplyFiltersCommand { get; }
         public ICommand ResetFiltersCommand { get; }
 
         //SERIVICIO
@@ -84,11 +93,11 @@ namespace Core.ViewModels
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
         {
             this.OpportunitiesViewModel = opportunitiesViewModel;
-            this.navigationService = Mvx.Resolve<IMvxNavigationService>();
-            this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-            this.toastService = Mvx.Resolve<IToastService>();
+            //this.navigationService = Mvx.Resolve<IMvxNavigationService>();
+            //this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
+            //this.toastService = Mvx.Resolve<IToastService>();
 
-            SelectClientCommand = new Command(async () => await SelectClientAsync());
+            //SelectClientCommand = new Command(async () => await SelectClientAsync());
 
             BeginDate = DateTime.Now.Date;
             EndDate = DateTime.Now.Date;
@@ -96,14 +105,37 @@ namespace Core.ViewModels
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
             
             CargarEstados();
-            //CargarCustomers();
-            CargarProdcutos();
+        }
+
+        public FilterOpportunitiesViewModel()
+        {
+            MaximumDate = DateTime.Now.Date;
+
+            this.navigationService = Mvx.Resolve<IMvxNavigationService>();
+            this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
+            this.toastService = Mvx.Resolve<IToastService>();
+
+            SelectClientCommand = new Command(async () => await SelectClientAsync());
+            SelectProductCommand = new Command(async () => await SelectProdcutoAsync());
+            ApplyFiltersCommand = new Command(async () => await ApplyFilters());
+
+            BeginDate = DateTime.Now.Date;
+            EndDate = DateTime.Now.Date;
+
+            OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
+
+            CargarEstados();
+        }
+
+        public override Task Initialize()
+        {
+            return base.Initialize();
         }
 
         private async Task SelectClientAsync()
         {
             int customerId = await navigationService.Navigate<CustomersViewModel, int>();
-
+            //int customerI = await popupnavigation
             try
             {
                 //IsLoading = true;
@@ -119,14 +151,26 @@ namespace Core.ViewModels
             }
         }
 
-        //private void CargarCustomers()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        private void CargarProdcutos()
+        private async Task SelectProdcutoAsync()
         {
+            try
+            {
+                OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
 
+                if (detail != null)
+                {
+                    Product = detail.product;
+
+                    //detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
+                    //Opportunity.Details.Add(detail);
+
+                    //Total = Opportunity.ComputeTotal();
+                }
+            }
+            catch (Exception e)
+            {
+                toastService.ShowError($"{e.Message}");
+            }
         }
 
         private void CargarEstados()
@@ -156,7 +200,26 @@ namespace Core.ViewModels
 
         }
 
-        //private void ApplyFilters()
+        private async Task ApplyFilters()
+        {
+            var filtro = new FilterOportunityModel
+            {
+                dateFrom = this.BeginDate,
+                dateTo = this.endDate,
+                customers = new List<Customer>(),
+                status = new List<OpportunityStatus>(),
+                products = new List<Product>(),
+                priceFrom = TotalDesde,
+                priceTo = TotalHasta
+            };
+
+            filtro.customers.Add(customer);
+            filtro.status.Add(Status);
+            filtro.products.Add(Product);
+
+            await navigationService.Close(this, filtro);
+        }
+
         //{
         //    List<Opportunity> Opportunities = OpportunitiesViewModel.Opportunities.ToList();
 
@@ -183,7 +246,6 @@ namespace Core.ViewModels
         //    OpportunitiesViewModel.Opportunities.AddRange(Opportunities);
 
         //    MessagingCenter.Send(this, "filtered", OpportunitiesViewModel);
-        //}
 
         //private void ResetFilters()
         //{

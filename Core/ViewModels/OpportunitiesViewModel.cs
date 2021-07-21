@@ -8,6 +8,7 @@ using Core.Model.Common;
 using Core.Model.Enums;
 using Core.Services;
 using Core.Services.Contracts;
+using Core.ViewModels.Model;
 using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -53,6 +54,7 @@ namespace Core.ViewModels
         public Command CreateOpportunityCommand { get; }
         public Command EditOpportunityCommand { get; }
         public Command NewOpportunitiesSearchCommand { get; }
+        public Command FilterOportunities { get; }
 
         // Constants
         private const int PageSize = 10;
@@ -75,6 +77,8 @@ namespace Core.ViewModels
             EditOpportunityCommand = new Command<Opportunity>(async o => await EditOpportunityAsync(o));
             NewOpportunitiesSearchCommand = new Command(async () => await NewOpportunitiesSearchAsync());
 
+            FilterOportunities = new Command(async () => await OpenFilterAsync());
+
             Opportunities.CollectionChanged += (sender, arg) =>
             {
                 TotalOfAllOportunities = Opportunities.Sum(x => x.totalPrice);
@@ -85,6 +89,25 @@ namespace Core.ViewModels
                 Opportunities = model.Opportunities;
                 Application.Current.MainPage.Navigation.PopModalAsync();
             });
+        }
+
+        private async Task OpenFilterAsync()
+        {
+            var filtro = await navigationService.Navigate<FilterOpportunitiesViewModel, FilterOportunityModel>();
+
+            try
+            {
+                IsLoading = true;
+                //SelectedCustomer = await prometeoApiService.GetCustomer(customerId);
+            }
+            catch (Exception ex)
+            {
+                toastService.ShowError("Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         public override async Task Initialize()
