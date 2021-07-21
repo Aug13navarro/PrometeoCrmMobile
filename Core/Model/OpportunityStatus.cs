@@ -1,6 +1,4 @@
-using System.ComponentModel;
-
-namespace Core.Model.Enums
+﻿namespace Core.Model
 {
     public class OpportunityStatus
     {

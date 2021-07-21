@@ -1,12 +1,16 @@
 ﻿using Core.Model;
-using Core.Model.Enums;
 using MvvmCross.ViewModels;
+using MvvmCross.Navigation;
 using System;
+using Core.Utils;
+using Core.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using MvvmCross;
 
 namespace Core.ViewModels
 {
@@ -47,33 +51,109 @@ namespace Core.ViewModels
             set => SetProperty(ref product, value);
         }
 
-        private decimal total;
-        public decimal Total
+        private decimal totalDesde;
+        public decimal TotalDesde
         {
-            get => total;
-            set => SetProperty(ref total, value);
+            get => totalDesde;
+            set => SetProperty(ref totalDesde, value);
+        }
+        private decimal totalHasta;
+        public decimal TotalHasta
+        {
+            get => totalHasta;
+            set => SetProperty(ref totalHasta, value);
         }
 
-        public IList<OpportunityStatus> OpportunityStatuses { get; set; }
-        public IList<Customer> Customers { get; set; }
-        public IList<Product> Products { get; set; }
-        public IList<double> Totals { get; set; }
+        public ObservableCollection<OpportunityStatus> OpportunityStatuses { get; set; }
+        public ObservableCollection<Customer> Customers { get; set; }
+        public ObservableCollection<Product> Products { get; set; }
+        public ObservableCollection<double> Totals { get; set; }
 
         public OpportunitiesViewModel OpportunitiesViewModel { get; set; }
 
+        //COMANDOS
+        public Command SelectClientCommand { get; }
         public ICommand ApplyFiltersCommand { get; }
         public ICommand ResetFiltersCommand { get; }
+
+        //SERIVICIO
+        private readonly IMvxNavigationService navigationService;
+        private readonly IPrometeoApiService prometeoApiService;
+        private readonly IToastService toastService;
 
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
         {
             this.OpportunitiesViewModel = opportunitiesViewModel;
-            Customers = opportunitiesViewModel.Opportunities.Select(x => x.customer).Distinct().ToList();
-            OpportunityStatuses = Enum.GetValues(typeof(OpportunityStatus)).OfType<OpportunityStatus>().ToList();
-            var ProdIds = opportunitiesViewModel.Opportunities.Select(x => x.Details.Select(y => y.productId)).ToList();
+            this.navigationService = Mvx.Resolve<IMvxNavigationService>();
+            this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
+            this.toastService = Mvx.Resolve<IToastService>();
 
-            Totals = opportunitiesViewModel.Opportunities.Select(x => x.totalPrice).ToList();
-            //ApplyFiltersCommand = new Command(() => ApplyFilters());
-            //ResetFiltersCommand = new Command(() => ResetFilters());
+            SelectClientCommand = new Command(async () => await SelectClientAsync());
+
+            BeginDate = DateTime.Now.Date;
+            EndDate = DateTime.Now.Date;
+
+            OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
+            
+            CargarEstados();
+            //CargarCustomers();
+            CargarProdcutos();
+        }
+
+        private async Task SelectClientAsync()
+        {
+            int customerId = await navigationService.Navigate<CustomersViewModel, int>();
+
+            try
+            {
+                //IsLoading = true;
+                Customer = await prometeoApiService.GetCustomer(customerId);
+            }
+            catch (Exception ex)
+            {
+                toastService.ShowError("Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+            }
+            finally
+            {
+                //IsLoading = false;
+            }
+        }
+
+        //private void CargarCustomers()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        private void CargarProdcutos()
+        {
+
+        }
+
+        private void CargarEstados()
+        {
+            OpportunityStatuses.Add(new OpportunityStatus
+            {
+                Id = 1,
+                name = "Análiss"
+            });
+            OpportunityStatuses.Add(new OpportunityStatus
+            {
+                Id = 2,
+                name = "Propuesta"
+            }); OpportunityStatuses.Add(new OpportunityStatus
+            {
+                Id = 3,
+                name = "Negociación"
+            }); OpportunityStatuses.Add(new OpportunityStatus
+            {
+                Id = 4,
+                name = "Cerrada Ganada"
+            }); OpportunityStatuses.Add(new OpportunityStatus
+            {
+                Id = 5,
+                name = "Cerrada Perdida"
+            });
+
         }
 
         //private void ApplyFilters()

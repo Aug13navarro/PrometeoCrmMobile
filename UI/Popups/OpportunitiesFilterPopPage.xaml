@@ -35,8 +35,8 @@
                         </StackLayout>
 
                         <Grid RowSpacing="3" ColumnSpacing="5" 
-                          RowDefinitions="Auto,Auto,Auto,Auto"
-                          ColumnDefinitions="50*,50*">
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                              ColumnDefinitions=".5*,.5*">
 
                             <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                                 <StackLayout Orientation="Horizontal" >
@@ -47,45 +47,59 @@
                                         </StackLayout>
                                         <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="0">
                                             <Label Text="Fecha Hasta" HorizontalTextAlignment="Center"/>
-                                            <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center"/>
+                                            <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding EndDate}"/>
                                         </StackLayout>
                                     </Grid>
                                 </StackLayout>
                             </Frame>
 
-                            <Frame Grid.Row="1" Grid.Column="0" Style="{StaticResource filterFrame}">
+                            <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                                 <StackLayout Orientation="Vertical" Spacing="0">
-                                    <Label Text="Estado" FontSize="Small"/>
-                                    <Picker ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status}"
-                            ItemDisplayBinding="{Binding}"/>
+                                    <!--<Label Text="Estado" FontSize="Small"/>-->
+                                    <Picker Title="Estados" ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status}"
+                                            ItemDisplayBinding="{Binding name}"/>
                                 </StackLayout>
                             </Frame>
 
-                            <Frame Grid.Row="1" Grid.Column="1" Style="{StaticResource filterFrame}">
+                            <Frame Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectClientCommand}"></TapGestureRecognizer>
+                                </Frame.GestureRecognizers>
                                 <StackLayout Orientation="Vertical" Spacing="0">
-                                    <Label Text="Cliente" FontSize="Small"/>
-                                    <Picker ItemsSource="{Binding Customers}" SelectedItem="{Binding Customer}"
-                            ItemDisplayBinding="{Binding Abbreviature}"/>
+                                    <!--<Label Text="Cliente" FontSize="Small"/>-->
+                                    <Entry IsReadOnly="True"
+                                        ></Entry>
+                                    <!--<Picker Title="Clientes" ItemsSource="{Binding Customers}" SelectedItem="{Binding Customer}"
+                                            ItemDisplayBinding="{Binding Abbreviature}"/>-->
                                 </StackLayout>
                             </Frame>
 
-                            <Frame Grid.Row="2" Grid.Column="0" Style="{StaticResource filterFrame}">
+                            <Frame Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                                 <StackLayout Orientation="Vertical" Spacing="0">
-                                    <Label Text="Producto" FontSize="Small"/>
-                                    <Picker ItemsSource="{Binding Products}" SelectedItem="{Binding Product}"
-                            />
+                                    <!--<Label Text="Producto" FontSize="Small"/>-->
+                                    <Picker Title="Productos" ItemsSource="{Binding Products}" SelectedItem="{Binding Product}" ItemDisplayBinding="{Binding name}"/>
                                 </StackLayout>
                             </Frame>
 
-                            <Frame Grid.Row="2" Grid.Column="1" Style="{StaticResource filterFrame}">
+                            <Frame Grid.Row="4" Style="{StaticResource filterFrame}">
                                 <StackLayout Orientation="Vertical" Spacing="0">
-                                    <Label Text="Precio" FontSize="Small"/>
-                                    <Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
-                            />
+                                    <Label Text="Precio Desde" FontSize="Small"/>
+                                    <Entry Keyboard="Numeric" Text="{Binding TotalDesde}"></Entry>
+                                    <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
+                            />-->
+                                </StackLayout>
+                            </Frame>
+                            
+                            <Frame Grid.Row="4" Grid.Column="1" Style="{StaticResource filterFrame}">
+                                <StackLayout Orientation="Vertical" Spacing="0">
+                                    <Label Text="Precio Hasta" FontSize="Small"/>
+                                    <Entry Keyboard="Numeric" Text="{Binding TotalHasta}"></Entry>
+                                    <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
+                            />-->
                                 </StackLayout>
                             </Frame>
 
-                            <Button Grid.Row="3" Grid.ColumnSpan="2" Text="Aceptar" Padding="0"
+                            <Button Grid.Row="5" Grid.ColumnSpan="2" Text="Aceptar" Padding="0"
                             Style="{StaticResource DefaultBtn}" Command="{Binding ApplyFiltersCommand}"/>
                         </Grid>
 

@@ -23,10 +23,15 @@
                 Orientation="Horizontal"
                 HorizontalOptions="EndAndExpand">
                 <Image Source="ic_search.png">
-                    <!--<Image.GestureRecognizers>
+                    <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="FilterOpportunities"/>
-                    </Image.GestureRecognizers>-->
+                    </Image.GestureRecognizers>
                 </Image>
+                <!--<ImageButton
+                    Source="ic_search.png"
+                    Mvx:Bi.nd="Command CreateOpportunityCommand">
+                    
+                </ImageButton>-->
                 <ImageButton
                 Source="filtro_vacio"
                 BackgroundColor="Transparent"

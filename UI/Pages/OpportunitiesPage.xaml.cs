@@ -1,8 +1,10 @@
 using System;
 using Core.Model;
+using Core.Services.Contracts;
 using Core.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
+using MvvmCross.Navigation;
 using Rg.Plugins.Popup.Services;
 using UI.Popups;
 using Xamarin.Forms;
