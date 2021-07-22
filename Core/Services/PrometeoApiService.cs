@@ -13,6 +13,7 @@ using Core.Model.Enums;
 using Core.Services.Contracts;
 using Core.Services.Exceptions;
 using Core.Services.Utils;
+using Core.ViewModels.Model;
 using Newtonsoft.Json;
 
 namespace Core.Services
@@ -537,6 +538,47 @@ namespace Core.Services
 
             Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
             await Task.FromResult(0);
+        }
+
+        public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token)
+        {
+            //var filtrodto = new
+            //{
+            //    //dateFrom = filtro.dateFrom.ToShortDateString().ToString("D"),
+            //    //dateTo = filtro.dateTo.ToShortDateString(),
+            //    dateFrom = "2021-07-10",
+            //    dateTo = "2021-07-22T14:44:57.384904+00:00",
+            //    customers = new List<cust>(),
+            //    status = new List<oppSta>(),
+            //    products = new List<prod>(),
+            //    priceFrom = filtro.priceFrom,
+            //    priceTo = filtro.priceTo
+            //};
+
+            try
+            {
+                var url = $"https://neophos-testing-api.azurewebsites.net/api/Opportunity/SearchOpportunityAsync";
+
+                var dto = JsonConvert.SerializeObject(filtro);
+
+                HttpContent httpContent = new StringContent(dto, Encoding.UTF8);
+
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.PostAsync(string.Format(url), httpContent);
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                var lista = JsonConvert.DeserializeObject<List<Opportunity>>(resultado);
+
+                return lista;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

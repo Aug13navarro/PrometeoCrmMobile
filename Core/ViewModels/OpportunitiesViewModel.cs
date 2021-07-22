@@ -97,12 +97,23 @@ namespace Core.ViewModels
 
             try
             {
-                IsLoading = true;
                 //SelectedCustomer = await prometeoApiService.GetCustomer(customerId);
+                var user = data.LoggedUser;
+
+                if (filtro != null)
+                {
+                    IsLoading = true;
+
+                    var opportunities = await prometeoApiService.GetOppByfilter(filtro,user.Token);
+
+                    Opportunities.Clear();
+
+                    Opportunities.AddRange(opportunities);
+                }
             }
             catch (Exception ex)
             {
-                toastService.ShowError("Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+                toastService.ShowError("Ocurrió un error al cargar el filtro. Compruebe su conexión a internet.");
             }
             finally
             {

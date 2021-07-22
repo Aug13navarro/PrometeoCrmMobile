@@ -9,10 +9,23 @@ namespace Core.ViewModels.Model
     {
         public DateTime dateFrom { get; set; }
         public DateTime dateTo { get; set; }
-        public List<OpportunityStatus> status { get; set; }
-        public List<Customer> customers { get; set; }
-        public List<Product> products { get; set; }
-        public decimal priceFrom { get; set; }
-        public decimal priceTo { get; set; }
+        public List<oppSta> status { get; set; }
+        public List<cust> customers { get; set; }
+        public List<prod> products { get; set; }
+        public decimal? priceFrom { get; set; }
+        public decimal? priceTo { get; set; }
+    }
+
+    public class cust
+    {
+        public int id { get; set; }
+    }
+    public class oppSta
+    {
+        public int id { get; set; }
+    }
+    public class prod
+    {
+        public int id { get; set; }
     }
 }

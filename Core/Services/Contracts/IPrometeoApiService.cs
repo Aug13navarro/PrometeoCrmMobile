@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Dtos;
 using Core.Model;
 using Core.Model.Common;
+using Core.ViewModels.Model;
 
 namespace Core.Services.Contracts
 {
@@ -30,5 +31,6 @@ namespace Core.Services.Contracts
         Task SaveOpportunityCommand(Opportunity opportunity, string token);
 
         Task<List<Opportunity>> GetOpportunietesTest(int userId);
+        Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token);
     }
 }

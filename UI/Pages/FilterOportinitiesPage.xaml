@@ -35,16 +35,6 @@
                      VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
                     <StackLayout Orientation="Horizontal">
-                        <!--<Label Text="Filtrar Oportunidad" FontSize="Medium" TextColor="Black"
-                           VerticalOptions="Start" HorizontalOptions="StartAndExpand"
-                           HorizontalTextAlignment="Start" Margin="7"/>-->
-
-                        <!--<Label Text="Limpiar Filtro" FontSize="Small" TextColor="IndianRed"
-                           HorizontalOptions="EndAndExpand" HorizontalTextAlignment="End" Margin="5">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ResetFiltersCommand}"/>
-                            </Label.GestureRecognizers>
-                        </Label>-->
                     </StackLayout>
 
                     <Grid RowSpacing="3" ColumnSpacing="5" 
@@ -56,11 +46,11 @@
                                 <Grid ColumnDefinitions=".5*,.5*" HorizontalOptions="FillAndExpand">
                                     <StackLayout Grid.Column="0" Orientation="Vertical" Spacing="0">
                                         <Label Text="Fecha Desde" HorizontalTextAlignment="Center"/>
-                                        <DatePicker Date="{Binding BeginDate}" HorizontalOptions="Center"/>
+                                        <DatePicker Date="{Binding BeginDate}" HorizontalOptions="Center" Format="dd/MM/yyyy"/>
                                     </StackLayout>
                                     <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="0">
                                         <Label Text="Fecha Hasta" HorizontalTextAlignment="Center"/>
-                                        <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}"/>
+                                        <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" Format="dd/MM/yyyy"/>
                                     </StackLayout>
                                 </Grid>
                             </StackLayout>

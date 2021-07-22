@@ -12,6 +12,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using MvvmCross;
 using Core.ViewModels.Model;
+using Newtonsoft.Json;
 
 namespace Core.ViewModels
 {
@@ -206,16 +207,18 @@ namespace Core.ViewModels
             {
                 dateFrom = this.BeginDate,
                 dateTo = this.endDate,
-                customers = new List<Customer>(),
-                status = new List<OpportunityStatus>(),
-                products = new List<Product>(),
+                customers = new List<cust>(),
+                status = new List<oppSta>(),
+                products = new List<prod>(),
                 priceFrom = TotalDesde,
                 priceTo = TotalHasta
             };
 
-            filtro.customers.Add(customer);
-            filtro.status.Add(Status);
-            filtro.products.Add(Product);
+            if (customer != null) filtro.customers.Add(new cust { id = customer.Id});
+            if (Status != null) filtro.status.Add(new oppSta { id = Status.Id });
+            if (Product != null) filtro.products.Add(new prod { id = Product.Id });
+            if (filtro.priceFrom == 0) filtro.priceFrom = null;
+            if (filtro.priceTo == 0) filtro.priceTo = null;
 
             await navigationService.Close(this, filtro);
         }
@@ -272,6 +275,5 @@ namespace Core.ViewModels
 
         //    //   MessagingCenter.Send(this, "filtered", ShipmentViewModel);
         //}
-
     }
 }

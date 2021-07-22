@@ -145,7 +145,7 @@ namespace Core.ViewModels
 
             //SelectedStatus = Opportunity.Status.GetEnumDescription();
 
-            selectedClosedLostStatusCause = Opportunity.ClosedLostStatusCause.GetEnumDescription();
+            selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
             SelectedCustomer = Opportunity.customer;
             Total = Opportunity.ComputeTotal();
         }
