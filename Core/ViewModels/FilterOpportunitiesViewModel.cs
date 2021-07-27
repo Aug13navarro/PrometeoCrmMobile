@@ -156,11 +156,11 @@ namespace Core.ViewModels
         {
             try
             {
-                OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
+                Product product = await navigationService.Navigate<SelectProductViewModel, Product>();
 
-                if (detail != null)
+                if (product != null)
                 {
-                    Product = detail.product;
+                    Product = product;
 
                     //detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
                     //Opportunity.Details.Add(detail);

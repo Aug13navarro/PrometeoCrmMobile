@@ -21,7 +21,7 @@
             </Image>-->
             <Label
                 HorizontalOptions="FillAndExpand"
-                    Text="Oportunidades"
+                    Text="{x:Static resources:AppResources.Opportunities}"
                     TextColor="White"
                     FontSize="Medium">
 

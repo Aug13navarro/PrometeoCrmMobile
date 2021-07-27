@@ -4,6 +4,7 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                       xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
                       xmlns:Behavior="clr-namespace:UI.Behavior;assembly=UI"
+                      xmlns:resources="clr-namespace:UI.LangResources"
                       x:Class="UI.Popups.SelectProductPopup">
     <Frame BorderColor="Gray" CornerRadius="10" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <StackLayout>
@@ -27,12 +28,12 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
 
-                <Label Text="Precio de venta" Grid.Row="0" Grid.Column="0" TextColor="{StaticResource PrimaryColor}" />
-                <Label Text="Cantidad" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource PrimaryColor}" />
-                <Label Text="% Desc." Grid.Row="0" Grid.Column="2" TextColor="{StaticResource PrimaryColor}" />
+                <Label Text="{x:Static resources:AppResources.Price}" Grid.Row="0" Grid.Column="0" TextColor="{StaticResource PrimaryColor}" />
+                <Label Text="{x:Static resources:AppResources.Quantity}" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource PrimaryColor}" />
+                <Label Text="{x:Static resources:AppResources.DiscountPopUp}" Grid.Row="0" Grid.Column="2" TextColor="{StaticResource PrimaryColor}" />
 
                 <Entry Style="{StaticResource DefaultEntry}" x:Name="priceInput" Grid.Row="1" Grid.Column="0" TextChanged="PriceInputTextChanged">
                     <Entry.Behaviors>
@@ -49,7 +50,7 @@
             <StackLayout Orientation="Horizontal">
                 <Label TextColor="{StaticResource SecondaryColor}" FontSize="Medium"
                        HorizontalOptions="StartAndExpand" VerticalOptions="Center" x:Name="subtotalInput" />
-                <Button Text="Aceptar" Style="{StaticResource OutlineSecondaryButton}" Clicked="OkButtonClicked" />
+                <Button Text="{x:Static resources:AppResources.Accept}" Style="{StaticResource OutlineSecondaryButton}" Clicked="OkButtonClicked" />
             </StackLayout>
 
             <!--<Label Text="Precio ($)" Style="{StaticResource DefaultLabel}" Margin="0,0,0,0" />

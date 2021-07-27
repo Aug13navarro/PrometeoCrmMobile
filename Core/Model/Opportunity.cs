@@ -46,7 +46,7 @@ namespace Core.Model
         //    set => SetProperty(ref description, value);
         //}
 
-        public string descripction { get; set; }
+        public string description { get; set; }
 
         private ClosedLostStatusCause closedLostStatusCause;
         public ClosedLostStatusCause ClosedLostStatusCause

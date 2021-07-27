@@ -3,12 +3,13 @@
 <Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                       xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
-                      x:Class="UI.Popups.OpportunityOptionsPopup">
+                      x:Class="UI.Popups.OpportunityOptionsPopup"
+                      xmlns:resources="clr-namespace:UI.LangResources">
     <Frame WidthRequest="160" BorderColor="Gray" CornerRadius="10" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
         <StackLayout>
             <StackLayout Orientation="Horizontal" Spacing="20">
                 <!-- <Image Source="ic_tachometer.png" BackgroundColor="SteelBlue" /> -->
-                <Label Text="Editar" TextColor="{StaticResource PrimaryColor}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                <Label Text="{x:Static resources:AppResources.Edit}" TextColor="{StaticResource PrimaryColor}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="EditLabelTapped" />
                     </Label.GestureRecognizers>
@@ -19,7 +20,7 @@
 
             <StackLayout Orientation="Horizontal" Spacing="20">
                 <!-- <Image Source="ic_tachometer.png" BackgroundColor="SteelBlue" /> -->
-                <Label Text="Generar Propuesta" TextColor="{StaticResource PrimaryColor}" HorizontalTextAlignment="Center"
+                <Label Text="{x:Static resources:AppResources.Generate_proposal}" TextColor="{StaticResource PrimaryColor}" HorizontalTextAlignment="Center"
                        VerticalTextAlignment="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="GeneratePropositionLabelTapped" />

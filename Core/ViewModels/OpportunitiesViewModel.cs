@@ -203,6 +203,8 @@ namespace Core.ViewModels
 
         private async Task EditOpportunityAsync(Opportunity opportunity)
         {
+            opportunity.Details = new MvxObservableCollection<OpportunityProducts>(opportunity.opportunityProducts);
+
             await navigationService.Navigate<CreateOpportunityViewModel, Opportunity>(opportunity);
         }
 

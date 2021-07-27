@@ -32,5 +32,6 @@ namespace Core.Services.Contracts
 
         Task<List<Opportunity>> GetOpportunietesTest(int userId);
         Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token);
+        Task<Opportunity> GetOppById(int id);
     }
 }

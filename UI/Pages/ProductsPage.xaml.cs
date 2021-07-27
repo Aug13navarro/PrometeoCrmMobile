@@ -54,7 +54,7 @@ namespace UI.Pages
                         //quantity = quantity,
 
                     },
-                    Price = price,
+                    //Price = price,
                     Discount = discount,
                     Quantity = quantity,
                 };

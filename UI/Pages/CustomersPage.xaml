@@ -7,18 +7,19 @@
                       xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
                       xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      xmlns:resources="clr-namespace:UI.LangResources"
                       x:Class="UI.Pages.CustomersPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
-            <Entry Placeholder="Buscar cliente" Text="{Binding ClientsQuery}"
+            <Entry Placeholder="{x:Static resources:AppResources.SearchCustomer}" Text="{Binding ClientsQuery}"
                    TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />
             <Image Source="ic_search.png">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NewClientsSearchCommand}" />
                 </Image.GestureRecognizers>
             </Image>
-            <Button Text="Crear" Command="{Binding GoToCreateCustomerCommand}" Style="{StaticResource MenuButton}" />
+            <Button Text="{x:Static resources:AppResources.Create}" Command="{Binding GoToCreateCustomerCommand}" Style="{StaticResource MenuButton}" />
         </StackLayout>
     </NavigationPage.TitleView>
 
@@ -55,7 +56,8 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Nombre: " FontAttributes="Bold" />
+                                            <Span Text="{x:Static resources:AppResources.Name}" FontAttributes="Bold" />
+                                            <Span Text=": " FontAttributes="Bold"></Span>
                                             <Span Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -80,7 +82,7 @@
                                     </StackLayout.GestureRecognizers>
 
                                     <Label Text="&#xf0da;" FontFamily="{StaticResource FontAwesomeSolid}" VerticalOptions="Center" />
-                                    <Label Text="Contactos" FontAttributes="Bold" />
+                                    <Label Text="{x:Static resources:AppResources.Contacts}" FontAttributes="Bold" />
                                 </StackLayout>
 
                                 <Controls:Repeater ItemsSource="{Binding Customer.Contacts}"

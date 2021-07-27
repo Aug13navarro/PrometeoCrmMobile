@@ -43,6 +43,12 @@ namespace Core.ViewModels
             set => SetProperty(ref iconCerrada, value);
         }
 
+        private int estadoId;
+        public int EstadoId
+        {
+            get => estadoId;
+            set => SetProperty(ref estadoId, value);
+        }
 
         private bool isLoading;
         public bool IsLoading
@@ -134,20 +140,71 @@ namespace Core.ViewModels
         private void CargarIconosEstados()
         {
             IconAnalisis = "ic_tab_1_violeta.png";
-            IconPropuesta = "ic_tab_2_violeta.png";
+            IconPropuesta = "ic_tab_2_gris.png";
             IconNegociacion = "ic_tab_3_gris.png";
             IconCerrada = "ic_tab_4_gris.png";
+
+            EstadoId = 1;
         }
 
-        public override void Prepare(Opportunity theOpportunity)
+        public async override void Prepare(Opportunity theOpportunity)
         {
-            Opportunity = theOpportunity;
+            if (theOpportunity.Id > 0)
+            {
+                var result = await prometeoApiService.GetOppById(theOpportunity.Id);
+                Opportunity = result;
+                Opportunity.Details = new MvxObservableCollection<OpportunityProducts>( result.opportunityProducts);
 
+                AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
+            }
+            else
+            {
+                Opportunity = theOpportunity;
+            }
             //SelectedStatus = Opportunity.Status.GetEnumDescription();
 
             selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
             SelectedCustomer = Opportunity.customer;
             Total = Opportunity.ComputeTotal();
+        }
+
+        public void AjustarBotonesEstados(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    IconAnalisis = "ic_tab_1_violeta.png";
+                    IconPropuesta = "ic_tab_2_gris.png";
+                    IconNegociacion = "ic_tab_3_gris.png";
+                    IconCerrada = "ic_tab_4_gris.png";
+
+                    EstadoId = id;
+                    break;
+                case 2:
+                    IconAnalisis = "ic_tab_1_violeta.png";
+                    IconPropuesta = "ic_tab_2_violeta.png";
+                    IconNegociacion = "ic_tab_3_gris.png";
+                    IconCerrada = "ic_tab_4_gris.png";
+
+                    EstadoId = id;
+                    break;
+                case 3:
+                    IconAnalisis = "ic_tab_1_violeta.png";
+                    IconPropuesta = "ic_tab_2_violeta.png";
+                    IconNegociacion = "ic_tab_3_violeta.png";
+                    IconCerrada = "ic_tab_4_gris.png";
+
+                    EstadoId = id;
+                    break;
+                case 4:
+                    IconAnalisis = "ic_tab_1_violeta.png";
+                    IconPropuesta = "ic_tab_2_violeta.png";
+                    IconNegociacion = "ic_tab_3_violeta.png";
+                    IconCerrada = "ic_tab_4_violeta.png";
+
+                    EstadoId = id;
+                    break;
+            }
         }
 
         public void FinishEditProduct((decimal Price, int Quantity, int Discount) args)
@@ -226,8 +283,8 @@ namespace Core.ViewModels
             var user = data.LoggedUser;
 
             //Opportunity.Status = GetOpportunityStatusDescriptionFromEnum(SelectedStatus);
-            Opportunity.opportunityStatus = new OpportunityStatus{ Id = 1};
-            Opportunity.ClosedLostStatusCause = GetOpportunityClosedLostCauseDescriptionFromEnum(selectedClosedLostStatusCause);
+            Opportunity.opportunityStatus = new OpportunityStatus{ Id = EstadoId};
+            //Opportunity.ClosedLostStatusCause = GetOpportunityClosedLostCauseDescriptionFromEnum(selectedClosedLostStatusCause);
             Opportunity.customer = SelectedCustomer;
 
             string error = ValidateOpportunity(Opportunity);
@@ -268,7 +325,7 @@ namespace Core.ViewModels
                 return "Debe asociar algún producto.";
             }
 
-            if (string.IsNullOrWhiteSpace(theOpportunity.descripction))
+            if (string.IsNullOrWhiteSpace(theOpportunity.description))
             {
                 return "Debe ingresar una descripción.";
             }

@@ -49,5 +49,29 @@ namespace UI.Pages
 
             await PopupNavigation.Instance.PushAsync(popup);
         }
+
+        private void ImageButton_Clicked_1(object sender, EventArgs e)
+        {
+
+            ViewModel.AjustarBotonesEstados(1);
+        }
+
+        private void ImageButton_Clicked_2(object sender, EventArgs e)
+        {
+
+            ViewModel.AjustarBotonesEstados(2);
+        }
+
+        private void ImageButton_Clicked_3(object sender, EventArgs e)
+        {
+
+            ViewModel.AjustarBotonesEstados(3);
+        }
+
+        private void ImageButton_Clicked_4(object sender, EventArgs e)
+        {
+
+            ViewModel.AjustarBotonesEstados(4);
+        }
     }
 }

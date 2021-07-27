@@ -7,13 +7,14 @@
                       xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
                       xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+    xmlns:resources="clr-namespace:UI.LangResources"
              x:Class="UI.Pages.FilterOportinitiesPage">
     <NavigationPage.TitleView>
         <StackLayout
             Orientation="Horizontal">
             <Label
                 HorizontalOptions="FillAndExpand"
-                Text="Filtrar Oportunidad"
+                Text="{x:Static resources:AppResources.Filter_Opportunity}"
                 TextColor="White"
                 FontSize="Medium">
                 
@@ -45,11 +46,11 @@
                             <StackLayout Orientation="Horizontal" >
                                 <Grid ColumnDefinitions=".5*,.5*" HorizontalOptions="FillAndExpand">
                                     <StackLayout Grid.Column="0" Orientation="Vertical" Spacing="0">
-                                        <Label Text="Fecha Desde" HorizontalTextAlignment="Center"/>
+                                        <Label Text="{x:Static resources:AppResources.FromDate}" HorizontalTextAlignment="Center"/>
                                         <DatePicker Date="{Binding BeginDate}" HorizontalOptions="Center" Format="dd/MM/yyyy"/>
                                     </StackLayout>
                                     <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="0">
-                                        <Label Text="Fecha Hasta" HorizontalTextAlignment="Center"/>
+                                        <Label Text="{x:Static resources:AppResources.EndDate}" HorizontalTextAlignment="Center"/>
                                         <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" Format="dd/MM/yyyy"/>
                                     </StackLayout>
                                 </Grid>
@@ -58,14 +59,14 @@
 
                         <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Vertical" Spacing="0">
-                                <Picker Title="Estados" ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status}"
+                                <Picker Title="{x:Static resources:AppResources.State}" ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status}"
                                             ItemDisplayBinding="{Binding name}"/>
                             </StackLayout>
                         </Frame>
 
                         <Frame Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Horizontal" HeightRequest="40">
-                                <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="Cliente" IsReadOnly="True" Text="{Binding Customer.CompanyName}">
+                                <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="{x:Static resources:AppResources.Customer}" IsReadOnly="True" Text="{Binding Customer.CompanyName}">
                                 </Entry>
                                 <ImageButton Source="clientes.png" Command="{Binding SelectClientCommand}"
                                              HorizontalOptions="End"
@@ -75,7 +76,7 @@
 
                         <Frame Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Horizontal"  HeightRequest="40">
-                                <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="Producto" IsReadOnly="True" Text="{Binding Product.name}">
+                                <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="{x:Static resources:AppResources.Product}" IsReadOnly="True" Text="{Binding Product.name}">
                                 </Entry>
                                 <ImageButton Source="producto_rosa.png" Command="{Binding SelectProductCommand}"
                                              HorizontalOptions="End"
@@ -85,7 +86,7 @@
 
                         <Frame Grid.Row="4" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Vertical" Spacing="0">
-                                <Label Text="Precio Desde" FontSize="Small"/>
+                                <Label Text="{x:Static resources:AppResources.FromPrice}" FontSize="Small"/>
                                 <Entry Keyboard="Numeric" Text="{Binding TotalDesde}"></Entry>
                                 <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
                             />-->
@@ -94,14 +95,14 @@
 
                         <Frame Grid.Row="4" Grid.Column="1" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Vertical" Spacing="0">
-                                <Label Text="Precio Hasta" FontSize="Small"/>
+                                <Label Text="{x:Static resources:AppResources.EndPrice}" FontSize="Small"/>
                                 <Entry Keyboard="Numeric" Text="{Binding TotalHasta}"></Entry>
                                 <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
                             />-->
                             </StackLayout>
                         </Frame>
 
-                        <Button Grid.Row="5" Grid.ColumnSpan="2" Text="Aceptar" Padding="0"
+                        <Button Grid.Row="5" Grid.ColumnSpan="2" Text="{x:Static resources:AppResources.Accept}" Padding="0"
                             Style="{StaticResource DefaultBtn}" Command="{Binding ApplyFiltersCommand}"/>
                     </Grid>
 

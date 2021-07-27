@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
-<Views:MvxContentPage x:TypeArguments="ViewModels:ProductsViewModel"
+<Views:MvxContentPage x:TypeArguments="ViewModels:SelectProductViewModel"
                       xmlns="http://xamarin.com/schemas/2014/forms"
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                       xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
@@ -8,7 +8,7 @@
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
                       xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
                       xmlns:resources="clr-namespace:UI.LangResources"
-                      x:Class="UI.Pages.ProductsPage">
+                      x:Class="UI.Pages.SelectProductoPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
@@ -48,7 +48,7 @@
                                 <Label Text="{Binding name}" TextColor="{StaticResource PrimaryColor}" 
                                    FontSize="Medium" FontAttributes="Bold"></Label>
 
-                                <StackLayout Orientation="Horizontal">
+                                <!--<StackLayout Orientation="Horizontal">
                                     <Label Text="{x:Static resources:AppResources.Available_Stock}" HorizontalOptions="StartAndExpand"></Label>
                                     <Label TextColor="#255E00">
                                         <Label.FormattedText>
@@ -58,9 +58,9 @@
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                </StackLayout>
+                                </StackLayout>-->
 
-                                <StackLayout Orientation="Horizontal">
+                                <!--<StackLayout Orientation="Horizontal">
                                     <Label Text="{x:Static resources:AppResources.Price}" HorizontalOptions="StartAndExpand"></Label>
                                     <Label TextColor="#255E00">
                                         <Label.FormattedText>
@@ -70,10 +70,10 @@
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-                                    <!--<Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" TextColor="{StaticResource PrimaryColor}"></Label>-->
-                                </StackLayout>
+                                    <Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" TextColor="{StaticResource PrimaryColor}"></Label>
+                                </StackLayout>-->
                             </StackLayout>
-                            
+
                             <BoxView BackgroundColor="LightGray" HeightRequest="1" />
                         </StackLayout>
                     </ViewCell>

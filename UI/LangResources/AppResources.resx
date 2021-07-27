@@ -123,6 +123,12 @@
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
+  <data name="Associated_Prodcuts" xml:space="preserve">
+    <value>Associated products</value>
+  </data>
+  <data name="Available_Stock" xml:space="preserve">
+    <value>Available Stock</value>
+  </data>
   <data name="BranchOffice" xml:space="preserve">
     <value>Branch Office</value>
   </data>
@@ -131,6 +137,9 @@
   </data>
   <data name="Contacts" xml:space="preserve">
     <value>Contacts</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
   </data>
   <data name="Customer" xml:space="preserve">
     <value>Customer</value>
@@ -141,6 +150,27 @@
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Description_PL" xml:space="preserve">
+    <value>Enter description</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="DiscountPopUp" xml:space="preserve">
+    <value>% Off</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="EndPrice" xml:space="preserve">
+    <value>End Price</value>
+  </data>
   <data name="Enter" xml:space="preserve">
     <value>LogIn</value>
   </data>
@@ -149,6 +179,18 @@
   </data>
   <data name="FilterBy" xml:space="preserve">
     <value>Filter By</value>
+  </data>
+  <data name="Filter_Opportunity" xml:space="preserve">
+    <value>Filter Opportunity</value>
+  </data>
+  <data name="FromDate" xml:space="preserve">
+    <value>From Date</value>
+  </data>
+  <data name="FromPrice" xml:space="preserve">
+    <value>From Price</value>
+  </data>
+  <data name="Generate_proposal" xml:space="preserve">
+    <value>Generate proposal</value>
   </data>
   <data name="Hello" xml:space="preserve">
     <value>Hello</value>
@@ -159,8 +201,14 @@
   <data name="LoginInvalidMsg" xml:space="preserve">
     <value>Invalid username or password.</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="NoOpportunitiesFound" xml:space="preserve">
     <value>No opportunities found</value>
+  </data>
+  <data name="No_Associated_Products" xml:space="preserve">
+    <value>There are no associated products</value>
   </data>
   <data name="Opportunities" xml:space="preserve">
     <value>Opportunities</value>
@@ -180,8 +228,17 @@
   <data name="Products" xml:space="preserve">
     <value>Products</value>
   </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
   <data name="ResetFilters" xml:space="preserve">
     <value>Reset filters</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search...</value>
+  </data>
+  <data name="SearchCustomer" xml:space="preserve">
+    <value>Search Customer</value>
   </data>
   <data name="SearchOpportunity" xml:space="preserve">
     <value>Search Opportunity</value>

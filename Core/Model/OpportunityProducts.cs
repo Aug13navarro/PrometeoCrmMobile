@@ -39,16 +39,18 @@ namespace Core.Model
             }
         }
 
-        private decimal price;
-        public decimal Price
-        {
-            get => price;
-            set
-            {
-                SetProperty(ref price, value);
-                Total = ComputeTotal();
-            }
-        }
+        public decimal Price => product.price;
+
+        //private decimal price;
+        //public decimal Price
+        //{
+        //    get => price;
+        //    set
+        //    {
+        //        SetProperty(ref price, value);
+        //        Total = ComputeTotal();
+        //    }
+        //}
 
         private decimal total;
         public decimal Total

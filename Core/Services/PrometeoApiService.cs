@@ -22,115 +22,8 @@ namespace Core.Services
     {
         private readonly HttpClient client;
 
-        private static readonly List<Product> Products = new List<Product>()
-        {
-            new Product() {Id = 1, name = "Producto 1", price = 2500, stock = 100, Discount = 0},
-            new Product() {Id = 2, name = "Producto 2", price = 3600, stock = 250, Discount = 0},
-            new Product() {Id = 3, name = "Producto 3", price = 5000, stock = 1000, Discount = 0},
-            new Product() {Id = 4, name = "Producto 4", price = 150, stock = 25, Discount = 0},
-        };
-
         private static readonly List<Opportunity> Opportunities = new List<Opportunity>()
         {
-            //new Opportunity()
-            //{
-            //    Id = 1,
-            //    Customer = new Customer() {Id = 2773, CompanyName = "COFCO BALCARCE"},
-            //    Date = DateTime.Now.AddDays(-5),
-            //    Description = "Oportunidad de ejemplo 1",
-            //    Status = OpportunityStatus.Analysis,
-            //    Details =
-            //    {
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 1, Description = Products[0].name, Price = Products[0].price,
-            //            Discount = 0, Quantity = 1, ProductId = Products[0].Id,
-            //        },
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 2, Description = Products[1].name, Price = Products[1].price,
-            //            Discount = 10, Quantity = 5, ProductId = Products[1].Id,
-            //        },
-            //    }
-            //},
-            //new Opportunity()
-            //{
-            //    Id = 2,
-            //    Customer = new Customer() {Id = 2773, CompanyName = "COFCO BALCARCE"},
-            //    Date = DateTime.Now.AddDays(-1),
-            //    Description = "Oportunidad de ejemplo 2",
-            //    Status = OpportunityStatus.Negotiation,
-            //    Details =
-            //    {
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 1, Description = Products[0].name, Price = Products[0].price,
-            //            Discount = 0, Quantity = 1, ProductId = Products[0].Id,
-            //        },
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 2, Description = Products[1].name, Price = Products[1].price,
-            //            Discount = 10, Quantity = 5, ProductId = Products[1].Id,
-            //        },
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 3, Description = Products[2].name, Price = Products[2].price,
-            //            Discount = 25, Quantity = 10, ProductId = Products[2].Id,
-            //        },
-            //    }
-            //},
-            //new Opportunity()
-            //{
-            //    Id = 3,
-            //    Customer = new Customer() {Id = 2773, CompanyName = "COFCO BALCARCE"},
-            //    Date = DateTime.Now.AddDays(-10),
-            //    Description = "Oportunidad de ejemplo 3",
-            //    Status = OpportunityStatus.Proposition,
-            //    Details =
-            //    {
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 1, Description = Products[0].name, Price = Products[0].price,
-            //            Discount = 0, Quantity = 8, ProductId = Products[0].Id,
-            //        },
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 2, Description = Products[1].name, Price = Products[1].price,
-            //            Discount = 10, Quantity = 3, ProductId = Products[1].Id,
-            //        },
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 3, Description = Products[2].name, Price = Products[2].price,
-            //            Discount = 40, Quantity = 2, ProductId = Products[2].Id,
-            //        },
-            //    }
-            //},
-            //new Opportunity()
-            //{
-            //    Id = 4,
-            //    Customer = new Customer() {Id = 2773, CompanyName = "COFCO BALCARCE"},
-            //    Date = DateTime.Now.AddDays(-10),
-            //    Description = "Oportunidad de ejemplo 4",
-            //    Status = OpportunityStatus.Proposition,
-            //    Details =
-            //    {
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 1, Description = Products[0].name, Price = Products[0].price,
-            //            Discount = 0, Quantity = 8, ProductId = Products[0].Id,
-            //        },
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 2, Description = Products[1].name, Price = Products[1].price,
-            //            Discount = 10, Quantity = 3, ProductId = Products[1].Id,
-            //        },
-            //        new OpportunityDetail()
-            //        {
-            //            Id = 3, Description = Products[2].name, Price = Products[2].price,
-            //            Discount = 40, Quantity = 2, ProductId = Products[2].Id,
-            //        },
-            //    }
-            //}
         };
 
         public PrometeoApiService(HttpClient client)
@@ -442,38 +335,8 @@ namespace Core.Services
             {
                 throw;
             }
-
-
-
-            //var products = new List<Product>()
-            //{
-            //    new Product() {Id = 1, Description = "Producto 1", Price = 2500, Stock = 25},
-            //    new Product() {Id = 2, Description = "Producto 2", Price = 5000, Stock = 10},
-            //    new Product() {Id = 3, Description = "Producto 3", Price = 1200, Stock = 5},
-            //    new Product() {Id = 4, Description = "Producto 4", Price = 1500, Stock = 3},
-            //};
-
-            //return Task.FromResult(products);
         }
 
-        //public Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData)
-        //{
-        //    try
-        //    {
-        //        List<Opportunity> opportunities = Opportunities
-        //                                          .Where(o => string.IsNullOrWhiteSpace(requestData.Query) ||
-        //                                                      o.descripction.ToLower().Contains(requestData.Query.ToLower()))
-        //                                          .Skip(requestData.CurrentPage - 1 * requestData.PageSize).Take(requestData.PageSize).ToList();
-
-        //        return Task.FromResult(new PaginatedList<Opportunity>(requestData.PageSize, requestData.CurrentPage, opportunities, Opportunities.Count));
-
-
-        //    }
-        //    catch ( Exception e)
-        //    {
-        //        throw;
-        //    }
-        //}
         public async Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData,string cadena, string token)
         {
             try
@@ -516,7 +379,7 @@ namespace Core.Services
                 opportunityProducts = opportunity.Details,
                 totalPrice = opportunity.totalPrice,
                 closedDate = opportunity.closedDate,
-                description = opportunity.descripction
+                description = opportunity.description
             };
 
             var objeto = JsonConvert.SerializeObject(dto);
@@ -542,19 +405,6 @@ namespace Core.Services
 
         public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token)
         {
-            //var filtrodto = new
-            //{
-            //    //dateFrom = filtro.dateFrom.ToShortDateString().ToString("D"),
-            //    //dateTo = filtro.dateTo.ToShortDateString(),
-            //    dateFrom = "2021-07-10",
-            //    dateTo = "2021-07-22T14:44:57.384904+00:00",
-            //    customers = new List<cust>(),
-            //    status = new List<oppSta>(),
-            //    products = new List<prod>(),
-            //    priceFrom = filtro.priceFrom,
-            //    priceTo = filtro.priceTo
-            //};
-
             try
             {
                 var url = $"https://neophos-testing-api.azurewebsites.net/api/Opportunity/SearchOpportunityAsync";
@@ -580,5 +430,30 @@ namespace Core.Services
                 throw;
             }
         }
+
+        public async Task<Opportunity> GetOppById(int id)
+        {
+            try
+            {
+                Opportunity opp = new Opportunity();
+                
+                var url = $"/api/Opportunity/{id}";
+
+                var respuesta = client.GetStringAsync(url);
+
+                if(respuesta != null)
+                {
+                    opp = JsonConvert.DeserializeObject<Opportunity>(respuesta.Result);
+                }
+
+                return opp;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }
