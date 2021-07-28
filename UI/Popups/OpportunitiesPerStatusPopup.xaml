@@ -1,32 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
+             xmlns:Popups="clr-namespace:UI.Popups"
              xmlns:resources="clr-namespace:UI.LangResources"
-             x:Class="UI.Popups.OpportunitiesPerStatusPopup">
-    <ContentPage.Content>
-        <AbsoluteLayout>
-            <AbsoluteLayout.Padding>
-                <OnPlatform x:TypeArguments="Thickness"
-                		iOS="15, 50, 15, 30"
-                		Android="28, 35, 17, 70">
-                </OnPlatform>
-            </AbsoluteLayout.Padding>
-            <StackLayout Orientation="Vertical" HeightRequest="420" WidthRequest="300" BackgroundColor="White"
-                     HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+             x:Class="UI.Popups.OpportunitiesPerStatusPopup"
+                      xmlns:animation="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup">
 
-                <Label Text="{x:Static resources:AppResources.OpportunitiesPerState}" Margin="10"
-                   HorizontalOptions="CenterAndExpand" 
+
+    <Popups:BasePopupPage.Content>
+        <Frame
+            Grid.Row="1"
+            Grid.Column="1"
+            CornerRadius="20"
+            Padding="0"
+            Margin="25,0"
+            HeightRequest="400"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <Grid
+                RowDefinitions="auto,auto">
+                <StackLayout BackgroundColor="White"
+                             Grid.Row="0"
+                             Orientation="Horizontal"
+                             Padding="10,0">
+
+                    <Label Text="{x:Static resources:AppResources.OpportunitiesPerState}" Margin="10"
+                   HorizontalOptions="StartAndExpand" 
                    HorizontalTextAlignment="Center" 
                    FontSize="Medium" 
                    TextColor="Black"/>
-
-                <!--<Frame
-               BorderColor="Gray" CornerRadius="10" 
-               HorizontalOptions="CenterAndExpand" 
-               VerticalOptions="CenterAndExpand">-->
-                <ListView x:Name="stateList"
-                  ItemsSource="{Binding opps}"
+                    <Image
+                        Source="ic_close.png"
+                        BackgroundColor="Transparent">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="CancelButtonClicked" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+                <ListView 
+                        Grid.Row="1"
+                        x:Name="stateList"
                   CachingStrategy="RecycleElement"
                   SelectionMode="None"
                   HasUnevenRows="True"
@@ -49,14 +62,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <!--</Frame>-->
-                <!--<Button Text="Aceptar" 
-                        HorizontalOptions="FillAndExpand"
-                        VerticalOptions="FillAndExpand" 
-                        Margin="10" 
-                        BackgroundColor=""
-                        />-->
-            </StackLayout>
-        </AbsoluteLayout>
-    </ContentPage.Content>
+            </Grid>        
+    </Frame>
+    </Popups:BasePopupPage.Content>
 </Popups:BasePopupPage>

@@ -2,6 +2,7 @@
 using Core.Model.Enums;
 using Core.ViewModels.Model;
 using MvvmCross.ViewModels;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,18 @@ namespace UI.Popups
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class OpportunitiesPerStatusPopup : BasePopupPage
     {
+        public IList<OpportunitiesPerStatusVM> opps { get; set; }
+
         public OpportunitiesPerStatusPopup(MvxObservableCollection<Opportunity> opportunities)
         {
             InitializeComponent();
 
-            IList<OpportunitiesPerStatusVM> opps = new List<OpportunitiesPerStatusVM>();
+            CloseWhenBackgroundIsClicked = true;
+
+            opps = new List<OpportunitiesPerStatusVM>();
+
+            SepararOportunidades(opportunities);
+
 
             try
             {
@@ -43,6 +51,58 @@ namespace UI.Popups
                 throw ex;
             }
         }
+        private async void CancelButtonClicked(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.PopAsync(false);
+            NotifyDismiss();
+        }
 
+        public void SepararOportunidades(MvxObservableCollection<Opportunity> opportunities)
+        {
+            var IntAnalisis = new OpportunitiesPerStatusVM
+            {
+                opportunityStatus = "Analisis"
+            };
+            var IntPropuesta = new OpportunitiesPerStatusVM
+            {
+                opportunityStatus = "Propuesta"
+            };
+            var IntNegociacion = new OpportunitiesPerStatusVM
+            {
+                opportunityStatus = "Negociacion"
+            };
+            var IntCerradaGanada = new OpportunitiesPerStatusVM
+            {
+                opportunityStatus = "Cerrada Ganada"
+            };
+            var IntCerradaPerdida = new OpportunitiesPerStatusVM
+            {
+                opportunityStatus = "Cerrada Perdida"
+            };
+
+            foreach (var item in opportunities)
+            {
+                switch (item.opportunityStatus.Id)
+                {
+                    case 1:
+                        IntAnalisis.Amount++;
+                        break;
+                    case 2:
+                        IntPropuesta.Amount++;
+                        break;
+                    case 3:
+                        IntNegociacion.Amount++;
+                        break;
+                    case 4:
+                        IntCerradaGanada.Amount++;
+                        break;
+                    case 5:
+                        IntCerradaPerdida.Amount++;
+                        break;
+                }
+            }
+
+            opps.Add(IntAnalisis); opps.Add(IntPropuesta); opps.Add(IntNegociacion); opps.Add(IntCerradaGanada); opps.Add(IntCerradaPerdida);
+        }
     }
 }

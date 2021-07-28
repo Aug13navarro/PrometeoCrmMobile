@@ -399,7 +399,7 @@ namespace Core.Services
             //    opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
             //}
 
-            Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
+            //Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
             await Task.FromResult(0);
         }
 
