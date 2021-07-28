@@ -34,8 +34,8 @@ namespace Core.ViewModels
             set => SetProperty(ref opportunitiesQuery, value);
         }
 
-        private double totalOfAllOportunities;
-        public double TotalOfAllOportunities
+        private decimal totalOfAllOportunities;
+        public decimal TotalOfAllOportunities
         {
             get => Opportunities.Sum(x => x.totalPrice);
             set

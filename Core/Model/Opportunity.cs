@@ -19,32 +19,11 @@ namespace Core.Model
 
         public Customer  customer { get; set; }
 
-        //private OpportunityStatus status;
-        //public OpportunityStatus Status
-        //{
-        //    get => status;
-        //    set => SetProperty(ref status, value);
-        //}
-
         public OpportunityStatus opportunityStatus { get; set; }
-
-        //private DateTime date;
-        //public DateTime Date
-        //{
-        //    get => date;
-        //    set => SetProperty(ref date, value);
-        //}
 
         public DateTime closedDate { get; set; }
 
         public List<OpportunityProducts> opportunityProducts { get; set; }
-
-        //private string description;
-        //public string Description
-        //{
-        //    get => description;
-        //    set => SetProperty(ref description, value);
-        //}
 
         public string description { get; set; }
 
@@ -62,7 +41,7 @@ namespace Core.Model
         //    private set => SetProperty(ref total, value);
         //}
 
-        public double totalPrice { get; set; }
+        public decimal totalPrice { get; set; }
 
         //private string productsDescription;
         public string ProductsDescription => string.Join(", ", opportunityProducts.Select(x => x.product.name));
@@ -73,19 +52,19 @@ namespace Core.Model
 
         public MvxObservableCollection<OpportunityProducts> Details { get; set; } = new MvxObservableCollection<OpportunityProducts>();
 
-        public Opportunity()
-        {
-            Details.CollectionChanged += (sender, args) =>
-            {
-                ComputeTotal();
-                //ProductsDescription = string.Join(", ", Details.Select(d => d.product.name));
-            };
-        }
+        //public Opportunity()
+        //{
+        //    Details.CollectionChanged += (sender, args) =>
+        //    {
+        //        ComputeTotal();
+        //        //ProductsDescription = string.Join(", ", Details.Select(d => d.product.name));
+        //    };
+        //}
 
-        public double ComputeTotal()
-        {
-            totalPrice = (double)Details.Sum(d => d.Total);
-            return totalPrice;
-        }
+        //public decimal ComputeTotal()
+        //{
+        //    totalPrice = Details.Sum(d => d.totaltemp);
+        //    return totalPrice;
+        //}
     }
 }

@@ -27,7 +27,7 @@ namespace UI.Popups
 
             descriptionLabel.Text = product.name;
             priceInput.Text = product.price.ToString(CultureInfo.InvariantCulture);
-            quantityInput.Text = isEditing ? product.stock.ToString() : "1";
+            quantityInput.Text = isEditing ? product.quantity.ToString() : "1";
             discountInput.Text = isEditing ? product.Discount.ToString() : "0";
         }
 

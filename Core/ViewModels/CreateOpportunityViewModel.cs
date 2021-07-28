@@ -85,8 +85,8 @@ namespace Core.ViewModels
             set => SetProperty(ref selectedCustomer, value);
         }
 
-        private double total;
-        public double Total
+        private decimal total;
+        public decimal Total
         {
             get => total;
             set => SetProperty(ref total, value);
@@ -161,11 +161,10 @@ namespace Core.ViewModels
             {
                 Opportunity = theOpportunity;
             }
-            //SelectedStatus = Opportunity.Status.GetEnumDescription();
 
             selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
             SelectedCustomer = Opportunity.customer;
-            Total = Opportunity.ComputeTotal();
+            ActualizarTotal(Opportunity.Details);
         }
 
         public void AjustarBotonesEstados(int id)
@@ -218,8 +217,14 @@ namespace Core.ViewModels
             editingOpportunityDetail.product.quantity = args.Quantity;
             editingOpportunityDetail.product.Discount = args.Discount;
 
+            var prodEdit = Opportunity.Details.Where(x => x.productId == editingOpportunityDetail.productId).FirstOrDefault();
+
+            Opportunity.Details.Remove(prodEdit);
+            Opportunity.Details.Add(editingOpportunityDetail);
+
+
             editingOpportunityDetail = null;
-            Total = Opportunity.ComputeTotal();
+            ActualizarTotal(Opportunity.Details);
         }
 
         public void CancelEditProduct()
@@ -238,7 +243,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError("Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+                toastService.ShowError($"Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
             }
             finally
             {
@@ -252,16 +257,35 @@ namespace Core.ViewModels
             if (detail != null)
             {
                 detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
+                detail.Total = CalcularTotal(detail);
                 Opportunity.Details.Add(detail);
 
-                Total = Opportunity.ComputeTotal();
+                ActualizarTotal(Opportunity.Details);
             }
+        }
+
+        private decimal CalcularTotal(OpportunityProducts detail)
+        {
+            if(detail.Discount == 0)
+            {
+                return detail.Quantity * detail.Price;
+            }
+            else
+            {
+               var temptotal = (detail.Quantity * detail.Price);
+                return temptotal - (temptotal * detail.Discount/ 100);
+            }
+        }
+
+        private void ActualizarTotal(MvxObservableCollection<OpportunityProducts> details)
+        {
+            Total = details.Sum(x => x.Total); 
         }
 
         private void RemoveProduct(OpportunityProducts detail)
         {
             Opportunity.Details.Remove(detail);
-            Total = Opportunity.ComputeTotal();
+            Total = Opportunity.totalPrice;
         }
 
         private void EditProduct(OpportunityProducts detail)
@@ -271,7 +295,8 @@ namespace Core.ViewModels
                 name = detail.product.name,
                 price = detail.product.price,
                 stock = detail.product.stock,
-                Discount = detail.product.Discount,
+                Discount = detail.Discount,
+                quantity = detail.Quantity
             };
 
             editingOpportunityDetail = detail;
@@ -282,9 +307,8 @@ namespace Core.ViewModels
         {
             var user = data.LoggedUser;
 
-            //Opportunity.Status = GetOpportunityStatusDescriptionFromEnum(SelectedStatus);
             Opportunity.opportunityStatus = new OpportunityStatus{ Id = EstadoId};
-            //Opportunity.ClosedLostStatusCause = GetOpportunityClosedLostCauseDescriptionFromEnum(selectedClosedLostStatusCause);
+
             Opportunity.customer = SelectedCustomer;
 
             string error = ValidateOpportunity(Opportunity);
@@ -294,19 +318,55 @@ namespace Core.ViewModels
                 return;
             }
 
-            if (Opportunity.Id == 0)
+            var id = Opportunity.Id;
+
+            if (id == 0)
             {
-                await prometeoApiService.SaveOpportunityCommand(Opportunity, user.Token);
+                var send = new OpportunityPost
+                {
+                    branchOfficeId = Opportunity.customer.Id,
+                    closedDate = Opportunity.closedDate,
+                    closedReason = "",
+                    customerId = Opportunity.customer.Id,
+                    description = Opportunity.description,
+                    opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                    opportunityStatusId = Opportunity.opportunityStatus.Id,
+                    totalPrice = Total
+                };
+
+                send.opportunityProducts = listaProductos(Opportunity.Details);
+
+                await prometeoApiService.SaveOpportunityCommand(send, user.Token);
             }
 
             await navigationService.Close(this);
             NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
         }
 
-        //private OpportunityStatus GetOpportunityStatusDescriptionFromEnum(string value)
-        //{
-        //    //return ((OpportunityStatus[])Enum.GetValues(typeof(OpportunityStatus))).Single(v => v.GetEnumDescription() == value);
-        //}
+        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
+        {
+            var lista = new List<OpportunityPost.ProductSend>();
+
+            foreach (var item in details)
+            {
+                decimal tempTotal = item.Price * item.Quantity;
+
+                if (item.Discount != 0)
+                {
+                    tempTotal = tempTotal - (tempTotal * item.Discount) / 100;
+                }
+
+                lista.Add(new OpportunityPost.ProductSend
+                {
+                    discount = item.Discount,
+                    productId = item.productId,
+                    quantity = item.Quantity,
+                    total = tempTotal,
+                });
+            }
+
+            return lista;
+        }
 
         private ClosedLostStatusCause GetOpportunityClosedLostCauseDescriptionFromEnum(string value)
         {

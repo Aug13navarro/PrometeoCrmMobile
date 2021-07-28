@@ -367,22 +367,22 @@ namespace Core.Services
             }
         }
 
-        public async Task SaveOpportunityCommand(Opportunity opportunity, string token)
+        public async Task SaveOpportunityCommand(OpportunityPost opportunity, string token)
         {
             var cadena = "https://neophos-testing-api.azurewebsites.net/api/Opportunity";
 
-            var dto = new
-            {
-                customerId = opportunity.customer.Id,
-                branchOfficeId = 1,
-                opportunityStatusId = opportunity.opportunityStatus.Id,
-                opportunityProducts = opportunity.Details,
-                totalPrice = opportunity.totalPrice,
-                closedDate = opportunity.closedDate,
-                description = opportunity.description
-            };
+            //var dto = new
+            //{
+            //    customerId = opportunity.customer.Id,
+            //    branchOfficeId = 1,
+            //    opportunityStatusId = opportunity.opportunityStatus.Id,
+            //    opportunityProducts = opportunity.Details,
+            //    totalPrice = opportunity.totalPrice,
+            //    closedDate = opportunity.closedDate,
+            //    description = opportunity.description
+            //};
 
-            var objeto = JsonConvert.SerializeObject(dto);
+            var objeto = JsonConvert.SerializeObject(opportunity);
 
             HttpContent httpContent = new StringContent(objeto);
 

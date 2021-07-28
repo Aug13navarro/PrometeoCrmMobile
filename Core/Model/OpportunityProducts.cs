@@ -24,7 +24,7 @@ namespace Core.Model
             set
             {
                 SetProperty(ref quantity, value);
-                Total = ComputeTotal();
+                //Total = ComputeTotal();
             }
         }
 
@@ -35,7 +35,7 @@ namespace Core.Model
             set
             {
                 SetProperty(ref discount, value);
-                Total = ComputeTotal();
+                //Total = ComputeTotal();
             }
         }
 
@@ -52,24 +52,21 @@ namespace Core.Model
         //    }
         //}
 
-        private decimal total;
-        public decimal Total
-        {
-            get => total;
-            private set => SetProperty(ref total, value);
-        }
+        //private decimal total;
+        public decimal Total { get; set; }
+        
 
-        private decimal ComputeTotal()
-        {
-            decimal tempTotal = Price * Quantity;
-            if (Discount == 0)
-            {
-                return tempTotal;
-            }
-            else
-            {
-                return tempTotal - (tempTotal * Discount / 100);
-            }
-        }
+        //private decimal ComputeTotal()
+        //{
+        //    decimal tempTotal = Price * Quantity;
+        //    if (Discount == 0)
+        //    {
+        //        return tempTotal;
+        //    }
+        //    else
+        //    {
+        //        return tempTotal - (tempTotal * Discount / 100);
+        //    }
+        //}
     }
 }
