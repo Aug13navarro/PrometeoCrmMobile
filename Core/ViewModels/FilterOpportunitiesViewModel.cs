@@ -108,6 +108,12 @@ namespace Core.ViewModels
             CargarEstados();
         }
 
+        public override void ViewDestroy(bool viewFinishing = true)
+        {
+            base.ViewDestroy(false);
+        }
+
+
         public FilterOpportunitiesViewModel()
         {
             MaximumDate = DateTime.Now.Date;

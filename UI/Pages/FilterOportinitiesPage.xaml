@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Views:MvxContentPage 
-    x:TypeArguments="ViewModels:FilterOpportunitiesViewModel"
-    xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+<Views:MvxContentPage x:TypeArguments="ViewModels:FilterOpportunitiesViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                       xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
                       xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
@@ -12,6 +11,7 @@
     <NavigationPage.TitleView>
         <StackLayout
             Orientation="Horizontal">
+            <Controls:BackIconToolbar />
             <Label
                 HorizontalOptions="FillAndExpand"
                 Text="{x:Static resources:AppResources.Filter_Opportunity}"
@@ -19,13 +19,13 @@
                 FontSize="Medium">
                 
             </Label>
-            <Label
+            <ImageButton
+                WidthRequest="40"
                 Padding="0,0,10,0"
-                Text="Limpiar"
-                TextColor="White"
-                FontSize="Medium">
+                Source="limpiar_blanco.png"
+                BackgroundColor="Transparent">
                 
-            </Label>
+            </ImageButton>
         </StackLayout>
     </NavigationPage.TitleView>
     <AbsoluteLayout>

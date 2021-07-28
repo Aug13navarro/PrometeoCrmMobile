@@ -158,18 +158,18 @@
                 <Label TextColor="Black" VerticalTextAlignment="Center" Margin="10,0,0,0">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="{x:Static resources:AppResources.Opportunities}" FontSize="16" />
-                            <Span Text=": " />
-                            <Span Text="{Binding Opportunities.Count}" FontSize="16" />
+                            <Span Text="{x:Static resources:AppResources.Opportunities}" FontSize="Medium" TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold"  />
+                            <Span Text=": " FontSize="Medium" FontAttributes="Bold" />
+                            <Span Text="{Binding Opportunities.Count}" FontSize="Medium"  FontAttributes="Bold"/>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
                 <Label TextColor="Black" HorizontalOptions="EndAndExpand" Margin="0,0,10,0" VerticalTextAlignment="Center">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="{x:Static resources:AppResources.TotalAmount}" FontSize="16" />
-                            <Span Text=": $" />
-                            <Span Text="{Binding TotalOfAllOportunities}" FontSize="16" />
+                            <Span Text="Total" FontSize="Medium" TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" />
+                            <Span Text=": $" FontSize="Medium" FontAttributes="Bold"/>
+                            <Span Text="{Binding TotalOfAllOportunities}" FontSize="Medium"  FontAttributes="Bold"/>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>

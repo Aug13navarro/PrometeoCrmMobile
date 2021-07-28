@@ -123,6 +123,9 @@
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="Associated_Prodcuts" xml:space="preserve">
     <value>Associated products</value>
   </data>

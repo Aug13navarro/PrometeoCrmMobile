@@ -12,9 +12,9 @@
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
-            <Label Mvx:Bi.nd="Text If(Opportunity.Id == 0, 'Crear Oportunidad', 'Editar Oportunidad')"
+            <Label Mvx:Bi.nd="Text If(Opportunity.Id == 0, 'Oportunidad', 'Oportunidad')"
                    TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="20"/>
-            <ImageButton Source="editar_blanco" Command="{Binding SaveOpportunityCommand}"
+            <ImageButton Source="guardar.png" Command="{Binding SaveOpportunityCommand}"
                          BackgroundColor="Transparent" WidthRequest="24">
                 
             </ImageButton>
@@ -51,7 +51,7 @@
 
                         <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
                            Grid.Row="0" Grid.Column="0" />
-                        <ImageButton Source="clientes.png" Command="{Binding SelectClientCommand}"
+                        <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
                             HorizontalOptions="End"
                             Grid.Row="0" Grid.Column="1"
                                      BackgroundColor="Transparent"/>

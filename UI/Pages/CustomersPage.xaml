@@ -10,16 +10,33 @@
                       xmlns:resources="clr-namespace:UI.LangResources"
                       x:Class="UI.Pages.CustomersPage">
     <NavigationPage.TitleView>
-        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
-            <Controls:BackIconToolbar />
-            <Entry Placeholder="{x:Static resources:AppResources.SearchCustomer}" Text="{Binding ClientsQuery}"
-                   TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />
-            <Image Source="ic_search.png">
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Margin="0,0,10,0">
+            <Grid
+                ColumnDefinitions="auto,*,auto">
+                <Controls:BackIconToolbar Grid.Column="0"/>
+                <Frame
+                    Grid.Column="1"
+                CornerRadius="20"
+                Margin="0"
+                Padding="0">
+                    <SearchBar
+                        Text="{Binding ClientsQuery}"
+                BackgroundColor="White"
+                Placeholder="{x:Static resources:AppResources.Search}"
+                        SearchCommand="{Binding NewClientsSearchCommand}">
+
+                    </SearchBar>
+                </Frame>
+                <!--<Entry Placeholder="{x:Static resources:AppResources.SearchCustomer}" Text="{Binding ClientsQuery}"
+                   TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />-->
+                <!--<Image Source="ic_search.png">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NewClientsSearchCommand}" />
                 </Image.GestureRecognizers>
-            </Image>
-            <Button Text="{x:Static resources:AppResources.Create}" Command="{Binding GoToCreateCustomerCommand}" Style="{StaticResource MenuButton}" />
+            </Image>-->
+                <Button Grid.Column="2" Text="{x:Static resources:AppResources.Create}" Command="{Binding GoToCreateCustomerCommand}" BorderWidth="1" BorderColor="White" BackgroundColor="Transparent" TextColor="White"/>
+                <!--Style="{StaticResource MenuButton}" -->
+            </Grid>            
         </StackLayout>
     </NavigationPage.TitleView>
 

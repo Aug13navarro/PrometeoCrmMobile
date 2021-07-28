@@ -35,10 +35,10 @@
                 <Label Text="{x:Static resources:AppResources.Quantity}" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource PrimaryColor}" />
                 <Label Text="{x:Static resources:AppResources.DiscountPopUp}" Grid.Row="0" Grid.Column="2" TextColor="{StaticResource PrimaryColor}" />
 
-                <Entry Style="{StaticResource DefaultEntry}" x:Name="priceInput" Grid.Row="1" Grid.Column="0" TextChanged="PriceInputTextChanged">
-                    <Entry.Behaviors>
+                <Entry Style="{StaticResource DefaultEntry}" Keyboard="Numeric" x:Name="priceInput" Grid.Row="1" Grid.Column="0" TextChanged="PriceInputTextChanged">
+                    <!--<Entry.Behaviors>
                         <Behavior:NumericValidationBehavior />
-                    </Entry.Behaviors>
+                    </Entry.Behaviors>-->
                 </Entry>
                 <Entry Keyboard="Numeric" Style="{StaticResource DefaultEntry}" Grid.Row="1" Grid.Column="1"
                        x:Name="quantityInput" TextChanged="QuantityInputTextChanged" />
@@ -50,7 +50,7 @@
             <StackLayout Orientation="Horizontal">
                 <Label TextColor="{StaticResource SecondaryColor}" FontSize="Medium"
                        HorizontalOptions="StartAndExpand" VerticalOptions="Center" x:Name="subtotalInput" />
-                <Button Text="{x:Static resources:AppResources.Accept}" Style="{StaticResource OutlineSecondaryButton}" Clicked="OkButtonClicked" />
+                <Button Text="{x:Static resources:AppResources.Add}" Style="{StaticResource OutlineSecondaryButton}" Clicked="OkButtonClicked" />
             </StackLayout>
 
             <!--<Label Text="Precio ($)" Style="{StaticResource DefaultLabel}" Margin="0,0,0,0" />

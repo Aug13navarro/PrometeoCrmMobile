@@ -108,7 +108,8 @@ namespace Core.ViewModels
 
                     Opportunities.Clear();
 
-                    Opportunities.AddRange(opportunities);
+                    var ordenOportunidad = new MvxObservableCollection<Opportunity>(opportunities.OrderByDescending(x => x.closedDate));
+                    Opportunities.AddRange(ordenOportunidad);
                 }
             }
             catch (Exception ex)
@@ -152,7 +153,8 @@ namespace Core.ViewModels
                     Opportunities.Clear();
                 }
 
-                Opportunities.AddRange(opportunities);
+                var ordenOportunidad = new MvxObservableCollection<Opportunity>(opportunities.OrderByDescending(x => x.closedDate));
+                Opportunities.AddRange(ordenOportunidad);
 
                 //CurrentPage = opportunities.CurrentPage;
                 //TotalPages = opportunities.TotalPages;
