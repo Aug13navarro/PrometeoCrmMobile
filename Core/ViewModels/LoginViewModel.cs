@@ -18,14 +18,16 @@ namespace Core.ViewModels
     public class LoginViewModel : MvxViewModel
     {
         // Properties
-        private string userName = "fladino@docworld.com.ar";
+        //private string userName = "fladino@docworld.com.ar";
+        private string userName;
         public string UserName
         {
             get => userName;
             set => SetProperty(ref userName, value);
         }
 
-        private string password = "123";
+        //private string password = "123";
+        private string password;
         public string Password
         {
             get => password;

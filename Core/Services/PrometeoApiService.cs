@@ -358,6 +358,22 @@ namespace Core.Services
                 }
 
                 return lista;
+                //var body = new
+                //{
+                //    requestData.CurrentPage,
+                //    requestData.PageSize,
+                //    requestData.Query,
+                //};
+
+                //using (var request = new HttpRequestMessage(HttpMethod.Get, cadena))
+                //using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
+                //{
+                //    //string req = await content.ReadAsStringAsync();
+                //    request.Content = content;
+                //    var result = await client.SendAsyncAs<IEnumerable<Opportunity>>(request);
+
+                //    return result;
+                //}
 
 
             }
@@ -439,11 +455,11 @@ namespace Core.Services
                 
                 var url = $"/api/Opportunity/{id}";
 
-                var respuesta = client.GetStringAsync(url);
+                var respuesta = await client.GetStringAsync(url);
 
                 if(respuesta != null)
                 {
-                    opp = JsonConvert.DeserializeObject<Opportunity>(respuesta.Result);
+                    opp = JsonConvert.DeserializeObject<Opportunity>(respuesta);
                 }
 
                 return opp;
@@ -455,5 +471,22 @@ namespace Core.Services
             }
         }
 
+        public async Task SaveOpportunityEdit(OpportunityPost send, int id)
+        {
+            var cadena = $"api/Opportunity?id={id}";
+
+            var objeto = JsonConvert.SerializeObject(send);
+
+            HttpContent httpContent = new StringContent(objeto);
+
+            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.PutAsync(string.Format(cadena), httpContent);
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            await Task.FromResult(0);
+        }
     }
 }

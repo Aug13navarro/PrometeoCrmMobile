@@ -12,6 +12,53 @@
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0" >
             <Controls:BackIconToolbar HorizontalOptions="Start"/>
+            <Grid
+                ColumnDefinitions="*,auto,auto"
+                HorizontalOptions="FillAndExpand">
+                <Label
+                    Grid.Column="0"
+                    HorizontalOptions="FillAndExpand"
+                    Text="{x:Static resources:AppResources.Opportunities}"
+                    TextColor="White"
+                    FontSize="Medium">
+
+                </Label>
+                <Frame
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0"
+                    Padding="0"
+                    IsVisible="{Binding SearchBarVisible}"
+                    CornerRadius="20">
+                    <SearchBar
+                        Margin="0"
+                        BackgroundColor="Transparent"
+                        Placeholder="{x:Static resources:AppResources.Search}"
+                        Text="{Binding OpportunitiesQuery, Mode=TwoWay}"
+                        SearchCommand="{Binding SearchOpportunityCommand}">
+
+                    </SearchBar>
+                </Frame>
+                <Image
+                    Grid.Column="1"
+                    Source="ic_search.png" 
+                    HorizontalOptions="End"
+                    Mvx:Bi.nd="IsVisible !SearchBarVisible">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ActivarSearchCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image
+                    Grid.Column="2"
+                    Source="filtro_vacio.png" 
+                    HorizontalOptions="End"
+                    WidthRequest="20"
+                    Margin="10,0,0,0">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding FilterOportunities}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
             <!--<Entry Placeholder="{x:Static resources:AppResources.SearchOpportunity}" Text="{Binding OpportunitiesQuery}"
                    TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />-->
             <!--<Image Source="ic_search.png">
@@ -19,19 +66,7 @@
                     <TapGestureRecognizer Command="{Binding NewOpportunitiesSearchCommand}" />
                 </Image.GestureRecognizers>
             </Image>-->
-            <Label
-                HorizontalOptions="FillAndExpand"
-                    Text="{x:Static resources:AppResources.Opportunities}"
-                    TextColor="White"
-                    FontSize="Medium">
-
-            </Label>
-
-            <Image Source="ic_search.png" >
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding FilterOportunities}"/>
-                </Image.GestureRecognizers>
-            </Image>
+            
         </StackLayout>
     </NavigationPage.TitleView>
 
@@ -58,7 +93,9 @@
                   CachingStrategy="RecycleElement"
                   SelectionMode="None"
                   HasUnevenRows="True"
-                  SeparatorColor="Transparent">
+                  SeparatorColor="Transparent"
+                          IsPullToRefreshEnabled="True"
+                          RefreshCommand="{Binding RefreshCommand}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>

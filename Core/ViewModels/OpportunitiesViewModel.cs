@@ -27,11 +27,25 @@ namespace Core.ViewModels
             private set => SetProperty(ref isLoading, value);
         }
 
+        private bool searchBarVisible;
+        public bool SearchBarVisible
+        {
+            get => searchBarVisible;
+            private set => SetProperty(ref searchBarVisible, value);
+        }
+
         private string opportunitiesQuery;
         public string OpportunitiesQuery
         {
             get => opportunitiesQuery;
-            set => SetProperty(ref opportunitiesQuery, value);
+            set
+            {
+                SetProperty(ref opportunitiesQuery, value);
+                if(string.IsNullOrWhiteSpace(this.opportunitiesQuery))
+                {
+                   SearchAsync();
+                }
+            }
         }
 
         private decimal totalOfAllOportunities;
@@ -55,6 +69,9 @@ namespace Core.ViewModels
         public Command EditOpportunityCommand { get; }
         public Command NewOpportunitiesSearchCommand { get; }
         public Command FilterOportunities { get; }
+        public Command ActivarSearchCommand { get; }
+        public Command SearchOpportunityCommand { get; }
+        public Command RefreshCommand { get; }
 
         // Constants
         private const int PageSize = 10;
@@ -78,6 +95,9 @@ namespace Core.ViewModels
             NewOpportunitiesSearchCommand = new Command(async () => await NewOpportunitiesSearchAsync());
 
             FilterOportunities = new Command(async () => await OpenFilterAsync());
+            ActivarSearchCommand = new Command(async () => await ActivarSearch());
+            SearchOpportunityCommand = new Command(async () => await SearchOpportunity());
+            RefreshCommand = new Command(async () => await RefreshList());
 
             Opportunities.CollectionChanged += (sender, arg) =>
             {
@@ -89,6 +109,38 @@ namespace Core.ViewModels
                 Opportunities = model.Opportunities;
                 Application.Current.MainPage.Navigation.PopModalAsync();
             });
+        }
+
+        private async Task RefreshList()
+        {
+            //SearchBarVisible = false;
+
+            var requestData = new OpportunitiesPaginatedRequest()
+            {
+                CurrentPage = 1,
+                PageSize = PageSize,
+                Query = OpportunitiesQuery,
+            };
+
+            await GetOpportunitiesAsync(requestData, true);
+        }
+
+        private async Task SearchOpportunity()
+        {
+            SearchBarVisible = false;
+
+            var listaSaerch = new MvxObservableCollection<Opportunity>(Opportunities.Where(x => x.customer.BusinessName.ToUpper().Contains(OpportunitiesQuery.ToUpper()) || x.customer.CompanyName.ToUpper().Contains(opportunitiesQuery.ToUpper())));
+
+            Opportunities.Clear();
+            Opportunities.AddRange(listaSaerch);
+
+            await Task.FromResult(0);
+        }
+
+        private async Task ActivarSearch()
+        {
+            SearchBarVisible = true;
+            await Task.FromResult(0);
         }
 
         private async Task OpenFilterAsync()
@@ -192,6 +244,19 @@ namespace Core.ViewModels
             };
 
             await GetOpportunitiesAsync(requestData,true);
+        }
+        private async Task SearchAsync()
+        {
+            SearchBarVisible = false;
+
+            var requestData = new OpportunitiesPaginatedRequest()
+            {
+                CurrentPage = 1,
+                PageSize = PageSize,
+                Query = OpportunitiesQuery,
+            };
+
+            await GetOpportunitiesAsync(requestData, true);
         }
 
         private async Task CreateOpportunityAsync()

@@ -110,7 +110,7 @@ namespace Core.ViewModels
         public Command SaveOpportunityCommand { get; }
 
         // Fields
-        private OpportunityProducts editingOpportunityDetail;
+        public OpportunityProducts editingOpportunityDetail { get; set; }
 
         // Services
         private readonly IMvxNavigationService navigationService;
@@ -213,13 +213,32 @@ namespace Core.ViewModels
                 throw new InvalidOperationException("No hay ningún detalle para editar. No debería pasar esto.");
             }
 
-            editingOpportunityDetail.product.price = args.Price;
-            editingOpportunityDetail.product.quantity = args.Quantity;
-            editingOpportunityDetail.product.Discount = args.Discount;
+            editingOpportunityDetail.Price = args.Price;
+            editingOpportunityDetail.Quantity = args.Quantity;
+            editingOpportunityDetail.Discount = args.Discount;
 
-            var prodEdit = Opportunity.Details.Where(x => x.productId == editingOpportunityDetail.productId).FirstOrDefault();
+            var temp = args.Price * args.Quantity;
+
+            if (args.Discount == 0)
+            {
+                editingOpportunityDetail.Total = temp;
+            }
+            else
+            {
+
+                editingOpportunityDetail.Total = temp - (temp * args.Discount / 100);
+            }
+
+            var listaProd = new MvxObservableCollection<OpportunityProducts>(Opportunity.Details);
+
+            var prodEdit = listaProd.Where(x => x.productId == editingOpportunityDetail.productId).FirstOrDefault();
 
             Opportunity.Details.Remove(prodEdit);
+
+            //listaProd.Remove(prodEdit);
+            //listaProd.Add(editingOpportunityDetail);
+
+
             Opportunity.Details.Add(editingOpportunityDetail);
 
 
@@ -285,7 +304,7 @@ namespace Core.ViewModels
         private void RemoveProduct(OpportunityProducts detail)
         {
             Opportunity.Details.Remove(detail);
-            Total = Opportunity.totalPrice;
+            ActualizarTotal(Opportunity.Details);
         }
 
         private void EditProduct(OpportunityProducts detail)
@@ -318,25 +337,29 @@ namespace Core.ViewModels
                 return;
             }
 
+            var send = new OpportunityPost
+            {
+                branchOfficeId = Opportunity.customer.Id,
+                closedDate = Opportunity.closedDate,
+                closedReason = "",
+                customerId = Opportunity.customer.Id,
+                description = Opportunity.description,
+                opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                opportunityStatusId = Opportunity.opportunityStatus.Id,
+                totalPrice = Total
+            };
+
+            send.opportunityProducts = listaProductos(Opportunity.Details);
+
             var id = Opportunity.Id;
 
             if (id == 0)
             {
-                var send = new OpportunityPost
-                {
-                    branchOfficeId = Opportunity.customer.Id,
-                    closedDate = Opportunity.closedDate,
-                    closedReason = "",
-                    customerId = Opportunity.customer.Id,
-                    description = Opportunity.description,
-                    opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                    opportunityStatusId = Opportunity.opportunityStatus.Id,
-                    totalPrice = Total
-                };
-
-                send.opportunityProducts = listaProductos(Opportunity.Details);
-
                 await prometeoApiService.SaveOpportunityCommand(send, user.Token);
+            }
+            else
+            {
+                await prometeoApiService.SaveOpportunityEdit(send, id);
             }
 
             await navigationService.Close(this);

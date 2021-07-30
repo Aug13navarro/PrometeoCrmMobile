@@ -68,7 +68,7 @@
                             <StackLayout Orientation="Horizontal" HeightRequest="40">
                                 <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="{x:Static resources:AppResources.Customer}" IsReadOnly="True" Text="{Binding Customer.CompanyName}">
                                 </Entry>
-                                <ImageButton Source="clientes.png" Command="{Binding SelectClientCommand}"
+                                <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
                                              HorizontalOptions="End"
                                              BackgroundColor="Transparent"/>
                             </StackLayout>
@@ -80,7 +80,8 @@
                                 </Entry>
                                 <ImageButton Source="producto_rosa.png" Command="{Binding SelectProductCommand}"
                                              HorizontalOptions="End"
-                                             BackgroundColor="Transparent"/>
+                                             BackgroundColor="Transparent"
+                                             Padding="0,0,5,0"/>
                             </StackLayout>
                         </Frame>
 

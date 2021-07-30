@@ -39,8 +39,7 @@ namespace Core.Model
             }
         }
 
-        public decimal Price => product.price;
-
+        public decimal Price { get; set; }
         //private decimal price;
         //public decimal Price
         //{
