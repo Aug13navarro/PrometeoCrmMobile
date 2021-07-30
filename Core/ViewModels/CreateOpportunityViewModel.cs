@@ -153,7 +153,7 @@ namespace Core.ViewModels
             {
                 var result = await prometeoApiService.GetOppById(theOpportunity.Id);
                 Opportunity = result;
-                Opportunity.Details = new MvxObservableCollection<OpportunityProducts>( result.opportunityProducts);
+                Opportunity.Details.AddRange(result.opportunityProducts);
 
                 AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
             }
@@ -276,6 +276,7 @@ namespace Core.ViewModels
             if (detail != null)
             {
                 detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
+                detail.Price = detail.product.price;
                 detail.Total = CalcularTotal(detail);
                 Opportunity.Details.Add(detail);
 
@@ -376,7 +377,7 @@ namespace Core.ViewModels
 
                 if (item.Discount != 0)
                 {
-                    tempTotal = tempTotal - (tempTotal * item.Discount) / 100;
+                    tempTotal = tempTotal - ((tempTotal * item.Discount) / 100);
                 }
 
                 lista.Add(new OpportunityPost.ProductSend

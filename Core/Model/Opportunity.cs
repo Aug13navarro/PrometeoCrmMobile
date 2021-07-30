@@ -23,7 +23,7 @@ namespace Core.Model
 
         public DateTime closedDate { get; set; }
 
-        public List<OpportunityProducts> opportunityProducts { get; set; }
+        public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
 
         public string description { get; set; }
 
