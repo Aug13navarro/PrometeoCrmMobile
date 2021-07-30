@@ -7,18 +7,19 @@
                       xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
                       xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
+                      xmlns:resources="clr-namespace:UI.LangResources"
                       x:Class="UI.Pages.ContactsPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
-            <Entry Placeholder="Buscar contacto" Text="{Binding Query}"
+            <Entry Placeholder="{x:Static resources:AppResources.Search}" Text="{Binding Query}"
                    TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />
             <Image Source="ic_search.png">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NewContactsSearchCommand}" />
                 </Image.GestureRecognizers>
             </Image>
-            <Button Text="Crear" Command="{Binding GoToCreateContactCommand}" Style="{StaticResource MenuButton}" />
+            <Button Text="{x:Static resources:AppResources.Create}" Command="{Binding GoToCreateContactCommand}" Style="{StaticResource MenuButton}" />
         </StackLayout>
     </NavigationPage.TitleView>
 
@@ -51,7 +52,8 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Nombre: " FontAttributes="Bold" />
+                                            <Span Text="{x:Static resources:AppResources.Name}" FontAttributes="Bold" />
+                                            <Span Text=": " FontAttributes="Bold"></Span>
                                             <Span Text="{Binding FullName}" TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -59,7 +61,8 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Email: " FontAttributes="Bold" />
+                                            <Span Text="Email" FontAttributes="Bold" />
+                                            <Span Text=": " FontAttributes="Bold"></Span>
                                             <Span Text="{Binding Email}" TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
                                     </Label.FormattedText>
@@ -67,7 +70,8 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Teléfono fijo: " FontAttributes="Bold" />
+                                            <Span Text="{Static resources:AppResources.Phone}" FontAttributes="Bold" />
+                                            <Span Text=": " FontAttributes="Bold"></Span>
                                             <Span Text="{Binding Landline, Converter={StaticResource MissingValueStringConverter}}"
                                                   TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
@@ -76,7 +80,8 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Teléfono móvil: " FontAttributes="Bold" />
+                                            <Span Text="{x:Static resources:AppResources.Mobile}" FontAttributes="Bold" />
+                                            <Span Text=": " FontAttributes="Bold"></Span>
                                             <Span Text="{Binding Cellphone, Converter={StaticResource MissingValueStringConverter}}"
                                                   TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
@@ -85,7 +90,8 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Cliente: " FontAttributes="Bold" />
+                                            <Span Text="{x:Static resources:AppResources.Customer}" FontAttributes="Bold" />
+                                            <Span Text=": " FontAttributes="Bold"></Span>
                                             <Span Text="El cliente!!" TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
                                     </Label.FormattedText>

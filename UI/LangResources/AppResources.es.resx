@@ -135,6 +135,9 @@
   <data name="BranchOffice" xml:space="preserve">
     <value>Sucursal</value>
   </data>
+  <data name="BusinessName" xml:space="preserve">
+    <value>Raz. Soc.</value>
+  </data>
   <data name="CloseSession" xml:space="preserve">
     <value>Cerrar Sesión</value>
   </data>
@@ -204,6 +207,9 @@
   <data name="LoginInvalidMsg" xml:space="preserve">
     <value>Usuario o contraseña incorrecto.</value>
   </data>
+  <data name="Mobile" xml:space="preserve">
+    <value>Celular</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Nombre</value>
   </data>
@@ -219,8 +225,14 @@
   <data name="OpportunitiesPerState" xml:space="preserve">
     <value>Oportunidades por Estado</value>
   </data>
+  <data name="Opportunity" xml:space="preserve">
+    <value>Oportunidad</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Contraseña</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Teléfono</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Precio</value>

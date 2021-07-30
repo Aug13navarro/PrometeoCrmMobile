@@ -27,15 +27,7 @@
 
                     </SearchBar>
                 </Frame>
-                <!--<Entry Placeholder="{x:Static resources:AppResources.SearchCustomer}" Text="{Binding ClientsQuery}"
-                   TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />-->
-                <!--<Image Source="ic_search.png">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NewClientsSearchCommand}" />
-                </Image.GestureRecognizers>
-            </Image>-->
                 <Button Grid.Column="2" Text="{x:Static resources:AppResources.Create}" Command="{Binding GoToCreateCustomerCommand}" BorderWidth="1" BorderColor="White" BackgroundColor="Transparent" TextColor="White"/>
-                <!--Style="{StaticResource MenuButton}" -->
             </Grid>            
         </StackLayout>
     </NavigationPage.TitleView>
@@ -82,7 +74,8 @@
                                 <Label>
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Raz. Soc.: " FontAttributes="Bold" />
+                                            <Span Text="{x:Static resources:AppResources.BusinessName}" FontAttributes="Bold" />
+                                            <Span Text=": " FontAttributes="Bold"></Span>
                                             <Span Text="{Binding Customer.BusinessName}" TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
                                     </Label.FormattedText>

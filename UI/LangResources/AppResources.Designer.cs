@@ -115,6 +115,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reg. Name.
+        /// </summary>
+        internal static string BusinessName {
+            get {
+                return ResourceManager.GetString("BusinessName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Log Out.
         /// </summary>
         internal static string CloseSession {
@@ -322,6 +331,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mobile.
+        /// </summary>
+        internal static string Mobile {
+            get {
+                return ResourceManager.GetString("Mobile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         internal static string Name {
@@ -367,11 +385,29 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Opportunity.
+        /// </summary>
+        internal static string Opportunity {
+            get {
+                return ResourceManager.GetString("Opportunity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone.
+        /// </summary>
+        internal static string Phone {
+            get {
+                return ResourceManager.GetString("Phone", resourceCulture);
             }
         }
         
