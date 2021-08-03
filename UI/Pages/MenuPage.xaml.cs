@@ -18,6 +18,7 @@ namespace UI.Pages
 
         public MenuItem[] MenuItems { get; } =
         {
+            new MenuItem(MenuItemType.Pedidos, LangResources.AppResources.Orders, "ic_menu_pedidos"),
             new MenuItem(MenuItemType.Customers, LangResources.AppResources.Customers, "ic_menu_cuentas"),
             new MenuItem(MenuItemType.Contacts, LangResources.AppResources.Contacts, "ic_menu_contactos"),
             new MenuItem(MenuItemType.Opportunities, LangResources.AppResources.Opportunities, "ic_menu_cuentasic_menu_oportunidades"),

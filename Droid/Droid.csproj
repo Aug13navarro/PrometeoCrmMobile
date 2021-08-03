@@ -469,10 +469,13 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\limpiar_blanco.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu_pedidos.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadUnhandledDeviceExceptionDroidHideInfoBar="True" XamarinHotReloadXFormsNugetUpgradeInfoBarDroidHideInfoBar="True" TriggeredFromHotReload="False" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadXFormsNugetUpgradeInfoBarDroidHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionDroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

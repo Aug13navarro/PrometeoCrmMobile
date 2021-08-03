@@ -7,5 +7,6 @@ namespace Core.Model.Enums
         Customers,
         Contacts,
         Opportunities,
+        Pedidos,
     }
 }

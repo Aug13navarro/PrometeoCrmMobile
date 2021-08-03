@@ -58,9 +58,9 @@ namespace Core
             {
                 if (initialFilter == null)
                 {
-                    var dateToStr = Preferences.Get("dateTo", null, "filtroAvansado");
+                    var json = Preferences.Get("filtroJson", null, "filtroAvanzado");
 
-                    if (dateToStr == null || string.IsNullOrWhiteSpace(dateToStr))
+                    if (json == null || string.IsNullOrWhiteSpace(json))
                     {
                         initialFilter = null;
                     }
@@ -70,10 +70,12 @@ namespace Core
                         //{
                         //    dateFrom = DateTime.Parse(Preferences.Get("dateFrom", null, "filtroAvanzado")),
                         //    dateTo = DateTime.Parse(Preferences.Get("dateTo",null,"filtroAvanzado")),
-                            
+
                         //};
 
-                        initialFilter = "";
+                        //var jsonString = Preferences.Get("filtroJson", null, "filtroAvanzado");
+
+                        initialFilter = json;
                     }
                 }
 
@@ -93,19 +95,9 @@ namespace Core
 
             LoggedUser = user;
         }
-        public void FilterAssignment(string filterOpportunity)
+        public void FilterOpportunity(string filterOpportunity)
         {
-            //var customerId = filterAssignment.customers.FirstOrDefault();
-            //var statusId = filterAssignment.status.FirstOrDefault();
-            //var productsId = filterAssignment.products.FirstOrDefault();
-
-            //Preferences.Set("dataFrom", filterAssignment.dateFrom.ToString(), "filtroAvanzado");
-            //Preferences.Set("dateTo", filterAssignment.dateTo.ToString(), "filtroAvanzado");
-            //Preferences.Set("statusId", statusId.id, "filtroAvanzado");
-            //Preferences.Set("customerId", customerId.id, "filtroAvanzado");
-            //Preferences.Set("productsId", productsId.id, "filtroAvanzado");
-            //Preferences.Set("priceFrom", filterAssignment.priceFrom.ToString(), "filtroAvanzado");
-            //Preferences.Set("priceTo", filterAssignment.priceTo.ToString(), "filtroAvanzado");
+            Preferences.Set("filtroJson", filterOpportunity, "filtroAvanzado");
 
             initialFilter = filterOpportunity;
         }

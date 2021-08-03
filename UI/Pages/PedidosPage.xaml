@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Views:MvxContentPage x:TypeArguments="ViewModel:PedidosViewModel"
+                      xmlns="http://xamarin.com/schemas/2014/forms"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                      xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                      xmlns:ViewModel="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:Controls="clr-namespace:UI.Controls"
+                      xmlns:resources="clr-namespace:UI.LangResources"
+                      x:Class="UI.Pages.PedidosPage">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
+            <Grid
+                ColumnDefinitions="auto,*,auto">
+                <Controls:BackIconToolbar Grid.Column="0"/>
+                <Frame
+                    Grid.Column="1"
+                    Margin="0"
+                    Padding="0"
+                    CornerRadius="20">
+                    <SearchBar Placeholder="{x:Static resources:AppResources.Search}" Text="{Binding Query}"
+                               HorizontalOptions="StartAndExpand" />
+                </Frame>
+                <Image Source="ic_search.png" Grid.Column="2">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding NewContactsSearchCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout
+            Padding="10">
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Frame
+                CornerRadius="30"
+                BorderColor="#2B0048"
+                Padding="10">
+                <Grid
+                    ColumnDefinitions="auto,*,auto">
+                    <Image
+                        Grid.Column="0"
+                        Source="ic_menu_pedidos.png">
+                        
+                    </Image>
+                    <Label
+                        Grid.Column="1"
+                        Text="CLIENTE"
+                        VerticalTextAlignment="Center"
+                        FontSize="Medium"
+                        TextColor="#2B0048"
+                        FontAttributes="Bold">
+                        
+                    </Label>
+                    <StackLayout
+                        Grid.Column="2">
+                        <Label
+                            HorizontalTextAlignment="End"
+                            Text="US$ 140.00"
+                            FontSize="Medium"
+                            FontAttributes="Bold">
+                            
+                        </Label>
+                        <Label
+                            Text="02/08/2021"
+                            HorizontalTextAlignment="End">
+                        </Label>
+                    </StackLayout>
+                </Grid>
+            </Frame>
+            <Frame
+                CornerRadius="30"
+                BorderColor="#2B0048"
+                Padding="10">
+                <Grid
+                    ColumnDefinitions="auto,*,auto">
+                    <Image
+                        Grid.Column="0"
+                        Source="ic_menu_pedidos.png">
+
+                    </Image>
+                    <Label
+                        Grid.Column="1"
+                        Text="CLIENTE"
+                        VerticalTextAlignment="Center"
+                        FontSize="Medium"
+                        TextColor="#2B0048"
+                        FontAttributes="Bold">
+
+                    </Label>
+                    <StackLayout
+                        Grid.Column="2">
+                        <Label
+                            HorizontalTextAlignment="End"
+                            Text="US$ 140.00"
+                            FontSize="Medium"
+                            FontAttributes="Bold">
+
+                        </Label>
+                        <Label
+                            Text="02/08/2021"
+                            HorizontalTextAlignment="End">
+                        </Label>
+                    </StackLayout>
+                </Grid>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</Views:MvxContentPage>

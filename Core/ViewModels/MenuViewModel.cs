@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Core.ViewModels
 
         public MenuItem[] MenuItems { get; } =
         {
+            new MenuItem(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"),
             new MenuItem(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"),
             new MenuItem(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"),
             new MenuItem(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"),
@@ -68,9 +70,15 @@ namespace Core.ViewModels
                 case MenuItemType.Opportunities:
                     await GoToOpportunities();
                     break;
-                default:
+                case MenuItemType.Pedidos:
+                    await GoToPedidos();
                     break;
             }
+        }
+
+        private async Task GoToPedidos()
+        {
+            await navigationService.Navigate<PedidosViewModel>();
         }
 
         private async Task Logout()

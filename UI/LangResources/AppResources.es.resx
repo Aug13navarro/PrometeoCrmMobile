@@ -228,6 +228,9 @@
   <data name="Opportunity" xml:space="preserve">
     <value>Oportunidad</value>
   </data>
+  <data name="Orders" xml:space="preserve">
+    <value>Pedidos</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Contraseña</value>
   </data>

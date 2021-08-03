@@ -394,6 +394,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Orders.
+        /// </summary>
+        internal static string Orders {
+            get {
+                return ResourceManager.GetString("Orders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string Password {

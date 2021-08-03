@@ -18,6 +18,8 @@ namespace Core.ViewModels
 {
     public class FilterOpportunitiesViewModel : MvxViewModelResult<FilterOportunityModel>
     {
+        private ApplicationData data;
+
         private DateTime maximumDate;
         public DateTime MaximumDate
         {
@@ -44,6 +46,13 @@ namespace Core.ViewModels
         {
             get => status;
             set => SetProperty(ref status, value);
+        }
+
+        private int indexStatus;
+        public int IndexStatus
+        {
+            get => indexStatus;
+            set => SetProperty(ref indexStatus, value);
         }
 
         private Customer customer;
@@ -84,7 +93,7 @@ namespace Core.ViewModels
         public Command SelectClientCommand { get; }
         public Command SelectProductCommand { get; }
         public Command ApplyFiltersCommand { get; }
-        public ICommand ResetFiltersCommand { get; }
+        public Command LimpiarFiltroCommand { get; }
 
         //SERIVICIO
         private readonly IMvxNavigationService navigationService;
@@ -116,6 +125,8 @@ namespace Core.ViewModels
 
         public FilterOpportunitiesViewModel()
         {
+            data = new ApplicationData();
+
             MaximumDate = DateTime.Now.Date;
 
             this.navigationService = Mvx.Resolve<IMvxNavigationService>();
@@ -125,6 +136,7 @@ namespace Core.ViewModels
             SelectClientCommand = new Command(async () => await SelectClientAsync());
             SelectProductCommand = new Command(async () => await SelectProdcutoAsync());
             ApplyFiltersCommand = new Command(async () => await ApplyFilters());
+            LimpiarFiltroCommand = new Command(async () => await ClearFilter());
 
             BeginDate = DateTime.Now.Date;
             EndDate = DateTime.Now.Date;
@@ -132,6 +144,53 @@ namespace Core.ViewModels
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
 
             CargarEstados();
+            CargarFiltroGuardado();
+        }
+
+        private Task ClearFilter()
+        {
+            BeginDate = DateTime.Now.Date;
+            EndDate = DateTime.Now.Date;
+            IndexStatus = -1;
+            Customer = null;
+            Product = null;
+            TotalDesde = 0;
+            TotalHasta = 0;
+
+            return Task.FromResult(0);
+        }
+
+        private void CargarFiltroGuardado()
+        {
+            var filtroJson = data.InitialFilter;
+            if (filtroJson != null)
+            {
+                var filtro = JsonConvert.DeserializeObject<FilterOpportunityJson>(filtroJson);
+
+                BeginDate = filtro.dateFrom;
+                EndDate = filtro.dateTo;
+
+                if(filtro.customers.Count() > 0)
+                {
+                    Customer = filtro.customers.FirstOrDefault();
+                }
+                if (filtro.status.Count() > 0)
+                {
+                    Status = filtro.status.FirstOrDefault();
+                    IndexStatus = Status.Id - 1;
+                }
+                else
+                {
+                    IndexStatus = -1;
+                }
+                if (filtro.products.Count() > 0)
+                {
+                    Product = filtro.products.FirstOrDefault();
+                }
+
+                if (filtro.priceFrom != null) TotalDesde = filtro.priceFrom.Value;
+                if (filtro.priceTo != null) TotalHasta = filtro.priceTo.Value;
+            }
         }
 
         public override Task Initialize()
@@ -226,60 +285,30 @@ namespace Core.ViewModels
             if (filtro.priceFrom == 0) filtro.priceFrom = null;
             if (filtro.priceTo == 0) filtro.priceTo = null;
 
+            var filtroJson = new FilterOpportunityJson
+            {
+                dateFrom = this.BeginDate,
+                dateTo = this.endDate,
+                customers = new List<Customer>(),
+                status = new List<OpportunityStatus>(),
+                products = new List<Product>(),
+                priceFrom = TotalDesde,
+                priceTo = TotalHasta
+            };
+
+            if (customer != null) filtroJson.customers.Add(customer);
+            if (Status != null) filtroJson.status.Add(Status);
+            if (Product != null) filtroJson.products.Add(Product);
+            if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
+            if (filtroJson.priceTo == 0) filtroJson.priceTo = null;
+
+            var filtroString = JsonConvert.SerializeObject(filtroJson);
+
+            data.FilterOpportunity(filtroString);
+
             await navigationService.Close(this, filtro);
         }
 
-        //{
-        //    List<Opportunity> Opportunities = OpportunitiesViewModel.Opportunities.ToList();
 
-        //    if (Customer != null)
-        //    {
-        //        Opportunities = Opportunities.Where(x => x.Customer?.Id == Customer.Id).ToList();
-        //        //OpportunitiesViewModel = Customer;
-        //    }
-
-        //    if (Status != null)
-        //    {
-        //        Opportunities = Opportunities.Where(x => x.Status == Status).ToList();
-        //        //  ShipmentViewModel.Destination = Destination;
-        //    }
-
-        //    //if (Ship != null)
-        //    //{
-        //    //    shipments = shipments.Where(x => x.Ship?.Id == Ship.Id).ToList();
-        //    //    ShipmentViewModel.Ship = Ship;
-        //    //}
-
-
-        //    OpportunitiesViewModel.Opportunities.Clear();
-        //    OpportunitiesViewModel.Opportunities.AddRange(Opportunities);
-
-        //    MessagingCenter.Send(this, "filtered", OpportunitiesViewModel);
-
-        //private void ResetFilters()
-        //{
-        //    ShipmentViewModel.Shipments.Clear();
-        //    // ShipmentViewModel.Shipments.AddRange(ShipmentViewModel.ShipmentListBackUp);
-
-        //    if (Preferences.Get("customerId", 0) > 0)
-        //        ShipmentViewModel.PrepareDisplayData(ShipmentViewModel.ShipmentListBackUp);
-        //    else
-        //        ShipmentViewModel.Shipments.AddRange(ShipmentViewModel.ShipmentListBackUp);
-
-        //    ShipmentViewModel.Customer = null;
-        //    ShipmentViewModel.Destination = null;
-        //    ShipmentViewModel.Ship = null;
-        //    ShipmentViewModel.Product = null;
-        //    ShipmentViewModel.Week = 0;
-        //    ShipmentViewModel.ContainerNumber = null;
-
-        //    Customer = null;
-        //    Destination = null;
-        //    week = 0;
-        //    Ship = null;
-        //    Product = null;
-
-        //    //   MessagingCenter.Send(this, "filtered", ShipmentViewModel);
-        //}
     }
 }
