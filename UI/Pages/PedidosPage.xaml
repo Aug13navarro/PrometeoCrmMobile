@@ -18,94 +18,253 @@
                     Padding="0"
                     CornerRadius="20">
                     <SearchBar Placeholder="{x:Static resources:AppResources.Search}" Text="{Binding Query}"
-                               HorizontalOptions="StartAndExpand" />
+                               HorizontalOptions="StartAndExpand" Keyboard="Text"/>
                 </Frame>
-                <Image Source="ic_search.png" Grid.Column="2">
+                <Image Source="filtro_vacio.png" Grid.Column="2" WidthRequest="25">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding NewContactsSearchCommand}" />
+                        <TapGestureRecognizer Command="{Binding FilterOrdersCommand}" />
                     </Image.GestureRecognizers>
                 </Image>
             </Grid>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>
-        <StackLayout
-            Padding="10">
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            <Frame
-                CornerRadius="30"
-                BorderColor="#2B0048"
+        <Grid
+            ColumnDefinitions="*,auto"
+            RowDefinitions="*,auto,auto">
+            <StackLayout
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="0"
                 Padding="10">
-                <Grid
+                <Frame
+                CornerRadius="30"
+                BorderColor="{StaticResource PrimaryColor}"
+                Padding="10">
+                    <Grid
                     ColumnDefinitions="auto,*,auto">
-                    <Image
+                        <Image
                         Grid.Column="0"
                         Source="ic_menu_pedidos.png">
-                        
-                    </Image>
-                    <Label
-                        Grid.Column="1"
-                        Text="CLIENTE"
-                        VerticalTextAlignment="Center"
-                        FontSize="Medium"
-                        TextColor="#2B0048"
-                        FontAttributes="Bold">
-                        
-                    </Label>
-                    <StackLayout
-                        Grid.Column="2">
-                        <Label
-                            HorizontalTextAlignment="End"
-                            Text="US$ 140.00"
+
+                        </Image>
+
+                        <StackLayout
+                        Grid.Column="1">
+                            <Label
+                            Text="CLIENTE"
+                            VerticalTextAlignment="Center"
                             FontSize="Medium"
+                            TextColor="{StaticResource PrimaryColor}"
                             FontAttributes="Bold">
-                            
-                        </Label>
-                        <Label
-                            Text="02/08/2021"
-                            HorizontalTextAlignment="End">
-                        </Label>
-                    </StackLayout>
-                </Grid>
-            </Frame>
-            <Frame
-                CornerRadius="30"
-                BorderColor="#2B0048"
-                Padding="10">
-                <Grid
-                    ColumnDefinitions="auto,*,auto">
-                    <Image
-                        Grid.Column="0"
-                        Source="ic_menu_pedidos.png">
 
-                    </Image>
-                    <Label
-                        Grid.Column="1"
-                        Text="CLIENTE"
-                        VerticalTextAlignment="Center"
-                        FontSize="Medium"
-                        TextColor="#2B0048"
-                        FontAttributes="Bold">
+                            </Label>
+                            <Label
+                            Text="Company Name">
 
-                    </Label>
-                    <StackLayout
-                        Grid.Column="2">
-                        <Label
+                            </Label>
+                            <StackLayout
+                            Orientation="Horizontal">
+                                <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="Fill"
+                            BackgroundColor="Red"
+                                WidthRequest="19"
+                                CornerRadius="10">
+                                </Frame>
+                                <Label
+                                Text="Estado">
+
+                                </Label>
+                            </StackLayout>
+
+                        </StackLayout>
+
+                        <StackLayout
+                        Grid.Column="2"
+                        VerticalOptions="Center">
+                            <Label
                             HorizontalTextAlignment="End"
                             Text="US$ 140.00"
                             FontSize="Medium"
                             FontAttributes="Bold">
 
-                        </Label>
-                        <Label
+                            </Label>
+                            <Label
                             Text="02/08/2021"
                             HorizontalTextAlignment="End">
-                        </Label>
-                    </StackLayout>
-                </Grid>
-            </Frame>
-        </StackLayout>
+                            </Label>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+                <Frame
+                CornerRadius="30"
+                BorderColor="#2B0048"
+                Padding="10">
+                    <Grid
+                    ColumnDefinitions="auto,*,auto">
+                        <Image
+                        Grid.Column="0"
+                        Source="ic_menu_pedidos.png">
+
+                        </Image>
+
+                        <StackLayout
+                        Grid.Column="1">
+                            <Label
+                            Text="CLIENTE"
+                            VerticalTextAlignment="Center"
+                            FontSize="Medium"
+                            TextColor="#2B0048"
+                            FontAttributes="Bold">
+
+                            </Label>
+                            <Label
+                            Text="Company Name">
+
+                            </Label>
+                            <StackLayout
+                            Orientation="Horizontal">
+                                <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="Fill"
+                            BackgroundColor="Gray"
+                                WidthRequest="19"
+                                CornerRadius="10">
+                                </Frame>
+                                <Label
+                                Text="Estado">
+
+                                </Label>
+                            </StackLayout>
+
+                        </StackLayout>
+
+                        <StackLayout
+                        Grid.Column="2"
+                        VerticalOptions="Center">
+                            <Label
+                            HorizontalTextAlignment="End"
+                            Text="US$ 140.00"
+                            FontSize="Medium"
+                            FontAttributes="Bold">
+
+                            </Label>
+                            <Label
+                            Text="02/08/2021"
+                            HorizontalTextAlignment="End">
+                            </Label>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+                <Frame
+                CornerRadius="30"
+                BorderColor="#2B0048"
+                Padding="10">
+                    <Grid
+                    ColumnDefinitions="auto,*,auto">
+                        <Image
+                        Grid.Column="0"
+                        Source="ic_menu_pedidos.png">
+
+                        </Image>
+
+                        <StackLayout
+                        Grid.Column="1">
+                            <Label
+                            Text="CLIENTE"
+                            VerticalTextAlignment="Center"
+                            FontSize="Medium"
+                            TextColor="#2B0048"
+                            FontAttributes="Bold">
+
+                            </Label>
+                            <Label
+                            Text="Company Name">
+
+                            </Label>
+                            <StackLayout
+                            Orientation="Horizontal">
+                                <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="Fill"
+                            BackgroundColor="Green"
+                                WidthRequest="19"
+                                CornerRadius="10">
+                                </Frame>
+                                <Label
+                                Text="Estado">
+
+                                </Label>
+                            </StackLayout>
+
+                        </StackLayout>
+
+                        <StackLayout
+                        Grid.Column="2"
+                        VerticalOptions="Center">
+                            <Label
+                            HorizontalTextAlignment="End"
+                            Text="US$ 140.00"
+                            FontSize="Medium"
+                            FontAttributes="Bold">
+
+                            </Label>
+                            <Label
+                            Text="02/08/2021"
+                            HorizontalTextAlignment="End">
+                            </Label>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+            </StackLayout>
+            
+            <ImageButton
+                Grid.Row="1"
+                Grid.Column="1"
+                Source="ic_edit_hdpi.png"
+                Margin="10,0">                
+                
+            </ImageButton>
+
+            <StackLayout
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                BackgroundColor="LightGray"
+                Padding="10,0,10,10">
+                <StackLayout
+                    Orientation="Horizontal">
+                    <Label
+                        Text="Total" TextColor="{StaticResource PrimaryColor}" Style="{StaticResource DefaultLabel}" FontSize="Large"
+                        VerticalOptions="Center">
+
+                    </Label>
+                    <Label TextColor="{StaticResource PrimaryColor}" Style="{StaticResource DefaultLabel}" FontSize="Large"
+                        VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="US$ "></Span>
+                                <Span Text="140.00"></Span>
+                            </FormattedString>
+                        </Label.FormattedText>
+
+                    </Label>
+                </StackLayout>
+                <Label
+                        VerticalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="01/01/2021"></Span>
+                            <Span Text=" - "></Span>
+                            <Span Text="01/01/2021"></Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </Views:MvxContentPage>

@@ -17,6 +17,7 @@ namespace Core.Model
         public class ProductSend
         {
             public int productId { get; set; }
+            public decimal price { get; set; }
             public int quantity { get; set; }
             public int discount { get; set; }
             public decimal total { get; set; }

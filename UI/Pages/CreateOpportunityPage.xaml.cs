@@ -5,6 +5,7 @@ using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
 using System;
 using UI.Popups;
+using Xamarin.Forms;
 
 namespace UI.Pages
 {
@@ -72,6 +73,19 @@ namespace UI.Pages
         {
 
             ViewModel.AjustarBotonesEstados(4);
+
+            var label = (Image)sender;
+            object parameter = ((TapGestureRecognizer)label.GestureRecognizers[0]).CommandParameter;
+
+            var popup = new CerrarOportunidadPopup();
+
+            popup.GanadaTapped += (s, args) =>
+            {
+                ViewModel.WinOpportunityCommand.Execute(parameter);
+                PopupNavigation.Instance.PopAsync(false);
+            };
+
+            PopupNavigation.Instance.PushAsync(popup);
         }
     }
 }

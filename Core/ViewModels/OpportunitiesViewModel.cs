@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Core.Model;
-using Core.Model.Common;
-using Core.Model.Enums;
-using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.IoC;

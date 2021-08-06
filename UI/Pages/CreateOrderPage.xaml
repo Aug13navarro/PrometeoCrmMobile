@@ -1,24 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<Views:MvxContentPage x:TypeArguments="ViewModels:CreateOpportunityViewModel"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Views:MvxContentPage x:TypeArguments="ViewModels:CreateOrderViewModel"
                       xmlns="http://xamarin.com/schemas/2014/forms"
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                       xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
-                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
+                      xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"                      
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
-                      xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
                       xmlns:resources="clr-namespace:UI.LangResources"
-                      x:Class="UI.Pages.CreateOpportunityPage">
+                      xmlns:Controls="clr-namespace:UI.Controls"
+                      x:Class="UI.Pages.CreateOrderPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
-            <Label Text="{x:Static resources:AppResources.Opportunity}"
+            <Label Text="Pedido"
                    TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="20"/>
-            <ImageButton Source="guardar.png" Command="{Binding SaveOpportunityCommand}"
+            <ImageButton Source="guardar.png" Command="{Binding SavePedidoCommand}"
                          BackgroundColor="Transparent" WidthRequest="40">
-                
+
             </ImageButton>
-            <!--Command="{Binding SaveOpportunityCommand}" Style="{StaticResource OutlinePrimaryButton}" -->
         </StackLayout>
     </NavigationPage.TitleView>
 
@@ -26,6 +24,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -38,74 +37,77 @@
                         Grid.Column="0"
                         Grid.ColumnSpan="2">
                 <StackLayout Padding="15,15,15,0" Spacing="0">
-                    <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" />
 
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                    <StackLayout Orientation="Horizontal" Margin="0,5">
+                    <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                        <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                        <Picker
+                        HorizontalOptions="FillAndExpand"
+                        Title="Seleccionar" ItemsSource="{Binding OrderStatus}" ItemDisplayBinding="{Binding name}" SelectedItem="{Binding Status, Mode=TwoWay}">
 
+                            </Picker>
+                        </Frame>
+                    </StackLayout>
+                    
+                    <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                        <Label Text="Empresa" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+
+                        <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                            <Picker
+                        HorizontalOptions="FillAndExpand"
+                        Title="Seleccionar" ItemsSource="{Binding OrderStatus}" ItemDisplayBinding="{Binding name}" SelectedItem="{Binding Status, Mode=TwoWay}">
+
+                            </Picker>
+                        </Frame>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal" Margin="0,5">
+                        <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
+                        <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
                         <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
-                           Grid.Row="0" Grid.Column="0" />
+                           Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand"/>
+                        </Frame>
                         <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
-                            HorizontalOptions="End"
-                            Grid.Row="0" Grid.Column="1"
+                                     HorizontalOptions="End"
+                                     Grid.Row="0" Grid.Column="1"
                                      BackgroundColor="Transparent"/>
-                        <!-- Style="{StaticResource OutlineSecondaryButton}"-->
-                    </Grid>
+                    </StackLayout>
 
-                    <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" />
-                    <!--<Picker Title="Picker" ItemsSource="{Binding StatusesDescription}"
-                        SelectedItem="{Binding SelectedStatus}" Style="{StaticResource DefaultPicker}" />-->
-
-                    <Grid
-                        HorizontalOptions="Center"
-                        ColumnDefinitions="auto,auto,auto,auto">
-                        <ImageButton
-                            Source="{Binding IconAnalisis}"
-                            Grid.Column="0"
-                            BackgroundColor="Transparent"
-                            Clicked="ImageButton_Clicked_1"
-                            ></ImageButton>
-                        <ImageButton 
-                            Source="{Binding IconPropuesta}"
-                            Grid.Column="1"
-                            BackgroundColor="Transparent"
-                            Clicked="ImageButton_Clicked_2"
-                            ></ImageButton>
-                        <ImageButton
-                            Source="{Binding IconNegociacion}"
-                            Grid.Column="2"
-                            BackgroundColor="Transparent"
-                            Clicked="ImageButton_Clicked_3"></ImageButton>
-                        <Image
-                            Source="{Binding IconCerrada}"
-                            Grid.Column="3"
-                            BackgroundColor="Transparent"
-                            >
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="ImageButton_Clicked_4"></TapGestureRecognizer>
-                            </Image.GestureRecognizers>
-                        </Image>
-                    </Grid>
-
-                    <Label Text="Motivo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0"
+                    <StackLayout Orientation="Horizontal" Margin="0,5">
+                        <Label Text="{x:Static resources:AppResources.Date}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0"  VerticalOptions="Center"/>
+                        <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                            <DatePicker Date="{Binding Opportunity.closedDate}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
+                        </Frame>
+                        
+                        <!--<Label Text="Motivo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0"
                        Mvx:Bi.nd="IsVisible SelectedStatus == 'Cerrada Perdida'" />
                     <Picker Title="Picker" ItemsSource="{Binding ClosedLostStatusCausesDescription}"
                         Mvx:Bi.nd="IsVisible SelectedStatus == 'Cerrada Perdida'"
-                        SelectedItem="{Binding SelectedClosedLostStatusCause}" Style="{StaticResource DefaultPicker}" />
-
-                    <Label Text="{x:Static resources:AppResources.Date}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                    <DatePicker Date="{Binding Opportunity.closedDate}" />
+                        SelectedItem="{Binding SelectedClosedLostStatusCause}" Style="{StaticResource DefaultPicker}" />-->
+                    </StackLayout>
+                    
 
                     <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                    <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" Style="{StaticResource DefaultEditor}"
-                        AutoSize="TextChanges" Text="{Binding Opportunity.description}" MaxLength="300" />
-
+                    <Frame
+                        Margin="0"
+                        Padding="5,0,0,0">
+                        <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" Style="{StaticResource DefaultEditor}"
+                        AutoSize="TextChanges" Text="{Binding Opportunity.description}" MaxLength="300" HeightRequest="100"/>
+                    </Frame>
+                    
                     <StackLayout Orientation="Horizontal">
                         <Label Text="{x:Static resources:AppResources.Associated_Prodcuts}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
                         <Image Source="ic_add_box.png">
@@ -173,6 +175,39 @@
 
             <StackLayout
                 Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal"
+                Padding="10,0,10,0"
+                BackgroundColor="LightGray">
+                <Label
+                    Text="Descuento" VerticalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Descuento" FontAttributes="Bold"></Span>
+                            <Span Text=" %" FontAttributes="Bold"></Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                    
+                </Label>
+                <Entry Keyboard="Numeric" WidthRequest="50" FontSize="Small" Margin="0">
+                    
+                </Entry>
+                <Label
+                    HorizontalOptions="EndAndExpand"
+                    Text="Descuento" VerticalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="-$ " FontAttributes="Bold"></Span>
+                            <Span Text="450.00" FontAttributes="Bold"></Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+
+                </Label>
+            </StackLayout>
+            
+            <StackLayout
+                Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Orientation="Horizontal"

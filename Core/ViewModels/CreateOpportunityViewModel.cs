@@ -108,6 +108,7 @@ namespace Core.ViewModels
         public Command EditProductCommand { get; }
         public Command RemoveProductCommand { get; }
         public Command SaveOpportunityCommand { get; }
+        public Command WinOpportunityCommand { get; }
 
         // Fields
         public OpportunityProducts editingOpportunityDetail { get; set; }
@@ -131,9 +132,17 @@ namespace Core.ViewModels
             RemoveProductCommand = new Command<OpportunityProducts>(RemoveProduct);
             EditProductCommand = new Command<OpportunityProducts>(EditProduct);
             SaveOpportunityCommand = new Command(async () => await SaveOpportunity());
+            WinOpportunityCommand = new Command<Opportunity>(async o => await WinOpportunityAsync(o));
 
             CargarIconosEstados();
 
+
+        }
+
+        private async Task WinOpportunityAsync(Opportunity o)
+        {
+            //int customerId = await navigationService.Navigate<CustomersViewModel, int>();
+            await navigationService.Navigate<CreateOrderViewModel, Opportunity>(Opportunity);
 
         }
 
@@ -386,6 +395,7 @@ namespace Core.ViewModels
                     productId = item.productId,
                     quantity = item.Quantity,
                     total = tempTotal,
+                    price = item.Price
                 });
             }
 
