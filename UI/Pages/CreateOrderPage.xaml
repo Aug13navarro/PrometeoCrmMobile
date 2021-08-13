@@ -157,15 +157,15 @@
 
                     <BoxView BackgroundColor="LightGray" HeightRequest="1" />
 
-                    <Controls:Repeater ItemsSource="{Binding Opportunity.Details}"
-                                   Mvx:Bi.nd="IsVisible And(Opportunity.Details.Count > 0)"
+                    <Controls:Repeater ItemsSource="{Binding Order.products}"
+                                   Mvx:Bi.nd="IsVisible And(Order.products.Count > 0)"
                                    Margin="0,10,0,0" x:Name="detailsList">
                         <Controls:Repeater.ItemTemplate>
                             <DataTemplate>
                                 <ContentView>
                                     <StackLayout>
                                         <StackLayout Orientation="Horizontal" Spacing="0">
-                                            <Label Text="{Binding product.name}" TextColor="{StaticResource SecondaryColor}"
+                                            <Label Text="{Binding productPresentationName}" TextColor="{StaticResource SecondaryColor}"
                                                FontAttributes="Bold" FontSize="Medium" Margin="0,8,0,5" HorizontalOptions="StartAndExpand" />
                                             <Image Source="ic_edit.png">
                                                 <Image.GestureRecognizers>
@@ -185,19 +185,19 @@
 
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="{x:Static resources:AppResources.Price}" HorizontalOptions="StartAndExpand" />
-                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', Price)" />
+                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', price)" />
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="{x:Static resources:AppResources.Quantity}" HorizontalOptions="StartAndExpand" />
-                                            <Label Mvx:Bi.nd="Text Format('{0} U', Quantity)" />
+                                            <Label Mvx:Bi.nd="Text Format('{0} U', quantity)" />
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="{x:Static resources:AppResources.Discount}" HorizontalOptions="StartAndExpand" />
-                                            <Label Mvx:Bi.nd="Text Format('{0} %', Discount)" />
+                                            <Label Mvx:Bi.nd="Text Format('{0} %', discount)" />
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="Subtotal" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
-                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', Total)" TextColor="{StaticResource PrimaryColor}" />
+                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', subTotal)" TextColor="{StaticResource PrimaryColor}" />
                                         </StackLayout>
                                         <BoxView BackgroundColor="LightGray" HeightRequest="1" />
                                     </StackLayout>
@@ -206,7 +206,7 @@
                         </Controls:Repeater.ItemTemplate>
                     </Controls:Repeater>
 
-                    <Label Text="{x:Static resources:AppResources.No_Associated_Products}" Mvx:Bi.nd="IsVisible Opportunity.Details.Count == 0" Margin="0,10,0,0" />
+                    <Label Text="{x:Static resources:AppResources.No_Associated_Products}" Mvx:Bi.nd="IsVisible Order.products.Count == 0" Margin="0,10,0,0" />
 
                 </StackLayout>
             </ScrollView>
@@ -256,9 +256,9 @@
                 Padding="10,0,0,0"
                 HeightRequest="40">
 
-                <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Opportunity.Details.Count > 0"
+                <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-                <Label Mvx:Bi.nd="Text Format('${0:0.##}', Total); IsVisible Opportunity.Details.Count > 0"
+                <Label Mvx:Bi.nd="Text Format('${0:0.##}', Total); IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="Medium" VerticalTextAlignment="Center" />
             </StackLayout>
         </Grid>

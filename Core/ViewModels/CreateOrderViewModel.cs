@@ -16,31 +16,31 @@ namespace Core.ViewModels
         private ApplicationData data;
         // Properties
 
-        private string iconAnalisis;
-        private string iconPropuesta;
-        private string iconNegociacion;
-        private string iconCerrada;
+        //private string iconAnalisis;
+        //private string iconPropuesta;
+        //private string iconNegociacion;
+        //private string iconCerrada;
 
-        public string IconAnalisis
-        {
-            get => iconAnalisis;
-            set => SetProperty(ref iconAnalisis, value);
-        }
-        public string IconPropuesta
-        {
-            get => iconPropuesta;
-            set => SetProperty(ref iconPropuesta, value);
-        }
-        public string IconNegociacion
-        {
-            get => iconNegociacion;
-            set => SetProperty(ref iconNegociacion, value);
-        }
-        public string IconCerrada
-        {
-            get => iconCerrada;
-            set => SetProperty(ref iconCerrada, value);
-        }
+        //public string IconAnalisis
+        //{
+        //    get => iconAnalisis;
+        //    set => SetProperty(ref iconAnalisis, value);
+        //}
+        //public string IconPropuesta
+        //{
+        //    get => iconPropuesta;
+        //    set => SetProperty(ref iconPropuesta, value);
+        //}
+        //public string IconNegociacion
+        //{
+        //    get => iconNegociacion;
+        //    set => SetProperty(ref iconNegociacion, value);
+        //}
+        //public string IconCerrada
+        //{
+        //    get => iconCerrada;
+        //    set => SetProperty(ref iconCerrada, value);
+        //}
 
         private int estadoId;
         public int EstadoId
@@ -166,24 +166,31 @@ namespace Core.ViewModels
         public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
                                           IToastService toastService)
         {
-            data = new ApplicationData();
+            try
+            {
+                data = new ApplicationData();
 
-            this.navigationService = navigationService;
-            this.prometeoApiService = prometeoApiService;
-            this.toastService = toastService;
+                this.navigationService = navigationService;
+                this.prometeoApiService = prometeoApiService;
+                this.toastService = toastService;
 
-            SelectClientCommand = new Command(async () => await SelectClientAsync());
-            AddProductCommand = new Command(async () => await AddProductAsync());
-            RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
-            EditProductCommand = new Command<OpportunityProducts>(EditProduct);
+                SelectClientCommand = new Command(async () => await SelectClientAsync());
+                AddProductCommand = new Command(async () => await AddProductAsync());
+                RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
+                EditProductCommand = new Command<OpportunityProducts>(EditProduct);
 
-            SavePedidoCommand = new Command(async () => await SaveOrder());
+                SavePedidoCommand = new Command(async () => await SaveOrder());
 
-            OrderStatus = new MvxObservableCollection<OpportunityStatus>();
+                OrderStatus = new MvxObservableCollection<OpportunityStatus>();
 
-            CargarEstados();
-            CargarEmpresas();
-            CargarCondiciones();
+                CargarEstados();
+                CargarEmpresas();
+                CargarCondiciones();
+            }
+            catch(Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
+            }
         }
 
         private async Task SaveOrder()
@@ -352,12 +359,41 @@ namespace Core.ViewModels
                 else
                 {
                     Order = theOrder;
+                    if (theOrder.Details == null)
+                    {
+                        Order.products = new MvxObservableCollection<OrderNote.ProductOrder>();
+                    }
+                    else
+                    {
+                        Order.products = AsignarProductos(theOrder.Details);
+                    }
                 }
             }
             catch(Exception e)
             {
                 toastService.ShowError($"{e.Message}");
             }
+        }
+
+        private MvxObservableCollection<OrderNote.ProductOrder> AsignarProductos(MvxObservableCollection<OpportunityProducts> details)
+        {
+            var listaProductos = new MvxObservableCollection<OrderNote.ProductOrder>();
+
+            foreach (var item in details)
+            {
+                listaProductos.Add(new OrderNote.ProductOrder
+                {
+                    companyProductPresentationId = item.productId,
+                    productPresentationName = item.product.name,
+                    discount = item.Discount,
+                    price = item.Price,
+                    quantity = item.Quantity,
+                    subtotal = item.Total,
+
+                });
+            }
+
+            return listaProductos;
         }
 
         public void FinishEditProduct((decimal Price, int Quantity, int Discount) args)
@@ -433,39 +469,57 @@ namespace Core.ViewModels
 
         private async Task AddProductAsync()
         {
-            OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
-
-            var product = new OrderNote.ProductOrder
+            try
             {
-                discount = detail.Discount,
-                price = detail.Price,
-                quantity = detail.Quantity,
-                subtotal = detail.Total,
-                companyProductPresentationId = detail.productId
-            };
+                OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
 
-            if (detail != null)
+                var product = new OrderNote.ProductOrder
+                {
+                    discount = detail.Discount,
+                    price = detail.Price,
+                    quantity = detail.Quantity,
+                    subtotal = detail.Total,
+                    companyProductPresentationId = detail.productId
+                };
+
+                if (detail != null)
+                {
+                    detail.product.Id = Order.products.Any() ? Order.products.Max(d => d.companyProductPresentationId) + 1 : 1;
+                    detail.Price = detail.product.price;
+                    detail.Total = CalcularTotal(detail);
+                    Order.products.Add(product);
+
+                    ActualizarTotal(Order.products);
+                }
+
+            }
+            catch (Exception e)
             {
-                detail.product.Id = Order.products.Any() ? Order.products.Max(d => d.companyProductPresentationId) + 1 : 1;
-                detail.Price = detail.product.price;
-                detail.Total = CalcularTotal(detail);
-                Order.products.Add(product);
-
-                ActualizarTotal(Order.products);
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
         }
 
         private void CalcularDescuento(int orderDiscount)
         {
+            try
+            { 
             var descuento = Total * orderDiscount / 100;
 
             ValorDescuento = descuento;
 
             ActualizarTotal(Order.products);
+
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
         }
 
         private decimal CalcularTotal(OpportunityProducts detail)
         {
+            try
+            { 
             if (detail.Discount == 0)
             {
                 if (ValorDescuento > 0)
@@ -491,16 +545,32 @@ namespace Core.ViewModels
                     return temptotal - (temptotal * detail.Discount / 100);
                 }
             }
+
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return 0;
+            }
         }
 
         private void RemoveProduct(OrderNote.ProductOrder detail)
         {
+            try
+            { 
             Order.products.Remove(detail);
             ActualizarTotal(Order.products);
+
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
         }
 
         private void EditProduct(OpportunityProducts detail)
         {
+            try
+            { 
             var product = new Product
             {
                 name = detail.product.name,
@@ -512,9 +582,17 @@ namespace Core.ViewModels
 
             editingOpportunityDetail = detail;
             ShowEditProductPopup?.Invoke(this, product);
+
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
         }
         private void ActualizarTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
+            try
+            { 
             if (OrderDiscount > 0)
             {
                 Total = details.Sum(x => x.subtotal) - ValorDescuento;
@@ -522,6 +600,12 @@ namespace Core.ViewModels
             else
             {
                 Total = details.Sum(x => x.subtotal);
+            }
+
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
         }
 
