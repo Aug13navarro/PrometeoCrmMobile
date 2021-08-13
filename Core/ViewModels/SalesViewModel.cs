@@ -13,10 +13,10 @@ using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
-    public class PedidosViewModel : MvxViewModel
+    public class SalesViewModel : MvxViewModel
     {
         private readonly ApplicationData data;
-        
+
         private bool isLoading;
         public bool IsLoading
         {
@@ -26,24 +26,23 @@ namespace Core.ViewModels
         private decimal total;
         public decimal Total
         {
-            get => OrdersNote.Sum( x => x.total);
+            get => Sales.Sum(x => x.total);
             set => SetProperty(ref total, value);
         }
 
-        public MvxObservableCollection<OrderNote> OrdersNote { get; set; } = new MvxObservableCollection<OrderNote>();
+        public MvxObservableCollection<Sale> Sales { get; set; } = new MvxObservableCollection<Sale>();
 
-        public int CurrentPage { get; private set; } = 1; 
+        public int CurrentPage { get; private set; } = 1;
         private const int PageSize = 10;
 
-        public Command NuevaNotaPedidoCommand { get; }
         public Command FilterOrdersCommand { get; }
-        public Command OpenOrderNoteCommand { get; }
-        
+        public Command NuevaNotaPedidoCommand { get; }
+
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IToastService toastService;
 
-        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
+        public SalesViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
                                           IToastService toastService)
         {
             data = new ApplicationData();
@@ -52,29 +51,15 @@ namespace Core.ViewModels
             this.prometeoApiService = prometeoApiService;
             this.toastService = toastService;
 
-            NuevaNotaPedidoCommand = new Command(async () => await NuevaNotaPedido());
             FilterOrdersCommand = new Command(async () => await FilterOrders());
-            OpenOrderNoteCommand = new Command<OrderNote>(async o => await AbrirNota(o));
+            NuevaNotaPedidoCommand = new Command(async () => NuevaNotaPedido());
 
-            OrdersNote.CollectionChanged += (sender, arg) =>
+            Sales.CollectionChanged += (sender, arg) =>
             {
-                Total = OrdersNote.Sum(x => x.total);
+                Total = Sales.Sum(x => x.total);
             };
         }
 
-        private async Task NuevaNotaPedido()
-        {
-            var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
-            var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now };
-
-            createViewModel.NewOrderCreated += async (sender, args) => await NewOrderSearchAsync();
-            await navigationService.Navigate(createViewModel, order);
-        }
-
-        private Task NewOrderSearchAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         public async override Task Initialize()
         {
@@ -100,15 +85,15 @@ namespace Core.ViewModels
                 requestData.userId = user.Id;
 
                 //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
-                var ordersnote = await prometeoApiService.GetOrderNote(requestData, user.Token);
+                var salesList = await prometeoApiService.GetSales(requestData, user.Token);
 
                 if (newSearch)
                 {
-                    OrdersNote.Clear();
+                    Sales.Clear();
                 }
 
-                var ordenNotes = new MvxObservableCollection<OrderNote>(ordersnote.Results.OrderByDescending(x => x.fecha));
-                OrdersNote.AddRange(ordenNotes);
+                var sales = new MvxObservableCollection<Sale>(salesList.Results.OrderByDescending(x => x.fecha));
+                Sales.AddRange(sales);
 
                 //CurrentPage = opportunities.CurrentPage;
                 //TotalPages = opportunities.TotalPages;
@@ -127,36 +112,27 @@ namespace Core.ViewModels
         private async Task FilterOrders()
         {
             var filtro = await navigationService.Navigate<FilterOrdersViewModel, FilterOrderModel>();
-
-            try
-            {
-                var user = data.LoggedUser;
-
-                if (filtro != null)
-                {
-                    IsLoading = true;
-
-                    var orders = await prometeoApiService.GetOrdersByfilter(filtro, user.Token);
-
-                    OrdersNote.Clear();
-
-                    var ordenOportunidad = new MvxObservableCollection<OrderNote>(orders.OrderByDescending(x => x.fecha));
-                    OrdersNote.AddRange(ordenOportunidad);
-                }
-            }
-            catch (Exception ex)
-            {
-                toastService.ShowError($"{ex.Message}");
-            }
-            finally
-            {
-                IsLoading = false;
-            }
         }
 
-        private async Task AbrirNota(OrderNote orderNote)
+        private async void NuevaNotaPedido()
         {
-            await navigationService.Navigate<CreateOrderViewModel, OrderNote>(orderNote);
+            var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
+            var order = new OrderNote() { orderStatus = 1, fecha= DateTime.Now };
+
+            createViewModel.NewOrderCreated += async (sender, args) => await NewSalesSearchAsync();
+            await navigationService.Navigate(createViewModel, order);
+            //await navigationService.Navigate<CreateOrderViewModel, Opportunity>(order);
+        }
+        private async Task NewSalesSearchAsync()
+        {
+            var requestData = new OrdersNotesPaginatedRequest()
+            {
+                CurrentPage = 1,
+                PageSize = PageSize,
+                //Query = OpportunitiesQuery,
+            };
+
+            await GetOrdersNoteAsync(requestData, true);
         }
     }
 }

@@ -72,7 +72,7 @@ namespace UI.Pages
         private void ImageButton_Clicked_4(object sender, EventArgs e)
         {
 
-            ViewModel.AjustarBotonesEstados(4);
+            //ViewModel.AjustarBotonesEstados(4);
 
             var label = (Image)sender;
             object parameter = ((TapGestureRecognizer)label.GestureRecognizers[0]).CommandParameter;
@@ -82,6 +82,11 @@ namespace UI.Pages
             popup.GanadaTapped += (s, args) =>
             {
                 ViewModel.WinOpportunityCommand.Execute(parameter);
+                PopupNavigation.Instance.PopAsync(false);
+            };
+            popup.PerdidaTapped += (s, args) =>
+            {
+                ViewModel.LostOpportunityCommand.Execute(parameter);
                 PopupNavigation.Instance.PopAsync(false);
             };
 

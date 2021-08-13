@@ -100,7 +100,7 @@
                         SelectedItem="{Binding SelectedClosedLostStatusCause}" Style="{StaticResource DefaultPicker}" />
 
                     <Label Text="{x:Static resources:AppResources.Date}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                    <DatePicker Date="{Binding Opportunity.closedDate}" />
+                    <DatePicker Date="{Binding Opportunity.createDt}" Format="dd/MM/yyyy"/>
 
                     <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
                     <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" Style="{StaticResource DefaultEditor}"

@@ -1,4 +1,3 @@
-using Core.Model;
 using Core.Model.Enums;
 using Core.ViewModels;
 using Core.ViewModels.Model;
@@ -18,6 +17,7 @@ namespace UI.Pages
 
         public MenuItem[] MenuItems { get; } =
         {
+            new MenuItem(MenuItemType.Sales, LangResources.AppResources.Sales, "ic_menu_presupuestos.png"),
             new MenuItem(MenuItemType.Pedidos, LangResources.AppResources.Orders, "ic_menu_pedidos"),
             new MenuItem(MenuItemType.Customers, LangResources.AppResources.Customers, "ic_menu_cuentas"),
             new MenuItem(MenuItemType.Contacts, LangResources.AppResources.Contacts, "ic_menu_contactos"),

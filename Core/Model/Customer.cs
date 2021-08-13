@@ -18,6 +18,7 @@ namespace Core.Model
         public decimal? DollarBalance { get; set; }
         public int? UnitBalance { get; set; }
         public string Descriptions { get; set; }
+        public int ExternalId { get; set; }
 
         public MvxObservableCollection<int> CompanyUserId { get; } = new MvxObservableCollection<int>();
         public MvxObservableCollection<int> CompanyUserIds { get; } = new MvxObservableCollection<int>();

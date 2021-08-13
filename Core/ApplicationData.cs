@@ -12,6 +12,7 @@ namespace Core
     {
         private static User loggedUser;
         private string initialFilter;
+        private string initialFilterOrder;
 
         public User LoggedUser
         {
@@ -84,6 +85,29 @@ namespace Core
             private set => SetProperty(ref initialFilter, value);
         }
 
+        public string InitialFilterOrder
+        {
+            get
+            {
+                if(initialFilterOrder == null)
+                {
+                    var json = Preferences.Get("filtroOrderJson", null, "filtroAvanzadoOrder");
+
+                    if(json == null || string.IsNullOrWhiteSpace(json))
+                    {
+                        initialFilterOrder = null;
+                    }
+                    else
+                    {
+                        initialFilterOrder = json;
+                    }
+                }
+
+                return initialFilterOrder;
+            }
+            private set => SetProperty(ref initialFilterOrder, value);
+        }
+
         public void SetLoggedUser(User user)
         {
             Preferences.Set("id", user.Id.ToString(), "loginData");
@@ -102,6 +126,13 @@ namespace Core
             initialFilter = filterOpportunity;
         }
 
+        public void FilterOrder(string filterOrder)
+        {
+            Preferences.Set("filtroOrderJson", filterOrder, "filtroAvanzadoOrder");
+
+            initialFilterOrder = filterOrder;
+        }
+
         public void ClearLoggedUser()
         {
             Preferences.Clear("loginData");
@@ -111,6 +142,12 @@ namespace Core
         {
             Preferences.Clear("filtroAvansado");
             initialFilter = null;
+        }
+
+        public void ClearFilterOrder()
+        {
+            Preferences.Clear("filtroAvanzadoOrder");
+            initialFilterOrder = null;
         }
     }
 }

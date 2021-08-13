@@ -12,6 +12,7 @@ namespace Core.Model
         public decimal totalPrice { get; set; }
         public string closedReason { get; set; }
         public DateTime closedDate { get; set; }
+        public DateTime createDt { get; set; }
         public string description { get; set; }
 
         public class ProductSend

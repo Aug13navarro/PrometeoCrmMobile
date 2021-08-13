@@ -48,7 +48,10 @@
                     <Frame Margin="0" Padding="0"
                            HorizontalOptions="FillAndExpand">
                         <Picker
-                            Title="{x:Static resources:AppResources.Company}">
+                            Title="{x:Static resources:AppResources.Company}"
+                            ItemsSource="{Binding Companies, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding BusinessName}"
+                            SelectedItem="{Binding Company, Mode=TwoWay}">
 
                         </Picker>
                     </Frame>
@@ -62,7 +65,10 @@
                     </Label>
                     <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
                         <Picker
-                            Title="{x:Static resources:AppResources.State}">
+                            Title="{x:Static resources:AppResources.State}"
+                            ItemsSource="{Binding OrderStatuses, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding name}"
+                            SelectedItem="{Binding Status, Mode=TwoWay}">
 
                         </Picker>
                     </Frame>
@@ -84,7 +90,9 @@
 
                             </Label>
                             <DatePicker
-                                Format="dd/MM/yyyy">
+                                Date="{Binding BeginDate}"
+                                Format="dd/MM/yyyy"
+                                MaximumDate="{Binding MaximumDate}">
 
                             </DatePicker>
                         </StackLayout>
@@ -101,7 +109,9 @@
 
                             </Label>
                             <DatePicker
-                                Format="dd/MM/yyyy">
+                                Format="dd/MM/yyyy"
+                                Date="{Binding EndDate}"
+                                MaximumDate="{Binding MaximumDate}">
 
                             </DatePicker>
                         </StackLayout>
@@ -118,7 +128,9 @@
 
                             </Label>
                             <Entry
-                                Keyboard="Numeric">
+                                Keyboard="Numeric"
+                                Text="{Binding TotalDesde, Mode=TwoWay}"
+                                HorizontalTextAlignment="End">
 
                             </Entry>
                         </StackLayout>
@@ -135,7 +147,9 @@
 
                             </Label>
                             <Entry
-                                    Keyboard="Numeric">
+                                    Keyboard="Numeric"
+                                Text="{Binding TotalHasta, Mode=TwoWay}"
+                                HorizontalTextAlignment="End">
 
                             </Entry>
                         </StackLayout>
@@ -147,7 +161,8 @@
                     Text="{x:Static resources:AppResources.Accept}"
                     BackgroundColor="{StaticResource PrimaryColor}"
                     TextColor="White"
-                    HorizontalOptions="Center">
+                    HorizontalOptions="Center"
+                    Command="{Binding ApplyFiltersCommand}">
                     
                 </Button>
             </Grid>

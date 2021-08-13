@@ -128,7 +128,7 @@ namespace Core.ViewModels
                     CompanyId = 0,
                     IsParentCustomer = true,
                 });
-                Task<List<Company>> companiesTask = prometeoApiService.GetCompaniesByUserId(appData.LoggedUser.Id);
+                Task<List<Company>> companiesTask = prometeoApiService.GetCompaniesByUserId(appData.LoggedUser.Id, appData.LoggedUser.Token);
 
                 await Task.WhenAll(customerTypesTask, documentTypesTask, corporativeCustomersTask, taxConditionsTask, companiesTask);
 

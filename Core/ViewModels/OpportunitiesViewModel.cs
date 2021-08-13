@@ -261,6 +261,8 @@ namespace Core.ViewModels
 
             createOpportunityViewModel.NewOpportunityCreated += async (sender, args) => await NewOpportunitiesSearchAsync();
             await navigationService.Navigate(createOpportunityViewModel, opportunity);
+
+            //await Initialize();
         }
 
         private async Task EditOpportunityAsync(Opportunity opportunity)
@@ -268,6 +270,8 @@ namespace Core.ViewModels
             opportunity.Details = new MvxObservableCollection<OpportunityProducts>(opportunity.opportunityProducts);
 
             await navigationService.Navigate<CreateOpportunityViewModel, Opportunity>(opportunity);
+
+            await NewOpportunitiesSearchAsync();
         }
 
     }

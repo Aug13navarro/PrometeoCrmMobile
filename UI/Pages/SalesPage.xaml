@@ -1,13 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Views:MvxContentPage x:TypeArguments="ViewModel:PedidosViewModel"
+<Views:MvxContentPage x:TypeArguments="ViewModel:SalesViewModel"
                       xmlns="http://xamarin.com/schemas/2014/forms"
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                       xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                       xmlns:ViewModel="clr-namespace:Core.ViewModels;assembly=Core"
                       xmlns:Controls="clr-namespace:UI.Controls"
                       xmlns:resources="clr-namespace:UI.LangResources"
-                      xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
-                      x:Class="UI.Pages.PedidosPage">
+                      x:Class="UI.Pages.SalesPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Grid
@@ -33,7 +32,7 @@
         <Grid
             ColumnDefinitions="*,auto"
             RowDefinitions="*,auto,auto">
-            <ListView
+            <!--<ListView
                 ItemsSource="{Binding OrdersNote}"
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
@@ -47,9 +46,6 @@
                                 CornerRadius="30"
                                 BorderColor="{StaticResource PrimaryColor}"
                                 Padding="10">
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding .}"></TapGestureRecognizer>
-                                </Frame.GestureRecognizers>
                                 <Grid
                                     ColumnDefinitions="auto,*,auto">
                                     <Image
@@ -70,7 +66,7 @@
                                         </Label>
                                         <Label
                                             Text="{Binding company.BusinessName}">
-                                            
+
                                         </Label>
                                         <StackLayout
                                             Orientation="Horizontal">
@@ -81,16 +77,16 @@
                                                 BackgroundColor="{Binding orderColor}"
                                                 WidthRequest="19"
                                                 CornerRadius="10">
-                                                
+
                                             </Frame>
                                             <Label
                                                 Text="{Binding orderStatusStr}">
-                                                
+
                                             </Label>
                                         </StackLayout>
-                                        
+
                                     </StackLayout>
-                                    
+
                                     <StackLayout
                                         Grid.Column="2"
                                         VerticalOptions="Center">
@@ -101,16 +97,15 @@
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding currency.name}"></Span>
-                                                    <Span Text=" "></Span>
                                                     <Span Text="{Binding total}"></Span>
                                                 </FormattedString>
                                             </Label.FormattedText>
-                                            
+
                                         </Label>
                                         <Label
                                             Text="{Binding fecha}"
                                             HorizontalTextAlignment="End">
-                                            
+
                                         </Label>
                                     </StackLayout>
                                 </Grid>
@@ -118,12 +113,167 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </ListView>-->
 
-            <StackLayout 
-                Grid.Row="0" Grid.ColumnSpan="2" VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible OrdersNote.Count == 0">
-                <Image Source="ic_no_oportunidad.png" HorizontalOptions="Center"/>
-                <Label Text="{x:Static resources:AppResources.NoOpportunitiesFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
+            <StackLayout                
+                Grid.Row="0"
+                Grid.ColumnSpan="2">
+
+                <Frame
+                Margin="10,5"
+                CornerRadius="30"
+                BorderColor="{StaticResource PrimaryColor}"
+                Padding="10">
+                    <Grid
+                    ColumnDefinitions="auto,*,auto">
+                        <Image
+                        Grid.Column="0"
+                        Source="ic_menu_presupuestos.png">
+                        </Image>
+
+                        <StackLayout
+                        Grid.Column="1">
+                            <Label
+                            Text="CLIENTE"
+                            VerticalTextAlignment="Center"
+                            FontSize="Medium"
+                            TextColor="{StaticResource PrimaryColor}"
+                            FontAttributes="Bold">
+
+                            </Label>
+                            <Label
+                            Text="FUGRAN">
+
+                            </Label>
+                        </StackLayout>
+
+                        <StackLayout
+                        Grid.Column="2"
+                        VerticalOptions="Center">
+                            <Label
+                            HorizontalTextAlignment="End"
+                            FontSize="Medium"
+                            FontAttributes="Bold">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="US$ "></Span>
+                                        <Span Text="123.45"></Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+
+                            </Label>
+                            <Label
+                            Text="01/01/2021"
+                            HorizontalTextAlignment="End">
+
+                            </Label>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+
+                <Frame
+                Margin="10,5"
+                CornerRadius="30"
+                BorderColor="{StaticResource PrimaryColor}"
+                Padding="10">
+                    <Grid
+                    ColumnDefinitions="auto,*,auto">
+                        <Image
+                        Grid.Column="0"
+                        Source="ic_menu_presupuestos.png">
+                        </Image>
+
+                        <StackLayout
+                        Grid.Column="1">
+                            <Label
+                            Text="CLIENTE"
+                            VerticalTextAlignment="Center"
+                            FontSize="Medium"
+                            TextColor="{StaticResource PrimaryColor}"
+                            FontAttributes="Bold">
+
+                            </Label>
+                            <Label
+                            Text="FUGRAN">
+
+                            </Label>
+                        </StackLayout>
+
+                        <StackLayout
+                        Grid.Column="2"
+                        VerticalOptions="Center">
+                            <Label
+                            HorizontalTextAlignment="End"
+                            FontSize="Medium"
+                            FontAttributes="Bold">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="US$ "></Span>
+                                        <Span Text="123.45"></Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+
+                            </Label>
+                            <Label
+                            Text="01/01/2021"
+                            HorizontalTextAlignment="End">
+
+                            </Label>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+
+                <Frame
+                Margin="10,5"
+                CornerRadius="30"
+                BorderColor="{StaticResource PrimaryColor}"
+                Padding="10">
+                    <Grid
+                    ColumnDefinitions="auto,*,auto">
+                        <Image
+                        Grid.Column="0"
+                        Source="ic_menu_presupuestos.png">
+                        </Image>
+
+                        <StackLayout
+                        Grid.Column="1">
+                            <Label
+                            Text="CLIENTE"
+                            VerticalTextAlignment="Center"
+                            FontSize="Medium"
+                            TextColor="{StaticResource PrimaryColor}"
+                            FontAttributes="Bold">
+
+                            </Label>
+                            <Label
+                            Text="FUGRAN">
+
+                            </Label>
+                        </StackLayout>
+
+                        <StackLayout
+                        Grid.Column="2"
+                        VerticalOptions="Center">
+                            <Label
+                            HorizontalTextAlignment="End"
+                            FontSize="Medium"
+                            FontAttributes="Bold">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="US$ "></Span>
+                                        <Span Text="123.45"></Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+
+                            </Label>
+                            <Label
+                            Text="01/01/2021"
+                            HorizontalTextAlignment="End">
+
+                            </Label>
+                        </StackLayout>
+                    </Grid>
+                </Frame>
             </StackLayout>
             
             <ImageButton
@@ -131,8 +281,8 @@
                 Grid.Column="1"
                 Source="ic_edit_hdpi.png"
                 Margin="10,0"
-                Command="{Binding NuevaNotaPedidoCommand}">                
-                
+                Command="{Binding NuevaNotaPedidoCommand}">
+
             </ImageButton>
 
             <StackLayout

@@ -109,6 +109,7 @@ namespace Core.ViewModels
         public Command RemoveProductCommand { get; }
         public Command SaveOpportunityCommand { get; }
         public Command WinOpportunityCommand { get; }
+        public Command LostOpportunityCommand { get; }
 
         // Fields
         public OpportunityProducts editingOpportunityDetail { get; set; }
@@ -133,16 +134,70 @@ namespace Core.ViewModels
             EditProductCommand = new Command<OpportunityProducts>(EditProduct);
             SaveOpportunityCommand = new Command(async () => await SaveOpportunity());
             WinOpportunityCommand = new Command<Opportunity>(async o => await WinOpportunityAsync(o));
+            LostOpportunityCommand = new Command(async () => await LostOpportunity());
 
             CargarIconosEstados();
 
 
         }
 
+        private async Task LostOpportunity()
+        {
+            try
+            {
+                var user = data.LoggedUser;
+
+                //Opportunity.opportunityStatus = new OpportunityStatus { Id = 5 };
+
+                Opportunity.customer = SelectedCustomer;
+
+                string error = ValidateOpportunity(Opportunity);
+                if (!string.IsNullOrWhiteSpace(error))
+                {
+                    toastService.ShowError(error);
+                    return;
+                }
+
+                var send = new OpportunityPost
+                {
+                    branchOfficeId = Opportunity.customer.Id,
+                    closedDate = Opportunity.createDt,
+                    closedReason = "",
+                    customerId = Opportunity.customer.Id,
+                    description = Opportunity.description,
+                    opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                    opportunityStatusId = 5,
+                    totalPrice = Total
+                };
+
+                send.opportunityProducts = listaProductos(Opportunity.Details);
+                
+                await prometeoApiService.SaveOpportunityEdit(send,Opportunity.Id);
+
+                await navigationService.Close(this);
+                NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); 
+                return;
+            }
+        }
+
         private async Task WinOpportunityAsync(Opportunity o)
         {
+            var order = new OrderNote
+            {
+                customerId = Opportunity.customer.Id,
+                customer = Opportunity.customer,
+                fecha = Opportunity.createDt,
+                opportunityId = Opportunity.Id,
+                Details = Opportunity.opportunityProducts,
+                total = Opportunity.totalPrice,
+            };
+
             //int customerId = await navigationService.Navigate<CustomersViewModel, int>();
-            await navigationService.Navigate<CreateOrderViewModel, Opportunity>(Opportunity);
+            await navigationService.Navigate<CreateOrderViewModel, OrderNote>(order);
 
         }
 
@@ -163,6 +218,11 @@ namespace Core.ViewModels
                 var result = await prometeoApiService.GetOppById(theOpportunity.Id);
                 Opportunity = result;
                 Opportunity.Details.AddRange(result.opportunityProducts);
+
+                if(Opportunity.opportunityStatus.Id >= 4)
+                {
+
+                }
 
                 AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
             }
@@ -205,6 +265,14 @@ namespace Core.ViewModels
                     EstadoId = id;
                     break;
                 case 4:
+                    IconAnalisis = "ic_tab_1_violeta.png";
+                    IconPropuesta = "ic_tab_2_violeta.png";
+                    IconNegociacion = "ic_tab_3_violeta.png";
+                    IconCerrada = "ic_tab_4_violeta.png";
+
+                    EstadoId = id;
+                    break;
+                case 5:
                     IconAnalisis = "ic_tab_1_violeta.png";
                     IconPropuesta = "ic_tab_2_violeta.png";
                     IconNegociacion = "ic_tab_3_violeta.png";
@@ -334,46 +402,59 @@ namespace Core.ViewModels
 
         private async Task SaveOpportunity()
         {
-            var user = data.LoggedUser;
-
-            Opportunity.opportunityStatus = new OpportunityStatus{ Id = EstadoId};
-
-            Opportunity.customer = SelectedCustomer;
-
-            string error = ValidateOpportunity(Opportunity);
-            if (!string.IsNullOrWhiteSpace(error))
+            try
             {
-                toastService.ShowError(error);
-                return;
+                if(EstadoId == 4 || EstadoId == 5)
+                {
+                    toastService.ShowError("Si la Oportunidad se encuentra cerrada no es posible editarla.");
+                    return;
+                }
+
+                var user = data.LoggedUser;
+
+                Opportunity.opportunityStatus = new OpportunityStatus { Id = EstadoId };
+
+                Opportunity.customer = SelectedCustomer;
+
+                string error = ValidateOpportunity(Opportunity);
+                if (!string.IsNullOrWhiteSpace(error))
+                {
+                    toastService.ShowError(error);
+                    return;
+                }
+
+                var send = new OpportunityPost
+                {
+                    branchOfficeId = Opportunity.customer.Id,
+                    closedDate = Opportunity.createDt,
+                    closedReason = "",
+                    customerId = Opportunity.customer.Id,
+                    description = Opportunity.description,
+                    opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                    opportunityStatusId = Opportunity.opportunityStatus.Id,
+                    totalPrice = Total
+                };
+
+                send.opportunityProducts = listaProductos(Opportunity.Details);
+
+                var id = Opportunity.Id;
+
+                if (id == 0)
+                {
+                    await prometeoApiService.SaveOpportunityCommand(send, user.Token);
+                }
+                else
+                {
+                    await prometeoApiService.SaveOpportunityEdit(send, id);
+                }
+
+                await navigationService.Close(this);
+                NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
             }
-
-            var send = new OpportunityPost
+            catch (Exception e)
             {
-                branchOfficeId = Opportunity.customer.Id,
-                closedDate = Opportunity.closedDate,
-                closedReason = "",
-                customerId = Opportunity.customer.Id,
-                description = Opportunity.description,
-                opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                opportunityStatusId = Opportunity.opportunityStatus.Id,
-                totalPrice = Total
-            };
-
-            send.opportunityProducts = listaProductos(Opportunity.Details);
-
-            var id = Opportunity.Id;
-
-            if (id == 0)
-            {
-                await prometeoApiService.SaveOpportunityCommand(send, user.Token);
+                await Application.Current.MainPage.DisplayAlert("Error", $"{ e.Message}", ""); return;
             }
-            else
-            {
-                await prometeoApiService.SaveOpportunityEdit(send, id);
-            }
-
-            await navigationService.Close(this);
-            NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
         }
 
         private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)

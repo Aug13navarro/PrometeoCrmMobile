@@ -472,10 +472,22 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\ic_menu_pedidos.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_coin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu_presupuestos.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\menos.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\trofeo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadXFormsNugetUpgradeInfoBarDroidHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionDroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadUnhandledDeviceExceptionDroidHideInfoBar="True" XamarinHotReloadXFormsNugetUpgradeInfoBarDroidHideInfoBar="True" TriggeredFromHotReload="False" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

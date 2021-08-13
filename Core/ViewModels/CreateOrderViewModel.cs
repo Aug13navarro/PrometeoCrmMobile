@@ -1,15 +1,17 @@
 ﻿using Core.Model;
 using Core.Services.Contracts;
 using MvvmCross.Navigation;
+using MvvmCross.Presenters.Hints;
 using MvvmCross.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
-    public class CreateOrderViewModel : MvxViewModel<Opportunity>
+    public class CreateOrderViewModel : MvxViewModel<OrderNote>
     {
         private ApplicationData data;
         // Properties
@@ -54,11 +56,11 @@ namespace Core.ViewModels
             set => SetProperty(ref isLoading, value);
         }
 
-        private Opportunity opportunity;
-        public Opportunity Opportunity
+        private OrderNote order;
+        public OrderNote Order
         {
-            get => opportunity;
-            set => SetProperty(ref opportunity, value);
+            get => order;
+            set => SetProperty(ref order, value);
         }
 
         private MvxObservableCollection<OpportunityStatus> selectedStatus;
@@ -75,6 +77,20 @@ namespace Core.ViewModels
             set => SetProperty(ref status, value);
         }
 
+        private MvxObservableCollection<Company> companies;
+        public MvxObservableCollection<Company> Companies
+        {
+            get => companies;
+            set => SetProperty(ref companies, value);
+        }
+
+        private Company company;
+        public Company Company
+        {
+            get => company;
+            set => SetProperty(ref company, value);
+        }
+
         private string selectedClosedLostStatusCause;
         public string SelectedClosedLostStatusCause
         {
@@ -89,6 +105,38 @@ namespace Core.ViewModels
             set => SetProperty(ref selectedCustomer, value);
         }
 
+        private MvxObservableCollection<PaymentCondition> paymentConditions;
+        public MvxObservableCollection<PaymentCondition> PaymentConditions
+        {
+            get => paymentConditions;
+            set => SetProperty(ref paymentConditions, value);
+        }
+        private PaymentCondition condition;
+        public PaymentCondition Condition
+        {
+            get => condition;
+            set => SetProperty(ref condition, value);
+        }
+
+        private decimal valorDescuento;
+        public decimal ValorDescuento
+        {
+            get => valorDescuento;
+            set => SetProperty(ref valorDescuento, value);
+        }
+
+        private int orderDiscount;
+        public int OrderDiscount
+        {
+            get => orderDiscount;
+            set
+            {
+                SetProperty(ref orderDiscount, value);
+                CalcularDescuento(this.OrderDiscount);
+            }
+        }
+
+
         private decimal total;
         public decimal Total
         {
@@ -98,7 +146,7 @@ namespace Core.ViewModels
 
         // Events
         public event EventHandler<Product> ShowEditProductPopup;
-        //public event EventHandler NewOpportunityCreated;
+        public event EventHandler NewOrderCreated;
 
         // Commands
         public Command SelectClientCommand { get; }
@@ -106,6 +154,8 @@ namespace Core.ViewModels
         public Command EditProductCommand { get; }
         public Command RemoveProductCommand { get; }
         public Command CerrarOportunidad { get; }
+
+        public Command SavePedidoCommand { get; }
 
         public OpportunityProducts editingOpportunityDetail { get; set; }
 
@@ -116,19 +166,167 @@ namespace Core.ViewModels
         public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
                                           IToastService toastService)
         {
+            data = new ApplicationData();
+
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
             this.toastService = toastService;
 
             SelectClientCommand = new Command(async () => await SelectClientAsync());
             AddProductCommand = new Command(async () => await AddProductAsync());
-            RemoveProductCommand = new Command<OpportunityProducts>(RemoveProduct);
+            RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
             EditProductCommand = new Command<OpportunityProducts>(EditProduct);
-            CerrarOportunidad = new Command(async () => await Cerrar());
+
+            SavePedidoCommand = new Command(async () => await SaveOrder());
 
             OrderStatus = new MvxObservableCollection<OpportunityStatus>();
 
             CargarEstados();
+            CargarEmpresas();
+            CargarCondiciones();
+        }
+
+        private async Task SaveOrder()
+        {
+            try
+            {
+                //if (Status == null ||
+                //    Company == null ||
+                //    SelectedCustomer == null ||
+                //    Condition == null)
+                //{
+                //    await Application.Current.MainPage.DisplayAlert("Atención", "Todos los campos son requeridos.", "Aceptar");
+                //    return;
+                //}
+
+                //var nuevaOrder = new OrderNote
+                //{
+                //    companyId = Company.Id,
+                //    currencyId = 1,
+                //    customerId = SelectedCustomer.Id,
+                //    discount = OrderDiscount,
+                //    fecha = Opportunity.createDt,
+                //    opportunityId = Opportunity.Id,
+                //    orderStatus = Status.Id,
+                //    paymentConditionId = Condition.id,
+                //    total = Total,
+                //    products = new List<OrderNote.ProductOrder>(DefinirProductos(Opportunity.Details)), // hacer que las empresas que no tengan un external id que no se muestren en la lista
+                //    cuenta = SelectedCustomer.ExternalId,
+                //    divisionCuentaId = Company.externalId.Value,
+                //    talon = 28,
+                //    tipoComprobante = 8,
+                //    tipoCuentaId = 1,
+                //    tipoServicioId = 50
+                //};
+
+                //var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
+
+                //if (respuesta != null)
+                //{
+                //    var send = new OpportunityPost
+                //    {
+                //        branchOfficeId = Opportunity.customer.Id,
+                //        closedDate = Opportunity.createDt,
+                //        closedReason = "",
+                //        customerId = Opportunity.customer.Id,
+                //        description = Opportunity.description,
+                //        opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                //        opportunityStatusId = 4,
+                //        totalPrice = Total
+                //    };
+
+                //    send.opportunityProducts = listaProductos(Opportunity.Details);
+
+                //    await prometeoApiService.SaveOpportunityEdit(send, Opportunity.Id);
+
+                //}
+
+                await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                await navigationService.Navigate<PedidosViewModel>();
+
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); 
+                return;
+            }
+        }
+
+        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
+        {
+            var lista = new List<OpportunityPost.ProductSend>();
+
+            foreach (var item in details)
+            {
+                decimal tempTotal = item.Price * item.Quantity;
+
+                if (item.Discount != 0)
+                {
+                    tempTotal = tempTotal - ((tempTotal * item.Discount) / 100);
+                }
+
+                lista.Add(new OpportunityPost.ProductSend
+                {
+                    discount = item.Discount,
+                    productId = item.productId,
+                    quantity = item.Quantity,
+                    total = tempTotal,
+                    price = item.Price
+                });
+            }
+
+            return lista;
+        }
+
+        private IEnumerable<OrderNote.ProductOrder> DefinirProductos(MvxObservableCollection<OpportunityProducts> details)
+        {
+            var lista = new List<OrderNote.ProductOrder>();
+
+            foreach (var item in details)
+            {
+                var prod = new OrderNote.ProductOrder
+                {
+                    arancel = 0,
+                    bonificacion = 0,
+                    companyProductPresentationId = item.productId,
+                    discount = item.Discount,
+                    price = item.Price,
+                    quantity = item.Quantity,
+                    subtotal = item.Total
+                };
+
+                lista.Add(prod);
+            }
+
+            return lista;
+        }
+
+        private async void CargarCondiciones()
+        {
+            try
+            {
+                var user = data.LoggedUser;
+
+                PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token));
+            }
+            catch(Exception e)
+            {
+                toastService.ShowError($"{e.Message}");
+            }
+        }
+
+        private async void CargarEmpresas()
+        {
+            try
+            {
+                var user = data.LoggedUser;
+
+                Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
+            }
+            catch ( Exception e)
+            {
+                toastService.ShowError($"{e.Message}");
+            }
         }
 
         private void CargarEstados()
@@ -139,34 +337,29 @@ namespace Core.ViewModels
             OrderStatus.Add(new OpportunityStatus { Id = 4, name = "Entregado" });
         }
 
-        public async override void Prepare(Opportunity theOpportunity)
+        public async override void Prepare(OrderNote theOrder)
         {
-            if(theOpportunity!=null)
+            try
             {
-                Opportunity = theOpportunity;
+                if (theOrder.id > 0)
+                {
+                    var user = data.LoggedUser;
+                    
+                    Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
 
-                selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
-                SelectedCustomer = Opportunity.customer;
-                ActualizarTotal(Opportunity.Details);
+                    ActualizarTotal(Order.products);
+                }
+                else
+                {
+                    Order = theOrder;
+                }
             }
-
-            //if (theOpportunity.Id > 0)
-            //{
-            //    //var result = await prometeoApiService.GetOppById(theOpportunity.Id);
-            //    //Opportunity = result;
-            //    //Opportunity.Details.AddRange(result.opportunityProducts);
-
-            //    //AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
-            //}
-            //else
-            //{
-            //    Opportunity = theOpportunity;
-            //}
-
-            //selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
-            //SelectedCustomer = Opportunity.customer;
-            //ActualizarTotal(Opportunity.Details);
+            catch(Exception e)
+            {
+                toastService.ShowError($"{e.Message}");
+            }
         }
+
         public void FinishEditProduct((decimal Price, int Quantity, int Discount) args)
         {
             if (editingOpportunityDetail == null)
@@ -190,21 +383,29 @@ namespace Core.ViewModels
                 editingOpportunityDetail.Total = temp - (temp * args.Discount / 100);
             }
 
-            var listaProd = new MvxObservableCollection<OpportunityProducts>(Opportunity.Details);
+            var listaProd = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products);
 
-            var prodEdit = listaProd.Where(x => x.productId == editingOpportunityDetail.productId).FirstOrDefault();
+            var prodEdit = listaProd.Where(x => x.companyProductPresentationId == editingOpportunityDetail.productId).FirstOrDefault();
 
-            Opportunity.Details.Remove(prodEdit);
+            Order.products.Remove(prodEdit);
 
             //listaProd.Remove(prodEdit);
             //listaProd.Add(editingOpportunityDetail);
 
+            var product = new OrderNote.ProductOrder
+            {
+                discount = editingOpportunityDetail.Discount,
+                price = editingOpportunityDetail.Price,
+                quantity = editingOpportunityDetail.Quantity,
+                subtotal = editingOpportunityDetail.Total,
+                companyProductPresentationId = editingOpportunityDetail.productId
+            };
 
-            Opportunity.Details.Add(editingOpportunityDetail);
+            Order.products.Add(product);
 
 
             editingOpportunityDetail = null;
-            ActualizarTotal(Opportunity.Details);
+            ActualizarTotal(Order.products);
         }
 
         public void CancelEditProduct()
@@ -233,38 +434,74 @@ namespace Core.ViewModels
         private async Task AddProductAsync()
         {
             OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
+
+            var product = new OrderNote.ProductOrder
+            {
+                discount = detail.Discount,
+                price = detail.Price,
+                quantity = detail.Quantity,
+                subtotal = detail.Total,
+                companyProductPresentationId = detail.productId
+            };
+
             if (detail != null)
             {
-                detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
+                detail.product.Id = Order.products.Any() ? Order.products.Max(d => d.companyProductPresentationId) + 1 : 1;
                 detail.Price = detail.product.price;
                 detail.Total = CalcularTotal(detail);
-                Opportunity.Details.Add(detail);
+                Order.products.Add(product);
 
-                ActualizarTotal(Opportunity.Details);
+                ActualizarTotal(Order.products);
             }
         }
+
+        private void CalcularDescuento(int orderDiscount)
+        {
+            var descuento = Total * orderDiscount / 100;
+
+            ValorDescuento = descuento;
+
+            ActualizarTotal(Order.products);
+        }
+
         private decimal CalcularTotal(OpportunityProducts detail)
         {
             if (detail.Discount == 0)
             {
-                return detail.Quantity * detail.Price;
+                if (ValorDescuento > 0)
+                {
+                    return (detail.Quantity * detail.Price) - ValorDescuento;
+                }
+                else
+                {
+                    return detail.Quantity * detail.Price;
+                }
             }
             else
             {
-                var temptotal = (detail.Quantity * detail.Price);
-                return temptotal - (temptotal * detail.Discount / 100);
+                var temptotal = detail.Quantity * detail.Price;
+
+                if (ValorDescuento > 0)
+                {
+                    var result = temptotal - (temptotal * detail.Discount / 100);
+                    return result - ValorDescuento;
+                }
+                else
+                {
+                    return temptotal - (temptotal * detail.Discount / 100);
+                }
             }
         }
 
-        private void RemoveProduct(OpportunityProducts detail)
+        private void RemoveProduct(OrderNote.ProductOrder detail)
         {
-            Opportunity.Details.Remove(detail);
-            ActualizarTotal(Opportunity.Details);
+            Order.products.Remove(detail);
+            ActualizarTotal(Order.products);
         }
 
         private void EditProduct(OpportunityProducts detail)
         {
-            var product = new Product()
+            var product = new Product
             {
                 name = detail.product.name,
                 price = detail.product.price,
@@ -276,14 +513,17 @@ namespace Core.ViewModels
             editingOpportunityDetail = detail;
             ShowEditProductPopup?.Invoke(this, product);
         }
-        private void ActualizarTotal(MvxObservableCollection<OpportunityProducts> details)
+        private void ActualizarTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
-            Total = details.Sum(x => x.Total);
+            if (OrderDiscount > 0)
+            {
+                Total = details.Sum(x => x.subtotal) - ValorDescuento;
+            }
+            else
+            {
+                Total = details.Sum(x => x.subtotal);
+            }
         }
 
-        private async Task Cerrar()
-        {
-            var d = Opportunity;
-        }
     }
 }

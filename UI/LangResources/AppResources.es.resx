@@ -138,6 +138,9 @@
   <data name="BusinessName" xml:space="preserve">
     <value>Raz. Soc.</value>
   </data>
+  <data name="CloseOpportunity" xml:space="preserve">
+    <value>Close Opportunity</value>
+  </data>
   <data name="CloseSession" xml:space="preserve">
     <value>Cerrar Sesión</value>
   </data>
@@ -210,6 +213,9 @@
   <data name="LoginInvalidMsg" xml:space="preserve">
     <value>Usuario o contraseña incorrecto.</value>
   </data>
+  <data name="Lost" xml:space="preserve">
+    <value>Lost</value>
+  </data>
   <data name="Mobile" xml:space="preserve">
     <value>Celular</value>
   </data>
@@ -237,6 +243,9 @@
   <data name="Password" xml:space="preserve">
     <value>Contraseña</value>
   </data>
+  <data name="PaymentCondition" xml:space="preserve">
+    <value>Condición de Pago</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Teléfono</value>
   </data>
@@ -255,6 +264,9 @@
   <data name="ResetFilters" xml:space="preserve">
     <value>Borrar Filtros</value>
   </data>
+  <data name="Sales" xml:space="preserve">
+    <value>Ventas</value>
+  </data>
   <data name="Search" xml:space="preserve">
     <value>Buscar...</value>
   </data>
@@ -263,6 +275,9 @@
   </data>
   <data name="SearchOpportunity" xml:space="preserve">
     <value>Buscar Oportunidad</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Seleccionar</value>
   </data>
   <data name="Since" xml:space="preserve">
     <value>Desde</value>
@@ -278,5 +293,8 @@
   </data>
   <data name="User" xml:space="preserve">
     <value>Usuario</value>
+  </data>
+  <data name="Won" xml:space="preserve">
+    <value>Won</value>
   </data>
 </root>

@@ -8,5 +8,6 @@ namespace Core.Model.Enums
         Contacts,
         Opportunities,
         Pedidos,
+        Sales
     }
 }

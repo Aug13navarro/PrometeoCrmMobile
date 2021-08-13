@@ -3,14 +3,7 @@ using Core.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UI.Popups;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace UI.Pages
 {
@@ -20,6 +13,7 @@ namespace UI.Pages
         public CreateOrderPage()
         {
             InitializeComponent();
+
         }
         protected override void OnViewModelSet()
         {

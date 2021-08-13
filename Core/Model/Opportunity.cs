@@ -21,6 +21,7 @@ namespace Core.Model
 
         public OpportunityStatus opportunityStatus { get; set; }
 
+        public DateTime createDt { get; set; }
         public DateTime closedDate { get; set; }
 
         public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();

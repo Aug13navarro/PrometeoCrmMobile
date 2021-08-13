@@ -21,7 +21,7 @@ namespace Core.Services.Contracts
         Task<List<CustomerType>> GetCustomerTypes();
         Task<List<DocumentType>> GetDocumentTypes();
         Task<List<TaxCondition>> GetTaxConditions();
-        Task<List<Company>> GetCompaniesByUserId(int userId);
+        Task<List<Company>> GetCompaniesByUserId(int userId, string token);
         Task<PaginatedList<CustomerContact>> SearchCustomerContacts(ContactsPaginatedRequest requestData);
         Task<Customer> GetCustomer(int id);
         Task UpdateCustomer(Customer customer);
@@ -34,5 +34,11 @@ namespace Core.Services.Contracts
         Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token);
         Task<Opportunity> GetOppById(int id);
         Task SaveOpportunityEdit(OpportunityPost send, int id);
+        Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token);
+        Task<OrderNote> CreateOrderNote(OrderNote nuevaOrder);
+        Task<PaginatedList<OrderNote>> GetOrderNote(OrdersNotesPaginatedRequest requestData, string token);
+        Task<PaginatedList<Sale>> GetSales(OrdersNotesPaginatedRequest requestData, string token);
+        Task<IEnumerable<OrderNote>> GetOrdersByfilter(FilterOrderModel filtro, string token);
+        Task<OrderNote> GetOrdersById(int id, string token);
     }
 }

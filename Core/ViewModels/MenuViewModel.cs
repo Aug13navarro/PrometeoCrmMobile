@@ -73,7 +73,16 @@ namespace Core.ViewModels
                 case MenuItemType.Pedidos:
                     await GoToPedidos();
                     break;
+                case MenuItemType.Sales:
+                    await GoToSales();
+                    break;
             }
+        }
+
+        private async Task GoToSales()
+        {
+
+            await navigationService.Navigate<SalesViewModel>();
         }
 
         private async Task GoToPedidos()

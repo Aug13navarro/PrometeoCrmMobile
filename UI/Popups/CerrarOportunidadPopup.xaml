@@ -2,19 +2,21 @@
 <Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
+                      xmlns:resources="clr-namespace:UI.LangResources"
              x:Class="UI.Popups.CerrarOportunidadPopup">
     <Frame
         CornerRadius="20"
         HorizontalOptions="Center"
         VerticalOptions="Center"
-        Padding="15,0,5,10">
+        Padding="15,0,5,10"
+        HeightRequest="120">
         <Grid
             ColumnDefinitions="auto,*,auto"
-            RowDefinitions="auto,auto,auto,auto">
+            RowDefinitions="auto,auto,auto">
             <Label
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
-                Text="Cerrar Oportunidad"
+                Text="{x:Static resources:AppResources.CloseOpportunity}"
                 FontSize="Medium"
                 VerticalOptions="Center"
                  Style="{StaticResource DefaultLabel}">
@@ -26,36 +28,42 @@
                 Source="ic_close.png">
                 
             </Image>
-            <Label 
+            <StackLayout                
                 Grid.Row="1"
-                Grid.Column="1"
-                Text="Ganada"
-                VerticalOptions="Center">
-                <Label.GestureRecognizers>
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal">
+                <StackLayout.GestureRecognizers>
                     <TapGestureRecognizer Tapped="CerradaGanada_Tapped" ></TapGestureRecognizer>
-                </Label.GestureRecognizers>
-            </Label>
-            <Image
-                Grid.Row="1"
-                Grid.Column="0"
-                Source="add.png">
+                </StackLayout.GestureRecognizers>
+                <Image
+                    Source="trofeo.png"
+                    WidthRequest="40">
 
-            </Image>
-            <Label 
-                Grid.Row="3"
-                Grid.Column="1"
-                Text="Perdida"
-                VerticalOptions="Center">
-                <Label.GestureRecognizers>
+                </Image>
+                <Label 
+                    Text="{x:Static resources:AppResources.Won}"
+                    VerticalOptions="Center">
+                </Label>
+            </StackLayout>
+            <StackLayout
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Orientation="Horizontal">
+                <StackLayout.GestureRecognizers>
                     <TapGestureRecognizer Tapped="CerradaPerdida_Tapped" ></TapGestureRecognizer>
-                </Label.GestureRecognizers>
-            </Label>
-            <Image
-                Grid.Row="3"
-                Grid.Column="0"
-                Source="add.png">
+                </StackLayout.GestureRecognizers>
+                <Image
+                    Source="menos.png"
+                    WidthRequest="40">
 
-            </Image>
+                </Image>
+                <Label 
+                    Text="{x:Static resources:AppResources.Lost}"
+                    VerticalOptions="Center">
+                </Label>
+            </StackLayout>
         </Grid>
     </Frame>
 </Popups:BasePopupPage>

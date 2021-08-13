@@ -128,7 +128,7 @@
                                                 <FormattedString>
                                                     <Span Text="{x:Static resources:AppResources.Date}" FontAttributes="Bold" />
                                                     <Span Text=": " FontAttributes="Bold" />
-                                                    <Span Text="{Binding closedDate, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
+                                                    <Span Text="{Binding createDt, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -187,7 +187,7 @@
                 <Image Source="ic_no_oportunidad.png" HorizontalOptions="Center"/>
                 <Label Text="{x:Static resources:AppResources.NoOpportunitiesFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
             </StackLayout>
-            
+
             <StackLayout Orientation="Horizontal" Margin="0" Spacing="5" HorizontalOptions="FillAndExpand"
                          HeightRequest="40" VerticalOptions="Center" BackgroundColor="LightGray"
                 Grid.Row="2"
@@ -224,9 +224,6 @@
             
             Command="{Binding CreateOpportunityCommand}"/>
         </Grid>
-        
-
-        
     </StackLayout>
     
 </Views:MvxContentPage>

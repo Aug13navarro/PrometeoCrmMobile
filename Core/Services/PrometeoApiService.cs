@@ -245,14 +245,30 @@ namespace Core.Services
             }
         }
 
-        public async Task<List<Company>> GetCompaniesByUserId(int userId)
+        public async Task<List<Company>> GetCompaniesByUserId(int userId, string token)
         {
-            string url = $"api/Company/GetCompanyByUserId/{userId}";
-
-            using (var request = new HttpRequestMessage(HttpMethod.Get, url))
+            try
             {
-                List<Company> result = await client.SendAsyncAs<List<Company>>(request);
-                return result;
+                string url = $"/api/Company/GetCompanyByUserId/{userId}";
+
+                var lista = new List<Company>();
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var response = await client.GetAsync($"{url}");
+
+                var resultado = await response.Content.ReadAsStringAsync();
+
+                if (resultado != null)
+                {
+                    lista = JsonConvert.DeserializeObject<IEnumerable<Company>>(resultado).ToList();
+                }
+
+                return lista;
+            }
+            catch
+            {
+                throw;
             }
         }
 
@@ -358,26 +374,8 @@ namespace Core.Services
                 }
 
                 return lista;
-                //var body = new
-                //{
-                //    requestData.CurrentPage,
-                //    requestData.PageSize,
-                //    requestData.Query,
-                //};
-
-                //using (var request = new HttpRequestMessage(HttpMethod.Get, cadena))
-                //using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
-                //{
-                //    //string req = await content.ReadAsStringAsync();
-                //    request.Content = content;
-                //    var result = await client.SendAsyncAs<IEnumerable<Opportunity>>(request);
-
-                //    return result;
-                //}
-
-
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -480,13 +478,133 @@ namespace Core.Services
             HttpContent httpContent = new StringContent(objeto);
 
             httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var json = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmbGFkaW5vQGRvY3dvcmxkLmNvbS5hciIsImFjdG9ydCI6IjYiLCJyb2xlTGlzdCI6IjEsMSwxLDEsMSwxLDEsMywxNSwyMiw0MiIsInJvbGVOYW1lTGlzdCI6IkFkbWluaXN0cmFkb3IsQWRtaW5pc3RyYWRvcixBZG1pbmlzdHJhZG9yLEFkbWluaXN0cmFkb3IsQWRtaW5pc3RyYWRvcixBZG1pbmlzdHJhZG9yLEFkbWluaXN0cmFkb3IsRW5jYXJnYWRvIGRlIGRpc3Bvc2l0aXZvcyxBZG1pbmlzdHJhZG9yIGRlIEVtcHJlc2EsQWRtaW5pc3RyYWRvciBkZSBlbXByZXNhLFJlc3BvbnNhYmxlIEFkbWluaXN0cmF0aXZvIiwiZXhwIjoxNzg0NDY4MTk4LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjIzOTIvIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDoyMzkyLyJ9.j6T4OfC-cYOuGrE660LNgbQw31HYicIXgIlQnyc9v2w";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", json);
 
             var respuesta = await client.PutAsync(string.Format(cadena), httpContent);
 
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
             await Task.FromResult(0);
+        }
+
+        public async Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token)
+        {
+            try
+            {
+                var url = $"/api/PaymentCondition/GetAllPaymentTermsAsync";
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.GetAsync(string.Format(url));
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                var lista = JsonConvert.DeserializeObject<IEnumerable<PaymentCondition>>(resultado);
+
+                return lista;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        public async Task<OrderNote> CreateOrderNote(OrderNote nuevaOrder)
+        {
+            var cadena = "/api/Opportunity/CreateOpportunityOrderNoteAsync";
+
+            var objeto = JsonConvert.SerializeObject(nuevaOrder);
+
+            HttpContent httpContent = new StringContent(objeto);
+
+            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            await Task.FromResult(0);
+
+            return JsonConvert.DeserializeObject<OrderNote>(resultado);
+        }
+
+        public async Task<PaginatedList<OrderNote>> GetOrderNote(OrdersNotesPaginatedRequest requestData, string token)
+        {
+            var cadena = "/api/Opportunity/SearchOpportunityOrderNoteAsync";
+
+            var objeto = JsonConvert.SerializeObject(requestData);
+
+            HttpContent httpContent = new StringContent(objeto);
+
+            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            await Task.FromResult(0);
+
+            return JsonConvert.DeserializeObject<PaginatedList<OrderNote>>(resultado);
+        }
+
+        public Task<PaginatedList<Sale>> GetSales(OrdersNotesPaginatedRequest requestData, string token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<OrderNote>> GetOrdersByfilter(FilterOrderModel filtro, string token)
+        {
+            try
+            {
+                var url = $"/api/Opportunity/SearchOpportunityOrderNoteByFiltersAsync";
+
+                var dto = JsonConvert.SerializeObject(filtro);
+
+                HttpContent httpContent = new StringContent(dto, Encoding.UTF8);
+
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.PostAsync(string.Format(url), httpContent);
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                var lista = JsonConvert.DeserializeObject<List<OrderNote>>(resultado);
+
+                return lista;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<OrderNote> GetOrdersById(int id, string token)
+        {
+            try
+            {
+                var url = $"/api/Opportunity/GetOpportunityOrderNoteByIdAsync?id={id}";
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.GetAsync($"{url}");
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<OrderNote>(resultado);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }
