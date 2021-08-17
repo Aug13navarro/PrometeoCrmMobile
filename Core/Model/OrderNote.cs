@@ -79,9 +79,9 @@ namespace Core.Model
             public string productPresentationName { get; set; }
             public int companyProductPresentationId { get; set; }
             public int quantity { get; set; }
-            public decimal price { get; set; }
+            public double price { get; set; }
             public int discount { get; set; }
-            public decimal subtotal { get; set; }
+            public double subtotal { get; set; }
             public int arancel { get; set; }
             public int bonificacion { get; set; }
         }

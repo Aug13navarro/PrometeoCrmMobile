@@ -385,6 +385,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If the Opportunity is closed is not possible edit it.
+        /// </summary>
+        internal static string NoEditOpportunity {
+            get {
+                return ResourceManager.GetString("NoEditOpportunity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No opportunities found.
         /// </summary>
         internal static string NoOpportunitiesFound {

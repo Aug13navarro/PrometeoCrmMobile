@@ -118,8 +118,8 @@ namespace Core.ViewModels
             set => SetProperty(ref condition, value);
         }
 
-        private decimal valorDescuento;
-        public decimal ValorDescuento
+        private double valorDescuento;
+        public double ValorDescuento
         {
             get => valorDescuento;
             set => SetProperty(ref valorDescuento, value);
@@ -137,8 +137,8 @@ namespace Core.ViewModels
         }
 
 
-        private decimal total;
-        public decimal Total
+        private double total;
+        public double Total
         {
             get => total;
             set => SetProperty(ref total, value);
@@ -265,7 +265,7 @@ namespace Core.ViewModels
 
             foreach (var item in details)
             {
-                decimal tempTotal = item.Price * item.Quantity;
+                double tempTotal = item.Price * item.Quantity;
 
                 if (item.Discount != 0)
                 {
@@ -396,7 +396,7 @@ namespace Core.ViewModels
             return listaProductos;
         }
 
-        public void FinishEditProduct((decimal Price, int Quantity, int Discount) args)
+        public void FinishEditProduct((double Price, int Quantity, int Discount) args)
         {
             if (editingOpportunityDetail == null)
             {
@@ -505,7 +505,7 @@ namespace Core.ViewModels
             { 
             var descuento = Total * orderDiscount / 100;
 
-            ValorDescuento = descuento;
+            ValorDescuento = Convert.ToDouble(descuento);
 
             ActualizarTotal(Order.products);
 
@@ -516,7 +516,7 @@ namespace Core.ViewModels
             }
         }
 
-        private decimal CalcularTotal(OpportunityProducts detail)
+        private double CalcularTotal(OpportunityProducts detail)
         {
             try
             { 

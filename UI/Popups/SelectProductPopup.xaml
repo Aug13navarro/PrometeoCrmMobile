@@ -31,14 +31,14 @@
                     <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
 
-                <Label Text="{x:Static resources:AppResources.Price}" Grid.Row="0" Grid.Column="0" TextColor="{StaticResource PrimaryColor}" />
+                <Label Text="{x:Static resources:AppResources.Price}" Grid.Row="0" Grid.Column="0" TextColor="{StaticResource PrimaryColor}" x:Name="lblPrice"/>
                 <Label Text="{x:Static resources:AppResources.Quantity}" Grid.Row="0" Grid.Column="1" TextColor="{StaticResource PrimaryColor}" />
                 <Label Text="{x:Static resources:AppResources.DiscountPopUp}" Grid.Row="0" Grid.Column="2" TextColor="{StaticResource PrimaryColor}" />
 
-                <Entry Style="{StaticResource DefaultEntry}" Keyboard="Numeric" x:Name="priceInput" Grid.Row="1" Grid.Column="0" TextChanged="PriceInputTextChanged">
-                    <!--<Entry.Behaviors>
+                <Entry Style="{StaticResource DefaultEntry}" x:Name="priceInput" Grid.Row="1" Grid.Column="0" TextChanged="PriceInputTextChanged">
+                    <Entry.Behaviors>
                         <Behavior:NumericValidationBehavior />
-                    </Entry.Behaviors>-->
+                    </Entry.Behaviors>
                 </Entry>
                 <Entry Keyboard="Numeric" Style="{StaticResource DefaultEntry}" Grid.Row="1" Grid.Column="1"
                        x:Name="quantityInput" TextChanged="QuantityInputTextChanged" />

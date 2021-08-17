@@ -4,6 +4,7 @@ using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
 using System;
+using UI.LangResources;
 using UI.Popups;
 using Xamarin.Forms;
 
@@ -51,26 +52,60 @@ namespace UI.Pages
             await PopupNavigation.Instance.PushAsync(popup);
         }
 
+        private void Cerrada_Clicked(object sender, EventArgs e)
+        {
+            if(ViewModel.EstadoId >= 4)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Info", AppResources.NoEditOpportunity, AppResources.Accept);
+                return;
+            }
+        }
+
         private void ImageButton_Clicked_1(object sender, EventArgs e)
         {
+            if (ViewModel.EstadoId >= 4)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Info", AppResources.NoEditOpportunity, AppResources.Accept);
+                return;
+            }
 
             ViewModel.AjustarBotonesEstados(1);
         }
 
         private void ImageButton_Clicked_2(object sender, EventArgs e)
         {
+            if (ViewModel.EstadoId >= 4)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Info", AppResources.NoEditOpportunity, AppResources.Accept);
+                return;
+            }
 
             ViewModel.AjustarBotonesEstados(2);
         }
 
         private void ImageButton_Clicked_3(object sender, EventArgs e)
         {
+            if (ViewModel.EstadoId >= 4)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Info", AppResources.NoEditOpportunity, AppResources.Accept);
+                return;
+            }
 
             ViewModel.AjustarBotonesEstados(3);
         }
 
         private void ImageButton_Clicked_4(object sender, EventArgs e)
         {
+            if (ViewModel.EstadoId >= 4)
+            {
+                Application.Current.MainPage.DisplayAlert(
+                    "Info", AppResources.NoEditOpportunity, AppResources.Accept);
+                return;
+            }
 
             //ViewModel.AjustarBotonesEstados(4);
 

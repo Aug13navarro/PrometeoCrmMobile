@@ -12,7 +12,7 @@ namespace UI.Popups
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SelectProductPopup : BasePopupPage
     {
-        public event EventHandler<(decimal Price, int Quantity, int Discount)> OkTapped;
+        public event EventHandler<(double Price, int Quantity, int Discount)> OkTapped;
 
         private readonly Product product;
         private readonly IToastService toastService;
@@ -26,15 +26,15 @@ namespace UI.Popups
             this.product = product;
 
             descriptionLabel.Text = product.name;
-            priceInput.Text = product.price.ToString(CultureInfo.InvariantCulture);
+            priceInput.Text = product.price.ToString();
             quantityInput.Text = isEditing ? product.quantity.ToString() : "1";
             discountInput.Text = isEditing ? product.Discount.ToString() : "0";
         }
 
         private void OkButtonClicked(object sender, EventArgs e)
         {
-            (decimal Price, int Quantity, int Discount) result =
-                (Price: decimal.Parse(priceInput.Text), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
+            (double Price, int Quantity, int Discount) result =
+                (Price: double.Parse(priceInput.Text), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
 
             if (result.Discount > 100)
             {
@@ -72,21 +72,42 @@ namespace UI.Popups
             subtotalInput.Text = $"${ComputeTotal():0.##}";
         }
 
-        private decimal ComputeTotal()
+        private double ComputeTotal()
         {
             try
             {
-                (decimal Price, int Quantity, int Discount) result =
-                    (Price: decimal.Parse(priceInput.Text), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
+                if(lblPrice.Text == "Price") //para cuando el idioma esta en ingles
+                {
 
-                decimal tempTotal = result.Price * result.Quantity;
-                if (result.Discount == 0)
-                {
-                    return tempTotal;
+                    var Price = double.Parse(priceInput.Text.Replace(",", "."));
+                    var Quantity = int.Parse(quantityInput.Text);
+                    var Discount = int.Parse(discountInput.Text);
+
+                    double tempTotal = Price * Quantity;
+                    if (Discount == 0)
+                    {
+                        return tempTotal;
+                    }
+                    else
+                    {
+                        return tempTotal - (tempTotal * Discount / 100);
+                    }
                 }
-                else
+                else // para cuando el idioma esta en español
                 {
-                    return tempTotal - (tempTotal * result.Discount / 100);
+                    var Price = double.Parse(priceInput.Text);
+                    var Quantity = int.Parse(quantityInput.Text);
+                    var Discount = int.Parse(discountInput.Text);
+
+                    double tempTotal = Price * Quantity;
+                    if (Discount == 0)
+                    {
+                        return tempTotal;
+                    }
+                    else
+                    {
+                        return tempTotal - (tempTotal * Discount / 100);
+                    }
                 }
             }
             catch (Exception e)

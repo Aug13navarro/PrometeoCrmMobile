@@ -222,6 +222,9 @@
   <data name="Name" xml:space="preserve">
     <value>Nombre</value>
   </data>
+  <data name="NoEditOpportunity" xml:space="preserve">
+    <value>Si la Oportunidad esta cerrada no es posible editarla</value>
+  </data>
   <data name="NoOpportunitiesFound" xml:space="preserve">
     <value>No se encontraron oportunidades</value>
   </data>
@@ -295,6 +298,6 @@
     <value>Usuario</value>
   </data>
   <data name="Won" xml:space="preserve">
-    <value>Won</value>
+    <value>Ganada</value>
   </data>
 </root>

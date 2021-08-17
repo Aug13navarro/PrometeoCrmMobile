@@ -469,7 +469,7 @@ namespace Core.Services
             }
         }
 
-        public async Task SaveOpportunityEdit(OpportunityPost send, int id)
+        public async Task SaveOpportunityEdit(OpportunityPost send, int id, string token)
         {
             var cadena = $"api/Opportunity?id={id}";
 
@@ -479,9 +479,7 @@ namespace Core.Services
 
             httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            var json = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmbGFkaW5vQGRvY3dvcmxkLmNvbS5hciIsImFjdG9ydCI6IjYiLCJyb2xlTGlzdCI6IjEsMSwxLDEsMSwxLDEsMywxNSwyMiw0MiIsInJvbGVOYW1lTGlzdCI6IkFkbWluaXN0cmFkb3IsQWRtaW5pc3RyYWRvcixBZG1pbmlzdHJhZG9yLEFkbWluaXN0cmFkb3IsQWRtaW5pc3RyYWRvcixBZG1pbmlzdHJhZG9yLEFkbWluaXN0cmFkb3IsRW5jYXJnYWRvIGRlIGRpc3Bvc2l0aXZvcyxBZG1pbmlzdHJhZG9yIGRlIEVtcHJlc2EsQWRtaW5pc3RyYWRvciBkZSBlbXByZXNhLFJlc3BvbnNhYmxlIEFkbWluaXN0cmF0aXZvIiwiZXhwIjoxNzg0NDY4MTk4LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjIzOTIvIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDoyMzkyLyJ9.j6T4OfC-cYOuGrE660LNgbQw31HYicIXgIlQnyc9v2w";
-
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", json);
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var respuesta = await client.PutAsync(string.Format(cadena), httpContent);
 

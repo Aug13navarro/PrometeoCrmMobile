@@ -39,7 +39,7 @@ namespace Core.Model
             }
         }
 
-        public decimal Price { get; set; }
+        public double Price { get; set; }
         //private decimal price;
         //public decimal Price
         //{
@@ -52,7 +52,7 @@ namespace Core.Model
         //}
 
         //private decimal total;
-        public decimal Total { get; set; }
+        public double Total { get; set; }
         
 
         //private decimal ComputeTotal()

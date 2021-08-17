@@ -222,6 +222,9 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="NoEditOpportunity" xml:space="preserve">
+    <value>If the Opportunity is closed is not possible edit it</value>
+  </data>
   <data name="NoOpportunitiesFound" xml:space="preserve">
     <value>No opportunities found</value>
   </data>

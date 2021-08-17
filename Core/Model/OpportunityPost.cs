@@ -9,7 +9,7 @@ namespace Core.Model
         public int branchOfficeId { get; set; }
         public int opportunityStatusId { get; set; }
         public List<ProductSend> opportunityProducts { get; set; }
-        public decimal totalPrice { get; set; }
+        public double totalPrice { get; set; }
         public string closedReason { get; set; }
         public DateTime closedDate { get; set; }
         public DateTime createDt { get; set; }
@@ -18,10 +18,10 @@ namespace Core.Model
         public class ProductSend
         {
             public int productId { get; set; }
-            public decimal price { get; set; }
+            public double price { get; set; }
             public int quantity { get; set; }
             public int discount { get; set; }
-            public decimal total { get; set; }
+            public double total { get; set; }
         }
     }
 }

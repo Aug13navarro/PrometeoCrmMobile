@@ -85,8 +85,8 @@ namespace Core.ViewModels
             set => SetProperty(ref selectedCustomer, value);
         }
 
-        private decimal total;
-        public decimal Total
+        private double total;
+        public double Total
         {
             get => total;
             set => SetProperty(ref total, value);
@@ -172,7 +172,7 @@ namespace Core.ViewModels
 
                 send.opportunityProducts = listaProductos(Opportunity.Details);
                 
-                await prometeoApiService.SaveOpportunityEdit(send,Opportunity.Id);
+                await prometeoApiService.SaveOpportunityEdit(send,Opportunity.Id, user.Token);
 
                 await navigationService.Close(this);
                 NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
@@ -283,7 +283,7 @@ namespace Core.ViewModels
             }
         }
 
-        public void FinishEditProduct((decimal Price, int Quantity, int Discount) args)
+        public void FinishEditProduct((double Price, int Quantity, int Discount) args)
         {
             if (editingOpportunityDetail == null)
             {
@@ -361,7 +361,7 @@ namespace Core.ViewModels
             }
         }
 
-        private decimal CalcularTotal(OpportunityProducts detail)
+        private double CalcularTotal(OpportunityProducts detail)
         {
             if(detail.Discount == 0)
             {
@@ -445,7 +445,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    await prometeoApiService.SaveOpportunityEdit(send, id);
+                    await prometeoApiService.SaveOpportunityEdit(send, id, user.Token);
                 }
 
                 await navigationService.Close(this);
@@ -463,7 +463,7 @@ namespace Core.ViewModels
 
             foreach (var item in details)
             {
-                decimal tempTotal = item.Price * item.Quantity;
+                double tempTotal = item.Price * item.Quantity;
 
                 if (item.Discount != 0)
                 {

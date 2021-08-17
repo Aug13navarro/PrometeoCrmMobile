@@ -42,7 +42,7 @@ namespace UI.Pages
             {
                 await PopupNavigation.Instance.PopAsync(false);
 
-                (decimal price, int quantity, int discount) = args;
+                (double price, int quantity, int discount) = args;
                 var detail = new OpportunityProducts()
                 {
                     productId = product.Id,

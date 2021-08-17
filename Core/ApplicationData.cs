@@ -42,9 +42,9 @@ namespace Core
                         user.FullName = fullName;
                         user.Token = token;
                         user.Language = language;
-                        user.Expiration = !string.IsNullOrWhiteSpace(tokenExpirationDate)
-                                              ? DateTime.Parse(tokenExpirationDate)
-                                              : (DateTime?)null;
+                        //user.Expiration = !string.IsNullOrWhiteSpace(tokenExpirationDate)
+                        //                      ? DateTime.Parse(tokenExpirationDate)
+                        //                      : (DateTime?)null;
 
                         loggedUser = user;
                     }
