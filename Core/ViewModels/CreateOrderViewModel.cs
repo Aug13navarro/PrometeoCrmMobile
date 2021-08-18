@@ -132,7 +132,7 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref orderDiscount, value);
-                CalcularDescuento(this.OrderDiscount);
+                //CalcularDescuento(this.OrderDiscount);
             }
         }
 
@@ -476,45 +476,57 @@ namespace Core.ViewModels
                 var product = new OrderNote.ProductOrder
                 {
                     discount = detail.Discount,
-                    price = detail.Price,
+                    price = detail.product.price,
                     quantity = detail.Quantity,
                     subtotal = detail.Total,
-                    companyProductPresentationId = detail.productId
+                    companyProductPresentationId = detail.productId,
+                    productPresentationName = detail.product.name,
                 };
 
-                if (detail != null)
-                {
-                    detail.product.Id = Order.products.Any() ? Order.products.Max(d => d.companyProductPresentationId) + 1 : 1;
-                    detail.Price = detail.product.price;
-                    detail.Total = CalcularTotal(detail);
-                    Order.products.Add(product);
+                //if (detail != null)
+                //{
+                //    detail.product.Id = Order.products.Any() ? Order.products.Max(d => d.companyProductPresentationId) + 1 : 1;
+                //    detail.Price = detail.product.price;
+                //    detail.Total = CalcularTotal(detail);
+                    
+                //}
 
-                    ActualizarTotal(Order.products);
-                }
+                Order.products.Add(product);
 
-            }
-            catch (Exception e)
-            {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
-            }
-        }
-
-        private void CalcularDescuento(int orderDiscount)
-        {
-            try
-            { 
-            var descuento = Total * orderDiscount / 100;
-
-            ValorDescuento = Convert.ToDouble(descuento);
-
-            ActualizarTotal(Order.products);
+                ActualizarTotal(Order.products);
 
             }
             catch (Exception e)
             {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
         }
+
+        //private void CalcularDescuento(int orderDiscount)
+        //{
+        //    try
+        //    {
+        //        var totalTemp = Order.products.Sum(x => x.subtotal);
+
+        //        var descuento = totalTemp * orderDiscount / 100;
+
+        //        var desStr = descuento.ToString();
+
+        //        if(desStr.Contains(","))
+        //        {
+        //            ValorDescuento = double.Parse(desStr.Replace(",", "."));
+        //        }
+
+        //        ValorDescuento = descuento;
+
+        //        ActualizarTotal(Order.products);
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+        //    }
+        //}
 
         private double CalcularTotal(OpportunityProducts detail)
         {
@@ -592,15 +604,15 @@ namespace Core.ViewModels
         private void ActualizarTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
             try
-            { 
-            if (OrderDiscount > 0)
             {
-                Total = details.Sum(x => x.subtotal) - ValorDescuento;
-            }
-            else
-            {
-                Total = details.Sum(x => x.subtotal);
-            }
+                if (OrderDiscount > 0)
+                {
+                    Total = details.Sum(x => x.subtotal) - ValorDescuento;
+                }
+                else
+                {
+                    Total = details.Sum(x => x.subtotal);
+                }
 
             }
             catch (Exception e)

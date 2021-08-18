@@ -107,7 +107,7 @@
                         AutoSize="TextChanges" Text="{Binding Opportunity.description}" MaxLength="300" />
 
                     <StackLayout Orientation="Horizontal">
-                        <Label Text="{x:Static resources:AppResources.Associated_Prodcuts}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
+                        <Label Text="{x:Static resources:AppResources.Associated_Products}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
                         <Image Source="ic_add_box.png">
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AddProductCommand}" />

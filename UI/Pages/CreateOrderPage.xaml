@@ -7,6 +7,7 @@
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
                       xmlns:resources="clr-namespace:UI.LangResources"
                       xmlns:Controls="clr-namespace:UI.Controls"
+                      xmlns:Behavior="clr-namespace:UI.Behavior"
                       x:Class="UI.Pages.CreateOrderPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
@@ -147,7 +148,7 @@
                     </Frame>
                     
                     <StackLayout Orientation="Horizontal">
-                        <Label Text="{x:Static resources:AppResources.Associated_Prodcuts}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
+                        <Label Text="{x:Static resources:AppResources.Associated_Products}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
                         <Image Source="ic_add_box.png">
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AddProductCommand}" />
@@ -167,7 +168,7 @@
                                         <StackLayout Orientation="Horizontal" Spacing="0">
                                             <Label Text="{Binding productPresentationName}" TextColor="{StaticResource SecondaryColor}"
                                                FontAttributes="Bold" FontSize="Medium" Margin="0,8,0,5" HorizontalOptions="StartAndExpand" />
-                                            <Image Source="ic_edit.png">
+                                            <Image Source="editar_imagen.png">
                                                 <Image.GestureRecognizers>
                                                     <TapGestureRecognizer
                                                     Command="{Binding Source={x:Reference detailsList}, Path=BindingContext.EditProductCommand}"
@@ -197,7 +198,7 @@
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="Subtotal" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
-                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', subTotal)" TextColor="{StaticResource PrimaryColor}" />
+                                            <Label Mvx:Bi.nd="Text Format('${0:0.##}', subtotal)" TextColor="{StaticResource PrimaryColor}" />
                                         </StackLayout>
                                         <BoxView BackgroundColor="LightGray" HeightRequest="1" />
                                     </StackLayout>
@@ -220,25 +221,27 @@
                 <StackLayout
                     Orientation="Horizontal">
                     <Label
-                    Text="Descuento" VerticalOptions="Center">
+                        VerticalOptions="Center">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="{x:Static resources:AppResources.Discount}" FontAttributes="Bold"></Span>
+                                <Span Text="{x:Static resources:AppResources.Discount}" FontAttributes="Bold" x:Name="lblDiscount"></Span>
                                 <Span Text=" %" FontAttributes="Bold"></Span>
                             </FormattedString>
                         </Label.FormattedText>
 
                     </Label>
-                    <Entry Keyboard="Numeric" WidthRequest="50" FontSize="Small" Margin="0" Text="{Binding OrderDiscount, Mode=TwoWay}">
-
+                    <Entry Keyboard="Default" WidthRequest="50" FontSize="Small" Margin="0" Text="{Binding OrderDiscount, Mode=TwoWay}" TextChanged="Entry_TextChanged" x:Name="lblOrderDiscount">
+                        <Entry.Behaviors>
+                            <Behavior:NumericValidationBehavior />
+                        </Entry.Behaviors>
                     </Entry>
                     <Label
-                    HorizontalOptions="EndAndExpand"
-                    Text="Descuento" VerticalOptions="Center">
+                    HorizontalOptions="EndAndExpand" VerticalOptions="Center">
                         <Label.FormattedText>
                             <FormattedString>
                                 <Span Text="-$ " FontAttributes="Bold"></Span>
-                                <Span Text="{Binding ValorDescuento, Mode=TwoWay}" FontAttributes="Bold"></Span>
+                                <Span  FontAttributes="Bold" x:Name="lblDiscountResult"></Span>
+                                <!--Text="{Binding ValorDescuento, Mode=TwoWay}"-->
                             </FormattedString>
                         </Label.FormattedText>
 

@@ -3,6 +3,7 @@ using Core.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
+using System;
 using UI.Popups;
 
 namespace UI.Pages
@@ -57,12 +58,27 @@ namespace UI.Pages
                     //Price = price,
                     Discount = discount,
                     Quantity = quantity,
+                    Total = CalcularTotal(price, quantity, discount),
                 };
 
                 await ViewModel.Close(detail);
             };
-
+            
             await PopupNavigation.Instance.PushAsync(popup);
+        }
+
+        private double CalcularTotal(double price, int quantity, int discount)
+        {
+            var totalTemp = price * quantity;
+
+            if (discount == 0)
+            {
+                return totalTemp;
+            }
+            else
+            {
+                return totalTemp - (totalTemp * discount / 100);
+            }
         }
 
         private void productsList_ItemAppearing(object sender, Xamarin.Forms.ItemVisibilityEventArgs e)

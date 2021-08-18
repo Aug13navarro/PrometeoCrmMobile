@@ -90,9 +90,9 @@ namespace UI.LangResources {
         /// <summary>
         ///   Looks up a localized string similar to Associated products.
         /// </summary>
-        internal static string Associated_Prodcuts {
+        internal static string Associated_Products {
             get {
-                return ResourceManager.GetString("Associated_Prodcuts", resourceCulture);
+                return ResourceManager.GetString("Associated_Products", resourceCulture);
             }
         }
         

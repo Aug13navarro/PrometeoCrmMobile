@@ -3,6 +3,7 @@ using Core.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
+using System;
 using UI.Popups;
 
 namespace UI.Pages
@@ -34,6 +35,31 @@ namespace UI.Pages
             popup.Dismissed += (s, args) => ViewModel.CancelEditProduct();
 
             await PopupNavigation.Instance.PushAsync(popup);
+        }
+
+        private void Entry_TextChanged(object sender, Xamarin.Forms.TextChangedEventArgs e)
+        {
+            if(lblDiscount.Text == "Discount")
+            {
+                if (ViewModel.OrderDiscount > 0)
+                {
+                    ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(lblOrderDiscount.Text))
+                {
+                    if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
+                    {
+                        var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
+
+                        var descuento = Convert.ToDouble($"0.{o}");
+
+                        lblDiscountResult.Text = (ViewModel.Total * descuento).ToString();
+                    }
+                }
+            }
         }
     }
 }
