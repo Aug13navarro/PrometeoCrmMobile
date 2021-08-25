@@ -10,6 +10,7 @@ using Core.Dtos;
 using Core.Model;
 using Core.Model.Common;
 using Core.Model.Enums;
+using Core.Model.Extern;
 using Core.Services.Contracts;
 using Core.Services.Exceptions;
 using Core.Services.Utils;
@@ -21,14 +22,12 @@ namespace Core.Services
     public class PrometeoApiService : IPrometeoApiService
     {
         private readonly HttpClient client;
+        private readonly IOfflineDataService offlineDataService;
 
-        private static readonly List<Opportunity> Opportunities = new List<Opportunity>()
-        {
-        };
-
-        public PrometeoApiService(HttpClient client)
+        public PrometeoApiService(HttpClient client, IOfflineDataService offlineDataService)
         {
             this.client = client;
+            this.offlineDataService = offlineDataService;
         }
 
         public async Task<LoginData> Login(string userName, string password)
@@ -149,6 +148,8 @@ namespace Core.Services
 
         public async Task<PaginatedList<Customer>> GetCustomers(CustomersPaginatedRequest requestData)
         {
+            //if (offlineDataService.IsWifiConection)
+            //{
             const string url = "api/Customer/GetList";
             var body = new
             {
@@ -157,16 +158,120 @@ namespace Core.Services
                 requestData.PageSize,
                 requestData.Query,
             };
-
+            
             using (var request = new HttpRequestMessage(HttpMethod.Post, url))
             using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
             {
                 //string req = await content.ReadAsStringAsync();
                 request.Content = content;
                 PaginatedList<Customer> result = await client.SendAsyncAs<PaginatedList<Customer>>(request);
-
+            
+                if(offlineDataService.IsDataLoaded)
+                {
+                    offlineDataService.UnloadAllData();
+                }
+            
+                offlineDataService.SaveCustomerSearch(result.Results);
+            
                 return result;
             }
+            //}
+            //else
+            //{
+            //    if(!offlineDataService.IsDataLoaded)
+            //    {
+            //        await offlineDataService.LoadAllData();
+            //    }
+
+            //    //var result = await offlineDataService.SearchPolicies(requestData);
+            //    //var customers = ConvertToPaginatedCustomers(result);
+
+            //    return new PaginatedList<Customer>();
+            //}
+        }
+
+        public async Task<List<Customer>> GetAllCustomer(int userId, bool isParent, int typeCustomer, string token)
+        {
+            try
+            {
+                if(offlineDataService.IsWifiConection)
+                {
+                    var lista = new List<Customer>();
+
+                    string url = $"api/Customer?idUser={userId}&companyId={0}&isParentCustomer=true&customerTypeId={typeCustomer}";
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    var response = await client.GetAsync($"{url}");
+                    var resultado = await response.Content.ReadAsStringAsync();
+
+                    if(!string.IsNullOrWhiteSpace(resultado))
+                    {
+                        lista = JsonConvert.DeserializeObject<List<Customer>>(resultado);
+                        
+                        if (offlineDataService.IsDataLoaded)
+                        {
+                            offlineDataService.UnloadAllData();
+                        }
+
+                        offlineDataService.SaveCustomerSearch(lista);
+                    }
+
+                    return lista;
+                }
+                else
+                {
+                    if(!offlineDataService.IsDataLoaded)
+                    {
+                        await offlineDataService.LoadAllData();
+                    }
+
+                    var result = await offlineDataService.SearchCustomers();
+
+                    return result;
+                }
+            }
+            catch (Exception e )
+            {
+                var s = e.Message;
+                throw;
+            }
+        }
+
+        private PaginatedList<Customer> ConvertToPaginatedCustomers(PaginatedList<CustomerExtern> results)
+        {
+            var resultBase = results.Results;
+
+            var clientes = ConvertCustomers(results.Results);
+
+            return new PaginatedList<Customer>(results.PageSize, results.CurrentPage, clientes, results.TotalCount)
+            {
+                CurrentPage = results.CurrentPage,
+                Results = clientes,
+                PageSize = results.PageSize,
+                ResultsCount = results.ResultsCount,
+                TotalCount = results.TotalCount,
+                TotalPages = results.TotalPages,
+            };
+        }
+
+        private List<Customer> ConvertCustomers(List<CustomerExtern> results)
+        {
+            var listaClientes = new List<Customer>();
+
+            foreach (var item in results)
+            {
+                listaClientes.Add(new Customer
+                {
+                    Id = item.Id,
+                    Abbreviature = item.Abbreviature,
+                    AccountOwnerId = item.AccountOwnerId,
+                    AccountOwnerName = item.AccountOwnerName,
+                    BusinessName = item.BusinessName,
+                    CompanyName = item.CompanyName,
+                });
+            }
+
+            return listaClientes;
         }
 
         public async Task<List<Customer>> GetCustomersOld(CustomersOldRequest requestData)
@@ -249,22 +354,44 @@ namespace Core.Services
         {
             try
             {
-                string url = $"/api/Company/GetCompanyByUserId/{userId}";
-
-                var lista = new List<Company>();
-
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                var response = await client.GetAsync($"{url}");
-
-                var resultado = await response.Content.ReadAsStringAsync();
-
-                if (resultado != null)
+                if (offlineDataService.IsWifiConection)
                 {
-                    lista = JsonConvert.DeserializeObject<IEnumerable<Company>>(resultado).ToList();
-                }
 
-                return lista;
+                    string url = $"/api/Company/GetCompanyByUserId/{userId}";
+
+                    var lista = new List<Company>();
+
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    var response = await client.GetAsync($"{url}");
+
+                    var resultado = await response.Content.ReadAsStringAsync();
+
+                    if (resultado != null)
+                    {
+                        lista = JsonConvert.DeserializeObject<IEnumerable<Company>>(resultado).ToList();
+
+                        if(offlineDataService.IsDataLoaded)
+                        {
+                            offlineDataService.UnloadAllData();
+                        }
+
+                        offlineDataService.SaveCompanySearch(lista);
+                    }
+
+                    return lista;
+                }
+                else
+                {
+                    if(!offlineDataService.IsDataLoaded)
+                    {
+                        await offlineDataService.LoadCompanies();
+                    }
+
+                    var result = await offlineDataService.SearchCompanies();
+
+                    return result;
+                }
             }
             catch
             {
@@ -492,17 +619,44 @@ namespace Core.Services
         {
             try
             {
-                var url = $"/api/PaymentCondition/GetAllPaymentTermsAsync";
+                if (offlineDataService.IsWifiConection)
+                {
 
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                    var lista = new List<PaymentCondition>();
 
-                var respuesta = await client.GetAsync(string.Format(url));
+                    var url = $"/api/PaymentCondition/GetAllPaymentTermsAsync";
 
-                var resultado = await respuesta.Content.ReadAsStringAsync();
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var lista = JsonConvert.DeserializeObject<IEnumerable<PaymentCondition>>(resultado);
+                    var respuesta = await client.GetAsync(string.Format(url));
 
-                return lista;
+                    var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                    if (!string.IsNullOrWhiteSpace(resultado))
+                    {
+                        lista = JsonConvert.DeserializeObject<List<PaymentCondition>>(resultado);
+
+                        if(offlineDataService.IsDataLoaded)
+                        {
+                            offlineDataService.UnloadAllData();
+                        }
+
+                        offlineDataService.SavePaymentConditions(lista.ToList());
+                    }
+
+                    return lista;
+                }
+                else
+                {
+                    if (!offlineDataService.IsDataLoaded)
+                    {
+                        await offlineDataService.LoadDataPayment();
+                    }
+
+                    var result = await offlineDataService.SearchPaymentConditions();
+
+                    return result;
+                }
             }
             catch (Exception)
             {

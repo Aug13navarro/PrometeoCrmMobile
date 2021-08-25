@@ -1,4 +1,5 @@
 using MvvmCross.ViewModels;
+using System;
 
 namespace Core.Model
 {

@@ -91,17 +91,35 @@ namespace Core.ViewModels
                 IsSearchInProgress = true;
                 Error = false;
 
-                PaginatedList<Customer> customers = await prometeoApiService.GetCustomers(requestData);
+                var user = appData.LoggedUser;
 
-                if (newSearch)
-                {
+                //PaginatedList<Customer> customers = await prometeoApiService.GetCustomers(requestData);
+
+                //if (requestData.CurrentPage == 1)
+                //{
+                    var allCustomer = await prometeoApiService.GetAllCustomer(requestData.UserId, true, 3, user.Token);
+
                     Customers.Clear();
-                }
 
-                Customers.AddRange(customers.Results.Select(c => new CustomerVm() {Customer = c}));
+                    Customers.AddRange(allCustomer.Select(x => new CustomerVm() { Customer = x }));
 
-                CurrentPage = customers.CurrentPage;
-                TotalPages = customers.TotalPages;
+                    isSearchInProgress = false;
+                //}
+                //else
+                //{
+
+                //    if (newSearch)
+                //    {
+                //        Customers.Clear();
+                //    }
+
+                //    Customers.AddRange(customers.Results.Select(c => new CustomerVm() { Customer = c }));
+
+                //    CurrentPage = customers.CurrentPage;
+                //    TotalPages = customers.TotalPages;
+
+                //    IsSearchInProgress = false;
+                //}
             }
             catch (Exception ex)
             {
