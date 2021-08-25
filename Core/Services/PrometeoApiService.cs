@@ -168,7 +168,7 @@ namespace Core.Services
             
                 if(offlineDataService.IsDataLoaded)
                 {
-                    offlineDataService.UnloadAllData();
+                    offlineDataService.UnloadAllData("Customer");
                 }
             
                 offlineDataService.SaveCustomerSearch(result.Results);
@@ -210,7 +210,7 @@ namespace Core.Services
                         
                         if (offlineDataService.IsDataLoaded)
                         {
-                            offlineDataService.UnloadAllData();
+                            offlineDataService.UnloadAllData("Customer");
                         }
 
                         offlineDataService.SaveCustomerSearch(lista);
@@ -373,7 +373,7 @@ namespace Core.Services
 
                         if(offlineDataService.IsDataLoaded)
                         {
-                            offlineDataService.UnloadAllData();
+                            offlineDataService.UnloadAllData("Company");
                         }
 
                         offlineDataService.SaveCompanySearch(lista);
@@ -455,24 +455,49 @@ namespace Core.Services
             }
         }
 
-        public async Task<ProductList> GetAvailableProducts(ProductList productList)
+        public async Task<List<Product>> GetAvailableProducts(ProductList productList, string token)
         {
             try
             {
-                string url = $"/api/Product/SearchCompanyProductPresentation";
+                if (offlineDataService.IsWifiConection)
+                {
+                    string url = $"/api/Product/GetCompanyProductPresentationByUserIdAsync";
 
-                var content = JsonConvert.SerializeObject(productList);
+                    //var content = JsonConvert.SerializeObject(productList);
 
-                HttpContent httpContent = new StringContent(content, Encoding.UTF8);
+                    //HttpContent httpContent = new StringContent(content, Encoding.UTF8);
 
-                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                    //httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var objeto = await client.PostAsync(string.Format(url), httpContent);
+                    var objeto = await client.GetAsync(string.Format(url));
 
-                var resultado = await objeto.Content.ReadAsStringAsync();
+                    var resultado = await objeto.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<ProductList>(resultado);
+                    var lista = JsonConvert.DeserializeObject<List<Product>>(resultado);
 
+                    if(offlineDataService.IsDataLoaded)
+                    {
+                        offlineDataService.UnloadAllData("Presentation");
+                    }
+
+                    offlineDataService.SavePresentations(lista);
+
+                    return lista;
+                }
+                else
+                {
+                    //if(!offlineDataService.IsDataLoaded)
+                    //{
+                    //    await offlineDataService.LoadPresentation();
+                    //}
+
+                    await offlineDataService.LoadPresentation();
+
+                    var result = await offlineDataService.SearchPresentations();
+
+                    return result;
+                }
             }
             catch (Exception)
             {
@@ -484,23 +509,38 @@ namespace Core.Services
         {
             try
             {
-                var lista = new List<Opportunity>();
-
-                var content = JsonConvert.SerializeObject(requestData);
-
-                HttpContent httpContent = new StringContent(content);
-
-                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-                var response = await client.GetStringAsync($"{cadena}");
-
-                if (response != null)
+                if (offlineDataService.IsWifiConection)
                 {
-                    lista = JsonConvert.DeserializeObject<IEnumerable<Opportunity>>(response).ToList();
-                }
+                    var lista = new List<Opportunity>();
 
-                return lista;
+                    var content = JsonConvert.SerializeObject(requestData);
+
+                    HttpContent httpContent = new StringContent(content);
+
+                    httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                    var response = await client.GetStringAsync($"{cadena}");
+
+                    if (response != null)
+                    {
+                        lista = JsonConvert.DeserializeObject<IEnumerable<Opportunity>>(response).ToList();
+                        
+                        //if (offlineDataService.IsDataLoaded)
+                        //{
+                        //    offlineDataService.UnloadAllData("Opportunity");
+                        //}
+                    }
+
+                    return lista;
+                }
+                else
+                {
+                    await offlineDataService.LoadOpportunities();
+                    var result = await offlineDataService.SearchOpportunities();
+
+                    return result;
+                }
             }
             catch (Exception)
             {
@@ -508,40 +548,53 @@ namespace Core.Services
             }
         }
 
-        public async Task SaveOpportunityCommand(OpportunityPost opportunity, string token)
+        public async Task SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity)
         {
-            var cadena = "https://neophos-testing-api.azurewebsites.net/api/Opportunity";
+            if (offlineDataService.IsWifiConection)
+            {
+                var cadena = "https://neophos-testing-api.azurewebsites.net/api/Opportunity";
 
-            //var dto = new
-            //{
-            //    customerId = opportunity.customer.Id,
-            //    branchOfficeId = 1,
-            //    opportunityStatusId = opportunity.opportunityStatus.Id,
-            //    opportunityProducts = opportunity.Details,
-            //    totalPrice = opportunity.totalPrice,
-            //    closedDate = opportunity.closedDate,
-            //    description = opportunity.description
-            //};
+                //var dto = new
+                //{
+                //    customerId = opportunity.customer.Id,
+                //    branchOfficeId = 1,
+                //    opportunityStatusId = opportunity.opportunityStatus.Id,
+                //    opportunityProducts = opportunity.Details,
+                //    totalPrice = opportunity.totalPrice,
+                //    closedDate = opportunity.closedDate,
+                //    description = opportunity.description
+                //};
 
-            var objeto = JsonConvert.SerializeObject(opportunity);
+                var objeto = JsonConvert.SerializeObject(opportunityPost);
 
-            HttpContent httpContent = new StringContent(objeto);
+                HttpContent httpContent = new StringContent(objeto);
 
-            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-            var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
+                var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
 
-            var resultado = await respuesta.Content.ReadAsStringAsync();
+                var resultado = await respuesta.Content.ReadAsStringAsync();
 
+                //if (opportunity.Id == 0)
+                //{
+                //    opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
+                //}
 
-            //if (opportunity.Id == 0)
-            //{
-            //    opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
-            //}
+                //Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
+                await Task.FromResult(0);
+            }
+            else
+            {
+                if (offlineDataService.IsDataLoaded)
+                {
+                    await offlineDataService.LoadOpportunities();
+                }
 
-            //Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
-            await Task.FromResult(0);
+                opportunity.totalPrice = Convert.ToDecimal(opportunityPost.totalPrice);
+                opportunity.opportunityStatus.Id = opportunityPost.opportunityStatusId;
+                offlineDataService.SaveOpportunity(opportunity);
+            }
         }
 
         public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token)
@@ -596,7 +649,7 @@ namespace Core.Services
             }
         }
 
-        public async Task SaveOpportunityEdit(OpportunityPost send, int id, string token)
+        public async Task SaveOpportunityEdit(OpportunityPost send, int id, string token, Opportunity opportunity)
         {
             var cadena = $"api/Opportunity?id={id}";
 
@@ -638,7 +691,7 @@ namespace Core.Services
 
                         if(offlineDataService.IsDataLoaded)
                         {
-                            offlineDataService.UnloadAllData();
+                            offlineDataService.UnloadAllData("Payment");
                         }
 
                         offlineDataService.SavePaymentConditions(lista.ToList());

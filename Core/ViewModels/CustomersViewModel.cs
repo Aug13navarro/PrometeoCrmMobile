@@ -11,7 +11,7 @@ using MvvmCross.ViewModels;
 
 namespace Core.ViewModels
 {
-    public class CustomersViewModel : MvxViewModelResult<int>
+    public class CustomersViewModel : MvxViewModelResult<Customer>
     {
         // Properties
         private bool isSearchInProgress;
@@ -169,7 +169,7 @@ namespace Core.ViewModels
 
         private async Task SelectCustomerAsync(CustomerVm customer)
         {
-            await navigationService.Close(this, customer.Customer.Id);
+            await navigationService.Close(this, customer.Customer);
         }
     }
 }

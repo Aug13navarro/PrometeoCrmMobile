@@ -172,7 +172,7 @@ namespace Core.ViewModels
 
                 send.opportunityProducts = listaProductos(Opportunity.Details);
                 
-                await prometeoApiService.SaveOpportunityEdit(send,Opportunity.Id, user.Token);
+                await prometeoApiService.SaveOpportunityEdit(send,Opportunity.Id, user.Token, Opportunity);
 
                 await navigationService.Close(this);
                 NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
@@ -330,12 +330,15 @@ namespace Core.ViewModels
 
         private async Task SelectClientAsync()
         {
-            int customerId = await navigationService.Navigate<CustomersViewModel, int>();
+            var customer = await navigationService.Navigate<CustomersViewModel, Customer>();
 
             try
             {
-                IsLoading = true;
-                SelectedCustomer = await prometeoApiService.GetCustomer(customerId);
+                if (customer != null)
+                {
+                    IsLoading = true;
+                    SelectedCustomer = customer;
+                }
             }
             catch (Exception ex)
             {
@@ -441,11 +444,11 @@ namespace Core.ViewModels
 
                 if (id == 0)
                 {
-                    await prometeoApiService.SaveOpportunityCommand(send, user.Token);
+                    await prometeoApiService.SaveOpportunityCommand(send, user.Token,Opportunity);
                 }
                 else
                 {
-                    await prometeoApiService.SaveOpportunityEdit(send, id, user.Token);
+                    await prometeoApiService.SaveOpportunityEdit(send, id, user.Token, Opportunity);
                 }
 
                 await navigationService.Close(this);

@@ -11,6 +11,7 @@ namespace Core.ViewModels
 {
     public class ProductsViewModel : MvxViewModelResult<OpportunityProducts>
     {
+        private ApplicationData data;
         // Properties
         private bool isSearchInProgress;
         public bool IsSearchInProgress
@@ -70,6 +71,8 @@ namespace Core.ViewModels
 
         public ProductsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)
         {
+            data = new ApplicationData();
+
             Query = "";
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
@@ -172,17 +175,17 @@ namespace Core.ViewModels
                 IsSearchInProgress = true;
                 Error = false;
 
-                var contacts = await prometeoApiService.GetAvailableProducts(requestData);
+                var products = await prometeoApiService.GetAvailableProducts(requestData, data.LoggedUser.Token);
 
                 if (newSearch)
                 {
                     Products.Clear();
                 }
 
-                Products.AddRange(contacts.results.ToList());
+                Products.AddRange(products.ToList());
 
-                CurrentPage = contacts.currentPage;
-                TotalPages = contacts.totalPages;
+                //CurrentPage = contacts.currentPage;
+                //TotalPages = contacts.totalPages;
             }
             catch (Exception ex)
             {

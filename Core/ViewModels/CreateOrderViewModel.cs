@@ -450,12 +450,12 @@ namespace Core.ViewModels
         }
         private async Task SelectClientAsync()
         {
-            int customerId = await navigationService.Navigate<CustomersViewModel, int>();
+            var customer = await navigationService.Navigate<CustomersViewModel, Customer>();
 
             try
             {
                 IsLoading = true;
-                SelectedCustomer = await prometeoApiService.GetCustomer(customerId);
+                SelectedCustomer = customer;
             }
             catch (Exception ex)
             {

@@ -1,16 +1,17 @@
+﻿using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Model.Enums;
-using MvvmCross.ViewModels;
+using System.Text;
 
-namespace Core.Model
+namespace Core.Model.Extern
 {
-    public class Opportunity : MvxNotifyPropertyChanged
+    [Serializable]
+    public class OpportunityExtern
     {
         public int Id { get; set; }
 
-        public Customer  customer { get; set; }
+        public Customer customer { get; set; }
 
         public OpportunityStatus opportunityStatus { get; set; }
 
@@ -21,12 +22,12 @@ namespace Core.Model
 
         public string description { get; set; }
 
-        private ClosedLostStatusCause closedLostStatusCause;
-        public ClosedLostStatusCause ClosedLostStatusCause
-        {
-            get => closedLostStatusCause;
-            set => SetProperty(ref closedLostStatusCause, value);
-        }
+        //private ClosedLostStatusCause closedLostStatusCause;
+        //public ClosedLostStatusCause ClosedLostStatusCause
+        //{
+        //    get => closedLostStatusCause;
+        //    set => SetProperty(ref closedLostStatusCause, value);
+        //}
 
 
         public decimal totalPrice { get; set; }

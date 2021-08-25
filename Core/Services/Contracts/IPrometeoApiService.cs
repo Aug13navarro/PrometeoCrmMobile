@@ -26,15 +26,15 @@ namespace Core.Services.Contracts
         Task<PaginatedList<CustomerContact>> SearchCustomerContacts(ContactsPaginatedRequest requestData);
         Task<Customer> GetCustomer(int id);
         Task UpdateCustomer(Customer customer);
-        Task<ProductList> GetAvailableProducts(ProductList productList);
+        Task<List<Product>> GetAvailableProducts(ProductList productList, string token);
         //Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData);
         Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData, string cadena, string token);
-        Task SaveOpportunityCommand(OpportunityPost opportunity, string token);
+        Task SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity);
 
         Task<List<Opportunity>> GetOpportunietesTest(int userId);
         Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token);
         Task<Opportunity> GetOppById(int id);
-        Task SaveOpportunityEdit(OpportunityPost send, int id, string token);
+        Task SaveOpportunityEdit(OpportunityPost send, int id, string token, Opportunity opportunity);
         Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token);
         Task<OrderNote> CreateOrderNote(OrderNote nuevaOrder);
         Task<PaginatedList<OrderNote>> GetOrderNote(OrdersNotesPaginatedRequest requestData, string token);

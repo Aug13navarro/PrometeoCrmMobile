@@ -23,14 +23,21 @@ namespace Core.Services
         private readonly List<CustomerExtern> customerSearchCache = new List<CustomerExtern>();
         private readonly List<CompanyExtern> companySearchCache = new List<CompanyExtern>();
         private readonly List<PaymentConditionsExtern> paymentConditionsSearchCache = new List<PaymentConditionsExtern>();
+        private readonly List<ProductExtern> presentationsSearchCache = new List<ProductExtern>();
+        private readonly List<OpportunityExtern> opportunitiesSearchCache = new List<OpportunityExtern>();
+
 
         private const int MaxCustomerToSave = 5000;
         private const int MaxCompanyToSave = 15;
         private const int MaxPaymentConditions = 50;
+        private const int MaxPresentations = 500;
+        private const int MaxOportunities = 50;
 
         private const string CustomerSearchCacheFilename = "customersearchcache";
         private const string CompanySearchCacheFileNAme = "companysearchcache";
         private const string PaymentConditionsSearchCacheFilename = "paymentconditionssearchcache";
+        private const string PresentationsSearchCacheFilename = "presentationssearchcache";
+        private const string OpportunitiesSearchCacheFilename = "opportunitiessearchcache";
 
         public async Task LoadAllData()
         {
@@ -146,15 +153,31 @@ namespace Core.Services
                     }
                 }
 
-                //itemsInCache.Clear();
+                itemsInCache.Clear();
             });
         }
 
-        public void UnloadAllData()
+        public void UnloadAllData(string tipo)
         {
-            customerSearchCache.Clear();
-            companySearchCache.Clear();
-            paymentConditionsSearchCache.Clear();
+            switch (tipo)
+            {
+                case "Customer":
+                    customerSearchCache.Clear();
+                    break;
+                case "Company":
+                    companySearchCache.Clear();
+                    break;
+                case "Payment":
+                    paymentConditionsSearchCache.Clear();
+                    break;
+                case "Presentation":
+                    presentationsSearchCache.Clear();
+                    break;
+                case "Opportunity":
+                    opportunitiesSearchCache.Clear();
+                    break;
+            }
+
 
             IsDataLoaded = false;
         }
@@ -228,6 +251,64 @@ namespace Core.Services
             paymentConditionsSearchCache.AddRange(lista);
         }
 
+        public void SavePresentations(List<Product> products)
+        {
+            try
+            {
+                var lista = new List<ProductExtern>();
+
+                foreach (var item in products)
+                {
+                    lista.Add(new ProductExtern
+                    {
+                        Discount = item.Discount,
+                        Id = item.Id,
+                        name = item.name,
+                        price = item.price,
+                        quantity = item.quantity,
+                        stock = item.stock,
+
+                    });
+                }
+
+                presentationsSearchCache.AddRange(lista);
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+            }
+        }
+
+        public void SaveOpportunity(Opportunity opportunity)
+        {
+            try
+            {
+                var opportunityEx = new OpportunityExtern
+                {
+                    customer = opportunity.customer,
+                    Details = opportunity.Details,
+                    Id = opportunity.Id,
+                    opportunityStatus = opportunity.opportunityStatus,
+                    //ProductsDescription  = opportunity.ProductsDescription,
+                    closedDate = opportunity.closedDate,
+                    createDt = opportunity.createDt,
+                    description = opportunity.description,
+                    opportunityProducts = opportunity.Details,
+                    totalPrice = opportunity.totalPrice,
+                };
+
+                var lista = new List<OpportunityExtern>();
+                lista.Add(opportunityEx);
+
+                opportunitiesSearchCache.AddRange(lista);
+            }
+            catch(Exception e)
+            {
+                var s = e.Message;
+            }
+        }
+
+
         public async Task SynchronizeToDisk()
         {
             try
@@ -235,6 +316,8 @@ namespace Core.Services
                 await SynchronizeItemsToDisk(customerSearchCache, MaxCustomerToSave, CustomerSearchCacheFilename);
                 await SynchronizeItemsToDisk(companySearchCache, MaxCompanyToSave, CompanySearchCacheFileNAme);
                 await SynchronizeItemsToDisk(paymentConditionsSearchCache, MaxPaymentConditions, PaymentConditionsSearchCacheFilename);
+                await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
+                await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
             }
             catch (Exception)
             {
@@ -251,36 +334,19 @@ namespace Core.Services
                     File.Delete(Path.Combine(FileSystem.CacheDirectory, CustomerSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.CacheDirectory, CompanySearchCacheFileNAme));
                     File.Delete(Path.Combine(FileSystem.CacheDirectory, PaymentConditionsSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.CacheDirectory, PresentationsSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.CacheDirectory, OpportunitiesSearchCacheFilename));
                 }
                 catch (Exception)
                 {
-
+                    throw;
                 }
             });
         }
+
+        #region SEARCH
         public Task<List<Customer>> SearchCustomers()
         {
-            //string criterio = string.IsNullOrWhiteSpace(requestData.Query) ? requestData.Query : requestData.Query.Replace("-", "").ToLower();
-
-            //List<CustomerExtern> query = customerSearchCache.Where(x => string.IsNullOrWhiteSpace(criterio) ||
-            //(!string.IsNullOrWhiteSpace(x.BusinessName))).ToList();
-
-            //int totalCustomer = query.Count;
-
-            //List<CustomerExtern> customers = query.Skip((requestData.CurrentPage - 1) * requestData.PageSize)
-            //    .Take(requestData.PageSize)
-            //    .ToList();
-
-            //var result = new PaginatedList<CustomerExtern>(requestData.PageSize, requestData.CurrentPage, customers, totalCustomer)
-            //{
-            //    PageSize = requestData.PageSize,
-            //    CurrentPage = requestData.CurrentPage,
-            //    Results = customers,
-            //    ResultsCount = (int)Math.Ceiling(totalCustomer / (double)requestData.PageSize),
-            //    TotalCount = totalCustomer,
-            //    TotalPages = customers.Count
-            //};
-
             var lista = new List<Customer>();
 
             var fromCache = customerSearchCache;
@@ -355,6 +421,73 @@ namespace Core.Services
             return Task.FromResult(lista);
         }
 
+        public Task<List<Product>> SearchPresentations()
+        {
+            try
+            {
+                var lista = new List<Product>();
+
+                var fromCache = presentationsSearchCache;
+
+                foreach (var item in fromCache)
+                {
+                    lista.Add(new Product
+                    {
+                        Discount = item.Discount,
+                        Id = item.Id,
+                        name = item.name,
+                        price = item.price,
+                        quantity = item.quantity,
+                        stock = item.stock,
+                    });
+                }
+
+                return Task.FromResult(lista);
+            }
+            catch(Exception e)
+            {
+                var s = e.Message;
+                throw;
+            }
+        }
+
+        public Task<List<Opportunity>> SearchOpportunities()
+        {
+            try
+            {
+                var lista = new List<Opportunity>();
+
+                var fromCache = opportunitiesSearchCache;
+
+                foreach (var opportunity in fromCache)
+                {
+                    lista.Add(new Opportunity
+                    {
+                        customer = opportunity.customer,
+                        Details = opportunity.Details,
+                        Id = opportunity.Id,
+                        opportunityStatus = opportunity.opportunityStatus,
+                        //ProductsDescription  = opportunity.ProductsDescription,
+                        closedDate = opportunity.closedDate,
+                        createDt = opportunity.createDt,
+                        description = opportunity.description,
+                        opportunityProducts = opportunity.opportunityProducts,
+                        totalPrice = opportunity.totalPrice,
+                    });
+                }
+
+                return Task.FromResult(lista);
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+                throw;
+            }
+        }
+        #endregion
+
+        #region LOAD
+
         public async Task LoadDataPayment()
         {
             await SynchronizeItemsToDisk(paymentConditionsSearchCache, MaxPaymentConditions, PaymentConditionsSearchCacheFilename);
@@ -368,10 +501,12 @@ namespace Core.Services
 
                     file.Position = 0;
                     var data = (List<PaymentConditionsExtern>)bf.Deserialize(file);
-                    paymentConditionsSearchCache.Clear();
+                    //paymentConditionsSearchCache.Clear();
                     paymentConditionsSearchCache.AddRange(data);
                 }
             });
+
+            IsDataLoaded = true;
         }
 
         public async Task LoadCompanies()
@@ -387,10 +522,71 @@ namespace Core.Services
 
                     file.Position = 0;
                     var data = (List<CompanyExtern>)bf.Deserialize(file);
-                    companySearchCache.Clear();
+                    //companySearchCache.Clear();
                     companySearchCache.AddRange(data);
                 }
             });
+
+            IsDataLoaded = true;
         }
+
+        public async Task LoadPresentation()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
+
+                await Task.Run(() =>
+                {
+                    string filename = Path.Combine(FileSystem.CacheDirectory, PresentationsSearchCacheFilename);
+                    using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
+                    {
+                        var bf = new BinaryFormatter();
+
+                        file.Position = 0;
+                        var data = (List<ProductExtern>)bf.Deserialize(file);
+                        //presentationsSearchCache.Clear();
+                        presentationsSearchCache.AddRange(data);
+                    }
+                });
+
+                IsDataLoaded = true;
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+            }
+        }
+
+        public async Task LoadOpportunities()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
+
+                await Task.Run(() =>
+                {
+                    string filename = Path.Combine(FileSystem.CacheDirectory, OpportunitiesSearchCacheFilename);
+                    using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
+                    {
+                        var bf = new BinaryFormatter();
+
+                        file.Position = 0;
+                        var data = (List<OpportunityExtern>)bf.Deserialize(file);
+                        //opportunitiesSearchCache.Clear();
+                        opportunitiesSearchCache.AddRange(data);
+                    }
+                });
+
+
+                IsDataLoaded = true;
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+            }
+        }
+
+        #endregion
     }
 }
