@@ -3,7 +3,7 @@ using MvvmCross.ViewModels;
 
 namespace Core.ViewModels.Model
 {
-    public class MenuItem : MvxNotifyPropertyChanged
+    public class MenuItems : MvxNotifyPropertyChanged
     {
         public MenuItemType Type { get; set; }
         public string Description { get; set; }
@@ -15,7 +15,7 @@ namespace Core.ViewModels.Model
         }
         private string icon;
 
-        public MenuItem(MenuItemType type, string description, string icon)
+        public MenuItems(MenuItemType type, string description, string icon)
         {
             Type = type;
             Description = description;

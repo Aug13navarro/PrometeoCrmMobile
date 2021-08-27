@@ -78,42 +78,6 @@ namespace Core.Services
                 return;
             }
 
-            //string filename = Path.Combine(FileSystem.CacheDirectory, cacheFilename);
-            //using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            //{
-            //    var bf = new BinaryFormatter();
-            //    List<T> cacheData = new List<T>();
-
-            //    try
-            //    {
-            //        cacheData = (List<T>)bf.Deserialize(file);
-            //    }
-            //    catch (Exception)
-            //    {
-            //        cacheData = new List<T>();
-            //    }
-
-            //    List<T> itemsNotInCache = itemsInCache.Where(x => !cacheData.Contains(x)).ToList();
-
-            //    if (itemsNotInCache.Count > 0)
-            //    {
-            //        if (cacheData.Count + itemsNotInCache.Count <= maxItemInCache)
-            //        {
-            //            cacheData.AddRange(itemsNotInCache);
-            //        }
-            //        else
-            //        {
-            //            cacheData.AddRange(itemsNotInCache);
-            //            cacheData = cacheData.Skip(cacheData.Count - maxItemInCache).ToList();
-            //        }
-
-            //        file.Position = 0;
-            //        bf.Serialize(file, cacheData);
-            //    }
-            //}
-
-            //itemsInCache.Clear();
-
             await Task.Run(() =>
             {
                 string filename = Path.Combine(FileSystem.CacheDirectory, cacheFilename);
@@ -501,7 +465,7 @@ namespace Core.Services
 
                     file.Position = 0;
                     var data = (List<PaymentConditionsExtern>)bf.Deserialize(file);
-                    //paymentConditionsSearchCache.Clear();
+                    paymentConditionsSearchCache.Clear();
                     paymentConditionsSearchCache.AddRange(data);
                 }
             });
@@ -522,7 +486,7 @@ namespace Core.Services
 
                     file.Position = 0;
                     var data = (List<CompanyExtern>)bf.Deserialize(file);
-                    //companySearchCache.Clear();
+                    companySearchCache.Clear();
                     companySearchCache.AddRange(data);
                 }
             });
@@ -545,7 +509,7 @@ namespace Core.Services
 
                         file.Position = 0;
                         var data = (List<ProductExtern>)bf.Deserialize(file);
-                        //presentationsSearchCache.Clear();
+                        presentationsSearchCache.Clear();
                         presentationsSearchCache.AddRange(data);
                     }
                 });
@@ -573,7 +537,7 @@ namespace Core.Services
 
                         file.Position = 0;
                         var data = (List<OpportunityExtern>)bf.Deserialize(file);
-                        //opportunitiesSearchCache.Clear();
+                        opportunitiesSearchCache.Clear();
                         opportunitiesSearchCache.AddRange(data);
                     }
                 });

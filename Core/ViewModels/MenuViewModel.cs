@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,11 +9,14 @@ using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
     public class MenuViewModel : MvxViewModel
     {
+        private readonly IOfflineDataService _offlineDataService;
+
         // Properties
         private User loggedUser;
         public User LoggedUser
@@ -21,31 +25,106 @@ namespace Core.ViewModels
             private set => SetProperty(ref loggedUser, value);
         }
 
-        public MenuItem[] MenuItems { get; } =
+        public MenuItems[] MenuItems { get; } =
         {
-            new MenuItem(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"),
-            new MenuItem(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"),
-            new MenuItem(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"),
-            new MenuItem(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"),
-            new MenuItem(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"),
+            new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"),
+            new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"),
+            new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"),
+            new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"),
+            new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"),
         };
 
         // Fields
         private readonly ApplicationData appData;
 
         // Services
+        private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
         private readonly INotificationService notificationService;
 
-        public MenuViewModel(ApplicationData appData, IMvxNavigationService navigationService, INotificationService notificationService)
+        public MenuViewModel(ApplicationData appData,IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, INotificationService notificationService, IOfflineDataService offlineDataService)
         {
+            this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
             this.notificationService = notificationService;
+
+            _offlineDataService = offlineDataService;
+
+            Sincronizar();
 
             this.appData = appData;
             LoggedUser = appData.LoggedUser;
 
             this.appData.PropertyChanged += OnAppDataPropertyChanged;
+        }
+
+        private async void Sincronizar()
+        {
+            try
+            {
+                if (_offlineDataService.IsWifiConection)
+                {
+                    await _offlineDataService.LoadOpportunities();
+                    var opportunities = await _offlineDataService.SearchOpportunities();
+
+                    if (opportunities.Count > 0)
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Sincronizando", "Se avisara cuando este listo", "Aceptar");
+
+                        foreach (var item in opportunities)
+                        {
+                            var send = new OpportunityPost
+                            {
+                                branchOfficeId = item.customer.Id,
+                                closedDate = item.createDt,
+                                closedReason = "",
+                                customerId = item.customer.Id,
+                                description = item.description,
+                                opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                                opportunityStatusId = item.opportunityStatus.Id,
+                                totalPrice = Convert.ToDouble(item.totalPrice)
+                            };
+
+                            send.opportunityProducts = listaProductos(item.Details);
+
+                            await prometeoApiService.SaveOpportunityCommand(send, loggedUser.Token, item);
+                        }
+
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Sincronizado", "Sincronizacion terminada", "Aceptar");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                
+            }
+        }
+        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
+        {
+            var lista = new List<OpportunityPost.ProductSend>();
+
+            foreach (var item in details)
+            {
+                double tempTotal = item.Price * item.Quantity;
+
+                if (item.Discount != 0)
+                {
+                    tempTotal = tempTotal - ((tempTotal * item.Discount) / 100);
+                }
+
+                lista.Add(new OpportunityPost.ProductSend
+                {
+                    discount = item.Discount,
+                    productId = item.productId,
+                    quantity = item.Quantity,
+                    total = tempTotal,
+                    price = item.Price
+                });
+            }
+
+            return lista;
         }
 
         public override async Task Initialize()
@@ -137,7 +216,7 @@ namespace Core.ViewModels
 
         private void OnNotificationsUpdated(object sender, bool hasUnreadNotifications)
         {
-            MenuItem menu = MenuItems.Single(m => m.Type == MenuItemType.Notifications);
+            MenuItems menu = MenuItems.Single(m => m.Type == MenuItemType.Notifications);
             menu.Icon = hasUnreadNotifications ? "ic_bell_on" : "ic_bell";
         }
     }

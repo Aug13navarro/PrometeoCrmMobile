@@ -43,6 +43,7 @@ namespace UI.Pages
             {
                 if (ViewModel.OrderDiscount > 0)
                 {
+                    ViewModel.ActualizarTotal(ViewModel.Order.products);
                     ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
                 }
             }
@@ -57,6 +58,7 @@ namespace UI.Pages
                         var descuento = Convert.ToDouble($"0.{o}");
 
                         lblDiscountResult.Text = (ViewModel.Total * descuento).ToString();
+                        ViewModel.ActualizarTotal(ViewModel.Order.products);
                     }
                 }
             }

@@ -244,7 +244,7 @@ namespace Core.ViewModels
             OpportunityStatuses.Add(new OpportunityStatus
             {
                 Id = 1,
-                name = "Análiss"
+                name = "Análisis"
             });
             OpportunityStatuses.Add(new OpportunityStatus
             {

@@ -15,20 +15,20 @@ namespace UI.Pages
             menuList.ItemsSource = MenuItems;
         }
 
-        public MenuItem[] MenuItems { get; } =
+        public MenuItems[] MenuItems { get; } =
         {
-            new MenuItem(MenuItemType.Sales, LangResources.AppResources.Sales, "ic_menu_presupuestos.png"),
-            new MenuItem(MenuItemType.Pedidos, LangResources.AppResources.Orders, "ic_menu_pedidos"),
-            new MenuItem(MenuItemType.Customers, LangResources.AppResources.Customers, "ic_menu_cuentas"),
-            new MenuItem(MenuItemType.Contacts, LangResources.AppResources.Contacts, "ic_menu_contactos"),
-            new MenuItem(MenuItemType.Opportunities, LangResources.AppResources.Opportunities, "ic_menu_cuentasic_menu_oportunidades"),
-            new MenuItem(MenuItemType.Logout, LangResources.AppResources.CloseSession, "ic_keyboard_backspace"),
+            new MenuItems(MenuItemType.Sales, LangResources.AppResources.Sales, "ic_menu_presupuestos.png"),
+            new MenuItems(MenuItemType.Pedidos, LangResources.AppResources.Orders, "ic_menu_pedidos"),
+            new MenuItems(MenuItemType.Customers, LangResources.AppResources.Customers, "ic_menu_cuentas"),
+            new MenuItems(MenuItemType.Contacts, LangResources.AppResources.Contacts, "ic_menu_contactos"),
+            new MenuItems(MenuItemType.Opportunities, LangResources.AppResources.Opportunities, "ic_menu_cuentasic_menu_oportunidades"),
+            new MenuItems(MenuItemType.Logout, LangResources.AppResources.CloseSession, "ic_keyboard_backspace"),
         };
 
         private async void OnMenuItemTapped(object sender, Xamarin.Forms.ItemTappedEventArgs e)
         {
             string cont = LangResources.AppResources.Contacts;
-            var menuItem = (MenuItem)e.Item;
+            var menuItem = (MenuItems)e.Item;
             await ViewModel.GoToMenu(menuItem.Type);
 
             FormsApp.RootPage.HideMainMenu();

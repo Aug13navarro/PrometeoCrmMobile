@@ -601,7 +601,8 @@ namespace Core.ViewModels
                 Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
         }
-        private void ActualizarTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
+
+        public void ActualizarTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
             try
             {
