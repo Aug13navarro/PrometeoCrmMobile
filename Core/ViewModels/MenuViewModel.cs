@@ -50,7 +50,6 @@ namespace Core.ViewModels
 
             _offlineDataService = offlineDataService;
 
-            Sincronizar();
 
             this.appData = appData;
             LoggedUser = appData.LoggedUser;
@@ -58,74 +57,6 @@ namespace Core.ViewModels
             this.appData.PropertyChanged += OnAppDataPropertyChanged;
         }
 
-        private async void Sincronizar()
-        {
-            try
-            {
-                if (_offlineDataService.IsWifiConection)
-                {
-                    await _offlineDataService.LoadOpportunities();
-                    var opportunities = await _offlineDataService.SearchOpportunities();
-
-                    if (opportunities.Count > 0)
-                    {
-                        await Application.Current.MainPage.DisplayAlert(
-                            "Sincronizando", "Se avisara cuando este listo", "Aceptar");
-
-                        foreach (var item in opportunities)
-                        {
-                            var send = new OpportunityPost
-                            {
-                                branchOfficeId = item.customer.Id,
-                                closedDate = item.createDt,
-                                closedReason = "",
-                                customerId = item.customer.Id,
-                                description = item.description,
-                                opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                                opportunityStatusId = item.opportunityStatus.Id,
-                                totalPrice = Convert.ToDouble(item.totalPrice)
-                            };
-
-                            send.opportunityProducts = listaProductos(item.Details);
-
-                            await prometeoApiService.SaveOpportunityCommand(send, loggedUser.Token, item);
-                        }
-
-                        await Application.Current.MainPage.DisplayAlert(
-                            "Sincronizado", "Sincronizacion terminada", "Aceptar");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                
-            }
-        }
-        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
-        {
-            var lista = new List<OpportunityPost.ProductSend>();
-
-            foreach (var item in details)
-            {
-                double tempTotal = item.Price * item.Quantity;
-
-                if (item.Discount != 0)
-                {
-                    tempTotal = tempTotal - ((tempTotal * item.Discount) / 100);
-                }
-
-                lista.Add(new OpportunityPost.ProductSend
-                {
-                    discount = item.Discount,
-                    productId = item.productId,
-                    quantity = item.Quantity,
-                    total = tempTotal,
-                    price = item.Price
-                });
-            }
-
-            return lista;
-        }
 
         public override async Task Initialize()
         {

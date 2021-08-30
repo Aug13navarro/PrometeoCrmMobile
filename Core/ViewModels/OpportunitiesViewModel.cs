@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Model;
@@ -13,6 +14,7 @@ namespace Core.ViewModels
 {
     public class OpportunitiesViewModel : MvxViewModel
     {
+        private readonly IOfflineDataService offlineDataService;
         private ApplicationData data;
         // Properties
         private bool isLoading;
@@ -76,9 +78,10 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IToastService toastService;
 
-        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IToastService toastService)
+        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IToastService toastService, IOfflineDataService offlineDataService)
         {
             data = new ApplicationData();
+            this.offlineDataService = offlineDataService;
 
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
@@ -104,8 +107,79 @@ namespace Core.ViewModels
                 Opportunities = model.Opportunities;
                 Application.Current.MainPage.Navigation.PopModalAsync();
             });
+
+            Sincronizar();
         }
 
+        private async void Sincronizar()
+        {
+            try
+            {
+                if (offlineDataService.IsWifiConection)
+                {
+                    await offlineDataService.LoadOpportunities();
+                    var opportunities = await offlineDataService.SearchOpportunities();
+
+                    if (opportunities.Count > 0)
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Sincronizando", "Se avisara cuando este listo", "Aceptar");
+
+                        foreach (var item in opportunities)
+                        {
+                            var send = new OpportunityPost
+                            {
+                                branchOfficeId = item.customer.Id,
+                                closedDate = item.createDt,
+                                closedReason = "",
+                                customerId = item.customer.Id,
+                                description = item.description,
+                                opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                                opportunityStatusId = item.opportunityStatus.Id,
+                                totalPrice = Convert.ToDouble(item.totalPrice)
+                            };
+
+                            send.opportunityProducts = listaProductos(item.Details);
+
+                            await prometeoApiService.SaveOpportunityCommand(send, data.LoggedUser.Token, item);
+                        }
+
+                        await Application.Current.MainPage.DisplayAlert(
+                            "Sincronizado", "Sincronizacion terminada", "Aceptar");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
+        {
+            var lista = new List<OpportunityPost.ProductSend>();
+
+            foreach (var item in details)
+            {
+                double tempTotal = item.Price * item.Quantity;
+
+                if (item.Discount != 0)
+                {
+                    tempTotal = tempTotal - ((tempTotal * item.Discount) / 100);
+                }
+
+                lista.Add(new OpportunityPost.ProductSend
+                {
+                    discount = item.Discount,
+                    productId = item.productId,
+                    quantity = item.Quantity,
+                    total = tempTotal,
+                    price = item.Price
+                });
+            }
+
+            return lista;
+        }
         private async Task RefreshList()
         {
             //SearchBarVisible = false;
