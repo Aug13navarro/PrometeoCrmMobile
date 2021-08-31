@@ -101,6 +101,8 @@ namespace Core.ViewModels
         // Events
         public event EventHandler<Product> ShowEditProductPopup;
         public event EventHandler NewOpportunityCreated;
+        //public event EventHandler OpportunityRefresh;
+
 
         // Commands
         public Command SelectClientCommand { get; }
@@ -445,14 +447,17 @@ namespace Core.ViewModels
                 if (id == 0)
                 {
                     await prometeoApiService.SaveOpportunityCommand(send, user.Token,Opportunity);
+
                 }
                 else
                 {
                     await prometeoApiService.SaveOpportunityEdit(send, id, user.Token, Opportunity);
+                    
                 }
 
                 await navigationService.Close(this);
                 NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
+                
             }
             catch (Exception e)
             {

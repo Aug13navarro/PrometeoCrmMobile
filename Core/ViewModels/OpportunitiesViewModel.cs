@@ -280,6 +280,8 @@ namespace Core.ViewModels
                 //CurrentPage = opportunities.CurrentPage;
                 //TotalPages = opportunities.TotalPages;
 
+                IsLoading = false;
+
             }
             catch (Exception ex)
             {
@@ -342,11 +344,10 @@ namespace Core.ViewModels
         private async Task EditOpportunityAsync(Opportunity opportunity)
         {
             opportunity.Details = new MvxObservableCollection<OpportunityProducts>(opportunity.opportunityProducts);
+            var createOpportunityViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOpportunityViewModel>();
 
-            await navigationService.Navigate<CreateOpportunityViewModel, Opportunity>(opportunity);
-
-            await NewOpportunitiesSearchAsync();
+            createOpportunityViewModel.NewOpportunityCreated += async (sender, args) => await NewOpportunitiesSearchAsync();
+            await navigationService.Navigate(createOpportunityViewModel, opportunity);
         }
-
     }
 }

@@ -59,7 +59,7 @@ namespace Core.Services
         {
             await Task.Run(() =>
             {
-                string filename = Path.Combine(FileSystem.CacheDirectory, cacheFilename);
+                string filename = Path.Combine(FileSystem.AppDataDirectory, cacheFilename);
                 using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
                 {
                     var bf = new BinaryFormatter();
@@ -80,7 +80,7 @@ namespace Core.Services
 
             await Task.Run(() =>
             {
-                string filename = Path.Combine(FileSystem.CacheDirectory, cacheFilename);
+                string filename = Path.Combine(FileSystem.AppDataDirectory, cacheFilename);
                 using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
                 {
                     var bf = new BinaryFormatter();
@@ -295,11 +295,11 @@ namespace Core.Services
             {
                 try
                 {
-                    File.Delete(Path.Combine(FileSystem.CacheDirectory, CustomerSearchCacheFilename));
-                    File.Delete(Path.Combine(FileSystem.CacheDirectory, CompanySearchCacheFileNAme));
-                    File.Delete(Path.Combine(FileSystem.CacheDirectory, PaymentConditionsSearchCacheFilename));
-                    File.Delete(Path.Combine(FileSystem.CacheDirectory, PresentationsSearchCacheFilename));
-                    File.Delete(Path.Combine(FileSystem.CacheDirectory, OpportunitiesSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, CustomerSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, CompanySearchCacheFileNAme));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, PaymentConditionsSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, PresentationsSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename));
                 }
                 catch (Exception)
                 {
@@ -458,7 +458,7 @@ namespace Core.Services
 
             await Task.Run(() =>
             {
-                string filename = Path.Combine(FileSystem.CacheDirectory, PaymentConditionsSearchCacheFilename);
+                string filename = Path.Combine(FileSystem.AppDataDirectory, PaymentConditionsSearchCacheFilename);
                 using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
                 {
                     var bf = new BinaryFormatter();
@@ -479,7 +479,7 @@ namespace Core.Services
 
             await Task.Run(() =>
             {
-                string filename = Path.Combine(FileSystem.CacheDirectory, CompanySearchCacheFileNAme);
+                string filename = Path.Combine(FileSystem.AppDataDirectory, CompanySearchCacheFileNAme);
                 using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
                 {
                     var bf = new BinaryFormatter();
@@ -502,7 +502,7 @@ namespace Core.Services
 
                 await Task.Run(() =>
                 {
-                    string filename = Path.Combine(FileSystem.CacheDirectory, PresentationsSearchCacheFilename);
+                    string filename = Path.Combine(FileSystem.AppDataDirectory, PresentationsSearchCacheFilename);
                     using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
                     {
                         var bf = new BinaryFormatter();
@@ -530,7 +530,7 @@ namespace Core.Services
 
                 await Task.Run(() =>
                 {
-                    string filename = Path.Combine(FileSystem.CacheDirectory, OpportunitiesSearchCacheFilename);
+                    string filename = Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename);
                     using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
                     {
                         var bf = new BinaryFormatter();
