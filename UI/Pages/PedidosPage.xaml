@@ -19,7 +19,7 @@
                     Padding="0"
                     CornerRadius="20">
                     <SearchBar Placeholder="{x:Static resources:AppResources.Search}" Text="{Binding Query}"
-                               HorizontalOptions="StartAndExpand" Keyboard="Text"/>
+                               HorizontalOptions="StartAndExpand" Keyboard="Text" SearchCommand="{Binding SearchQueryCommand}"/>
                 </Frame>
                 <Image Source="filtro_vacio.png" Grid.Column="2" WidthRequest="25">
                     <Image.GestureRecognizers>

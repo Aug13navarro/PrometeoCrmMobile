@@ -196,6 +196,7 @@ namespace Core.ViewModels
                 opportunityId = Opportunity.Id,
                 Details = Opportunity.opportunityProducts,
                 total = Opportunity.totalPrice,
+                oppDescription = Opportunity.description,
             };
 
             //int customerId = await navigationService.Navigate<CustomersViewModel, int>();

@@ -23,6 +23,27 @@ namespace Core.ViewModels
             get => isLoading;
             private set => SetProperty(ref isLoading, value);
         }
+
+        private string query;
+        public string Query
+        {
+            get => query;
+            set
+            {
+                SetProperty(ref query, value);
+                if(string.IsNullOrWhiteSpace(query))
+                {
+                    var requestData = new OrdersNotesPaginatedRequest()
+                    {
+                        CurrentPage = 1,
+                        PageSize = 20,
+                    };
+
+                    GetOrdersNoteAsync(requestData, true);
+                }
+            }
+        }
+
         private decimal total;
         public decimal Total
         {
@@ -33,12 +54,14 @@ namespace Core.ViewModels
         public MvxObservableCollection<OrderNote> OrdersNote { get; set; } = new MvxObservableCollection<OrderNote>();
 
         public int CurrentPage { get; private set; } = 1; 
-        private const int PageSize = 10;
+        private const int PageSize = 20;
 
         public Command NuevaNotaPedidoCommand { get; }
         public Command FilterOrdersCommand { get; }
         public Command OpenOrderNoteCommand { get; }
-        
+        public Command SearchQueryCommand { get; }
+
+
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IToastService toastService;
@@ -55,11 +78,24 @@ namespace Core.ViewModels
             NuevaNotaPedidoCommand = new Command(async () => await NuevaNotaPedido());
             FilterOrdersCommand = new Command(async () => await FilterOrders());
             OpenOrderNoteCommand = new Command<OrderNote>(async o => await AbrirNota(o));
+            SearchQueryCommand = new Command(async () => await SearchQuery());
 
             OrdersNote.CollectionChanged += (sender, arg) =>
             {
                 Total = OrdersNote.Sum(x => x.total);
             };
+        }
+
+        private async Task SearchQuery()
+        {
+            var requestData = new OrdersNotesPaginatedRequest()
+            {
+                CurrentPage = 1,
+                PageSize = 20,
+                query = Query
+            };
+
+            await GetOrdersNoteAsync(requestData, true);
         }
 
         private async Task NuevaNotaPedido()
@@ -110,7 +146,7 @@ namespace Core.ViewModels
                 var ordenNotes = new MvxObservableCollection<OrderNote>(ordersnote.Results.OrderByDescending(x => x.fecha));
                 OrdersNote.AddRange(ordenNotes);
 
-                //CurrentPage = opportunities.CurrentPage;
+                CurrentPage = CurrentPage++;
                 //TotalPages = opportunities.TotalPages;
 
             }

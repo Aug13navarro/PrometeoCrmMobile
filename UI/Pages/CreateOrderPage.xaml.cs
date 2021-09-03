@@ -39,28 +39,45 @@ namespace UI.Pages
 
         private void Entry_TextChanged(object sender, Xamarin.Forms.TextChangedEventArgs e)
         {
-            if(lblDiscount.Text == "Discount")
+            try
             {
-                if (ViewModel.OrderDiscount > 0)
+                if (lblDiscount.Text == "Discount")
                 {
-                    ViewModel.ActualizarTotal(ViewModel.Order.products);
-                    ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(lblOrderDiscount.Text))
-                {
-                    if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
+                    ViewModel.ResetTotal(ViewModel.Order.products);
+
+                    if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
                     {
-                        var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
+                        ViewModel.OrderDiscount = 0;
+                        lblDiscountResult.Text = 0.ToString();
+                    }
 
-                        var descuento = Convert.ToDouble($"0.{o}");
+                    if (ViewModel.OrderDiscount > 0)
+                    {
+                        ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
+                        lblDiscountResult.Text = ViewModel.ValorDescuento.ToString();
 
-                        lblDiscountResult.Text = (ViewModel.Total * descuento).ToString();
                         ViewModel.ActualizarTotal(ViewModel.Order.products);
                     }
                 }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(lblOrderDiscount.Text))
+                    {
+                        if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
+                        {
+                            var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
+
+                            var descuento = Convert.ToDouble($"0.{o}");
+
+                            lblDiscountResult.Text = (ViewModel.Total * descuento).ToString();
+                            ViewModel.ActualizarTotal(ViewModel.Order.products);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                var s = ex.Message;
             }
         }
     }

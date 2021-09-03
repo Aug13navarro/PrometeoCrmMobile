@@ -177,7 +177,7 @@ namespace Core.ViewModels
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
-                EditProductCommand = new Command<OpportunityProducts>(EditProduct);
+                EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
 
@@ -197,56 +197,58 @@ namespace Core.ViewModels
         {
             try
             {
-                //if (Status == null ||
-                //    Company == null ||
-                //    SelectedCustomer == null ||
-                //    Condition == null)
-                //{
-                //    await Application.Current.MainPage.DisplayAlert("Atención", "Todos los campos son requeridos.", "Aceptar");
-                //    return;
-                //}
+                if (Company == null ||
+                    SelectedCustomer == null ||
+                    Condition == null)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "Todos los campos son Obligatorios.", "Aceptar");
+                    return;
+                }
 
-                //var nuevaOrder = new OrderNote
-                //{
-                //    companyId = Company.Id,
-                //    currencyId = 1,
-                //    customerId = SelectedCustomer.Id,
-                //    discount = OrderDiscount,
-                //    fecha = Opportunity.createDt,
-                //    opportunityId = Opportunity.Id,
-                //    orderStatus = Status.Id,
-                //    paymentConditionId = Condition.id,
-                //    total = Total,
-                //    products = new List<OrderNote.ProductOrder>(DefinirProductos(Opportunity.Details)), // hacer que las empresas que no tengan un external id que no se muestren en la lista
-                //    cuenta = SelectedCustomer.ExternalId,
-                //    divisionCuentaId = Company.externalId.Value,
-                //    talon = 28,
-                //    tipoComprobante = 8,
-                //    tipoCuentaId = 1,
-                //    tipoServicioId = 50
-                //};
+                var nuevaOrder = new OrderNote
+                {
+                    companyId = Company.Id,
+                    Description = Order.Description,
+                    currencyId = 1,
+                    customerId = SelectedCustomer.Id,
+                    discount = OrderDiscount,
+                    fecha = Order.fecha,
+                    opportunityId = Order.opportunityId, //puede ser null
+                    orderStatus = Status.Id,
+                    paymentConditionId = Condition.id,
+                    total = Convert.ToDecimal(Total),
+                    products = DefinirProductos(Order.Details.ToList()),                                  // hacer que las empresas que no tengan un external id que no se muestren en la lista
+                    cuenta = SelectedCustomer.ExternalId,
+                    divisionCuentaId = Company.externalId.Value,
+                    talon = 28,                          //puede ser null
+                    tipoComprobante = 8,                 //puede ser null
+                    tipoCuentaId = 1,                    //puede ser null
+                    tipoServicioId = 50                  //puede ser null
+                };
 
-                //var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
+                var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
-                //if (respuesta != null)
-                //{
-                //    var send = new OpportunityPost
-                //    {
-                //        branchOfficeId = Opportunity.customer.Id,
-                //        closedDate = Opportunity.createDt,
-                //        closedReason = "",
-                //        customerId = Opportunity.customer.Id,
-                //        description = Opportunity.description,
-                //        opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                //        opportunityStatusId = 4,
-                //        totalPrice = Total
-                //    };
+                if (respuesta != null)
+                {
+                    var send = new OpportunityPost
+                    {
+                        branchOfficeId = Order.customer.Id,
+                        closedDate = DateTime.Now,
+                        closedReason = "",
+                        customerId = Order.customer.Id,
+                        description = Order.oppDescription,
+                        opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                        opportunityStatusId = 4,
+                        totalPrice = Total
+                    };
 
-                //    send.opportunityProducts = listaProductos(Opportunity.Details);
+                    send.opportunityProducts = listaProductos(Order.Details);
 
-                //    await prometeoApiService.SaveOpportunityEdit(send, Opportunity.Id);
+                    var opp = new Opportunity();
 
-                //}
+                    await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+
+                }
 
                 await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
                 await navigationService.Navigate<PedidosViewModel>();
@@ -285,9 +287,9 @@ namespace Core.ViewModels
             return lista;
         }
 
-        private IEnumerable<OrderNote.ProductOrder> DefinirProductos(MvxObservableCollection<OpportunityProducts> details)
+        private MvxObservableCollection<OrderNote.ProductOrder> DefinirProductos(List<OpportunityProducts> details)
         {
-            var lista = new List<OrderNote.ProductOrder>();
+            var lista = new MvxObservableCollection<OrderNote.ProductOrder>();
 
             foreach (var item in details)
             {
@@ -366,6 +368,7 @@ namespace Core.ViewModels
                     else
                     {
                         Order.products = AsignarProductos(theOrder.Details);
+                        ActualizarTotal(Order.products);
                     }
                 }
             }
@@ -579,42 +582,49 @@ namespace Core.ViewModels
             }
         }
 
-        private void EditProduct(OpportunityProducts detail)
+        private void EditProduct(OrderNote.ProductOrder detail)
         {
             try
-            { 
-            var product = new Product
             {
-                name = detail.product.name,
-                price = detail.product.price,
-                stock = detail.product.stock,
-                Discount = detail.Discount,
-                quantity = detail.Quantity
-            };
+                var product = new Product()
+                {
 
-            editingOpportunityDetail = detail;
-            ShowEditProductPopup?.Invoke(this, product);
+                    name = detail.productPresentationName,
+                    price = detail.price,
+                    Id = detail.companyProductPresentationId,
+                    //stock = detail.quantity,
+                    Discount = detail.discount,
+                    quantity = detail.quantity,
+                };
+
+                editingOpportunityDetail = ConvertProduct(detail);
+                ShowEditProductPopup?.Invoke(this, product);
 
             }
             catch (Exception e)
             {
                 Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
+        }
+
+        private OpportunityProducts ConvertProduct(OrderNote.ProductOrder detail)
+        {
+            return new OpportunityProducts
+            {
+                Discount = detail.discount,
+                Price = detail.price,
+                productId = detail.companyProductPresentationId,
+                //product = detail.
+                Quantity = detail.quantity,
+                Total = detail.subtotal,
+            };
         }
 
         public void ActualizarTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
             try
             {
-                if (OrderDiscount > 0)
-                {
-                    Total = details.Sum(x => x.subtotal) - ValorDescuento;
-                }
-                else
-                {
-                    Total = details.Sum(x => x.subtotal);
-                }
-
+                Total = details.Sum(x => x.subtotal) - ValorDescuento;
             }
             catch (Exception e)
             {
@@ -622,5 +632,9 @@ namespace Core.ViewModels
             }
         }
 
+        public void ResetTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
+        {
+            Total = details.Sum(x => x.subtotal);
+        }
     }
 }

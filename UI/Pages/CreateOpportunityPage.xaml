@@ -127,7 +127,7 @@
                                         <StackLayout Orientation="Horizontal" Spacing="0">
                                             <Label Text="{Binding product.name}" TextColor="{StaticResource SecondaryColor}"
                                                FontAttributes="Bold" FontSize="Medium" Margin="0,8,0,5" HorizontalOptions="StartAndExpand" />
-                                            <Image Source="ic_edit.png">
+                                            <Image Source="editar_imagen.png">
                                                 <Image.GestureRecognizers>
                                                     <TapGestureRecognizer
                                                     Command="{Binding Source={x:Reference detailsList}, Path=BindingContext.EditProductCommand}"
