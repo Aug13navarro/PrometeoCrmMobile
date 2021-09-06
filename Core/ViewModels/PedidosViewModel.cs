@@ -60,6 +60,7 @@ namespace Core.ViewModels
         public Command FilterOrdersCommand { get; }
         public Command OpenOrderNoteCommand { get; }
         public Command SearchQueryCommand { get; }
+        public Command RefreshListCommand { get; }
 
 
         private readonly IMvxNavigationService navigationService;
@@ -79,11 +80,24 @@ namespace Core.ViewModels
             FilterOrdersCommand = new Command(async () => await FilterOrders());
             OpenOrderNoteCommand = new Command<OrderNote>(async o => await AbrirNota(o));
             SearchQueryCommand = new Command(async () => await SearchQuery());
+            RefreshListCommand = new Command(async () => await RefreshList());
 
             OrdersNote.CollectionChanged += (sender, arg) =>
             {
                 Total = OrdersNote.Sum(x => x.total);
             };
+        }
+
+        private async Task RefreshList()
+        {
+            var requestData = new OrdersNotesPaginatedRequest()
+            {
+                CurrentPage = 1,
+                PageSize = 20,
+                query = Query
+            };
+
+            await GetOrdersNoteAsync(requestData, true);
         }
 
         private async Task SearchQuery()
@@ -147,6 +161,7 @@ namespace Core.ViewModels
                 OrdersNote.AddRange(ordenNotes);
 
                 CurrentPage = CurrentPage++;
+                IsLoading = false;
                 //TotalPages = opportunities.TotalPages;
 
             }
