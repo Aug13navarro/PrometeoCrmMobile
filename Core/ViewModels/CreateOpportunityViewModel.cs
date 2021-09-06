@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Model;
@@ -204,12 +205,22 @@ namespace Core.ViewModels
 
         }
 
-        private void CargarIconosEstados()
+        public void CargarIconosEstados()
         {
-            IconAnalisis = "ic_tab_1_violeta.png";
-            IconPropuesta = "ic_tab_2_gris.png";
-            IconNegociacion = "ic_tab_3_gris.png";
-            IconCerrada = "ic_tab_4_gris.png";
+            if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
+            {
+                IconAnalisis = "ic_tab_1_violeta_eng.png";
+                IconPropuesta = "ic_tab_2_gris_eng.png";
+                IconNegociacion = "ic_tab_3_gris_eng.png";
+                IconCerrada = "ic_tab_4_gris_eng.png";
+            }
+            else
+            {
+                IconAnalisis = "ic_tab_1_violeta.png";
+                IconPropuesta = "ic_tab_2_gris.png";
+                IconNegociacion = "ic_tab_3_gris.png";
+                IconCerrada = "ic_tab_4_gris.png";
+            }
 
             EstadoId = 1;
         }
@@ -280,6 +291,52 @@ namespace Core.ViewModels
                     IconPropuesta = "ic_tab_2_violeta.png";
                     IconNegociacion = "ic_tab_3_violeta.png";
                     IconCerrada = "ic_tab_4_violeta.png";
+
+                    EstadoId = id;
+                    break;
+            }
+        }
+        public void AjustarBotonesEstadosEng(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    IconAnalisis = "ic_tab_1_violeta_eng.png";
+                    IconPropuesta = "ic_tab_2_gris_eng.png";
+                    IconNegociacion = "ic_tab_3_gris_eng.png";
+                    IconCerrada = "ic_tab_4_gris_eng.png";
+
+                    EstadoId = id;
+                    break;
+                case 2:
+                    IconAnalisis = "ic_tab_1_violeta_eng.png";
+                    IconPropuesta = "ic_tab_2_violeta_eng.png";
+                    IconNegociacion = "ic_tab_3_gris_eng.png";
+                    IconCerrada = "ic_tab_4_gris_eng.png";
+
+                    EstadoId = id;
+                    break;
+                case 3:
+                    IconAnalisis = "ic_tab_1_violeta_eng.png";
+                    IconPropuesta = "ic_tab_2_violeta_eng.png";
+                    IconNegociacion = "ic_tab_3_violeta_eng.png";
+                    IconCerrada = "ic_tab_4_gris_eng.png";
+
+                    EstadoId = id;
+                    break;
+                case 4:
+                    IconAnalisis = "ic_tab_1_violeta_eng.png";
+                    IconPropuesta = "ic_tab_2_violeta_eng.png";
+                    IconNegociacion = "ic_tab_3_violeta_eng.png";
+                    IconCerrada = "ic_tab_4_violeta_eng.png";
+
+                    EstadoId = id;
+                    break;
+                case 5:
+                    IconAnalisis = "ic_tab_1_violeta_eng.png";
+                    IconPropuesta = "ic_tab_2_violeta_eng.png";
+                    IconNegociacion = "ic_tab_3_violeta_eng.png";
+                    IconCerrada = "ic_tab_4_violeta_eng.png";
 
                     EstadoId = id;
                     break;

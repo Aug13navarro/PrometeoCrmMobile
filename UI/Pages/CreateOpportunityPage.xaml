@@ -38,7 +38,7 @@
                         Grid.Column="0"
                         Grid.ColumnSpan="2">
                 <StackLayout Padding="15,15,15,0" Spacing="0">
-                    <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" />
+                    <Label x:Name="lblCustomer" Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" />
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -70,22 +70,26 @@
                             Grid.Column="0"
                             BackgroundColor="Transparent"
                             Clicked="ImageButton_Clicked_1"
+                            WidthRequest="80"
                             ></ImageButton>
                         <ImageButton 
                             Source="{Binding IconPropuesta}"
                             Grid.Column="1"
                             BackgroundColor="Transparent"
                             Clicked="ImageButton_Clicked_2"
+                            WidthRequest="85"
                             ></ImageButton>
                         <ImageButton
                             Source="{Binding IconNegociacion}"
                             Grid.Column="2"
                             BackgroundColor="Transparent"
+                            WidthRequest="100"
                             Clicked="ImageButton_Clicked_3"></ImageButton>
                         <Image
                             Source="{Binding IconCerrada}"
                             Grid.Column="3"
                             BackgroundColor="Transparent"
+                            WidthRequest="80"
                             >
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="ImageButton_Clicked_4"></TapGestureRecognizer>

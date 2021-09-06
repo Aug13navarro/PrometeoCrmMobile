@@ -228,6 +228,9 @@
   <data name="NoOpportunitiesFound" xml:space="preserve">
     <value>No opportunities found</value>
   </data>
+  <data name="NoOrdersFound" xml:space="preserve">
+    <value>No Orders Found</value>
+  </data>
   <data name="No_Associated_Products" xml:space="preserve">
     <value>There are no associated products</value>
   </data>

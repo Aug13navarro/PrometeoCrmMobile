@@ -71,7 +71,14 @@ namespace UI.Pages
                 return;
             }
 
-            ViewModel.AjustarBotonesEstados(1);
+            if (lblCustomer.Text == "Cliente")
+            {
+                ViewModel.AjustarBotonesEstados(1);
+            }
+            else
+            {
+                ViewModel.AjustarBotonesEstadosEng(1);
+            }
         }
 
         private void ImageButton_Clicked_2(object sender, EventArgs e)
@@ -82,8 +89,14 @@ namespace UI.Pages
                     "Info", AppResources.NoEditOpportunity, AppResources.Accept);
                 return;
             }
-
-            ViewModel.AjustarBotonesEstados(2);
+            if (lblCustomer.Text == "Cliente")
+            {
+                ViewModel.AjustarBotonesEstados(2);
+            }
+            else
+            {
+                ViewModel.AjustarBotonesEstadosEng(2);
+            }
         }
 
         private void ImageButton_Clicked_3(object sender, EventArgs e)
@@ -95,7 +108,14 @@ namespace UI.Pages
                 return;
             }
 
-            ViewModel.AjustarBotonesEstados(3);
+            if (lblCustomer.Text == "Cliente")
+            {
+                ViewModel.AjustarBotonesEstados(3);
+            }
+            else
+            {
+                ViewModel.AjustarBotonesEstadosEng(3);
+            }
         }
 
         private void ImageButton_Clicked_4(object sender, EventArgs e)

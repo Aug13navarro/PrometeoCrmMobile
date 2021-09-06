@@ -403,6 +403,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Orders Found.
+        /// </summary>
+        internal static string NoOrdersFound {
+            get {
+                return ResourceManager.GetString("NoOrdersFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opportunities.
         /// </summary>
         internal static string Opportunities {
