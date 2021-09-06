@@ -204,6 +204,11 @@ namespace Core.ViewModels
                     await Application.Current.MainPage.DisplayAlert("Atención", "Todos los campos son Obligatorios.", "Aceptar");
                     return;
                 }
+                if(string.IsNullOrWhiteSpace(Order.Description))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "Ingrese una Descripción", "Aceptar");
+                    return;
+                }
 
                 var nuevaOrder = new OrderNote
                 {
@@ -213,11 +218,9 @@ namespace Core.ViewModels
                     customerId = SelectedCustomer.Id,
                     discount = OrderDiscount,
                     fecha = Order.fecha,
-                    opportunityId = Order.opportunityId, //puede ser null
-                    orderStatus = Status.Id,
+                    orderStatus = 1,
                     paymentConditionId = Condition.id,
                     total = Convert.ToDecimal(Total),
-                    products = DefinirProductos(Order.Details.ToList()),                                  // hacer que las empresas que no tengan un external id que no se muestren en la lista
                     cuenta = SelectedCustomer.ExternalId,
                     divisionCuentaId = Company.externalId.Value,
                     talon = 28,                          //puede ser null
@@ -226,28 +229,41 @@ namespace Core.ViewModels
                     tipoServicioId = 50                  //puede ser null
                 };
 
+                if(Order.opportunityId == 0 || Order.opportunityId == null)
+                {
+                    nuevaOrder.opportunityId = null;
+                    nuevaOrder.products = Order.products;
+                }
+                else
+                {
+                    nuevaOrder.opportunityId = Order.opportunityId;
+                    nuevaOrder.products = DefinirProductos(Order.Details.ToList());
+                }
+
                 var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
                 if (respuesta != null)
                 {
-                    var send = new OpportunityPost
+                    if (respuesta.opportunityId > 0)
                     {
-                        branchOfficeId = Order.customer.Id,
-                        closedDate = DateTime.Now,
-                        closedReason = "",
-                        customerId = Order.customer.Id,
-                        description = Order.oppDescription,
-                        opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                        opportunityStatusId = 4,
-                        totalPrice = Total
-                    };
+                        var send = new OpportunityPost
+                        {
+                            branchOfficeId = Order.customer.Id,
+                            closedDate = DateTime.Now,
+                            closedReason = "",
+                            customerId = Order.customer.Id,
+                            description = Order.oppDescription,
+                            opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                            opportunityStatusId = 4,
+                            totalPrice = Total
+                        };
 
-                    send.opportunityProducts = listaProductos(Order.Details);
+                        send.opportunityProducts = listaProductos(Order.Details);
 
-                    var opp = new Opportunity();
+                        var opp = new Opportunity();
 
-                    await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
-
+                        await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+                    }
                 }
 
                 await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));

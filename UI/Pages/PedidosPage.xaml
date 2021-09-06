@@ -38,7 +38,9 @@
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
                 HasUnevenRows="True"
-                SeparatorVisibility="None">
+                SeparatorVisibility="None"
+                IsPullToRefreshEnabled="True"
+                RefreshCommand="{Binding RefreshListCommand}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -61,7 +63,7 @@
                                     <StackLayout
                                         Grid.Column="1">
                                         <Label
-                                            Text="{Binding customer.BusinessName}"
+                                            Text="{Binding customer.CompanyName}"
                                             VerticalTextAlignment="Center"
                                             FontSize="Medium"
                                             TextColor="{StaticResource PrimaryColor}"

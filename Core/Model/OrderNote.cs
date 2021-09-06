@@ -7,7 +7,7 @@ namespace Core.Model
     public class OrderNote
     {
         public int  id { get; set; }
-        public int opportunityId { get; set; }
+        public int? opportunityId { get; set; }
         public string oppDescription { get; set; }
         public string Description { get; set; }
         public int orderStatus { get; set; }

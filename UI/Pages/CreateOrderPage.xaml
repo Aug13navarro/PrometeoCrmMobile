@@ -139,7 +139,7 @@
                         Margin="0"
                         Padding="5,0,0,0">
                         <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" Style="{StaticResource DefaultEditor}"
-                        AutoSize="TextChanges" Text="{Binding Order.description}" MaxLength="300" HeightRequest="100"/>
+                        AutoSize="TextChanges" Text="{Binding Order.Description}" MaxLength="300" HeightRequest="100"/>
                     </Frame>
                     
                     <StackLayout Orientation="Horizontal">
