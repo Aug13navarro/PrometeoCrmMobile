@@ -16,32 +16,6 @@ namespace Core.ViewModels
         private ApplicationData data;
         // Properties
 
-        //private string iconAnalisis;
-        //private string iconPropuesta;
-        //private string iconNegociacion;
-        //private string iconCerrada;
-
-        //public string IconAnalisis
-        //{
-        //    get => iconAnalisis;
-        //    set => SetProperty(ref iconAnalisis, value);
-        //}
-        //public string IconPropuesta
-        //{
-        //    get => iconPropuesta;
-        //    set => SetProperty(ref iconPropuesta, value);
-        //}
-        //public string IconNegociacion
-        //{
-        //    get => iconNegociacion;
-        //    set => SetProperty(ref iconNegociacion, value);
-        //}
-        //public string IconCerrada
-        //{
-        //    get => iconCerrada;
-        //    set => SetProperty(ref iconCerrada, value);
-        //}
-
         private int estadoId;
         public int EstadoId
         {
@@ -240,35 +214,42 @@ namespace Core.ViewModels
                     nuevaOrder.products = DefinirProductos(Order.Details.ToList());
                 }
 
-                var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
-
-                if (respuesta != null)
+                if (Order.id > 0)
                 {
-                    if (respuesta.opportunityId > 0)
+                    var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
+
+                    if (respuesta != null)
                     {
-                        var send = new OpportunityPost
+                        if (respuesta.opportunityId > 0)
                         {
-                            branchOfficeId = Order.customer.Id,
-                            closedDate = DateTime.Now,
-                            closedReason = "",
-                            customerId = Order.customer.Id,
-                            description = Order.oppDescription,
-                            opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                            opportunityStatusId = 4,
-                            totalPrice = Total
-                        };
+                            var send = new OpportunityPost
+                            {
+                                branchOfficeId = Order.customer.Id,
+                                closedDate = DateTime.Now,
+                                closedReason = "",
+                                customerId = Order.customer.Id,
+                                description = Order.oppDescription,
+                                opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                                opportunityStatusId = 4,
+                                totalPrice = Total
+                            };
 
-                        send.opportunityProducts = listaProductos(Order.Details);
+                            send.opportunityProducts = listaProductos(Order.Details);
 
-                        var opp = new Opportunity();
+                            var opp = new Opportunity();
 
-                        await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+                            await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+                        }
                     }
+
+                    await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                    await navigationService.Navigate<PedidosViewModel>();
                 }
-
-                await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                await navigationService.Navigate<PedidosViewModel>();
-
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "Por Ahora no se puede modificar un Pedido de Venta.", "Aceptar");
+                    return;
+                }
             }
             catch (Exception e)
             {
@@ -371,6 +352,11 @@ namespace Core.ViewModels
                     var user = data.LoggedUser;
                     
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
+                    SelectedCustomer = Order.customer;
+                    Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
+                    Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                    Total = Convert.ToDouble(Order.total);
+                    OrderDiscount = Order.discount;
 
                     ActualizarTotal(Order.products);
                 }
