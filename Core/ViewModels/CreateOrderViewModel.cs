@@ -313,7 +313,7 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token));
+                PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
             }
             catch(Exception e)
             {
@@ -328,6 +328,8 @@ namespace Core.ViewModels
                 var user = data.LoggedUser;
 
                 Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
+
+                Company = Companies.FirstOrDefault();
             }
             catch ( Exception e)
             {

@@ -670,7 +670,7 @@ namespace Core.Services
             await Task.FromResult(0);
         }
 
-        public async Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token)
+        public async Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token, int companyId)
         {
             try
             {
@@ -679,7 +679,7 @@ namespace Core.Services
 
                     var lista = new List<PaymentCondition>();
 
-                    var url = $"/api/PaymentCondition/GetAllPaymentTermsAsync";
+                    var url = $"/api/PaymentCondition/GetPaymentTermsByCompanyIdAsync?companyId={companyId}";
 
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 

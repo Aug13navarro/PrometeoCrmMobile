@@ -79,6 +79,20 @@ namespace Core.ViewModels
             set => SetProperty(ref selectedClosedLostStatusCause, value);
         }
 
+        private MvxObservableCollection<Company> companies;
+        public MvxObservableCollection<Company> Companies
+        {
+            get => companies;
+            set => SetProperty(ref companies, value);
+        }
+
+        private Company company;
+        public Company Company
+        {
+            get => company;
+            set => SetProperty(ref company, value);
+        }
+
         private Customer selectedCustomer;
         public Customer SelectedCustomer
         {
@@ -141,7 +155,24 @@ namespace Core.ViewModels
 
             CargarIconosEstados();
 
+            CargarEmpresas();
 
+        }
+
+        private async void CargarEmpresas()
+        {
+            try
+            {
+                var user = data.LoggedUser;
+
+                Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
+
+                Company = Companies.FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                toastService.ShowError($"{e.Message}");
+            }
         }
 
         private async Task LostOpportunity()

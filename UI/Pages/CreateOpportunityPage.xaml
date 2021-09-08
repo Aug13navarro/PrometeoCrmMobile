@@ -38,6 +38,15 @@
                         Grid.Column="0"
                         Grid.ColumnSpan="2">
                 <StackLayout Padding="15,15,15,0" Spacing="0">
+                    
+                    <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                    
+                    <Picker
+                        HorizontalOptions="FillAndExpand"
+                        Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding Companies}" ItemDisplayBinding="{Binding BusinessName}" SelectedItem="{Binding Company, Mode=TwoWay}">
+
+                    </Picker>
+                    
                     <Label x:Name="lblCustomer" Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" />
 
                     <Grid>
