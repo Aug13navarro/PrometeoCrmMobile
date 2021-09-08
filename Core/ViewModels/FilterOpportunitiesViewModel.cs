@@ -55,6 +55,14 @@ namespace Core.ViewModels
             set => SetProperty(ref indexStatus, value);
         }
 
+        private Company company;
+        public Company Company
+        {
+            get => company;
+            set => SetProperty(ref company, value);
+        }
+
+
         private Customer customer;
         public Customer Customer
         {
@@ -83,6 +91,7 @@ namespace Core.ViewModels
         }
 
         public ObservableCollection<OpportunityStatus> OpportunityStatuses { get; set; }
+        public ObservableCollection<Company> Companies { get; set; }
         public ObservableCollection<Customer> Customers { get; set; }
         public ObservableCollection<Product> Products { get; set; }
         public ObservableCollection<double> Totals { get; set; }
@@ -113,6 +122,7 @@ namespace Core.ViewModels
             EndDate = DateTime.Now.Date;
 
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
+            //Companies = new ObservableCollection<Company>();
             
             CargarEstados();
         }
@@ -144,7 +154,28 @@ namespace Core.ViewModels
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
 
             CargarEstados();
+            CargarCompanies();
+
             CargarFiltroGuardado();
+        }
+
+        private async void CargarCompanies()
+        {
+            try
+            {
+                var user = data.LoggedUser;
+
+                var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
+
+                Companies = new ObservableCollection<Company>(d);
+
+                CargarFiltroGuardado();
+
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
         }
 
         private Task ClearFilter()
@@ -154,6 +185,7 @@ namespace Core.ViewModels
             IndexStatus = -1;
             Customer = null;
             Product = null;
+            Company = null;
             TotalDesde = 0;
             TotalHasta = 0;
 
@@ -275,6 +307,7 @@ namespace Core.ViewModels
                 customers = new List<cust>(),
                 status = new List<oppSta>(),
                 products = new List<prod>(),
+                companies = new List<comp>(),
                 priceFrom = TotalDesde,
                 priceTo = TotalHasta
             };
@@ -282,6 +315,7 @@ namespace Core.ViewModels
             if (customer != null) filtro.customers.Add(new cust { id = customer.Id});
             if (Status != null) filtro.status.Add(new oppSta { id = Status.Id });
             if (Product != null) filtro.products.Add(new prod { id = Product.Id });
+            if (Company != null) filtro.companies.Add(new comp { id = Company.Id });
             if (filtro.priceFrom == 0) filtro.priceFrom = null;
             if (filtro.priceTo == 0) filtro.priceTo = null;
 
@@ -293,12 +327,14 @@ namespace Core.ViewModels
                 status = new List<OpportunityStatus>(),
                 products = new List<Product>(),
                 priceFrom = TotalDesde,
-                priceTo = TotalHasta
+                priceTo = TotalHasta,
+                companies = new List<Company>(),
             };
 
             if (customer != null) filtroJson.customers.Add(customer);
             if (Status != null) filtroJson.status.Add(Status);
             if (Product != null) filtroJson.products.Add(Product);
+            if (Company != null) filtroJson.companies.Add(Company);
             if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
             if (filtroJson.priceTo == 0) filtroJson.priceTo = null;
 

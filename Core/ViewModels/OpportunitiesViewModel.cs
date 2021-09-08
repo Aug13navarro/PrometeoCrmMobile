@@ -266,8 +266,7 @@ namespace Core.ViewModels
                 
                 var request = new ProductList();
 
-                //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
-                var opportunities = await prometeoApiService.GetOp(requestData, "https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", user.Token);
+                var opportunities = await prometeoApiService.GetOp(requestData, "/api/Opportunity/GetListByCustomerIdAsync", user.Token);
 
                 if (newSearch)
                 {

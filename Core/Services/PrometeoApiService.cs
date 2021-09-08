@@ -34,8 +34,10 @@ namespace Core.Services
         {
             //const string url = "api/User/Login";
             //const string url = "http://testing-prometeo.docworld.com.ar:8089/api/User/Login";
-            const string url = "https://neophos-testing-api.azurewebsites.net/api/User/Login";
             // const string url = "https://prometeoerp.com/login";
+
+
+            const string url = "api/User/Login";
             var body = new
             {
                 Login = userName,
@@ -63,7 +65,7 @@ namespace Core.Services
         public async Task<UserData> GetUserData(int userId)
         {
             // string url = $"api/User/{userId}";
-            string url = $"https://neophos-testing-api.azurewebsites.net/api/User/{userId}";
+            string url = $"api/User/{userId}";
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
             {
@@ -81,7 +83,7 @@ namespace Core.Services
             // string url = $"api/User/{userId}";
             try
             {
-                string url = $"https://neophos-testing-api.azurewebsites.net/api/Opportunity/{userId}";
+                string url = $"api/Opportunity/{userId}";
 
                 using (var request = new HttpRequestMessage(HttpMethod.Get, url))
                 {
@@ -461,7 +463,7 @@ namespace Core.Services
             {
                 if (offlineDataService.IsWifiConection)
                 {
-                    string url = $"/api/Product/GetCompanyProductPresentationByUserIdAsync";
+                    string url = $"api/Product/GetCompanyProductPresentationByUserIdAsync";
 
                     //var content = JsonConvert.SerializeObject(productList);
 
@@ -552,7 +554,7 @@ namespace Core.Services
         {
             if (offlineDataService.IsWifiConection)
             {
-                var cadena = "https://neophos-testing-api.azurewebsites.net/api/Opportunity";
+                var cadena = "api/Opportunity";
 
                 //var dto = new
                 //{
@@ -601,7 +603,7 @@ namespace Core.Services
         {
             try
             {
-                var url = $"https://neophos-testing-api.azurewebsites.net/api/Opportunity/SearchOpportunityAsync";
+                var url = $"api/Opportunity/SearchOpportunityAsync";
 
                 var dto = JsonConvert.SerializeObject(filtro);
 
