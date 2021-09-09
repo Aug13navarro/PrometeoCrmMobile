@@ -457,52 +457,54 @@ namespace Core.Services
             }
         }
 
-        public async Task<List<Product>> GetAvailableProducts(ProductList productList, string token)
+        public async Task<PaginatedList<Product>> GetAvailableProducts(ProductList productList, string token)
         {
             try
             {
-                if (offlineDataService.IsWifiConection)
-                {
-                    string url = $"api/Product/GetCompanyProductPresentationByUserIdAsync";
+                //if (offlineDataService.IsWifiConection)
+                //{
+                    //string url = $"api/Product/GetCompanyProductPresentationByUserIdAsync";
+                    string url = $"api/Product/SearchCompanyProductPresentationCanBeSold";
 
-                    //var content = JsonConvert.SerializeObject(productList);
+                    var content = JsonConvert.SerializeObject(productList);
 
-                    //HttpContent httpContent = new StringContent(content, Encoding.UTF8);
+                    HttpContent httpContent = new StringContent(content);
 
-                    //httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                    httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var objeto = await client.GetAsync(string.Format(url));
+                    var objeto = await client.PostAsync(string.Format(url), httpContent);
 
                     var resultado = await objeto.Content.ReadAsStringAsync();
 
-                    var lista = JsonConvert.DeserializeObject<List<Product>>(resultado);
+                    var lista = JsonConvert.DeserializeObject<PaginatedList<Product>>(resultado);
 
                     if(offlineDataService.IsDataLoaded)
                     {
                         offlineDataService.UnloadAllData("Presentation");
                     }
 
-                    offlineDataService.SavePresentations(lista);
+                    //offlineDataService.SavePresentations(lista);
 
                     return lista;
-                }
-                else
-                {
-                    //if(!offlineDataService.IsDataLoaded)
-                    //{
-                    //    await offlineDataService.LoadPresentation();
-                    //}
+                //}
+                //else
+                //{
+                //    //if(!offlineDataService.IsDataLoaded)
+                //    //{
+                //    //    await offlineDataService.LoadPresentation();
+                //    //}
 
-                    await offlineDataService.LoadPresentation();
+                //    //await offlineDataService.LoadPresentation();
 
-                    var result = await offlineDataService.SearchPresentations();
+                //    //var result = await offlineDataService.SearchPresentations();
 
-                    return result;
-                }
+                //    //return result;
+                //}
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                var s = e.Message;
                 throw;
             }
         }

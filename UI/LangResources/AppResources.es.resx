@@ -258,6 +258,9 @@
   <data name="Price" xml:space="preserve">
     <value>Precio</value>
   </data>
+  <data name="PriceList" xml:space="preserve">
+    <value>Lista de Precios</value>
+  </data>
   <data name="Product" xml:space="preserve">
     <value>Producto</value>
   </data>

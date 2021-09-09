@@ -159,7 +159,6 @@ namespace Core.ViewModels
 
                 CargarEstados();
                 CargarEmpresas();
-                CargarCondiciones();
             }
             catch(Exception e)
             {
@@ -330,6 +329,8 @@ namespace Core.ViewModels
                 Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
 
                 Company = Companies.FirstOrDefault();
+
+                CargarCondiciones();
             }
             catch ( Exception e)
             {

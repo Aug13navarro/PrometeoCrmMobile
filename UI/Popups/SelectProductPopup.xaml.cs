@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Core.Model;
 using Core.Services.Contracts;
 using MvvmCross.IoC;
@@ -25,10 +28,24 @@ namespace UI.Popups
             CloseWhenBackgroundIsClicked = true;
             this.product = product;
 
+            cmbListPrice.ItemsSource = CrearSource(product.priceList);
+
             descriptionLabel.Text = product.name;
             priceInput.Text = product.price.ToString();
             quantityInput.Text = isEditing ? product.quantity.ToString() : "1";
             discountInput.Text = isEditing ? product.Discount.ToString() : "0";
+        }
+
+        private IList CrearSource(List<PriceList> priceList)
+        {
+            List<string> lista = new List<string>();
+
+            foreach (var item in priceList)
+            {
+                lista.Add($"{item.description} - ${item.price}");
+            }
+
+            return lista;
         }
 
         private void OkButtonClicked(object sender, EventArgs e)
@@ -76,7 +93,7 @@ namespace UI.Popups
         {
             try
             {
-                if(lblPrice.Text == "Price") //para cuando el idioma esta en ingles
+                if (lblPrice.Text == "Price") //para cuando el idioma esta en ingles
                 {
 
                     var Price = double.Parse(priceInput.Text.Replace(",", "."));
@@ -114,6 +131,13 @@ namespace UI.Popups
             {
                 return 0;
             }
+        }
+
+        private void cmbListPrice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var index = cmbListPrice.SelectedIndex;
+
+            priceInput.Text = product.priceList[index].price.ToString();
         }
     }
 }

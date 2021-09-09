@@ -152,6 +152,7 @@ namespace Core.ViewModels
             EndDate = DateTime.Now.Date;
 
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
+            Companies = new ObservableCollection<Company>();
 
             CargarEstados();
             CargarCompanies();
@@ -167,9 +168,12 @@ namespace Core.ViewModels
 
                 var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
 
-                Companies = new ObservableCollection<Company>(d);
+                foreach (var item in d)
+                {
+                    Companies.Add(item);
+                }
 
-                CargarFiltroGuardado();
+                //CargarFiltroGuardado();
 
             }
             catch (Exception e)
@@ -210,6 +214,10 @@ namespace Core.ViewModels
                 {
                     Status = filtro.status.FirstOrDefault();
                     IndexStatus = Status.Id - 1;
+                }
+                if(filtro.companies.Count() > 0)
+                {
+                    Company = filtro.companies.FirstOrDefault();
                 }
                 else
                 {

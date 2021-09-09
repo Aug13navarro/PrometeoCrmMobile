@@ -7,6 +7,7 @@ using Core.Model;
 using Core.Model.Enums;
 using Core.Services.Contracts;
 using Core.Utils;
+using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Xamarin.Forms;
@@ -139,24 +140,31 @@ namespace Core.ViewModels
         public CreateOpportunityViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
                                           IToastService toastService)
         {
-            data = new ApplicationData(); 
+            try
+            {
+                data = new ApplicationData();
 
-            this.navigationService = navigationService;
-            this.prometeoApiService = prometeoApiService;
-            this.toastService = toastService;
+                this.navigationService = navigationService;
+                this.prometeoApiService = prometeoApiService;
+                this.toastService = toastService;
 
-            SelectClientCommand = new Command(async () => await SelectClientAsync());
-            AddProductCommand = new Command(async () => await AddProductAsync());
-            RemoveProductCommand = new Command<OpportunityProducts>(RemoveProduct);
-            EditProductCommand = new Command<OpportunityProducts>(EditProduct);
-            SaveOpportunityCommand = new Command(async () => await SaveOpportunity());
-            WinOpportunityCommand = new Command<Opportunity>(async o => await WinOpportunityAsync(o));
-            LostOpportunityCommand = new Command(async () => await LostOpportunity());
+                SelectClientCommand = new Command(async () => await SelectClientAsync());
+                AddProductCommand = new Command(async () => await AddProductAsync());
+                RemoveProductCommand = new Command<OpportunityProducts>(RemoveProduct);
+                EditProductCommand = new Command<OpportunityProducts>(EditProduct);
+                SaveOpportunityCommand = new Command(async () => await SaveOpportunity());
+                WinOpportunityCommand = new Command<Opportunity>(async o => await WinOpportunityAsync(o));
+                LostOpportunityCommand = new Command(async () => await LostOpportunity());
 
-            CargarIconosEstados();
+                CargarIconosEstados();
 
-            CargarEmpresas();
+                CargarEmpresas();
 
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+            }
         }
 
         private async void CargarEmpresas()
@@ -201,7 +209,8 @@ namespace Core.ViewModels
                     description = Opportunity.description,
                     opportunityProducts = new List<OpportunityPost.ProductSend>(),
                     opportunityStatusId = 5,
-                    totalPrice = Total
+                    totalPrice = Total,
+                    companyId = Company.Id
                 };
 
                 send.opportunityProducts = listaProductos(Opportunity.Details);
@@ -229,6 +238,7 @@ namespace Core.ViewModels
                 Details = Opportunity.opportunityProducts,
                 total = Opportunity.totalPrice,
                 oppDescription = Opportunity.description,
+                companyId = Company.Id,
             };
 
             //int customerId = await navigationService.Navigate<CustomersViewModel, int>();
@@ -258,27 +268,38 @@ namespace Core.ViewModels
 
         public async override void Prepare(Opportunity theOpportunity)
         {
-            if (theOpportunity.Id > 0)
+            try
             {
-                var result = await prometeoApiService.GetOppById(theOpportunity.Id);
-                Opportunity = result;
-                Opportunity.Details.AddRange(result.opportunityProducts);
-
-                if(Opportunity.opportunityStatus.Id >= 4)
+                if (theOpportunity.Id > 0)
                 {
+                    var result = await prometeoApiService.GetOppById(theOpportunity.Id);
+                    Opportunity = result;
+                    Opportunity.Details.AddRange(result.opportunityProducts);
 
+                    Company = Companies.FirstOrDefault(x => x.Id == Opportunity.Company.Id);
+
+                    if (Opportunity.opportunityStatus.Id >= 4)
+                    {
+
+                    }
+
+                    AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
+                }
+                else
+                {
+                    Opportunity = theOpportunity;
+                    Opportunity.createDt = DateTime.Today;
                 }
 
-                AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
+                selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
+                SelectedCustomer = Opportunity.customer;
+                
+                ActualizarTotal(Opportunity.Details);
             }
-            else
+            catch( Exception e)
             {
-                Opportunity = theOpportunity;
+                var s = e.Message;
             }
-
-            selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
-            SelectedCustomer = Opportunity.customer;
-            ActualizarTotal(Opportunity.Details);
         }
 
         public void AjustarBotonesEstados(int id)
@@ -443,7 +464,11 @@ namespace Core.ViewModels
 
         private async Task AddProductAsync()
         {
+            //var oppCompany = new Core.Model.OpportunityProducts{ CompanyId = Company.Id};
+            //var ViewModelProduct =new ProductsViewModel(prometeoApiService, navigationService, Company.Id);
+
             OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
+
             if (detail != null)
             {
                 detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
@@ -526,7 +551,8 @@ namespace Core.ViewModels
                     description = Opportunity.description,
                     opportunityProducts = new List<OpportunityPost.ProductSend>(),
                     opportunityStatusId = Opportunity.opportunityStatus.Id,
-                    totalPrice = Total
+                    totalPrice = Total,
+                    companyId = Company.Id
                 };
 
                 send.opportunityProducts = listaProductos(Opportunity.Details);

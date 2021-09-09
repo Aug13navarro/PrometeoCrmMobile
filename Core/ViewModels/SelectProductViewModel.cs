@@ -185,7 +185,7 @@ namespace Core.ViewModels
                     Products.Clear();
                 }
 
-                Products.AddRange(products.ToList());
+                Products.AddRange(products.Results);
 
                 //CurrentPage = contacts.currentPage;
                 //TotalPages = contacts.totalPages;

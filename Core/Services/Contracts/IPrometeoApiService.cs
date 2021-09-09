@@ -26,7 +26,7 @@ namespace Core.Services.Contracts
         Task<PaginatedList<CustomerContact>> SearchCustomerContacts(ContactsPaginatedRequest requestData);
         Task<Customer> GetCustomer(int id);
         Task UpdateCustomer(Customer customer);
-        Task<List<Product>> GetAvailableProducts(ProductList productList, string token);
+        Task<PaginatedList<Product>> GetAvailableProducts(ProductList productList, string token);
         //Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData);
         Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData, string cadena, string token);
         Task SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity);

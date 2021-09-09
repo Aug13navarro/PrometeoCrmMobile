@@ -39,7 +39,7 @@
                         Grid.ColumnSpan="2">
                 <StackLayout Padding="15,15,15,0" Spacing="0">
                     
-                    <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                    <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}"  VerticalOptions="Center"/>
                     
                     <Picker
                         HorizontalOptions="FillAndExpand"

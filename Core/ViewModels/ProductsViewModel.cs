@@ -41,13 +41,6 @@ namespace Core.ViewModels
             }
         }
 
-        //private List<Product> products;
-        //public List<Product> Products
-        //{
-        //    get => products;
-        //    set => SetProperty(ref products, value);
-        //}
-
         public MvxObservableCollection<Product> Products { get; } = new MvxObservableCollection<Product>();
 
         // Events
@@ -69,9 +62,13 @@ namespace Core.ViewModels
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
 
+        private int companyId;
+
         public ProductsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)
         {
             data = new ApplicationData();
+
+            companyId = 7;
 
             Query = "";
             this.prometeoApiService = prometeoApiService;
@@ -88,7 +85,7 @@ namespace Core.ViewModels
             {
                 var requestData = new ProductList
                 {
-                    companyId = 7,
+                    companyId = companyId,
                     currentPage = 1,
                     pageSize = 50,
                     query = Query,
@@ -136,7 +133,7 @@ namespace Core.ViewModels
             
             var requestData = new ProductList
             {
-                companyId = 7,
+                companyId = companyId,
                 currentPage = CurrentPage,
                 pageSize = PageSize,
                 query = Query,
@@ -160,7 +157,7 @@ namespace Core.ViewModels
         {
             var requestData = new ProductList
             {
-                companyId = 7,
+                companyId = companyId,
                 currentPage = CurrentPage + 1,
                 pageSize = PageSize,
                 query = Query,
@@ -182,7 +179,7 @@ namespace Core.ViewModels
                     Products.Clear();
                 }
 
-                Products.AddRange(products.ToList());
+                Products.AddRange(products.Results);
 
                 //CurrentPage = contacts.currentPage;
                 //TotalPages = contacts.totalPages;

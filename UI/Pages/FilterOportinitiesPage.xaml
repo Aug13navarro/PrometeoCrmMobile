@@ -67,7 +67,7 @@
 
                         <Frame Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Vertical" Spacing="0">
-                                <Picker Title="{x:Static resources:AppResources.Company}" ItemsSource="{Binding Companies}" SelectedItem="{Binding Company}"
+                                <Picker Title="{x:Static resources:AppResources.Company}" ItemsSource="{Binding Companies, Mode=TwoWay}" SelectedItem="{Binding Company, Mode=TwoWay}"
                                         ItemDisplayBinding="{Binding BusinessName}"/>
                             </StackLayout>
                         </Frame>

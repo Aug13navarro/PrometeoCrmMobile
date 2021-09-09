@@ -7,16 +7,6 @@ namespace Core.Model
         public int productId { get; set; }
         public Product product { get; set; }
 
-        //private string descrption;
-        //public string Description
-        //{
-        //    get => descrption;
-        //    set
-        //    {
-        //        SetProperty(ref descrption, value);
-        //    }
-        //}
-
         private int quantity;
         public int Quantity
         {
@@ -24,7 +14,6 @@ namespace Core.Model
             set
             {
                 SetProperty(ref quantity, value);
-                //Total = ComputeTotal();
             }
         }
 
@@ -35,37 +24,14 @@ namespace Core.Model
             set
             {
                 SetProperty(ref discount, value);
-                //Total = ComputeTotal();
             }
         }
 
         public double Price { get; set; }
-        //private decimal price;
-        //public decimal Price
-        //{
-        //    get => price;
-        //    set
-        //    {
-        //        SetProperty(ref price, value);
-        //        Total = ComputeTotal();
-        //    }
-        //}
 
-        //private decimal total;
         public double Total { get; set; }
         
-
-        //private decimal ComputeTotal()
-        //{
-        //    decimal tempTotal = Price * Quantity;
-        //    if (Discount == 0)
-        //    {
-        //        return tempTotal;
-        //    }
-        //    else
-        //    {
-        //        return tempTotal - (tempTotal * Discount / 100);
-        //    }
-        //}
+        //para pasar company a producto
+        public int CompanyId { get; set; }
     }
 }

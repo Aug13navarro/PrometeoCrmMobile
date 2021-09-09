@@ -11,6 +11,7 @@ namespace Core.Model
         public int Id { get; set; }
 
         public Customer  customer { get; set; }
+        public Company Company { get; set; }
 
         public OpportunityStatus opportunityStatus { get; set; }
 
