@@ -96,17 +96,17 @@
                         <Label
                             Style="{StaticResource DefaultLabel}"
                             VerticalOptions="Center"
-                            Text="Moneda">
+                            Text="{x:Static resources:AppResources.Currency}">
                             
                         </Label>
                         <Frame
                             Margin="0"
-                            Padding="0"
-                            WidthRequest="50">
+                            Padding="5,0">
                         <Picker
                             IsEnabled="False" 
-                            Title="Us"
-                            HorizontalTextAlignment="Center">
+                            Title="US$"
+                            HorizontalTextAlignment="Center"
+                            WidthRequest="100">
                             
                         </Picker>
                         </Frame>

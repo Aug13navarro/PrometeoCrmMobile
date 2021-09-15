@@ -28,7 +28,10 @@ namespace UI.Popups
             CloseWhenBackgroundIsClicked = true;
             this.product = product;
 
-            cmbListPrice.ItemsSource = CrearSource(product.priceList);
+            if (product.priceList != null)
+            {
+                cmbListPrice.ItemsSource = CrearSource(product.priceList);
+            }
 
             descriptionLabel.Text = product.name;
             priceInput.Text = product.price.ToString();
@@ -42,7 +45,7 @@ namespace UI.Popups
 
             foreach (var item in priceList)
             {
-                lista.Add($"{item.description} - ${item.price}");
+                lista.Add($"{item.description} - US$ {item.price}");
             }
 
             return lista;

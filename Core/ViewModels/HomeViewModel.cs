@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Core.Model;
 using MvvmCross.Commands;
@@ -12,9 +13,10 @@ namespace Core.ViewModels
         public User LoggedUser { get; }
 
         // Commands
+        public IMvxAsyncCommand GoToOpportunitiesCommand { get; }
+        public IMvxAsyncCommand GoToOrderCommand { get; }
         public IMvxAsyncCommand GoToCustomersCommand { get; }
         public IMvxAsyncCommand GoToContactsCommand { get; }
-        public IMvxAsyncCommand GoToOpportunitiesCommand { get; }
 
         // Fields
         private readonly IMvxNavigationService navigationService;
@@ -25,9 +27,15 @@ namespace Core.ViewModels
 
             LoggedUser = appData.LoggedUser;
 
+            GoToOpportunitiesCommand = new MvxAsyncCommand(GoToOpportunitiesAsync);
+            GoToOrderCommand = new MvxAsyncCommand(GoToOrderAsync);
             GoToCustomersCommand = new MvxAsyncCommand(GoToCustomersAsync);
             GoToContactsCommand = new MvxAsyncCommand(GoToContactsAsync);
-            GoToOpportunitiesCommand = new MvxAsyncCommand(GoToOpportunitiesAsync);
+        }
+
+        private async Task GoToOrderAsync()
+        {
+            await navigationService.Navigate<PedidosViewModel>();
         }
 
         private async Task GoToCustomersAsync()

@@ -153,6 +153,9 @@
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
   <data name="Customer" xml:space="preserve">
     <value>Customer</value>
   </data>
@@ -186,6 +189,9 @@
   <data name="Enter" xml:space="preserve">
     <value>LogIn</value>
   </data>
+  <data name="EnterEmail" xml:space="preserve">
+    <value>Enter Email</value>
+  </data>
   <data name="ErrorLoginMsg" xml:space="preserve">
     <value>Error </value>
   </data>
@@ -215,6 +221,9 @@
   </data>
   <data name="Lost" xml:space="preserve">
     <value>Lost</value>
+  </data>
+  <data name="Mail" xml:space="preserve">
+    <value>Email</value>
   </data>
   <data name="Mobile" xml:space="preserve">
     <value>Mobile</value>
@@ -269,6 +278,12 @@
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Quantity</value>
+  </data>
+  <data name="RecoverPass" xml:space="preserve">
+    <value>Recover Password</value>
+  </data>
+  <data name="RecoverPassInfo" xml:space="preserve">
+    <value>You will receive an email with the instructions to recover your password</value>
   </data>
   <data name="ResetFilters" xml:space="preserve">
     <value>Reset filters</value>

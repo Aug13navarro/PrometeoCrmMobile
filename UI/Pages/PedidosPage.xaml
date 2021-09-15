@@ -102,7 +102,8 @@
                                             FontAttributes="Bold">
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{Binding currency.name}"></Span>
+                                                    <Span Text="$"></Span>
+                                                    <!--{Binding currency.name}-->
                                                     <Span Text=" "></Span>
                                                     <Span Text="{Binding total}"></Span>
                                                 </FormattedString>
@@ -154,7 +155,7 @@
                         VerticalOptions="Center" HorizontalOptions="EndAndExpand">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="US$ "></Span>
+                                <Span Text="$ "></Span>
                                 <Span Text="{Binding Total}"></Span>
                             </FormattedString>
                         </Label.FormattedText>

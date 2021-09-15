@@ -248,20 +248,39 @@ namespace Core.ViewModels
 
         public void CargarIconosEstados()
         {
-            if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
-            {
-                IconAnalisis = "ic_tab_1_violeta_eng.png";
-                IconPropuesta = "ic_tab_2_gris_eng.png";
-                IconNegociacion = "ic_tab_3_gris_eng.png";
-                IconCerrada = "ic_tab_4_gris_eng.png";
-            }
-            else
+            var user = data.LoggedUser;
+
+            string lang = user.Language.ToLower();
+
+            if (lang == "es" || lang.Contains("spanish"))
             {
                 IconAnalisis = "ic_tab_1_violeta.png";
                 IconPropuesta = "ic_tab_2_gris.png";
                 IconNegociacion = "ic_tab_3_gris.png";
                 IconCerrada = "ic_tab_4_gris.png";
             }
+            else
+            {
+                IconAnalisis = "ic_tab_1_violeta_eng.png";
+                IconPropuesta = "ic_tab_2_gris_eng.png";
+                IconNegociacion = "ic_tab_3_gris_eng.png";
+                IconCerrada = "ic_tab_4_gris_eng.png";
+            }
+
+            //    if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
+            //{
+            //    IconAnalisis = "ic_tab_1_violeta_eng.png";
+            //    IconPropuesta = "ic_tab_2_gris_eng.png";
+            //    IconNegociacion = "ic_tab_3_gris_eng.png";
+            //    IconCerrada = "ic_tab_4_gris_eng.png";
+            //}
+            //else
+            //{
+            //    IconAnalisis = "ic_tab_1_violeta.png";
+            //    IconPropuesta = "ic_tab_2_gris.png";
+            //    IconNegociacion = "ic_tab_3_gris.png";
+            //    IconCerrada = "ic_tab_4_gris.png";
+            //}
 
             EstadoId = 1;
         }
@@ -276,11 +295,16 @@ namespace Core.ViewModels
                     Opportunity = result;
                     Opportunity.Details.AddRange(result.opportunityProducts);
 
+                    if(Companies == null)
+                    {
+                        CargarEmpresas();
+                    }
+
                     Company = Companies.FirstOrDefault(x => x.Id == Opportunity.Company.Id);
 
                     if (Opportunity.opportunityStatus.Id >= 4)
                     {
-
+                        toastService.ShowError("Si la Oportunidad se encuentra cerrada no es posible editarla.");
                     }
 
                     AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
@@ -621,11 +645,6 @@ namespace Core.ViewModels
             if (theOpportunity.Details?.Count == 0)
             {
                 return "Debe asociar algún producto.";
-            }
-
-            if (string.IsNullOrWhiteSpace(theOpportunity.description))
-            {
-                return "Debe ingresar una descripción.";
             }
 
             return null;

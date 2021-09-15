@@ -27,7 +27,30 @@
     </NavigationPage.TitleView>
 
     <StackLayout BackgroundColor="White">
-        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25">
+
+        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25,20">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToOpportunitiesCommand}" />
+            </StackLayout.GestureRecognizers>
+
+            <Image Source="ic_menu_cuentasic_menu_oportunidades.png" />
+            <Label Text="{x:Static resources:AppResources.Opportunities}" FontSize="Medium" TextColor="#4045A2" VerticalOptions="Center" />
+        </StackLayout>
+
+        <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25,20">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToOrderCommand}" />
+            </StackLayout.GestureRecognizers>
+
+            <Image Source="ic_menu_pedidos.png" />
+            <Label Text="{x:Static resources:AppResources.Orders}" FontSize="Medium" TextColor="#21a1e6" VerticalOptions="Center" />
+        </StackLayout>
+        
+        <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25,20">
             <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding GoToCustomersCommand}" />
             </StackLayout.GestureRecognizers>
@@ -37,7 +60,7 @@
 
         <BoxView BackgroundColor="LightGray" HeightRequest="1" />
 
-        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25">
+        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25,20">
             <StackLayout.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding GoToContactsCommand}" />
             </StackLayout.GestureRecognizers>
@@ -46,16 +69,6 @@
             <Label Text="{x:Static resources:AppResources.Contacts}" FontSize="Medium" TextColor="#2BB348" VerticalOptions="Center" />
         </StackLayout>
 
-        <BoxView BackgroundColor="LightGray" HeightRequest="1" />
-
-        <StackLayout Orientation="Horizontal" Spacing="20" Margin="25">
-            <StackLayout.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding GoToOpportunitiesCommand}" />
-            </StackLayout.GestureRecognizers>
-
-            <Image Source="ic_menu_cuentasic_menu_oportunidades.png" />
-            <Label Text="{x:Static resources:AppResources.Opportunities}" FontSize="Medium" TextColor="#4045A2" VerticalOptions="Center" />
-        </StackLayout>
 
         <BoxView BackgroundColor="#F5F5F5" VerticalOptions="FillAndExpand" />
     </StackLayout>

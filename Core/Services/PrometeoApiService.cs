@@ -815,5 +815,17 @@ namespace Core.Services
                 throw;
             }
         }
+
+        public async Task<string> RecoverPassword(string mail)
+        {
+            string url = $"/api/User/RecoverPassword?email={mail}";
+
+            var response = await client.GetAsync($"{url}");
+
+            var respuesta = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<string>(respuesta);
+
+        }
     }
 }

@@ -17,11 +17,11 @@ namespace UI.Pages
 
         public MenuItems[] MenuItems { get; } =
         {
-            new MenuItems(MenuItemType.Sales, LangResources.AppResources.Sales, "ic_menu_presupuestos.png"),
+            //new MenuItems(MenuItemType.Sales, LangResources.AppResources.Sales, "ic_menu_presupuestos.png"),
+            new MenuItems(MenuItemType.Opportunities, LangResources.AppResources.Opportunities, "ic_menu_cuentasic_menu_oportunidades"),
             new MenuItems(MenuItemType.Pedidos, LangResources.AppResources.Orders, "ic_menu_pedidos"),
             new MenuItems(MenuItemType.Customers, LangResources.AppResources.Customers, "ic_menu_cuentas"),
             new MenuItems(MenuItemType.Contacts, LangResources.AppResources.Contacts, "ic_menu_contactos"),
-            new MenuItems(MenuItemType.Opportunities, LangResources.AppResources.Opportunities, "ic_menu_cuentasic_menu_oportunidades"),
             new MenuItems(MenuItemType.Logout, LangResources.AppResources.CloseSession, "ic_keyboard_backspace"),
         };
 

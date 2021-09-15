@@ -21,7 +21,8 @@ namespace PrometeoCrmMobile.Droid
 {
     [Activity(
         Label = "PrometeoCRM",
-        Icon = "@mipmap/ic_launcher",
+        Icon = "@drawable/icono",
+        RoundIcon = "@drawable/ic_launcher",
         Theme = "@style/MainTheme",
         MainLauncher = false,
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,

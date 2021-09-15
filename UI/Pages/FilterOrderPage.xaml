@@ -37,7 +37,7 @@
                >
             <Grid
                 ColumnDefinitions="*,*"
-                RowDefinitions="auto,auto,auto,auto">
+                RowDefinitions="auto,auto,auto,auto,auto,auto,auto">
                 <StackLayout Orientation="Horizontal"
                              Grid.Row="0"
                              Grid.ColumnSpan="2">
@@ -73,90 +73,76 @@
                         </Picker>
                     </Frame>
                 </StackLayout>
-                <Grid Grid.Row="2"
-                      Grid.ColumnSpan="2"
-                      HorizontalOptions="Center"
-                      RowDefinitions="auto,auto"
-                      ColumnDefinitions="auto,auto">
-                    <Frame
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        BorderColor="{StaticResource PrimaryColor}"
-                        CornerRadius="5">
-                        <StackLayout HorizontalOptions="Center">
-                            <Label
-                                Text="{x:Static resources:AppResources.FromDate}"
-                                HorizontalOptions="Center">
+                <StackLayout Orientation="Horizontal"
+                             Grid.Row="2"
+                             Grid.ColumnSpan="2">
+                    <Label Style="{StaticResource DefaultLabel}"
+                           Text="{x:Static resources:AppResources.FromDate}"
+                           VerticalOptions="Center">
 
-                            </Label>
-                            <DatePicker
+                    </Label>
+                    <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
+                        <DatePicker
                                 Date="{Binding BeginDate}"
                                 Format="dd/MM/yyyy"
                                 MaximumDate="{Binding MaximumDate}">
 
-                            </DatePicker>
-                        </StackLayout>
+                        </DatePicker>
                     </Frame>
-                    <Frame
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        BorderColor="{StaticResource PrimaryColor}"
-                        CornerRadius="5">
-                        <StackLayout HorizontalOptions="Center">
-                            <Label
-                                Text="{x:Static resources:AppResources.EndDate}"
-                                HorizontalOptions="Center">
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"
+                             Grid.Row="3"
+                             Grid.ColumnSpan="2">
+                    <Label Style="{StaticResource DefaultLabel}"
+                           Text="{x:Static resources:AppResources.EndDate}"
+                           VerticalOptions="Center">
 
-                            </Label>
-                            <DatePicker
+                    </Label>
+                    <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
+                        <DatePicker
                                 Format="dd/MM/yyyy"
                                 Date="{Binding EndDate}"
                                 MaximumDate="{Binding MaximumDate}">
 
-                            </DatePicker>
-                        </StackLayout>
+                        </DatePicker>
                     </Frame>
-                    <Frame
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        BorderColor="{StaticResource PrimaryColor}"
-                        CornerRadius="5">
-                        <StackLayout>
-                            <Label
-                                Text="{x:Static resources:AppResources.FromPrice}"
-                                HorizontalOptions="Center">
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"
+                             Grid.Row="4"
+                             Grid.ColumnSpan="2">
+                    <Label Text="{x:Static resources:AppResources.FromPrice}"
+                           Style="{StaticResource DefaultLabel}"
+                           VerticalOptions="Center">
 
-                            </Label>
-                            <Entry
+                    </Label>
+                    <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
+                        <Entry
                                 Keyboard="Numeric"
                                 Text="{Binding TotalDesde, Mode=TwoWay}"
                                 HorizontalTextAlignment="End">
 
-                            </Entry>
-                        </StackLayout>
+                        </Entry>
                     </Frame>
-                    <Frame
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        BorderColor="{StaticResource PrimaryColor}"
-                        CornerRadius="5">
-                        <StackLayout>
-                            <Label
-                                Text="{x:Static resources:AppResources.EndPrice}"
-                                HorizontalOptions="Center">
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"
+                             Grid.Row="5"
+                             Grid.ColumnSpan="2">
+                    <Label  Text="{x:Static resources:AppResources.EndPrice}"
+                           Style="{StaticResource DefaultLabel}"
+                           VerticalOptions="Center">
 
-                            </Label>
-                            <Entry
+                    </Label>
+                    <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
+                        <Entry
                                     Keyboard="Numeric"
                                 Text="{Binding TotalHasta, Mode=TwoWay}"
                                 HorizontalTextAlignment="End">
 
-                            </Entry>
-                        </StackLayout>
+                        </Entry>
                     </Frame>
-                </Grid>
+                </StackLayout>
                 <Button
-                    Grid.Row="4"
+                    Grid.Row="6"
                     Grid.ColumnSpan="2"
                     Text="{x:Static resources:AppResources.Accept}"
                     BackgroundColor="{StaticResource PrimaryColor}"

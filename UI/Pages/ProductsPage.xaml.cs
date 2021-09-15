@@ -94,9 +94,12 @@ namespace UI.Pages
             var currentProducts = (Product)e.Item;
             Product LastProduct = ViewModel.Products[ViewModel.Products.Count - 1];
 
-            if(currentProducts.Id == LastProduct.Id)
+            if (ViewModel.Products.Count >= 1)
             {
-                ViewModel.LoadMorePruductsCommand.Execute(null);
+                if (currentProducts.Id == LastProduct.Id)
+                {
+                    ViewModel.LoadMorePruductsCommand.Execute(null);
+                }
             }
         }
     }

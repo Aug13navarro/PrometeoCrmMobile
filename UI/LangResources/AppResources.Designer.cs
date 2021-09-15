@@ -169,6 +169,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Currency.
+        /// </summary>
+        internal static string Currency {
+            get {
+                return ResourceManager.GetString("Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Customer.
         /// </summary>
         internal static string Customer {
@@ -268,6 +277,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter Email.
+        /// </summary>
+        internal static string EnterEmail {
+            get {
+                return ResourceManager.GetString("EnterEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error .
         /// </summary>
         internal static string ErrorLoginMsg {
@@ -354,6 +372,15 @@ namespace UI.LangResources {
         internal static string Lost {
             get {
                 return ResourceManager.GetString("Lost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        internal static string Mail {
+            get {
+                return ResourceManager.GetString("Mail", resourceCulture);
             }
         }
         
@@ -516,6 +543,24 @@ namespace UI.LangResources {
         internal static string Quantity {
             get {
                 return ResourceManager.GetString("Quantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recover Password.
+        /// </summary>
+        internal static string RecoverPass {
+            get {
+                return ResourceManager.GetString("RecoverPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You will receive an email with the instructions to recover your password.
+        /// </summary>
+        internal static string RecoverPassInfo {
+            get {
+                return ResourceManager.GetString("RecoverPassInfo", resourceCulture);
             }
         }
         

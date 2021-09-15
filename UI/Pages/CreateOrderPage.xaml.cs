@@ -69,7 +69,9 @@ namespace UI.Pages
 
                             var descuento = Convert.ToDouble($"0.{o}");
 
-                            lblDiscountResult.Text = (ViewModel.Total * descuento).ToString();
+                            ViewModel.ValorDescuento = ViewModel.Total * descuento;
+                            lblDiscountResult.Text = ViewModel.ValorDescuento.ToString();
+
                             ViewModel.ActualizarTotal(ViewModel.Order.products);
                         }
                     }

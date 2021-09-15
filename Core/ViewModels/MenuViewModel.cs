@@ -27,10 +27,10 @@ namespace Core.ViewModels
 
         public MenuItems[] MenuItems { get; } =
         {
+            new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"),
             new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"),
             new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"),
             new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"),
-            new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"),
             new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"),
         };
 

@@ -73,7 +73,7 @@
 
                     <Grid
                         HorizontalOptions="Center"
-                        ColumnDefinitions="auto,auto,auto,auto">
+                        ColumnDefinitions=".2*,.2*,.25*,.2*">
                         <ImageButton
                             Source="{Binding IconAnalisis}"
                             Grid.Column="0"

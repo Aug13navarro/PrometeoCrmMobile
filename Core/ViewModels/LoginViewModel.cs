@@ -50,7 +50,7 @@ namespace Core.ViewModels
 
         // Commands
         public IMvxCommand LoginCommand { get; }
-
+        public Command RecoverPasswordCommand { get; }
         // Fields
         private readonly ApplicationData appData;
 
@@ -69,7 +69,14 @@ namespace Core.ViewModels
             this.appData = appData;
             this.notificationService = notificationService;
 
+            RecoverPasswordCommand = new Command(async () => await RecoverPassword());
+
             LoginCommand = new MvxAsyncCommand(LoginAsync);
+        }
+
+        private async Task RecoverPassword()
+        {
+            await navigationService.Navigate<RecoverPasswordViewModel>();
         }
 
         private async Task LoginAsync()

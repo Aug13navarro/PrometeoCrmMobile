@@ -54,6 +54,11 @@
                     Command="{Binding LoginCommand}"
                     Mvx:Bi.nd="IsEnabled !IsLogging"
                     Style="{StaticResource PrimaryButton}" />
+            <Label Text="{x:Static resources:AppResources.RecoverPass}" TextColor="Blue">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RecoverPasswordCommand}"></TapGestureRecognizer>
+                </Label.GestureRecognizers>
+            </Label>
 
             <Label Text="{Binding ErrorMessage}"
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNullOrEmptyBoolConverter}}"

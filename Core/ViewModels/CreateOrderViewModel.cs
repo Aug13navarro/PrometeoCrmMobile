@@ -177,11 +177,6 @@ namespace Core.ViewModels
                     await Application.Current.MainPage.DisplayAlert("Atención", "Todos los campos son Obligatorios.", "Aceptar");
                     return;
                 }
-                if(string.IsNullOrWhiteSpace(Order.Description))
-                {
-                    await Application.Current.MainPage.DisplayAlert("Atención", "Ingrese una Descripción", "Aceptar");
-                    return;
-                }
 
                 var nuevaOrder = new OrderNote
                 {
@@ -213,7 +208,7 @@ namespace Core.ViewModels
                     nuevaOrder.products = DefinirProductos(Order.Details.ToList());
                 }
 
-                if (Order.id > 0)
+                if (Order.id == 0)
                 {
                     var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
@@ -366,6 +361,7 @@ namespace Core.ViewModels
                 else
                 {
                     Order = theOrder;
+                    SelectedCustomer = Order.customer;
                     if (theOrder.Details == null)
                     {
                         Order.products = new MvxObservableCollection<OrderNote.ProductOrder>();
@@ -430,6 +426,7 @@ namespace Core.ViewModels
             var listaProd = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products);
 
             var prodEdit = listaProd.Where(x => x.companyProductPresentationId == editingOpportunityDetail.productId).FirstOrDefault();
+            var name = prodEdit.productPresentationName;
 
             Order.products.Remove(prodEdit);
 
@@ -442,7 +439,8 @@ namespace Core.ViewModels
                 price = editingOpportunityDetail.Price,
                 quantity = editingOpportunityDetail.Quantity,
                 subtotal = editingOpportunityDetail.Total,
-                companyProductPresentationId = editingOpportunityDetail.productId
+                companyProductPresentationId = editingOpportunityDetail.productId,
+                productPresentationName = name,
             };
 
             Order.products.Add(product);

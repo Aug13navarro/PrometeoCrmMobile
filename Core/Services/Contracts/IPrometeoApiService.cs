@@ -10,6 +10,7 @@ namespace Core.Services.Contracts
     public interface IPrometeoApiService
     {
         Task<LoginData> Login(string userName, string password);
+        Task<string> RecoverPassword(string mail);
         Task<UserData> GetUserData(int userId);
         Task<Assignment> GetAssignment(int id);
         Task<PaginatedList<Assignment>> SearchAssignment(SearchAssignmentRequest requestData);

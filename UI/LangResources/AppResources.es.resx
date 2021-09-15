@@ -153,6 +153,9 @@
   <data name="Create" xml:space="preserve">
     <value>Crear</value>
   </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Moneda</value>
+  </data>
   <data name="Customer" xml:space="preserve">
     <value>Cliente</value>
   </data>
@@ -186,6 +189,9 @@
   <data name="Enter" xml:space="preserve">
     <value>Ingresar</value>
   </data>
+  <data name="Enter Email" xml:space="preserve">
+    <value>Ingrese su Correo Electrónico</value>
+  </data>
   <data name="ErrorLoginMsg" xml:space="preserve">
     <value>An error occurred while logging in. Check your internet connection.</value>
   </data>
@@ -214,7 +220,10 @@
     <value>Usuario o contraseña incorrecto.</value>
   </data>
   <data name="Lost" xml:space="preserve">
-    <value>Lost</value>
+    <value>Perdida</value>
+  </data>
+  <data name="Mail" xml:space="preserve">
+    <value>Correo</value>
   </data>
   <data name="Mobile" xml:space="preserve">
     <value>Celular</value>
@@ -269,6 +278,12 @@
   </data>
   <data name="Quantity" xml:space="preserve">
     <value>Cantidad</value>
+  </data>
+  <data name="RecoverPass" xml:space="preserve">
+    <value>Recuperar Contraseña</value>
+  </data>
+  <data name="RecoverPassInfo" xml:space="preserve">
+    <value>Le llegará un correo electrónico con las indicaciones para recuperar su contraseña</value>
   </data>
   <data name="ResetFilters" xml:space="preserve">
     <value>Borrar Filtros</value>

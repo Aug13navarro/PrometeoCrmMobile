@@ -56,7 +56,7 @@ namespace Core.ViewModels
 
 
         //Constant
-        private const int PageSize = 10;
+        private const int PageSize = 30;
 
         // Services
         private readonly IPrometeoApiService prometeoApiService;
@@ -83,11 +83,13 @@ namespace Core.ViewModels
         {
             if (Query != null)
             {
+                CurrentPage = 1;
+
                 var requestData = new ProductList
                 {
                     companyId = companyId,
-                    currentPage = 1,
-                    pageSize = 50,
+                    currentPage = CurrentPage,
+                    pageSize = PageSize,
                     query = Query,
                     sort = null,
                 };
@@ -158,7 +160,7 @@ namespace Core.ViewModels
             var requestData = new ProductList
             {
                 companyId = companyId,
-                currentPage = CurrentPage + 1,
+                currentPage = CurrentPage,
                 pageSize = PageSize,
                 query = Query,
             };
@@ -173,6 +175,11 @@ namespace Core.ViewModels
                 Error = false;
 
                 var products = await prometeoApiService.GetAvailableProducts(requestData, data.LoggedUser.Token);
+                
+                if(products.Results.Count > 0)
+                {
+                    CurrentPage++;
+                }
 
                 if (newSearch)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rg.Plugins.Popup.Services;
+using System;
 using Xamarin.Forms.Xaml;
 
 namespace UI.Popups
@@ -21,6 +22,11 @@ namespace UI.Popups
         private void CerradaPerdida_Tapped(object sender, EventArgs e)
         {
             PerdidaTapped?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.PopAsync(false);
         }
     }
 }
