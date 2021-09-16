@@ -63,6 +63,7 @@
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
                             <Picker
+                                IsEnabled="{Binding EnableForEdit}"
                                 HorizontalOptions="FillAndExpand"
                                 Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding Companies}" ItemDisplayBinding="{Binding BusinessName}" SelectedItem="{Binding Company, Mode=TwoWay}">
 
@@ -77,9 +78,11 @@
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
                             <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
+                                   IsEnabled="{Binding EnableForEdit}"
                                    Grid.Row="0" Grid.Column="0"/>
                         </Frame>
                         <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
+                                     IsEnabled="{Binding EnableForEdit}"
                                      HorizontalOptions="End"
                                      Grid.Row="0" Grid.Column="1"
                                      BackgroundColor="Transparent"/>
@@ -91,7 +94,7 @@
                             Margin="0"
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
-                            <DatePicker Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
+                            <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
                         </Frame>
                         <Label
                             Style="{StaticResource DefaultLabel}"
@@ -125,7 +128,8 @@
                             Margin="0"
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
-                            <Picker Title="{x:Static resources:AppResources.Select}" 
+                            <Picker IsEnabled="{Binding EnableForEdit}"
+                                    Title="{x:Static resources:AppResources.Select}" 
                                     ItemsSource="{Binding PaymentConditions, Mode=TwoWay}" 
                                     ItemDisplayBinding="{Binding description}"
                                     SelectedItem="{Binding Condition, Mode=TwoWay}">
@@ -144,7 +148,7 @@
                     
                     <StackLayout Orientation="Horizontal">
                         <Label Text="{x:Static resources:AppResources.Associated_Products}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
-                        <Image Source="ic_add_box.png">
+                        <Image IsEnabled="{Binding EnableForEdit}"  Source="ic_add_box.png">
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding AddProductCommand}" />
                             </Image.GestureRecognizers>
@@ -155,13 +159,13 @@
 
                     <Controls:Repeater ItemsSource="{Binding Order.products}"
                                    Mvx:Bi.nd="IsVisible And(Order.products.Count > 0)"
-                                   Margin="0,10,0,0" x:Name="detailsList">
+                                   Margin="0,10,0,0" x:Name="detailsList" IsEnabled="{Binding EnableForEdit}">
                         <Controls:Repeater.ItemTemplate>
                             <DataTemplate>
                                 <ContentView>
                                     <StackLayout>
                                         <StackLayout Orientation="Horizontal" Spacing="0">
-                                            <Label Text="{Binding productPresentationName}" TextColor="{StaticResource SecondaryColor}"
+                                            <Label Text="{Binding companyProductPresentation.name}" TextColor="{StaticResource SecondaryColor}"
                                                FontAttributes="Bold" FontSize="Medium" Margin="0,8,0,5" HorizontalOptions="StartAndExpand" />
                                             <Image Source="editar_imagen.png">
                                                 <Image.GestureRecognizers>
@@ -225,7 +229,7 @@
                         </Label.FormattedText>
 
                     </Label>
-                    <Entry Keyboard="Default" WidthRequest="50" FontSize="Small" Margin="0" Text="{Binding OrderDiscount, Mode=TwoWay}" TextChanged="Entry_TextChanged" x:Name="lblOrderDiscount">
+                    <Entry IsEnabled="{Binding EnableForEdit}" Keyboard="Default" WidthRequest="50" FontSize="Small" Margin="0" Text="{Binding OrderDiscount, Mode=TwoWay}" TextChanged="Entry_TextChanged" x:Name="lblOrderDiscount">
                         <Entry.Behaviors>
                             <Behavior:NumericValidationBehavior />
                         </Entry.Behaviors>

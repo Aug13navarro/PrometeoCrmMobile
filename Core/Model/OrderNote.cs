@@ -78,7 +78,7 @@ namespace Core.Model
 
         public class ProductOrder
         {
-            public string productPresentationName { get; set; }
+            public Product companyProductPresentation { get; set; }
             public int companyProductPresentationId { get; set; }
             public int quantity { get; set; }
             public double price { get; set; }

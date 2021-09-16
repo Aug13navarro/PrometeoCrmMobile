@@ -685,7 +685,7 @@ namespace Core.Services
 
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var respuesta = await client.GetAsync(string.Format(url));
+                    var respuesta = await client.GetAsync(url);
 
                     var resultado = await respuesta.Content.ReadAsStringAsync();
 

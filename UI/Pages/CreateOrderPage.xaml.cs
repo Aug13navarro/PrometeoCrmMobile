@@ -20,6 +20,7 @@ namespace UI.Pages
         {
             base.OnViewModelSet();
             ViewModel.ShowEditProductPopup += OnShowEditProductPopup;
+            
         }
 
         private async void OnShowEditProductPopup(object sender, Product product)

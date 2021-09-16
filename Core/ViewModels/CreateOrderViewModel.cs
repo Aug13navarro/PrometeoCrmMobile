@@ -85,6 +85,7 @@ namespace Core.ViewModels
             get => paymentConditions;
             set => SetProperty(ref paymentConditions, value);
         }
+
         private PaymentCondition condition;
         public PaymentCondition Condition
         {
@@ -116,6 +117,13 @@ namespace Core.ViewModels
         {
             get => total;
             set => SetProperty(ref total, value);
+        }
+
+        private bool enableForEdit;
+        public bool EnableForEdit
+        {
+            get => enableForEdit;
+            set => SetProperty(ref enableForEdit, value);
         }
 
         // Events
@@ -308,6 +316,18 @@ namespace Core.ViewModels
                 var user = data.LoggedUser;
 
                 PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
+
+                if (Order != null)
+                {
+                    if (Order.paymentConditionId > 0)
+                    {
+                        Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                    }
+                    else
+                    {
+                        Condition = PaymentConditions.FirstOrDefault();
+                    }
+                }
             }
             catch(Exception e)
             {
@@ -323,9 +343,18 @@ namespace Core.ViewModels
 
                 Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
 
-                Company = Companies.FirstOrDefault();
+                if(Order != null)
+                {
+                    if(Order.companyId > 0)
+                    {
+                        Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+                    }
+                }
+                else
+                {
+                    Company = Companies.FirstOrDefault();
+                }
 
-                CargarCondiciones();
             }
             catch ( Exception e)
             {
@@ -347,19 +376,27 @@ namespace Core.ViewModels
             {
                 if (theOrder.id > 0)
                 {
+                    EnableForEdit = false;
+
                     var user = data.LoggedUser;
                     
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
                     SelectedCustomer = Order.customer;
                     Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
-                    Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+
+                    CargarCondiciones();
+
+                    //Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
                     Total = Convert.ToDouble(Order.total);
                     OrderDiscount = Order.discount;
 
                     ActualizarTotal(Order.products);
+
                 }
                 else
                 {
+                    EnableForEdit = true; 
+
                     Order = theOrder;
                     SelectedCustomer = Order.customer;
                     if (theOrder.Details == null)
@@ -388,7 +425,7 @@ namespace Core.ViewModels
                 listaProductos.Add(new OrderNote.ProductOrder
                 {
                     companyProductPresentationId = item.productId,
-                    productPresentationName = item.product.name,
+                    companyProductPresentation = item.product,
                     discount = item.Discount,
                     price = item.Price,
                     quantity = item.Quantity,
@@ -426,7 +463,7 @@ namespace Core.ViewModels
             var listaProd = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products);
 
             var prodEdit = listaProd.Where(x => x.companyProductPresentationId == editingOpportunityDetail.productId).FirstOrDefault();
-            var name = prodEdit.productPresentationName;
+            var name = prodEdit.companyProductPresentation.name;
 
             Order.products.Remove(prodEdit);
 
@@ -440,7 +477,7 @@ namespace Core.ViewModels
                 quantity = editingOpportunityDetail.Quantity,
                 subtotal = editingOpportunityDetail.Total,
                 companyProductPresentationId = editingOpportunityDetail.productId,
-                productPresentationName = name,
+                companyProductPresentation = editingOpportunityDetail.product,
             };
 
             Order.products.Add(product);
@@ -486,7 +523,7 @@ namespace Core.ViewModels
                     quantity = detail.Quantity,
                     subtotal = detail.Total,
                     companyProductPresentationId = detail.productId,
-                    productPresentationName = detail.product.name,
+                    companyProductPresentation = detail.product,
                 };
 
                 //if (detail != null)
@@ -592,7 +629,7 @@ namespace Core.ViewModels
                 var product = new Product()
                 {
 
-                    name = detail.productPresentationName,
+                    name = detail.companyProductPresentation.name,
                     price = detail.price,
                     Id = detail.companyProductPresentationId,
                     //stock = detail.quantity,

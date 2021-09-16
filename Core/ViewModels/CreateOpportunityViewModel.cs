@@ -101,8 +101,8 @@ namespace Core.ViewModels
             set => SetProperty(ref selectedCustomer, value);
         }
 
-        private double total;
-        public double Total
+        private decimal total;
+        public decimal Total
         {
             get => total;
             set => SetProperty(ref total, value);
@@ -209,7 +209,7 @@ namespace Core.ViewModels
                     description = Opportunity.description,
                     opportunityProducts = new List<OpportunityPost.ProductSend>(),
                     opportunityStatusId = 5,
-                    totalPrice = Total,
+                    totalPrice = Convert.ToDouble(Total),
                     companyId = Company.Id
                 };
 
@@ -519,7 +519,7 @@ namespace Core.ViewModels
 
         private void ActualizarTotal(MvxObservableCollection<OpportunityProducts> details)
         {
-            Total = details.Sum(x => x.Total); 
+            Total = Convert.ToDecimal(details.Sum(x => x.Total)); 
         }
 
         private void RemoveProduct(OpportunityProducts detail)
@@ -575,7 +575,7 @@ namespace Core.ViewModels
                     description = Opportunity.description,
                     opportunityProducts = new List<OpportunityPost.ProductSend>(),
                     opportunityStatusId = Opportunity.opportunityStatus.Id,
-                    totalPrice = Total,
+                    totalPrice = Convert.ToDouble(Total),
                     companyId = Company.Id
                 };
 

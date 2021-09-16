@@ -196,7 +196,7 @@
                 <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Opportunity.Details.Count > 0"
                        TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
                 <!--HorizontalOptions="End"  Margin="0,20,0,0" -->
-                <Label Mvx:Bi.nd="Text Format('${0:0.##}', Total); IsVisible Opportunity.Details.Count > 0"
+                <Label Mvx:Bi.nd="IsVisible Opportunity.Details.Count > 0" Text="{Binding Total}"
                        TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="Medium" VerticalTextAlignment="Center" />
                 <!--HorizontalOptions="End" -->
             </StackLayout>
