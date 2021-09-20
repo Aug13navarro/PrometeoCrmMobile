@@ -8,7 +8,7 @@ namespace Core.ViewModels.Model
         public DateTime dateTo { get; set; }
         public int? companyId { get; set; }
         public int? orderStatusId { get; set; }
-        public decimal? priceFrom { get; set; }
-        public decimal? priceTo { get; set; }
+        public double? priceFrom { get; set; }
+        public double? priceTo { get; set; }
     }
 }

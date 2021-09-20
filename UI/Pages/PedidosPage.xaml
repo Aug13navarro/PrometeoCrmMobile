@@ -62,34 +62,38 @@
 
                                     <StackLayout
                                         Grid.Column="1">
-                                        <Label
+                                        <StackLayout
+                                            Orientation="Horizontal">
+                                            <Frame
+                                                Margin="0"
+                                                Padding="0"
+                                                BackgroundColor="{Binding orderColor}"
+                                                WidthRequest="20"
+                                                HeightRequest="20"
+                                                CornerRadius="10"
+                                                VerticalOptions="Center"
+                                                >
+                                            </Frame>
+                                            <Label
                                             Text="{Binding customer.CompanyName}"
                                             VerticalTextAlignment="Center"
                                             FontSize="Medium"
                                             TextColor="{StaticResource PrimaryColor}"
                                             FontAttributes="Bold">
 
-                                        </Label>
+                                            </Label>
+                                        </StackLayout>
                                         <Label
                                             Text="{Binding company.BusinessName}">
                                             
                                         </Label>
-                                        <StackLayout
+                                        <!--<StackLayout
                                             Orientation="Horizontal">
-                                            <Frame
-                                                Margin="0"
-                                                Padding="0"
-                                                HorizontalOptions="Fill"
-                                                BackgroundColor="{Binding orderColor}"
-                                                WidthRequest="19"
-                                                CornerRadius="10">
-                                                
-                                            </Frame>
                                             <Label
                                                 Text="{Binding orderStatusStr}">
                                                 
                                             </Label>
-                                        </StackLayout>
+                                        </StackLayout>-->
                                         
                                     </StackLayout>
                                     
@@ -102,7 +106,7 @@
                                             FontAttributes="Bold">
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="$"></Span>
+                                                    <Span Text="US$"></Span>
                                                     <!--{Binding currency.name}-->
                                                     <Span Text=" "></Span>
                                                     <Span Text="{Binding total}"></Span>
@@ -111,7 +115,7 @@
                                             
                                         </Label>
                                         <Label
-                                            Text="{Binding fecha}"
+                                            Text="{Binding fechaStr}"
                                             HorizontalTextAlignment="End">
                                             
                                         </Label>
@@ -155,7 +159,7 @@
                         VerticalOptions="Center" HorizontalOptions="EndAndExpand">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="$ "></Span>
+                                <Span Text="US$ "></Span>
                                 <Span Text="{Binding Total}"></Span>
                             </FormattedString>
                         </Label.FormattedText>

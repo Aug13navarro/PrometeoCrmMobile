@@ -47,13 +47,13 @@
 
         <ListView x:Name="customersList"
                   ItemsSource="{Binding Customers}"
-                  Mvx:Bi.nd="IsVisible And(Customers.Count > 0, !Error)"
-                  
+                  Mvx:Bi.nd="IsVisible And(Customers.Count > 0, !Error)"                  
                   CachingStrategy="RecycleElement"
                   SelectionMode="None"
                   HasUnevenRows="True"
-                  SeparatorColor="Transparent">
-            <!--ItemAppearing="OnCustomersListItemAppearing"-->
+                  SeparatorColor="Transparent"
+                  ItemAppearing="OnCustomersListItemAppearing">
+            <!---->
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>

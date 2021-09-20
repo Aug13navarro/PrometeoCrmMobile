@@ -65,14 +65,14 @@ namespace Core.ViewModels
         //private MvxObservableCollection<Company> companies;
         public MvxObservableCollection<Company> Companies { get; set; } = new MvxObservableCollection<Company>();
 
-        private decimal totalDesde;
-        public decimal TotalDesde
+        private double totalDesde;
+        public double TotalDesde
         {
             get => totalDesde;
             set => SetProperty(ref totalDesde, value);
         }
-        private decimal totalHasta;
-        public decimal TotalHasta
+        private double totalHasta;
+        public double TotalHasta
         {
             get => totalHasta;
             set => SetProperty(ref totalHasta, value);
@@ -153,21 +153,76 @@ namespace Core.ViewModels
         
         private void CargarEstados()
         {
-            OrderStatuses.Add(new OpportunityStatus
+            var user = data.LoggedUser;
+
+            string lang = user.Language.ToLower();
+
+            if (lang == "es" || lang.Contains("spanish"))
             {
-                Id = 1,
-                name = "Pendiente"
-            });
-            OrderStatuses.Add(new OpportunityStatus
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 1,
+                    name = "Pendiente"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 2,
+                    name = "Aprobado"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 3,
+                    name = "Rechazado"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 4,
+                    name = "Remitado"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 5,
+                    name = "Despachado"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 6,
+                    name = "Entregado"
+                });
+            }
+            else
             {
-                Id = 2,
-                name = "Generado"
-            }); 
-            OrderStatuses.Add(new OpportunityStatus
-            {
-                Id = 3,
-                name = "Entregado"
-            }); 
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 1,
+                    name = "Pending"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 2,
+                    name = "Approved"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 3,
+                    name = "Rejected"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 4,
+                    name = "Forwarded"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 5,
+                    name = "Dispatched"
+                });
+                OrderStatuses.Add(new OpportunityStatus
+                {
+                    Id = 6,
+                    name = "Delivered"
+                });
+            }                
         }
 
         private async void CargarCompanies()
@@ -202,8 +257,8 @@ namespace Core.ViewModels
 
                 if (filtro.company != null) Company = Companies.ToList().FirstOrDefault(x => x.Id == filtro.company.Id);
                 if (filtro.status != null) Status = OrderStatuses.ToList().FirstOrDefault(x => x.Id == filtro.status.Id);
-                if (filtro.priceFrom != null) TotalDesde = filtro.priceFrom.Value;
-                if (filtro.priceTo != null) TotalHasta = filtro.priceTo.Value;
+                if (filtro.priceFrom != null) TotalDesde = Convert.ToDouble(filtro.priceFrom);
+                if (filtro.priceTo != null) TotalHasta = Convert.ToDouble(filtro.priceTo);
             }
         }
 

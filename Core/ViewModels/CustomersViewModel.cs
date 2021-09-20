@@ -93,33 +93,33 @@ namespace Core.ViewModels
 
                 var user = appData.LoggedUser;
 
-                //PaginatedList<Customer> customers = await prometeoApiService.GetCustomers(requestData);
+                PaginatedList<Customer> customers = await prometeoApiService.GetCustomers(requestData);
 
-                //if (requestData.CurrentPage == 1)
-                //{
-                    var allCustomer = await prometeoApiService.GetAllCustomer(requestData.UserId, true, 3, user.Token);
+                if (requestData.CurrentPage == 1)
+                {
+                    //var allCustomer = await prometeoApiService.GetAllCustomer(requestData.UserId, true, 3, user.Token);
 
                     Customers.Clear();
 
-                    Customers.AddRange(allCustomer.Select(x => new CustomerVm() { Customer = x }));
+                    Customers.AddRange(customers.Results.Select(x => new CustomerVm() { Customer = x }));
 
                     isSearchInProgress = false;
-                //}
-                //else
-                //{
+                }
+                else
+                {
 
-                //    if (newSearch)
-                //    {
-                //        Customers.Clear();
-                //    }
+                    if (newSearch)
+                    {
+                        Customers.Clear();
+                    }
 
-                //    Customers.AddRange(customers.Results.Select(c => new CustomerVm() { Customer = c }));
+                    Customers.AddRange(customers.Results.Select(c => new CustomerVm() { Customer = c }));
 
-                //    CurrentPage = customers.CurrentPage;
-                //    TotalPages = customers.TotalPages;
+                    CurrentPage = customers.CurrentPage;
+                    TotalPages = customers.TotalPages;
 
-                //    IsSearchInProgress = false;
-                //}
+                    IsSearchInProgress = false;
+                }
             }
             catch (Exception ex)
             {

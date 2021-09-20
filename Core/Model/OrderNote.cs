@@ -23,9 +23,18 @@ namespace Core.Model
                     estado = "Pendiente";
                     break;
                 case 2:
-                    estado = "Generado";
+                    estado = "Aprobado";
                     break;
                 case 3:
+                    estado = "Rechazado";
+                    break;
+                case 4:
+                    estado = "Remitado";
+                    break;
+                case 5:
+                    estado = "Despachado";
+                    break;
+                case 6:
                     estado = "Entregado";
                     break;
             }
@@ -33,22 +42,31 @@ namespace Core.Model
             return estado;
         }
 
-        public Color orderColor => AsignarColor(this.orderStatus);
+        public string orderColor => AsignarColor(this.orderStatus);
 
-        private Color AsignarColor(int orderStatus)
+        private string AsignarColor(int orderStatus)
         {
-            var color = new Color();
+            string color = "";
 
             switch (orderStatus)
             {
                 case 1:
-                    color = Color.Gray;
+                    color = "#797979";
                     break;
                 case 2:
-                    color = Color.LightBlue;
+                    color = "#70B603";
                     break;
                 case 3:
-                    color = Color.Green;
+                    color = "#D9001B";
+                    break;
+                case 4:
+                    color = "#FFCC00";
+                    break;
+                case 5:
+                    color = "#00BFBF";
+                    break;
+                case 6:
+                    color = "#006600";
                     break;
             }
 
@@ -63,6 +81,7 @@ namespace Core.Model
         public int talon { get; set; }
         public int numero { get; set; }
         public DateTime fecha { get; set; }
+        public string fechaStr => fecha.ToString("d");
         public int divisionCuentaId { get; set; }
         public int cuenta { get; set; }
         public int tipoCuentaId { get; set; }

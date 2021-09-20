@@ -40,6 +40,7 @@
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <Label Text="{x:Static resources:AppResources.Price}" Grid.Row="0" Grid.Column="0" TextColor="{StaticResource PrimaryColor}" x:Name="lblPrice"/>
@@ -55,6 +56,11 @@
                        x:Name="quantityInput" TextChanged="QuantityInputTextChanged" />
                 <Entry Keyboard="Numeric" Style="{StaticResource DefaultEntry}" Grid.Row="1" Grid.Column="2"
                        x:Name="discountInput" TextChanged="DiscountInputTextChanged" />
+                <Label Text="%"
+                       Grid.Row="1"
+                       Grid.Column="3"
+                       VerticalOptions="Center"
+                       Style="{StaticResource DefaultEntry}"></Label>
             </Grid>
 
             <Label Text="Subtotal" TextColor="{StaticResource PrimaryColor}" />

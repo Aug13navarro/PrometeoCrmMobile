@@ -232,7 +232,7 @@ namespace UI.LangResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to % Off.
+        ///   Looks up a localized string similar to Off.
         /// </summary>
         internal static string DiscountPopUp {
             get {

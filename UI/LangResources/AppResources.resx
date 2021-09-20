@@ -175,7 +175,7 @@
     <value>Discount</value>
   </data>
   <data name="DiscountPopUp" xml:space="preserve">
-    <value>% Off</value>
+    <value>Off</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
