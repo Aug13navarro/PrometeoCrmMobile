@@ -129,6 +129,9 @@
   <data name="Associated_Products" xml:space="preserve">
     <value>Associated products</value>
   </data>
+  <data name="AttachFile" xml:space="preserve">
+    <value>Attach file</value>
+  </data>
   <data name="Available_Stock" xml:space="preserve">
     <value>Available Stock</value>
   </data>
@@ -165,6 +168,21 @@
   <data name="Date" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="DeliveryAddress" xml:space="preserve">
+    <value>Delivery Address</value>
+  </data>
+  <data name="DeliveryBranch" xml:space="preserve">
+    <value>Delivery Branch</value>
+  </data>
+  <data name="DeliveryDate" xml:space="preserve">
+    <value>Delivery Date</value>
+  </data>
+  <data name="DeliveryResponsible" xml:space="preserve">
+    <value>Delivery Resp.</value>
+  </data>
+  <data name="DescribeWhoDelivers" xml:space="preserve">
+    <value>Describe who delivers</value>
+  </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>
   </data>
@@ -194,6 +212,9 @@
   </data>
   <data name="ErrorLoginMsg" xml:space="preserve">
     <value>Error </value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Files</value>
   </data>
   <data name="FilterBy" xml:space="preserve">
     <value>Filter By</value>
@@ -231,6 +252,9 @@
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="NOCCustomer" xml:space="preserve">
+    <value>N of OC Customer</value>
+  </data>
   <data name="NoEditOpportunity" xml:space="preserve">
     <value>If the Opportunity is closed is not possible edit it</value>
   </data>
@@ -243,6 +267,9 @@
   <data name="No_Associated_Products" xml:space="preserve">
     <value>There are no associated products</value>
   </data>
+  <data name="OCCustomer" xml:space="preserve">
+    <value>OC Customer</value>
+  </data>
   <data name="Opportunities" xml:space="preserve">
     <value>Opportunities</value>
   </data>
@@ -251,6 +278,9 @@
   </data>
   <data name="Opportunity" xml:space="preserve">
     <value>Opportunity</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Order</value>
   </data>
   <data name="Orders" xml:space="preserve">
     <value>Orders</value>
@@ -263,6 +293,9 @@
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
+  </data>
+  <data name="PlacePayment" xml:space="preserve">
+    <value>Place Payment</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>Price</value>
@@ -284,6 +317,9 @@
   </data>
   <data name="RecoverPassInfo" xml:space="preserve">
     <value>You will receive an email with the instructions to recover your password</value>
+  </data>
+  <data name="RemittanceType" xml:space="preserve">
+    <value>Remittance Type</value>
   </data>
   <data name="ResetFilters" xml:space="preserve">
     <value>Reset filters</value>

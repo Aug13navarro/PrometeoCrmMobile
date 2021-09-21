@@ -16,6 +16,27 @@ namespace Core.ViewModels
         private ApplicationData data;
         // Properties
 
+        private bool stackInfo;
+        public bool StackInfo
+        {
+            get => stackInfo;
+            set => SetProperty(ref stackInfo, value);
+        }
+
+        private bool stackProductos;
+        public bool StackProductos
+        {
+            get => stackProductos;
+            set => SetProperty(ref stackProductos, value);
+        }
+
+        private bool stackAdjunto;
+        public bool StackAdjunto
+        {
+            get => stackAdjunto;
+            set => SetProperty(ref stackAdjunto, value);
+        }
+
         private int estadoId;
         public int EstadoId
         {
@@ -42,6 +63,16 @@ namespace Core.ViewModels
         {
             get => selectedStatus;
             set => SetProperty(ref selectedStatus, value);
+        }
+
+        public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
+        public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
+
+        private TypeStandard typeOfRemittance;
+        public TypeStandard TypeOfRemittance
+        {
+            get => typeOfRemittance;
+            set => SetProperty(ref typeOfRemittance, value);
         }
 
         private OpportunityStatus status;
@@ -119,6 +150,13 @@ namespace Core.ViewModels
             set => SetProperty(ref total, value);
         }
 
+        private MvxObservableCollection<AttachFile> attachFiles;
+        public MvxObservableCollection<AttachFile> AttachFiles
+        {
+            get => attachFiles;
+            set => SetProperty(ref attachFiles, value);
+        }
+
         private bool enableForEdit;
         public bool EnableForEdit
         {
@@ -150,6 +188,10 @@ namespace Core.ViewModels
         {
             try
             {
+                StackInfo = true;
+                StackProductos = false;
+                StackAdjunto = false;
+
                 data = new ApplicationData();
 
                 this.navigationService = navigationService;
@@ -167,10 +209,51 @@ namespace Core.ViewModels
 
                 CargarEstados();
                 CargarEmpresas();
+                CargarTipoRemito();
+                CargarLugarPago();
+
             }
             catch(Exception e)
             {
                 Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
+            }
+        }
+
+        private void CargarLugarPago()
+        {
+            var user = data.LoggedUser;
+
+            string lang = user.Language.ToLower();
+
+            if (lang == "es" || lang.Contains("spanish"))
+            {
+                PlaceOfPayment.Add(new TypeStandard { Id = 1, Description = "En Origen" });
+                PlaceOfPayment.Add(new TypeStandard { Id = 2, Description = "En Destino" });
+            }
+            else
+            {
+                PlaceOfPayment.Add(new TypeStandard { Id = 1, Description = "In Origin" });
+                PlaceOfPayment.Add(new TypeStandard { Id = 2, Description = "At Destination" });
+            }
+        }
+
+        private void CargarTipoRemito()
+        {
+            var user = data.LoggedUser;
+
+            string lang = user.Language.ToLower();
+
+            if (lang == "es" || lang.Contains("spanish"))
+            {
+                TypeOfRemittances.Add(new TypeStandard { Id = 1, Description = "Normal/Estándar" });
+                TypeOfRemittances.Add(new TypeStandard { Id = 2, Description = "En Consignación" });
+                TypeOfRemittances.Add(new TypeStandard { Id = 3, Description = "FC Anticipada" });
+            }
+            else
+            {
+                TypeOfRemittances.Add(new TypeStandard { Id = 1, Description = "Normal/Stándard" });
+                TypeOfRemittances.Add(new TypeStandard { Id = 2, Description = "On Consignment" });
+                TypeOfRemittances.Add(new TypeStandard { Id = 3, Description = "FC Early" });
             }
         }
 
@@ -349,10 +432,11 @@ namespace Core.ViewModels
                     {
                         Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
                     }
-                }
-                else
-                {
-                    Company = Companies.FirstOrDefault();
+                    else
+                    {
+                        Company = Companies.FirstOrDefault();
+                        CargarCondiciones();
+                    }
                 }
 
             }
@@ -676,5 +760,9 @@ namespace Core.ViewModels
         {
             Total = details.Sum(x => x.subtotal);
         }
+
+        #region EXPLORADOR DE ARCHIVOS
+
+        #endregion
     }
 }

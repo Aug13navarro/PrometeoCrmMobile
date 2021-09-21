@@ -12,7 +12,7 @@
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
-            <Label Text="Pedido"
+            <Label Text="{x:Static resources:AppResources.Order}"
                    TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="20"/>
             <ImageButton Source="guardar.png" Command="{Binding SavePedidoCommand}"
                          BackgroundColor="Transparent" WidthRequest="30"
@@ -23,24 +23,76 @@
     </NavigationPage.TitleView>
 
     <StackLayout Spacing="0">
-        <Grid>
-            <Grid.RowDefinitions>
+        <StackLayout>
+            <Grid
+                RowDefinitions="40">
+                <Frame
+                    x:Name="btnInfo"
+                    Padding="0"
+                    Grid.Column="0">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapInfo_Tapped"></TapGestureRecognizer>
+                    </Frame.GestureRecognizers>
+                    <Label Text="{x:Static resources:AppResources.Order}"
+                           x:Name="lblInfo"
+                           Style="{x:StaticResource DefaultLabel}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"></Label>
+                </Frame>
+                <Frame
+                    x:Name="btnProductos"
+                    BackgroundColor="{x:StaticResource PrimaryColor}"
+                    Padding="0"
+                    Grid.Column="1">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapProducts_Tapped"></TapGestureRecognizer>
+                    </Frame.GestureRecognizers>
+                    <Label Text="{x:Static resources:AppResources.Products}"
+                           x:Name="lblProductos"
+                           TextColor="White"
+                           Style="{x:StaticResource DefaultLabel}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"></Label>
+                </Frame>
+                <Frame
+                    x:Name="btnAdjunto"
+                    BackgroundColor="{x:StaticResource PrimaryColor}"
+                    Padding="0"
+                    Grid.Column="2">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="TapAdjuntos_Tapped"></TapGestureRecognizer>
+                    </Frame.GestureRecognizers>
+                    <Label Text="{x:Static resources:AppResources.Files}"
+                           x:Name="lblAdjuntos"
+                           TextColor="White"
+                           Style="{x:StaticResource DefaultLabel}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"></Label>
+                </Frame>
+            </Grid>
+        </StackLayout>
+
+        <StackLayout
+            IsVisible="{Binding StackInfo}"
+            VerticalOptions="FillAndExpand">
+            <Grid>
+                <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <ScrollView Mvx:Bi.nd="IsVisible !IsLoading"
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="2">
-                <StackLayout Padding="15,5,15,0" Spacing="0">
+                <ScrollView Mvx:Bi.nd="IsVisible !IsLoading"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2">
+                    <StackLayout Padding="15,5,15,0" Spacing="0">
 
-                    <!--<StackLayout Orientation="Horizontal" Margin="0,5">
+                        <!--<StackLayout Orientation="Horizontal" Margin="0,5">
                     <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
                         <Frame
                             Margin="0"
@@ -54,128 +106,259 @@
                         </Frame>
                     </StackLayout>-->
 
-                    <Frame
-                        BackgroundColor="{Binding Order.orderColor}"
-                        CornerRadius="10"
-                        HeightRequest="30"
-                        Margin="0,0,0,5"
-                        Padding="0">
-                        <Label
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            Text="{Binding Order.orderStatusStr}"
-                            Style="{StaticResource DefaultLabel}">
-                            
-                        </Label>                        
-                    </Frame>
-                    
-                    <StackLayout Orientation="Horizontal"
-                                 Margin="0,5">
-                        <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                        <StackLayout Orientation="Horizontal"
+                                     Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                            <Frame
+                                HorizontalOptions="FillAndExpand"
+                                BackgroundColor="{Binding Order.orderColor}"
+                                CornerRadius="10"
+                                HeightRequest="30"
+                                Padding="0">
+                                <Label
+                                    HorizontalOptions="Center"                                    
+                                    VerticalOptions="Center"
+                                    Text="{Binding Order.orderStatusStr}"
+                                    Style="{StaticResource DefaultLabel}">
 
-                        <Frame
+                                </Label>
+                            </Frame>
+
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+
+                            <Frame
                             Margin="0"
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
-                            <Picker
+                                <Picker
                                 IsEnabled="{Binding EnableForEdit}"
                                 HorizontalOptions="FillAndExpand"
                                 Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding Companies}" ItemDisplayBinding="{Binding BusinessName}" SelectedItem="{Binding Company, Mode=TwoWay}">
 
-                            </Picker>
-                        </Frame>
-                    </StackLayout>
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
 
-                    <StackLayout Orientation="Horizontal" Margin="0,5">
-                        <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
-                        <Frame
+                        <StackLayout Orientation="Horizontal" Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
+                            <Frame
                             Margin="0"
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
-                            <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
+                                <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
                                    IsEnabled="{Binding EnableForEdit}"
                                    Grid.Row="0" Grid.Column="0"/>
-                        </Frame>
-                        <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
+                            </Frame>
+                            <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
                                      IsEnabled="{Binding EnableForEdit}"
                                      HorizontalOptions="End"
                                      Grid.Row="0" Grid.Column="1"
                                      BackgroundColor="Transparent"/>
-                    </StackLayout>
+                        </StackLayout>
+                        
+                        <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.OCCustomer}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
 
-                    <StackLayout Orientation="Horizontal" Margin="0,5">
-                        <Label Text="{x:Static resources:AppResources.Date}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
-                        <Frame
+                            <Frame
                             Margin="0"
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
-                            <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
-                        </Frame>
-                        <Label
+                                <Entry
+                                IsEnabled="{Binding EnableForEdit}"
+                                HorizontalOptions="FillAndExpand"
+                                Keyboard="Text"
+                                    Placeholder="{x:Static resources:AppResources.NOCCustomer}">
+
+                                </Entry>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.Date}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
+                            <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
+                            </Frame>
+                            <Label
                             Style="{StaticResource DefaultLabel}"
                             VerticalOptions="Center"
                             Text="{x:Static resources:AppResources.Currency}">
-                            
-                        </Label>
-                        <Frame
+
+                            </Label>
+                            <Frame
                             Margin="0"
                             Padding="5,0">
-                        <Picker
+                                <Picker
                             IsEnabled="False" 
                             Title="US$"
                             HorizontalTextAlignment="Center"
                             WidthRequest="100">
-                            
-                        </Picker>
-                        </Frame>
-                        <!--<Label Text="Motivo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0"
-                       Mvx:Bi.nd="IsVisible SelectedStatus == 'Cerrada Perdida'" />
-                    <Picker Title="Picker" ItemsSource="{Binding ClosedLostStatusCausesDescription}"
-                        Mvx:Bi.nd="IsVisible SelectedStatus == 'Cerrada Perdida'"
-                        SelectedItem="{Binding SelectedClosedLostStatusCause}" Style="{StaticResource DefaultPicker}" />-->
-                    </StackLayout>
 
-                    <StackLayout Orientation="Horizontal" Margin="0,5">
-                        <Label Text="{x:Static resources:AppResources.PaymentCondition}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center">
-                            
-                        </Label>
-                        <Frame
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.RemittanceType}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+
+                            <Frame
                             Margin="0"
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
-                            <Picker IsEnabled="{Binding EnableForEdit}"
+                                <Picker
+                                IsEnabled="{Binding EnableForEdit}"
+                                HorizontalOptions="FillAndExpand"
+                                Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding TypeOfRemittances}" ItemDisplayBinding="{Binding Description}" SelectedItem="{Binding TypeOfRemittance, Mode=TwoWay}">
+
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.PaymentCondition}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center">
+
+                            </Label>
+                            <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                                <Picker IsEnabled="{Binding EnableForEdit}"
                                     Title="{x:Static resources:AppResources.Select}" 
                                     ItemsSource="{Binding PaymentConditions, Mode=TwoWay}" 
                                     ItemDisplayBinding="{Binding description}"
                                     SelectedItem="{Binding Condition, Mode=TwoWay}">
-                            
-                        </Picker>
+
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.PlacePayment}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+
+                            <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                                <Picker
+                                IsEnabled="{Binding EnableForEdit}"
+                                HorizontalOptions="FillAndExpand"
+                                Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding PlaceOfPayment}" ItemDisplayBinding="{Binding Description}" SelectedItem="{Binding Place, Mode=TwoWay}">
+
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.DeliveryDate}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
+                            <Frame
+                                Margin="0"
+                                Padding="0"
+                                HorizontalOptions="FillAndExpand">
+                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.DeliveryResponsible}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+
+                            <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                                <Entry
+                                IsEnabled="{Binding EnableForEdit}"
+                                HorizontalOptions="FillAndExpand"
+                                    Placeholder="{x:Static resources:AppResources.DescribeWhoDelivers}">
+
+                                </Entry>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.DeliveryBranch}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
+                            <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                                <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
+                                   IsEnabled="{Binding EnableForEdit}"
+                                   Grid.Row="0" Grid.Column="0"/>
+                            </Frame>
+                            <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
+                                     IsEnabled="{Binding EnableForEdit}"
+                                     HorizontalOptions="End"
+                                     Grid.Row="0" Grid.Column="1"
+                                     BackgroundColor="Transparent"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.DeliveryAddress}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+
+                            <Frame
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                                <Picker
+                                IsEnabled="{Binding EnableForEdit}"
+                                HorizontalOptions="FillAndExpand"
+                                Title="{x:Static resources:AppResources.Select}"
+                                    ItemsSource="{Binding SelectedCustomer.Addresses}" ItemDisplayBinding="{Binding Address}">
+
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
+
+                        <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}" />
+
+                        <Frame
+                            Margin="0"
+                            Padding="5,0,0,0">
+                            <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" Style="{StaticResource DefaultEditor}"
+                                    AutoSize="TextChanges" Text="{Binding Order.Description}" MaxLength="300" HeightRequest="100"/>
                         </Frame>
+
                     </StackLayout>
-
-                    <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}" />
-                    <Frame
-                        Margin="0"
-                        Padding="5,0,0,0">
-                        <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" Style="{StaticResource DefaultEditor}"
-                        AutoSize="TextChanges" Text="{Binding Order.Description}" MaxLength="300" HeightRequest="100"/>
-                    </Frame>
-                    
-                    <StackLayout Orientation="Horizontal">
-                        <Label Text="{x:Static resources:AppResources.Associated_Products}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
-                        <Image IsEnabled="{Binding EnableForEdit}"  Source="ic_add_box.png">
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding AddProductCommand}" />
-                            </Image.GestureRecognizers>
-                        </Image>
-                    </StackLayout>
-
-                    <BoxView BackgroundColor="LightGray" HeightRequest="1" />
-
-                    <Controls:Repeater ItemsSource="{Binding Order.products}"
-                                   Mvx:Bi.nd="IsVisible And(Order.products.Count > 0)"
-                                   Margin="0,10,0,0" x:Name="detailsList" IsEnabled="{Binding EnableForEdit}">
-                        <Controls:Repeater.ItemTemplate>
+                </ScrollView>
+            </Grid>
+        </StackLayout><!--Lista de Datos-->
+    
+        <StackLayout
+            IsVisible="{Binding StackProductos}"
+            Margin="10,0"
+            VerticalOptions="FillAndExpand">
+            <Grid
+                VerticalOptions="FillAndExpand"
+                RowDefinitions="*,auto">
+                <ScrollView
+                    Grid.Row="0">
+                    <StackLayout
+                        VerticalOptions="FillAndExpand">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{x:Static resources:AppResources.Associated_Products}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
+                            <Image IsEnabled="{Binding EnableForEdit}"  Source="ic_add_box.png">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding AddProductCommand}" />
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </StackLayout>
+                        
+                        <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+                        
+                        <Controls:Repeater ItemsSource="{Binding Order.products}"
+                                           Mvx:Bi.nd="IsVisible And(Order.products.Count > 0)"
+                                           Margin="0,0,0,0" x:Name="detailsList" IsEnabled="{Binding EnableForEdit}">
+                            <Controls:Repeater.ItemTemplate>
                             <DataTemplate>
                                 <ContentView>
                                     <StackLayout>
@@ -219,66 +402,108 @@
                                 </ContentView>
                             </DataTemplate>
                         </Controls:Repeater.ItemTemplate>
-                    </Controls:Repeater>
+                        </Controls:Repeater>
+                        
+                        <Label Text="{x:Static resources:AppResources.No_Associated_Products}" Mvx:Bi.nd="IsVisible Order.products.Count == 0" Margin="0,10,0,0" />
+                    </StackLayout>
+                </ScrollView>
 
-                    <Label Text="{x:Static resources:AppResources.No_Associated_Products}" Mvx:Bi.nd="IsVisible Order.products.Count == 0" Margin="0,10,0,0" />
-
-                </StackLayout>
-            </ScrollView>
-
-            <Frame
+                <Frame
+                VerticalOptions="End"
                 Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
                 Padding="10,0,10,0"
                 BorderColor="{StaticResource PrimaryColor}">
-                <StackLayout
+                    <StackLayout
                     Orientation="Horizontal">
-                    <Label
+                        <Label
                         VerticalOptions="Center">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="{x:Static resources:AppResources.Discount}" FontAttributes="Bold" x:Name="lblDiscount"></Span>
-                                <Span Text=" %" FontAttributes="Bold"></Span>
-                            </FormattedString>
-                        </Label.FormattedText>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{x:Static resources:AppResources.Discount}" FontAttributes="Bold" x:Name="lblDiscount"></Span>
+                                    <Span Text=" %" FontAttributes="Bold"></Span>
+                                </FormattedString>
+                            </Label.FormattedText>
 
-                    </Label>
-                    <Entry IsEnabled="{Binding EnableForEdit}" Keyboard="Default" WidthRequest="50" FontSize="Small" Margin="0" Text="{Binding OrderDiscount, Mode=TwoWay}" TextChanged="Entry_TextChanged" x:Name="lblOrderDiscount">
-                        <Entry.Behaviors>
-                            <Behavior:NumericValidationBehavior />
-                        </Entry.Behaviors>
-                    </Entry>
-                    <Label
+                        </Label>
+                        <Entry IsEnabled="{Binding EnableForEdit}" Keyboard="Default" WidthRequest="50" FontSize="Small" Margin="0" Text="{Binding OrderDiscount, Mode=TwoWay}" TextChanged="Entry_TextChanged" x:Name="lblOrderDiscount">
+                            <Entry.Behaviors>
+                                <Behavior:NumericValidationBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label
                     HorizontalOptions="EndAndExpand" VerticalOptions="Center">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="-US$ " FontAttributes="Bold"></Span>
-                                <Span  FontAttributes="Bold" x:Name="lblDiscountResult"></Span>
-                                <!--Text="{Binding ValorDescuento, Mode=TwoWay}"-->
-                            </FormattedString>
-                        </Label.FormattedText>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="-US$ " FontAttributes="Bold"></Span>
+                                    <Span  FontAttributes="Bold" x:Name="lblDiscountResult"></Span>
+                                    <!--Text="{Binding ValorDescuento, Mode=TwoWay}"-->
+                                </FormattedString>
+                            </Label.FormattedText>
 
-                    </Label>
+                        </Label>
 
+                    </StackLayout>
+                </Frame>
+            </Grid>
+            
+            
+        </StackLayout><!--lista de Productos-->
+
+        <StackLayout
+            IsVisible="{Binding StackAdjunto}"
+            Margin="10,0"
+            VerticalOptions="FillAndExpand">
+            <StackLayout>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="{x:Static resources:AppResources.AttachFile}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
+                    <Image IsEnabled="{Binding EnableForEdit}"  Source="adjuntar.png" VerticalOptions="End">
+                        
+                    </Image>
                 </StackLayout>
-            </Frame>
+
+                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+            </StackLayout>
+            <ListView IsVisible="false"
+                      ItemsSource="{Binding AttachFiles}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
             <StackLayout
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                Mvx:Bi.nd="!IsVisible AttachFiles.Count > 0">
+                <Image
+                    Source="upLoad.png"
+                    WidthRequest="150"
+                    HeightRequest="150">
+                    
+                </Image>
+                <Label
+                    Text="No existen archivos adjuntos" Style="{x:StaticResource DefaultLabel}">
+                    
+                </Label>
+            </StackLayout>
+        </StackLayout>
+        
+        <StackLayout
                 Orientation="Horizontal"
                 BackgroundColor="LightGray"
                 Padding="10,0,0,0"
                 HeightRequest="40">
 
-                <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Order.products.Count > 0"
+            <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-                <Label Mvx:Bi.nd="Text Format('US$ {0:0.##}', Total); IsVisible Order.products.Count > 0"
+            <Label Mvx:Bi.nd="Text Format('US$ {0:0.##}', Total); IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="Medium" VerticalTextAlignment="Center" />
-            </StackLayout>
-        </Grid>
+        </StackLayout>
 
         <ActivityIndicator IsVisible="{Binding IsLoading}"
                            IsRunning="{Binding IsLoading}"

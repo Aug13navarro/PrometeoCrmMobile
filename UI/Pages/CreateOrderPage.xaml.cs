@@ -20,7 +20,7 @@ namespace UI.Pages
         {
             base.OnViewModelSet();
             ViewModel.ShowEditProductPopup += OnShowEditProductPopup;
-            
+
         }
 
         private async void OnShowEditProductPopup(object sender, Product product)
@@ -78,10 +78,58 @@ namespace UI.Pages
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var s = ex.Message;
             }
+        }
+
+        private void TapInfo_Tapped(object sender, EventArgs e)
+        {
+            btnProductos.BackgroundColor = Xamarin.Forms.Color.FromHex("#2B0048");
+            lblProductos.TextColor = Xamarin.Forms.Color.White;
+
+            btnAdjunto.BackgroundColor = Xamarin.Forms.Color.FromHex("#2B0048");
+            lblAdjuntos.TextColor = Xamarin.Forms.Color.White;
+
+            btnInfo.BackgroundColor = Xamarin.Forms.Color.White;
+            lblInfo.TextColor = Xamarin.Forms.Color.FromHex("#2B0048");
+
+            ViewModel.StackInfo = true;
+            ViewModel.StackProductos = false;
+            ViewModel.StackAdjunto = false;
+        }
+
+        private void TapProducts_Tapped(object sender, EventArgs e)
+        {
+            btnAdjunto.BackgroundColor = Xamarin.Forms.Color.FromHex("#2B0048");
+            lblAdjuntos.TextColor = Xamarin.Forms.Color.White;
+
+            btnInfo.BackgroundColor = Xamarin.Forms.Color.FromHex("#2B0048");
+            lblInfo.TextColor = Xamarin.Forms.Color.White;
+
+            btnProductos.BackgroundColor = Xamarin.Forms.Color.White;
+            lblProductos.TextColor = Xamarin.Forms.Color.FromHex("#2B0048");
+
+            ViewModel.StackInfo = false;
+            ViewModel.StackProductos = true;
+            ViewModel.StackAdjunto = false;
+        }
+
+        private void TapAdjuntos_Tapped(object sender, EventArgs e)
+        {
+            btnInfo.BackgroundColor = Xamarin.Forms.Color.FromHex("#2B0048");
+            lblInfo.TextColor = Xamarin.Forms.Color.White;
+
+            btnProductos.BackgroundColor = Xamarin.Forms.Color.FromHex("#2B0048");
+            lblProductos.TextColor = Xamarin.Forms.Color.White;
+
+            btnAdjunto.BackgroundColor = Xamarin.Forms.Color.White;
+            lblAdjuntos.TextColor = Xamarin.Forms.Color.FromHex("#2B0048");
+
+            ViewModel.StackInfo = false;
+            ViewModel.StackProductos = false;
+            ViewModel.StackAdjunto = true;
         }
     }
 }
