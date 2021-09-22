@@ -159,8 +159,8 @@
                         VerticalOptions="Center" HorizontalOptions="EndAndExpand">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="US$ "></Span>
-                                <Span Text="{Binding Total}"></Span>
+                                <Span Mvx:Bi.nd="Text Format('US$ {0:N2}', Total)"></Span>
+                                <!--<Span Text="{Binding Total}"></Span>-->
                             </FormattedString>
                         </Label.FormattedText>
 
@@ -170,9 +170,9 @@
                         VerticalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="01/01/2021"></Span>
+                            <Span Text="{Binding FechaInicioFiltro}"></Span>
                             <Span Text=" - "></Span>
-                            <Span Text="01/01/2021"></Span>
+                            <Span Text="{Binding FechaFinFiltro}"></Span>
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>

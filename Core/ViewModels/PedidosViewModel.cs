@@ -51,6 +51,20 @@ namespace Core.ViewModels
             set => SetProperty(ref total, value);
         }
 
+        private string fechaInicioFiltro;
+        public string FechaInicioFiltro
+        {
+            get => fechaInicioFiltro;
+            set => SetProperty(ref fechaInicioFiltro, value);
+        }
+
+        private string fechaFinFiltro;
+        public string FechaFinFiltro
+        {
+            get => fechaFinFiltro;
+            set => SetProperty(ref fechaFinFiltro, value);
+        }
+
         public MvxObservableCollection<OrderNote> OrdersNote { get; set; } = new MvxObservableCollection<OrderNote>();
 
         public int CurrentPage { get; private set; } = 1; 
@@ -86,6 +100,9 @@ namespace Core.ViewModels
             {
                 Total = OrdersNote.Sum(x => x.total);
             };
+
+            FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("d");
+            FechaFinFiltro = DateTime.Now.ToString("d");
         }
 
         private async Task RefreshList()
@@ -188,6 +205,9 @@ namespace Core.ViewModels
                     IsLoading = true;
 
                     var orders = await prometeoApiService.GetOrdersByfilter(filtro, user.Token);
+
+                    FechaInicioFiltro = filtro.dateFrom.ToString("d");
+                    FechaFinFiltro = filtro.dateTo.ToString("d");
 
                     OrdersNote.Clear();
 

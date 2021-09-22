@@ -284,7 +284,7 @@
                             </Frame>
                         </StackLayout>
 
-                        <StackLayout Orientation="Horizontal" Margin="0,5">
+                        <!--<StackLayout Orientation="Horizontal" Margin="0,5">
                             <Label Text="{x:Static resources:AppResources.DeliveryBranch}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
                             <Frame
                             Margin="0"
@@ -299,7 +299,7 @@
                                      HorizontalOptions="End"
                                      Grid.Row="0" Grid.Column="1"
                                      BackgroundColor="Transparent"/>
-                        </StackLayout>
+                        </StackLayout>-->
 
                         <StackLayout Orientation="Horizontal"
                                  Margin="0,5">
@@ -457,7 +457,7 @@
                 <StackLayout Orientation="Horizontal">
                     <Label Text="{x:Static resources:AppResources.AttachFile}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
                     <Image IsEnabled="{Binding EnableForEdit}"  Source="adjuntar.png" VerticalOptions="End">
-                        
+
                     </Image>
                 </StackLayout>
 
@@ -484,15 +484,15 @@
                     Source="upLoad.png"
                     WidthRequest="150"
                     HeightRequest="150">
-                    
+
                 </Image>
                 <Label
                     Text="No existen archivos adjuntos" Style="{x:StaticResource DefaultLabel}">
-                    
+
                 </Label>
             </StackLayout>
-        </StackLayout>
-        
+        </StackLayout><!--Lista de Adjuntos-->
+
         <StackLayout
                 Orientation="Horizontal"
                 BackgroundColor="LightGray"
@@ -501,7 +501,7 @@
 
             <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-            <Label Mvx:Bi.nd="Text Format('US$ {0:0.##}', Total); IsVisible Order.products.Count > 0"
+            <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', Total); IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="Medium" VerticalTextAlignment="Center" />
         </StackLayout>
 
