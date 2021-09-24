@@ -69,6 +69,13 @@ namespace Core.ViewModels
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
         public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
 
+        private TypeStandard place;
+        public TypeStandard Place
+        {
+            get => place;
+            set => SetProperty(ref place, value);
+        }
+
         private TypeStandard typeOfRemittance;
         public TypeStandard TypeOfRemittance
         {
@@ -109,6 +116,13 @@ namespace Core.ViewModels
         {
             get => selectedCustomer;
             set => SetProperty(ref selectedCustomer, value);
+        }
+
+        private CustomerAddress customerAddress;
+        public CustomerAddress CustomerAddress
+        {
+            get => customerAddress;
+            set => SetProperty(ref customerAddress, value);
         }
 
         private MvxObservableCollection<PaymentCondition> paymentConditions;
@@ -286,7 +300,13 @@ namespace Core.ViewModels
                     talon = 28,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
                     tipoCuentaId = 1,                    //puede ser null
-                    tipoServicioId = 50                  //puede ser null
+                    tipoServicioId = 50,                  //puede ser null
+                    DeliveryAddress = customerAddress.Address,
+                    DeliveryDate = Order.DeliveryDate,
+                    DeliveryResponsible = Order.DeliveryResponsible,
+                    OCCustomer = Order.OCCustomer,
+                    PlacePayment = Place.Id,
+                    RemittanceType = typeOfRemittance.Id,
                 };
 
                 if(Order.opportunityId == 0 || Order.opportunityId == null)
@@ -464,10 +484,16 @@ namespace Core.ViewModels
                     EnableForEdit = false;
 
                     var user = data.LoggedUser;
-                    
+
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
                     SelectedCustomer = Order.customer;
                     Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
+                    TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
+                    Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
+
+                    SelectedCustomer.Addresses.Add(new CustomerAddress { Address = Order.DeliveryAddress });
+
+                    CustomerAddress = SelectedCustomer.Addresses.FirstOrDefault();
 
                     CargarCondiciones();
 

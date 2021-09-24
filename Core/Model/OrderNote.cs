@@ -94,6 +94,12 @@ namespace Core.Model
         //public int createBy { get; set; }
         public MvxObservableCollection<ProductOrder> products { get; set; }
         public MvxObservableCollection<OpportunityProducts> Details { get; set; }
+        public string OCCustomer { get; set; }
+        public int RemittanceType { get; set; }
+        public int PlacePayment { get; set; }
+        public DateTime? DeliveryDate { get; set; }
+        public string DeliveryResponsible { get; set; }
+        public string DeliveryAddress { get; set; }
 
         public class ProductOrder
         {

@@ -169,10 +169,12 @@
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
                                 <Entry
-                                IsEnabled="{Binding EnableForEdit}"
-                                HorizontalOptions="FillAndExpand"
-                                Keyboard="Text"
-                                    Placeholder="{x:Static resources:AppResources.NOCCustomer}">
+                                    IsEnabled="{Binding EnableForEdit}"
+                                    HorizontalOptions="FillAndExpand"
+                                    Keyboard="Text"
+                                    MaxLength="15"
+                                    Placeholder="{x:Static resources:AppResources.NOCCustomer}"
+                                    Text="{Binding Order.OCCustomer, Mode=TwoWay}">
 
                                 </Entry>
                             </Frame>
@@ -214,9 +216,10 @@
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
                                 <Picker
-                                IsEnabled="{Binding EnableForEdit}"
-                                HorizontalOptions="FillAndExpand"
-                                Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding TypeOfRemittances}" ItemDisplayBinding="{Binding Description}" SelectedItem="{Binding TypeOfRemittance, Mode=TwoWay}">
+                                    IsEnabled="{Binding EnableForEdit}"
+                                    HorizontalOptions="FillAndExpand"
+                                    Title="{x:Static resources:AppResources.Select}" 
+                                    ItemsSource="{Binding TypeOfRemittances}" ItemDisplayBinding="{Binding Description}" SelectedItem="{Binding TypeOfRemittance, Mode=TwoWay}">
 
                                 </Picker>
                             </Frame>
@@ -263,7 +266,7 @@
                                 Margin="0"
                                 Padding="0"
                                 HorizontalOptions="FillAndExpand">
-                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
+                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Order.DeliveryDate}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
                             </Frame>
                         </StackLayout>
 
@@ -276,9 +279,11 @@
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
                                 <Entry
-                                IsEnabled="{Binding EnableForEdit}"
-                                HorizontalOptions="FillAndExpand"
-                                    Placeholder="{x:Static resources:AppResources.DescribeWhoDelivers}">
+                                    IsEnabled="{Binding EnableForEdit}"
+                                    MaxLength="100"
+                                    HorizontalOptions="FillAndExpand"
+                                    Placeholder="{x:Static resources:AppResources.DescribeWhoDelivers}"
+                                    Text="{Binding Order.DeliveryResponsible}">
 
                                 </Entry>
                             </Frame>
@@ -310,10 +315,10 @@
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
                                 <Picker
-                                IsEnabled="{Binding EnableForEdit}"
-                                HorizontalOptions="FillAndExpand"
-                                Title="{x:Static resources:AppResources.Select}"
-                                    ItemsSource="{Binding SelectedCustomer.Addresses}" ItemDisplayBinding="{Binding Address}">
+                                    IsEnabled="{Binding EnableForEdit}"
+                                    HorizontalOptions="FillAndExpand"
+                                    Title="{x:Static resources:AppResources.Select}"
+                                    ItemsSource="{Binding SelectedCustomer.Addresses}" ItemDisplayBinding="{Binding Address}" SelectedItem="{Binding CustomerAddress,Mode=TwoWay}">
 
                                 </Picker>
                             </Frame>
