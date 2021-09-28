@@ -1,4 +1,6 @@
 ﻿using Core.Services.Contracts;
+using MvvmCross.Navigation;
+using MvvmCross.Presenters.Hints;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,10 +23,12 @@ namespace Core.ViewModels
         public Command RecoverPassCommand { get; }
 
         private IPrometeoApiService prometeoApiService;
+        private IMvxNavigationService navigationService;
 
-        public RecoverPasswordViewModel(IPrometeoApiService prometeoApiService)
+        public RecoverPasswordViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)
         {
             this.prometeoApiService = prometeoApiService;
+            this.navigationService = navigationService;
 
             RecoverPassCommand = new Command(async () => await RecoverPass());
         }
@@ -37,12 +41,14 @@ namespace Core.ViewModels
 
                 if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
                 {
-                    await Application.Current.MainPage.DisplayAlert("Success", $"Check your email", "Acept"); return;
+                    await Application.Current.MainPage.DisplayAlert("Recover Password", $"Check your email", "Acept");
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Exito", $"Revise su correo electrónico", "Aceptar"); return;
+                    await Application.Current.MainPage.DisplayAlert("Recuperar Contraseña", $"Revise su correo electrónico", "Aceptar");
                 }
+
+                await navigationService.Navigate<LoginViewModel>();
 
             }
             catch (Exception )
