@@ -101,7 +101,11 @@ namespace Core.ViewModels
         public Company Company
         {
             get => company;
-            set => SetProperty(ref company, value);
+            set
+            {
+                SetProperty(ref company, value);
+                CargarCondiciones();
+            }
         }
 
         private string selectedClosedLostStatusCause;
@@ -278,10 +282,22 @@ namespace Core.ViewModels
             {
                 if (Company == null ||
                     SelectedCustomer == null ||
-                    Condition == null)
+                    Condition == null ||
+                    TypeOfRemittance == null ||
+                    PlaceOfPayment == null ||
+                    CustomerAddress == null
+                    )
                 {
-                    await Application.Current.MainPage.DisplayAlert("Atención", "Todos los campos son Obligatorios.", "Aceptar");
-                    return;
+                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Faltan ingresar datos obligatorios.", "Aceptar");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
+                        return;
+                    }
                 }
 
                 var nuevaOrder = new OrderNote
@@ -452,6 +468,7 @@ namespace Core.ViewModels
                     if(Order.companyId > 0)
                     {
                         Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+                        CargarCondiciones();
                     }
                     else
                     {
@@ -506,10 +523,20 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    EnableForEdit = true; 
+                    EnableForEdit = true;
 
                     Order = theOrder;
-                    SelectedCustomer = Order.customer;
+                    Order.orderStatus = 1;
+                    if (Order.customer != null)
+                    {
+                        SelectedCustomer = Order.customer;
+                    }
+                    if (Companies != null)
+                    {
+                        Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
+                    }
+
+                    //CargarCondiciones();
                     if (theOrder.Details == null)
                     {
                         Order.products = new MvxObservableCollection<OrderNote.ProductOrder>();

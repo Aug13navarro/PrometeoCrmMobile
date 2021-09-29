@@ -85,16 +85,9 @@
                                         </StackLayout>
                                         <Label
                                             Text="{Binding company.BusinessName}">
-                                            
+
                                         </Label>
-                                        <!--<StackLayout
-                                            Orientation="Horizontal">
-                                            <Label
-                                                Text="{Binding orderStatusStr}">
-                                                
-                                            </Label>
-                                        </StackLayout>-->
-                                        
+
                                     </StackLayout>
                                     
                                     <StackLayout
