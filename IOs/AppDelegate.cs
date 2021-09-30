@@ -20,10 +20,6 @@ namespace IOs
         //[Export ("application:didFinishLaunchingWithOptions:")]
         public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
         {
-            // Override point for customization after application launch.
-            // If not required for your application you can safely delete this method
-            //return true;
-
             Rg.Plugins.Popup.Popup.Init();
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new FormsApp());
