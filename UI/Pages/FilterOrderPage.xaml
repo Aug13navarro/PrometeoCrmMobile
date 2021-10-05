@@ -83,9 +83,10 @@
                     </Label>
                     <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
                         <DatePicker
-                                Date="{Binding BeginDate}"
-                                Format="dd/MM/yyyy"
-                                MaximumDate="{Binding MaximumDate}">
+                            Date="{Binding BeginDate}"
+                            Format="dd/MM/yyyy"
+                            MinimumDate="{Binding MinimumDate}"
+                            MaximumDate="{Binding MaximumDate}">
 
                         </DatePicker>
                     </Frame>
@@ -100,9 +101,10 @@
                     </Label>
                     <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
                         <DatePicker
-                                Format="dd/MM/yyyy"
-                                Date="{Binding EndDate}"
-                                MaximumDate="{Binding MaximumDate}">
+                            Format="dd/MM/yyyy"
+                            Date="{Binding EndDate}"
+                            MaximumDate="{Binding MaximumDate}"
+                            MinimumDate="{Binding MinimumDate}">
 
                         </DatePicker>
                     </Frame>

@@ -232,7 +232,7 @@ namespace Core.ViewModels
             var order = new OrderNote
             {
                 customerId = Opportunity.customer.Id,
-                customer = Opportunity.customer,
+                customer = SelectedCustomer,
                 fecha = Opportunity.createDt,
                 opportunityId = Opportunity.Id,
                 Details = Opportunity.opportunityProducts,

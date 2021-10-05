@@ -736,7 +736,7 @@ namespace UI.LangResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to State.
+        ///   Looks up a localized string similar to Status.
         /// </summary>
         internal static string State {
             get {

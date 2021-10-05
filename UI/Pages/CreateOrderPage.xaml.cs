@@ -55,7 +55,7 @@ namespace UI.Pages
                     if (ViewModel.OrderDiscount > 0)
                     {
                         ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
-                        lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N4");
+                        lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N2");
 
                         ViewModel.ActualizarTotal(ViewModel.Order.products);
                     }
@@ -64,6 +64,14 @@ namespace UI.Pages
                 {
                     if (!string.IsNullOrWhiteSpace(lblOrderDiscount.Text))
                     {
+                        ViewModel.ResetTotal(ViewModel.Order.products);
+
+                        if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
+                        {
+                            ViewModel.OrderDiscount = 0;
+                            lblDiscountResult.Text = 0.ToString();
+                        }
+
                         if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
                         {
                             var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;

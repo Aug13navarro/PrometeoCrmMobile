@@ -126,49 +126,57 @@
 
                         </StackLayout>
 
-                        <StackLayout Orientation="Horizontal"
-                                 Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                        <StackLayout Margin="0,5">
+                            <Grid
+                                ColumnDefinitions="auto,*">
+                                <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
+                                       Grid.Column="0"/>
 
-                            <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
-                                <Picker
-                                IsEnabled="{Binding EnableForEdit}"
-                                HorizontalOptions="FillAndExpand"
-                                Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding Companies}" ItemDisplayBinding="{Binding BusinessName}" SelectedItem="{Binding Company, Mode=TwoWay}">
+                                <Frame
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    Padding="0"
+                                    HorizontalOptions="FillAndExpand">
+                                    <Picker
+                                        IsEnabled="{Binding EnableForEdit}"
+                                        HorizontalOptions="FillAndExpand"
+                                        Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding Companies}" ItemDisplayBinding="{Binding BusinessName}" SelectedItem="{Binding Company, Mode=TwoWay}">
 
-                                </Picker>
-                            </Frame>
+                                    </Picker>
+                                </Frame>
+                            </Grid>
                         </StackLayout>
 
-                        <StackLayout Orientation="Horizontal" Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
-                            <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
-                                <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
-                                   IsEnabled="{Binding EnableForEdit}"
-                                   Grid.Row="0" Grid.Column="0"/>
-                            </Frame>
-                            <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
-                                     IsEnabled="{Binding EnableForEdit}"
-                                     HorizontalOptions="End"
-                                     Grid.Row="0" Grid.Column="1"
-                                     BackgroundColor="Transparent"/>
+                        <StackLayout Margin="0,5">
+                            <Grid
+                                ColumnDefinitions="auto,*,auto">
+                                <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
+                                       Grid.Column="0"/>
+                                <Frame
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    Padding="0">
+                                    <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
+                                           IsEnabled="{Binding EnableForEdit}"/>
+                                </Frame>
+                                <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
+                                             IsEnabled="{Binding EnableForEdit}"
+                                             BackgroundColor="Transparent"
+                                             Grid.Column="2"/>
+                            </Grid>
                         </StackLayout>
                         
-                        <StackLayout Orientation="Horizontal"
-                                 Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.OCCustomer}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
-
-                            <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
-                                <Entry
+                        <StackLayout Margin="0,5">
+                            <Grid
+                                ColumnDefinitions="auto,*">
+                                <Label Text="{x:Static resources:AppResources.OCCustomer}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
+                                   Grid.Column="0"/>
+                                <Frame
+                                Grid.Column="1"
+                                Margin="0"
+                                Padding="0"
+                                HorizontalOptions="FillAndExpand">
+                                    <Entry
                                     IsEnabled="{Binding EnableForEdit}"
                                     HorizontalOptions="FillAndExpand"
                                     Keyboard="Text"
@@ -176,8 +184,9 @@
                                     Placeholder="{x:Static resources:AppResources.NOCCustomer}"
                                     Text="{Binding Order.OCCustomer, Mode=TwoWay}">
 
-                                </Entry>
-                            </Frame>
+                                    </Entry>
+                                </Frame>
+                            </Grid>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal" Margin="0,5">

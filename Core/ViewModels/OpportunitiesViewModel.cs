@@ -198,7 +198,19 @@ namespace Core.ViewModels
         {
             SearchBarVisible = false;
 
-            var listaSaerch = new MvxObservableCollection<Opportunity>(Opportunities.Where(x => x.customer.BusinessName.ToUpper().Contains(OpportunitiesQuery.ToUpper()) || x.customer.CompanyName.ToUpper().Contains(opportunitiesQuery.ToUpper())));
+            //var requestData = new OpportunitiesPaginatedRequest()
+            //{
+            //    CurrentPage = 1,
+            //    PageSize = PageSize,
+            //    Query = OpportunitiesQuery,
+            //};
+
+            //await GetOpportunitiesAsync(requestData, true);
+
+            var stringUpper = OpportunitiesQuery.ToUpper();
+
+            var listaSaerch = new MvxObservableCollection<Opportunity>(
+            Opportunities.Where(x => x.customer.CompanyName.ToUpper().Contains(stringUpper)));
 
             Opportunities.Clear();
             Opportunities.AddRange(listaSaerch);

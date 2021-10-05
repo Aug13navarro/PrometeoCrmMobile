@@ -25,14 +25,7 @@ namespace Core.ViewModels
             private set => SetProperty(ref loggedUser, value);
         }
 
-        public MenuItems[] MenuItems { get; } =
-        {
-            new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"),
-            new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"),
-            new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"),
-            new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"),
-            new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"),
-        };
+        public List<MenuItems> MenuItems { get; set; }
 
         // Fields
         private readonly ApplicationData appData;
@@ -42,7 +35,7 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly INotificationService notificationService;
 
-        public MenuViewModel(ApplicationData appData,IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, INotificationService notificationService, IOfflineDataService offlineDataService)
+        public MenuViewModel(ApplicationData appData, IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, INotificationService notificationService, IOfflineDataService offlineDataService)
         {
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
@@ -50,9 +43,28 @@ namespace Core.ViewModels
 
             _offlineDataService = offlineDataService;
 
+            MenuItems = new List<MenuItems>();
 
             this.appData = appData;
             LoggedUser = appData.LoggedUser;
+
+
+            if (LoggedUser.Language.ToLower() == "es" || LoggedUser.Language.Contains("spanish"))
+            {
+                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"));
+                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"));
+                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"));
+                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"));
+                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"));
+            }
+            else
+            {
+                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Opportunities", "ic_menu_cuentasic_menu_oportunidades"));
+                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Orders", "ic_menu_pedidos"));
+                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Customers", "ic_menu_cuentas"));
+                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contacts", "ic_menu_contactos"));
+                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Log out", "ic_keyboard_backspace"));
+            }
 
             this.appData.PropertyChanged += OnAppDataPropertyChanged;
         }

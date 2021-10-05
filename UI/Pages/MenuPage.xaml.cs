@@ -3,27 +3,48 @@ using Core.ViewModels;
 using Core.ViewModels.Model;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace UI.Pages
 {
     [MvxMasterDetailPagePresentation(MasterDetailPosition.Master)]
     public partial class MenuPage : MvxContentPage<MenuViewModel>
     {
+        public List<MenuItems> MenuItems { get; set; }
+
         public MenuPage()
         {
             InitializeComponent();
-            menuList.ItemsSource = MenuItems;
+            //CargarItems();
+
+            //MenuItems = ViewModel.MenuItems;
+            //menuList.ItemsSource = MenuItems;
         }
 
-        public MenuItems[] MenuItems { get; } =
-        {
-            //new MenuItems(MenuItemType.Sales, LangResources.AppResources.Sales, "ic_menu_presupuestos.png"),
-            new MenuItems(MenuItemType.Opportunities, LangResources.AppResources.Opportunities, "ic_menu_cuentasic_menu_oportunidades"),
-            new MenuItems(MenuItemType.Pedidos, LangResources.AppResources.Orders, "ic_menu_pedidos"),
-            new MenuItems(MenuItemType.Customers, LangResources.AppResources.Customers, "ic_menu_cuentas"),
-            new MenuItems(MenuItemType.Contacts, LangResources.AppResources.Contacts, "ic_menu_contactos"),
-            new MenuItems(MenuItemType.Logout, LangResources.AppResources.CloseSession, "ic_keyboard_backspace"),
-        };
+        //private void CargarItems()
+        //{
+        //    if (ViewModel.LoggedUser.Language.ToLower() == "es" || ViewModel.LoggedUser.Language.Contains("spanish"))
+        //    {
+        //        MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"));
+        //    }
+        //    else
+        //    {
+        //        MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Opportunities", "ic_menu_cuentasic_menu_oportunidades"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Orders", "ic_menu_pedidos"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Customers, "Customers", "ic_menu_cuentas"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contacts", "ic_menu_contactos"));
+        //        MenuItems.Add(new MenuItems(MenuItemType.Logout, "Log out", "ic_keyboard_backspace"));
+        //    }
+        //}
+
+        
 
         private async void OnMenuItemTapped(object sender, Xamarin.Forms.ItemTappedEventArgs e)
         {

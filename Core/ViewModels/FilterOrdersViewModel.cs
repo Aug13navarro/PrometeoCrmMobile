@@ -20,6 +20,13 @@ namespace Core.ViewModels
     {
         private ApplicationData data;
 
+        private DateTime minimumDate;
+        public DateTime MinimumDate
+        {
+            get => minimumDate;
+            set => SetProperty(ref minimumDate, value);
+        }
+
         private DateTime maximumDate;
         public DateTime MaximumDate
         {
@@ -118,7 +125,9 @@ namespace Core.ViewModels
         {
             data = new ApplicationData();
 
+            MinimumDate = DateTime.Now.Date.AddMonths(-6);
             MaximumDate = DateTime.Now.Date;
+
 
             this.navigationService = Mvx.Resolve<IMvxNavigationService>();
             this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
@@ -140,7 +149,7 @@ namespace Core.ViewModels
 
         private Task ClearFilter()
         {
-            BeginDate = DateTime.Now.Date;
+            BeginDate = DateTime.Now.Date.AddMonths(-6);
             EndDate = DateTime.Now.Date;
             Status = null;
             Company = null;
