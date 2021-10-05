@@ -101,8 +101,17 @@ namespace Core.ViewModels
                 Total = OrdersNote.Sum(x => x.total);
             };
 
-            FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("d");
-            FechaFinFiltro = DateTime.Now.ToString("d");
+            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("dd/MM/yyyy");
+                FechaFinFiltro = DateTime.Now.ToString("dd/MM/yyyy");
+            }
+            else
+            {
+                FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("MM/dd/yyyy");
+                FechaFinFiltro = DateTime.Now.ToString("MM/dd/yyyy");
+            }
+
         }
 
         private async Task RefreshList()

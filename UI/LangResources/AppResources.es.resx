@@ -222,6 +222,9 @@
   <data name="Filter_Opportunity" xml:space="preserve">
     <value>Filtrar Oportunidad</value>
   </data>
+  <data name="FormaDate" xml:space="preserve">
+    <value>dd/MM/yyyy</value>
+  </data>
   <data name="FromDate" xml:space="preserve">
     <value>Fecha Desde</value>
   </data>

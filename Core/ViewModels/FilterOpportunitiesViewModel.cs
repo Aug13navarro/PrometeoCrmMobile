@@ -26,6 +26,12 @@ namespace Core.ViewModels
             get => maximumDate;
             set => SetProperty(ref maximumDate, value);
         }
+        private DateTime minimumDate;
+        public DateTime MinimumDate
+        {
+            get => minimumDate;
+            set => SetProperty(ref minimumDate, value);
+        }
 
         private DateTime beginDate;
         public DateTime BeginDate
@@ -137,6 +143,7 @@ namespace Core.ViewModels
         {
             data = new ApplicationData();
 
+            MinimumDate = DateTime.Now.Date.AddMonths(-6);
             MaximumDate = DateTime.Now.Date;
 
             this.navigationService = Mvx.Resolve<IMvxNavigationService>();
@@ -184,9 +191,10 @@ namespace Core.ViewModels
 
         private Task ClearFilter()
         {
-            BeginDate = DateTime.Now.Date;
+            BeginDate = DateTime.Now.Date.AddMonths(-6);
             EndDate = DateTime.Now.Date;
             IndexStatus = -1;
+            Status = null;
             Customer = null;
             Product = null;
             Company = null;
@@ -212,7 +220,9 @@ namespace Core.ViewModels
                 }
                 if (filtro.status.Count() > 0)
                 {
-                    Status = filtro.status.FirstOrDefault();
+                    var estado = filtro.status.FirstOrDefault();
+
+                    Status = OpportunityStatuses.FirstOrDefault(x => x.Id == estado.Id);
                     IndexStatus = Status.Id - 1;
                 }
                 if(filtro.companies.Count() > 0)

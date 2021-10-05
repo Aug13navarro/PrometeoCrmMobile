@@ -48,11 +48,11 @@
                                 <Grid ColumnDefinitions=".5*,.5*" HorizontalOptions="FillAndExpand">
                                     <StackLayout Grid.Column="0" Orientation="Vertical" Spacing="0">
                                         <Label Text="{x:Static resources:AppResources.FromDate}" HorizontalTextAlignment="Center"/>
-                                        <DatePicker Date="{Binding BeginDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" Format="dd/MM/yyyy"/>
+                                        <DatePicker Date="{Binding BeginDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" MinimumDate="{Binding MinimumDate}" Format="{Static resources:AppResources.FormatDate}"/>
                                     </StackLayout>
                                     <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="0">
                                         <Label Text="{x:Static resources:AppResources.EndDate}" HorizontalTextAlignment="Center"/>
-                                        <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" Format="dd/MM/yyyy"/>
+                                        <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" MinimumDate="{Binding MinimumDate}" Format="{Static resources:AppResources.FormatDate}"/>
                                     </StackLayout>
                                 </Grid>
                             </StackLayout>
@@ -60,8 +60,9 @@
 
                         <Frame Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Vertical" Spacing="0">
-                                <Picker Title="{x:Static resources:AppResources.State}" ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status}"
-                                        SelectedIndex="{Binding IndexStatus, Mode=TwoWay}" ItemDisplayBinding="{Binding name}"/>
+                                <Picker Title="{x:Static resources:AppResources.State}" ItemsSource="{Binding OpportunityStatuses}" SelectedItem="{Binding Status, Mode=TwoWay}"
+                                         ItemDisplayBinding="{Binding name}"/>
+                                <!--SelectedIndex="{Binding IndexStatus, Mode=TwoWay}"-->
                             </StackLayout>
                         </Frame>
 

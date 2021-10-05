@@ -376,6 +376,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MM/dd/yyyy.
+        /// </summary>
+        internal static string FormatDate {
+            get {
+                return ResourceManager.GetString("FormatDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From Date.
         /// </summary>
         internal static string FromDate {
