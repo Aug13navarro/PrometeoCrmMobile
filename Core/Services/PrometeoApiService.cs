@@ -738,7 +738,15 @@ namespace Core.Services
 
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
-            await Task.FromResult(0);
+            if(respuesta.ReasonPhrase == "Bad Request")
+            {
+                throw new Exception(resultado);
+            }
+
+            if(respuesta.ReasonPhrase == "Internal Server Error")
+            {
+                throw new Exception("Error al Impactar en un Servicio Externo");
+            }
 
             return JsonConvert.DeserializeObject<OrderNote>(resultado);
         }

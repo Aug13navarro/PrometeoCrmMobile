@@ -57,9 +57,9 @@ namespace PrometeoCrmMobile.Droid
 
                 Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-
+                var s = e.Message;
                 throw;
             }
         }

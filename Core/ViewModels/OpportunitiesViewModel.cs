@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Model;
@@ -52,8 +53,34 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref totalOfAllOportunities, value);
+                ConvertirTotalStr(this.totalOfAllOportunities);
             }
         }
+
+        private string totalOfAllOportunitiesStr;
+        public string TotalOfAllOportunitiesStr
+        {
+            get => totalOfAllOportunitiesStr;
+            set
+            {
+                SetProperty(ref totalOfAllOportunitiesStr, value);
+            }
+        }
+
+        private void ConvertirTotalStr(decimal totalOfAllOportunities)
+        {
+            if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                TotalOfAllOportunitiesStr = TotalOfAllOportunities.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                TotalOfAllOportunitiesStr = TotalOfAllOportunities.ToString("N2", new CultureInfo("en-US"));
+            }
+
+            var s = TotalOfAllOportunitiesStr;
+        }
+
 
         public MvxObservableCollection<Opportunity> Opportunities { get; set; } = new MvxObservableCollection<Opportunity>();
 

@@ -1,6 +1,8 @@
-﻿using MvvmCross.ViewModels;
+﻿using Core.Helpers;
+using MvvmCross.ViewModels;
 using System;
 using System.Drawing;
+using System.Globalization;
 
 namespace Core.Model
 {
@@ -91,6 +93,28 @@ namespace Core.Model
         public int paymentConditionId { get; set; }
         public int discount { get; set; }
         public decimal total { get; set; }
+
+        public string totalStr => CanvertirTotal(this.total);
+
+        private string CanvertirTotal(decimal total)
+        {
+            if (!string.IsNullOrWhiteSpace(Identity.LanguageUser))
+            {
+                if (Identity.LanguageUser.ToLower() == "es" || Identity.LanguageUser.Contains("spanish"))
+                {
+                    return total.ToString("N2", new CultureInfo("es-ES"));
+                }
+                else
+                {
+                    return total.ToString("N2", new CultureInfo("es-US"));
+                }
+            }
+            else
+            {
+                return total.ToString("N2", new CultureInfo("es-ES"));
+            }
+        }
+
         //public int createBy { get; set; }
         public MvxObservableCollection<ProductOrder> products { get; set; }
         public MvxObservableCollection<OpportunityProducts> Details { get; set; }
@@ -111,7 +135,10 @@ namespace Core.Model
             public double subtotal { get; set; }
             public int arancel { get; set; }
             public int bonificacion { get; set; }
+
+
         }
 
-    }
+        public string error { get; set; }
+    }    
 }

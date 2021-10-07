@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Dtos;
+using Core.Helpers;
 using Core.Model;
 using Core.Services.Contracts;
 using Core.Services.Exceptions;
@@ -124,7 +125,10 @@ namespace Core.ViewModels
                         Permissions = item.RolePermissions.Select(x => x.Permission).ToList()
                     });
                 }
+
                 appData.SetLoggedUser(user);
+                Identity.LanguageUser = user.Language;
+
                 //notificationService.StartListeningNotifications();
 
                 CultureInfo language;

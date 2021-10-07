@@ -152,7 +152,8 @@
                         VerticalOptions="Center" HorizontalOptions="EndAndExpand">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Mvx:Bi.nd="Text Format('US$ {0:N2}', Total)"></Span>
+                                <Span Text="US$"></Span>
+                                <Span Text="{Binding TotalOfOrderStr}"></Span> 
                                 <!--<Span Text="{Binding Total}"></Span>-->
                             </FormattedString>
                         </Label.FormattedText>

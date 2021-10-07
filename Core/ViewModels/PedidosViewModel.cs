@@ -6,6 +6,7 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,7 +49,34 @@ namespace Core.ViewModels
         public decimal Total
         {
             get => OrdersNote.Sum( x => x.total);
-            set => SetProperty(ref total, value);
+            set
+            {
+                SetProperty(ref total, value);
+                ConvertirTotalStr(this.total);
+            }
+        }
+        private string totalOfOrderStr;
+        public string TotalOfOrderStr
+        {
+            get => totalOfOrderStr;
+            set
+            {
+                SetProperty(ref totalOfOrderStr, value);
+            }
+        }
+
+        private void ConvertirTotalStr(decimal total)
+        {
+            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                TotalOfOrderStr = Total.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                TotalOfOrderStr = Total.ToString("N2", new CultureInfo("en-US"));
+            }
+
+            var s = TotalOfOrderStr;
         }
 
         private string fechaInicioFiltro;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Core;
 using Core.Model;
 using Core.Services.Contracts;
 using MvvmCross.IoC;
@@ -20,10 +21,14 @@ namespace UI.Popups
         private readonly Product product;
         private readonly IToastService toastService;
 
+        private ApplicationData data;
+
         public SelectProductPopup(Product product, bool isEditing = false)
         {
             InitializeComponent();
             toastService = MvxIoCProvider.Instance.Resolve<IToastService>();
+
+            data = new ApplicationData();
 
             CloseWhenBackgroundIsClicked = true;
             this.product = product;
@@ -79,17 +84,38 @@ namespace UI.Popups
 
         private void PriceInputTextChanged(object sender, TextChangedEventArgs e)
         {
-            subtotalInput.Text = $"${ComputeTotal():0.##}";
+            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("en-US"));
+            }
         }
 
         private void QuantityInputTextChanged(object sender, TextChangedEventArgs e)
         {
-            subtotalInput.Text = $"${ComputeTotal():0.##}";
+            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("en-US"));
+            }
         }
 
         private void DiscountInputTextChanged(object sender, TextChangedEventArgs e)
         {
-            subtotalInput.Text = $"${ComputeTotal():0.##}";
+            if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("en-US"));
+            }
         }
 
         private double ComputeTotal()

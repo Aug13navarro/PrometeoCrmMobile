@@ -204,9 +204,10 @@
                 <Label TextColor="Black" HorizontalOptions="EndAndExpand" Margin="0,0,10,0" VerticalTextAlignment="Center">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="Total" FontSize="Medium" TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" />
-                            <Span Text=": $" FontSize="Medium" FontAttributes="Bold"/>
-                            <Span Text="{Binding TotalOfAllOportunities}" FontSize="Medium"  FontAttributes="Bold"/>
+                            <Span Text="Total:" FontSize="Medium" TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" />
+                            <Span Text=" US$" FontSize="Medium"  FontAttributes="Bold"></Span>
+                            <Span Text="{Binding TotalOfAllOportunitiesStr}" FontSize="Medium"  FontAttributes="Bold"></Span>
+                            <!--Mvx:Bi.nd="Text Format('US$ {0:N2}', TotalOfAllOportunities)" -->
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>

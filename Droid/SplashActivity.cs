@@ -1,5 +1,6 @@
 using Android.App;
 using Android.Support.V7.App;
+using System;
 
 namespace PrometeoCrmMobile.Droid
 {
@@ -13,8 +14,16 @@ namespace PrometeoCrmMobile.Droid
     {
         protected override void OnResume()
         {
-            base.OnResume();
-            StartActivity(typeof(MainActivity));
+            try
+            {
+                base.OnResume();
+                StartActivity(typeof(MainActivity));
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+                throw;
+            }
         }
     }
 }

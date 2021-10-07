@@ -325,7 +325,12 @@ namespace Core.ViewModels
                     RemittanceType = typeOfRemittance.Id,
                 };
 
-                if(Order.opportunityId == 0 || Order.opportunityId == null)
+                if (nuevaOrder.DeliveryDate == null)
+                {
+                    nuevaOrder.DeliveryDate = DateTime.Now.Date;
+                }
+
+                if (Order.opportunityId == 0 || Order.opportunityId == null)
                 {
                     nuevaOrder.opportunityId = null;
                     nuevaOrder.products = Order.products;
