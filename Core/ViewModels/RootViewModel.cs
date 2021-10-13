@@ -32,7 +32,11 @@ namespace Core.ViewModels
         {
             if (appData.LoggedUser == null || string.IsNullOrWhiteSpace(appData.LoggedUser.Token))
             {
-                await navigationService.Navigate<MenuViewModel>();
+                /* LA LINEA N° 39 FUE COMENTADA YA QUE PRETENDIA ENTRAR EN EL MENU
+                 * SI NO EXISTIA UN USUARIO REGISTRADO
+                 */
+
+                //await navigationService.Navigate<MenuViewModel>();
                 await navigationService.Navigate<LoginViewModel>();
             }
             else

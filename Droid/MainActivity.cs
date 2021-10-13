@@ -10,6 +10,7 @@ using Core.Services.Contracts;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Forms.Platforms.Android.Views;
+//using Plugin.CurrentActivity;
 using PrometeoCrmMobile.Droid.Services;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
@@ -21,12 +22,12 @@ namespace PrometeoCrmMobile.Droid
 {
     [Activity(
         Label = "PrometeoCRM",
-        Icon = "@drawable/icono",
-        RoundIcon = "@drawable/ic_launcher",
+        //Icon = "@drawable/icono",
+        //RoundIcon = "@drawable/ic_launcher",
         Theme = "@style/MainTheme",
-        MainLauncher = false,
-        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-        LaunchMode = LaunchMode.SingleTask)]
+    MainLauncher = false,
+    ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
+    LaunchMode = LaunchMode.SingleTask)]
     public class MainActivity : MvxFormsAppCompatActivity<MvxFormsAndroidSetup<App, FormsApp>, App, FormsApp>
     {
         private void initFontScale()
@@ -50,12 +51,17 @@ namespace PrometeoCrmMobile.Droid
                 ToolbarResource = Resource.Layout.Toolbar;
 
                 Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
+                //Plugin.CurrentActivity.
 
+                //CrossCurrentActivity.Current.Activity = this;
+                //CrossCurrentActivity.Current.Init(this, savedInstanceState);
+                Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
                 base.OnCreate(savedInstanceState);
 
                 Mvx.IoCProvider.RegisterType<IToastService>(() => new ToastDroidService());
 
                 Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+                //global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             }
             catch (System.Exception e)
             {
