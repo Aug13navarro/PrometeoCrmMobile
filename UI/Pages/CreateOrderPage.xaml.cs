@@ -14,7 +14,6 @@ namespace UI.Pages
         public CreateOrderPage()
         {
             InitializeComponent();
-
         }
         protected override void OnViewModelSet()
         {

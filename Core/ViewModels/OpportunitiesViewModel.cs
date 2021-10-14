@@ -209,8 +209,6 @@ namespace Core.ViewModels
         }
         private async Task RefreshList()
         {
-            //SearchBarVisible = false;
-
             var requestData = new OpportunitiesPaginatedRequest()
             {
                 CurrentPage = 1,
@@ -371,12 +369,10 @@ namespace Core.ViewModels
         private async Task CreateOpportunityAsync()
         {
             var createOpportunityViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOpportunityViewModel>();
-            var opportunity = new Opportunity() { opportunityStatus = new OpportunityStatus { Id = 1}, closedDate = DateTime.Now };
+            var opportunity = new Opportunity() { opportunityStatus = new OpportunityStatus { Id = 1 }, closedDate = DateTime.Now };
 
             createOpportunityViewModel.NewOpportunityCreated += async (sender, args) => await NewOpportunitiesSearchAsync();
             await navigationService.Navigate(createOpportunityViewModel, opportunity);
-
-            //await Initialize();
         }
 
         private async Task EditOpportunityAsync(Opportunity opportunity)

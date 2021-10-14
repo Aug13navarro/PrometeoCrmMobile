@@ -14,7 +14,7 @@
             <Controls:BackIconToolbar />
             <Label
                 HorizontalOptions="FillAndExpand"
-                Text="Orders"
+                Text="{x:Static resources:AppResources.Orders}"
                 TextColor="White"
                 FontSize="Medium"
                 VerticalTextAlignment="Center">
@@ -85,7 +85,6 @@
                         <DatePicker
                             Date="{Binding BeginDate}"
                             Format="dd/MM/yyyy"
-                            MinimumDate="{Binding MinimumDate}"
                             MaximumDate="{Binding MaximumDate}">
 
                         </DatePicker>
@@ -103,8 +102,7 @@
                         <DatePicker
                             Format="dd/MM/yyyy"
                             Date="{Binding EndDate}"
-                            MaximumDate="{Binding MaximumDate}"
-                            MinimumDate="{Binding MinimumDate}">
+                            MaximumDate="{Binding MaximumDate}">
 
                         </DatePicker>
                     </Frame>

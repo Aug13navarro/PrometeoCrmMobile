@@ -348,6 +348,9 @@
   <data name="State" xml:space="preserve">
     <value>Estado</value>
   </data>
+  <data name="StatusOrderPending" xml:space="preserve">
+    <value>estado en ingles</value>
+  </data>
   <data name="TotalAmount" xml:space="preserve">
     <value>Monto Total</value>
   </data>

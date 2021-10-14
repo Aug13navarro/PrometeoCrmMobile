@@ -20,12 +20,12 @@ namespace Core.ViewModels
     {
         private ApplicationData data;
 
-        private DateTime minimumDate;
-        public DateTime MinimumDate
-        {
-            get => minimumDate;
-            set => SetProperty(ref minimumDate, value);
-        }
+        //private DateTime minimumDate;
+        //public DateTime MinimumDate
+        //{
+        //    get => minimumDate;
+        //    set => SetProperty(ref minimumDate, value);
+        //}
 
         private DateTime maximumDate;
         public DateTime MaximumDate
@@ -38,14 +38,45 @@ namespace Core.ViewModels
         public DateTime BeginDate
         {
             get => beginDate;
-            set => SetProperty(ref beginDate, value);
+            set
+            {
+                SetProperty(ref beginDate, value);
+                VerificarMargenFecha();
+            }
         }
 
         private DateTime endDate;
         public DateTime EndDate
         {
             get => endDate;
-            set => SetProperty(ref endDate, value);
+            set
+            {
+                SetProperty(ref endDate, value);
+                VerificarMargenFecha();
+            }
+        }
+
+        private bool VerificarMargenFecha()
+        {
+            var fechaLimite = BeginDate.AddMonths(+12);
+
+            if (EndDate > fechaLimite)
+            {
+                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                {
+                    Application.Current.MainPage.DisplayAlert("Atención", "Puede filtrar por hasta 1 año como máximo.", "Aceptar");
+                    return false;
+                }
+                else
+                {
+                    Application.Current.MainPage.DisplayAlert("Atention", "You can filter for up to 1 year maximum.", "Acept");
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
         }
 
         private OpportunityStatus status;
@@ -125,7 +156,6 @@ namespace Core.ViewModels
         {
             data = new ApplicationData();
 
-            MinimumDate = DateTime.Now.Date.AddMonths(-6);
             MaximumDate = DateTime.Now.Date;
 
 
@@ -136,7 +166,7 @@ namespace Core.ViewModels
             ApplyFiltersCommand = new Command(async () => await ApplyFilters());
             LimpiarFiltroCommand = new Command(async () => await ClearFilter());
 
-            BeginDate = DateTime.Now.Date;
+            BeginDate = DateTime.Now.Date.AddMonths(-6);
             EndDate = DateTime.Now.Date;
 
             //OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
@@ -273,52 +303,55 @@ namespace Core.ViewModels
 
         private async Task ApplyFilters()
         {
-            var filtro = new FilterOrderModel
+            if (VerificarMargenFecha())
             {
-                dateFrom = this.BeginDate,
-                dateTo = this.endDate,
-                priceFrom = TotalDesde,
-                priceTo = TotalHasta
-            };
+                var filtro = new FilterOrderModel
+                {
+                    dateFrom = this.BeginDate,
+                    dateTo = this.endDate,
+                    priceFrom = TotalDesde,
+                    priceTo = TotalHasta
+                };
 
 
-            if (Status != null)
-            {
-                filtro.orderStatusId = Status.Id;
+                if (Status != null)
+                {
+                    filtro.orderStatusId = Status.Id;
+                }
+                else
+                {
+                    filtro.orderStatusId = null;
+                }
+                if (Company != null)
+                {
+                    filtro.companyId = Company.Id;
+                }
+                //else
+                //{
+                //    filtro.companyId = 0;
+                //}
+                if (filtro.priceFrom == 0) filtro.priceFrom = null;
+                if (filtro.priceTo == 0) filtro.priceTo = null;
+
+                var filtroJson = new FilterOrderJson
+                {
+                    dateFrom = BeginDate,
+                    dateTo = EndDate,
+                    priceFrom = TotalDesde,
+                    priceTo = TotalHasta
+                };
+
+                if (Company != null) filtroJson.company = Company;
+                if (Status != null) filtroJson.status = Status;
+                if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
+                if (filtroJson.priceTo == 0) filtroJson.priceTo = null;
+
+                var filtroString = JsonConvert.SerializeObject(filtroJson);
+
+                data.FilterOrder(filtroString);
+
+                await navigationService.Close(this, filtro);
             }
-            else
-            {
-                filtro.orderStatusId = null;
-            }
-            if (Company != null)
-            {
-                filtro.companyId = Company.Id;
-            }
-            //else
-            //{
-            //    filtro.companyId = 0;
-            //}
-            if (filtro.priceFrom == 0) filtro.priceFrom = null;
-            if (filtro.priceTo == 0) filtro.priceTo = null;
-
-            var filtroJson = new FilterOrderJson
-            {
-                dateFrom = BeginDate,
-                dateTo = EndDate,
-                priceFrom = TotalDesde,
-                priceTo = TotalHasta
-            };
-
-            if (Company != null) filtroJson.company = Company;
-            if (Status != null) filtroJson.status = Status;
-            if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
-            if (filtroJson.priceTo == 0) filtroJson.priceTo = null;
-
-            var filtroString = JsonConvert.SerializeObject(filtroJson);
-
-            data.FilterOrder(filtroString);
-
-            await navigationService.Close(this, filtro);
         }
     }
 }

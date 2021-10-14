@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using System.Globalization;
 
 namespace Core.ViewModels
 {
@@ -64,6 +65,13 @@ namespace Core.ViewModels
         {
             get => selectedStatus;
             set => SetProperty(ref selectedStatus, value);
+        }
+
+        private string orderStatusOrderStr;
+        public string OrderStatusOrderStr
+        {
+            get => orderStatusOrderStr;
+            set => SetProperty(ref orderStatusOrderStr, value);
         }
 
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
@@ -166,7 +174,34 @@ namespace Core.ViewModels
         public double Total
         {
             get => total;
-            set => SetProperty(ref total, value);
+            set
+            {
+                SetProperty(ref total, value);
+                ConvertirTotalStr(Convert.ToDecimal(total));
+            }
+        }
+        private string totalOfOrderStr;
+        public string TotalOfOrderStr
+        {
+            get => totalOfOrderStr;
+            set
+            {
+                SetProperty(ref totalOfOrderStr, value);
+            }
+        }
+
+        private void ConvertirTotalStr(decimal total)
+        {
+            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                TotalOfOrderStr = Total.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                TotalOfOrderStr = Total.ToString("N2", new CultureInfo("en-US"));
+            }
+
+            var s = TotalOfOrderStr;
         }
 
         private MvxObservableCollection<AttachFile> attachFiles;
@@ -501,13 +536,16 @@ namespace Core.ViewModels
         {
             try
             {
+                var user = data.LoggedUser;
+
                 if (theOrder.id > 0)
                 {
                     EnableForEdit = false;
 
-                    var user = data.LoggedUser;
-
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
+
+                    AjustarEstado(user.Language, Order.orderStatus);
+
                     SelectedCustomer = Order.customer;
                     Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
                     TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
@@ -532,6 +570,9 @@ namespace Core.ViewModels
 
                     Order = theOrder;
                     Order.orderStatus = 1;
+
+                    AjustarEstado(user.Language, Order.orderStatus);
+
                     if (Order.customer != null)
                     {
                         SelectedCustomer = Order.customer;
@@ -556,6 +597,58 @@ namespace Core.ViewModels
             catch(Exception e)
             {
                 toastService.ShowError($"{e.Message}");
+            }
+        }
+
+        private void AjustarEstado(string language, int orderStatus)
+        {
+            if (language.ToLower() == "es" || language.Contains("spanish"))
+            {
+                switch (orderStatus)
+                {
+                    case 1:
+                        OrderStatusOrderStr = "Pendiente";
+                        break;
+                    case 2:
+                        OrderStatusOrderStr = "Aprobado";
+                        break;
+                    case 3:
+                        OrderStatusOrderStr = "Rechazado";
+                        break;
+                    case 4:
+                        OrderStatusOrderStr = "Remitado";
+                        break;
+                    case 5:
+                        OrderStatusOrderStr = "Despachado";
+                        break;
+                    case 6:
+                        OrderStatusOrderStr = "Entregado";
+                        break;
+                }
+            }
+            else
+            {
+                switch (orderStatus)
+                {
+                    case 1:
+                        OrderStatusOrderStr = "Pending";
+                        break;
+                    case 2:
+                        OrderStatusOrderStr = "Approved";
+                        break;
+                    case 3:
+                        OrderStatusOrderStr = "Rejected";
+                        break;
+                    case 4:
+                        OrderStatusOrderStr = "Forwarded";
+                        break;
+                    case 5:
+                        OrderStatusOrderStr = "Dispatched";
+                        break;
+                    case 6:
+                        OrderStatusOrderStr = "Delivered";
+                        break;
+                }
             }
         }
 

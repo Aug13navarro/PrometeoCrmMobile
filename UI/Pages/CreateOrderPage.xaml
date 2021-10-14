@@ -80,7 +80,7 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
-            </Grid.RowDefinitions>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -118,7 +118,7 @@
                                 <Label
                                     HorizontalOptions="Center"                                    
                                     VerticalOptions="Center"
-                                    Text="{Binding Order.orderStatusStr}"
+                                    Text="{Binding OrderStatusOrderStr, Mode=TwoWay}"
                                     Style="{StaticResource DefaultLabel}">
 
                                 </Label>
@@ -315,25 +315,47 @@
                                      BackgroundColor="Transparent"/>
                         </StackLayout>-->
 
+                        
+
                         <StackLayout Orientation="Horizontal"
-                                 Margin="0,5">
+                                     Margin="0,5">
                             <Label Text="{x:Static resources:AppResources.DeliveryAddress}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
 
                             <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
+                                Margin="0"
+                                Padding="0"
+                                HorizontalOptions="FillAndExpand">
                                 <Picker
                                     IsEnabled="{Binding EnableForEdit}"
                                     HorizontalOptions="FillAndExpand"
                                     Title="{x:Static resources:AppResources.Select}"
                                     ItemsSource="{Binding SelectedCustomer.Addresses}" ItemDisplayBinding="{Binding Address}" SelectedItem="{Binding CustomerAddress,Mode=TwoWay}">
 
-                                </Picker>
+                            </Picker>
                             </Frame>
+                            <!--<ImageButton
+                                BackgroundColor="Transparent"
+                                Source="editar_imagen.png"
+                                WidthRequest="30"
+                                Margin="0"
+                                Padding="0">
+                                
+                            </ImageButton>-->
                         </StackLayout>
+                        
+                        <!--<Frame
+                            HeightRequest="100"
+                            Margin="0"
+                            Padding="0"
+                            HorizontalOptions="FillAndExpand">
+                                <Editor Grid.Column="0"
+                                        Keyboard="Text"
+                                        Placeholder="Ingresar dirección">
+                                    
+                                </Editor>
+                        </Frame>-->
 
-                        <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}" />
+                        <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}"/>
 
                         <Frame
                             Margin="0"
@@ -515,7 +537,7 @@
 
             <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
-            <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', Total); IsVisible Order.products.Count > 0"
+            <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', TotalOfOrderStr); IsVisible Order.products.Count > 0"
                        TextColor="{StaticResource SecondaryColor}" FontAttributes="Bold" FontSize="Medium" VerticalTextAlignment="Center" />
         </StackLayout>
 
