@@ -69,7 +69,7 @@ namespace UI.Popups
 
             if (result.Quantity <= 0)
             {
-                toastService.ShowError("La cantPriceInputTextChangedyor a 1.");
+                toastService.ShowError("La cantidad deber ser 1 o mayor.");
                 return;
             }
 

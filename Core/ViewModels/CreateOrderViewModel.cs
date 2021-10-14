@@ -348,7 +348,7 @@ namespace Core.ViewModels
                     total = Convert.ToDecimal(Total),
                     cuenta = SelectedCustomer.ExternalId,
                     divisionCuentaId = Company.externalId.Value,
-                    talon = 28,                          //puede ser null
+                    talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
                     tipoCuentaId = 1,                    //puede ser null
                     tipoServicioId = 50,                  //puede ser null
@@ -752,16 +752,22 @@ namespace Core.ViewModels
             {
                 OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
 
-                var product = new OrderNote.ProductOrder
+                if (detail != null)
                 {
-                    discount = detail.Discount,
-                    price = detail.product.price,
-                    quantity = detail.Quantity,
-                    subtotal = detail.Total,
-                    companyProductPresentationId = detail.productId,
-                    companyProductPresentation = detail.product,
-                };
+                    var product = new OrderNote.ProductOrder
+                    {
+                        discount = detail.Discount,
+                        price = detail.product.price,
+                        quantity = detail.Quantity,
+                        subtotal = detail.Total,
+                        companyProductPresentationId = detail.productId,
+                        companyProductPresentation = detail.product,
+                    };
 
+                    Order.products.Add(product);
+
+                    ActualizarTotal(Order.products);
+                }
                 //if (detail != null)
                 //{
                 //    detail.product.Id = Order.products.Any() ? Order.products.Max(d => d.companyProductPresentationId) + 1 : 1;
@@ -769,11 +775,6 @@ namespace Core.ViewModels
                 //    detail.Total = CalcularTotal(detail);
                     
                 //}
-
-                Order.products.Add(product);
-
-                ActualizarTotal(Order.products);
-
             }
             catch (Exception e)
             {
