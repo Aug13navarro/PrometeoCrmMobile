@@ -95,31 +95,39 @@ namespace Core.ViewModels
 
                 PaginatedList<Customer> customers = await prometeoApiService.GetCustomers(requestData);
 
-                if (requestData.CurrentPage == 1)
+                if (customers.Results.Count() > 0)
                 {
-                    //var allCustomer = await prometeoApiService.GetAllCustomer(requestData.UserId, true, 3, user.Token);
+                    if (requestData.CurrentPage == 1)
+                    {
+                        //var allCustomer = await prometeoApiService.GetAllCustomer(requestData.UserId, true, 3, user.Token);
 
-                    Customers.Clear();
+                        Customers.Clear();
 
-                    Customers.AddRange(customers.Results.Select(x => new CustomerVm() { Customer = x }));
+                        Customers.AddRange(customers.Results.Select(x => new CustomerVm() { Customer = x }));
 
-                    isSearchInProgress = false;
+                        IsSearchInProgress = false;
+                    }
+                    else
+                    {
+
+                        if (newSearch)
+                        {
+                            Customers.Clear();
+                        }
+
+                        Customers.AddRange(customers.Results.Select(c => new CustomerVm() { Customer = c }));
+
+                        CurrentPage = customers.CurrentPage;
+                        TotalPages = customers.TotalPages;
+
+                        IsSearchInProgress = false;
+                    }
                 }
                 else
                 {
-
-                    if (newSearch)
-                    {
-                        Customers.Clear();
-                    }
-
-                    Customers.AddRange(customers.Results.Select(c => new CustomerVm() { Customer = c }));
-
-                    CurrentPage = customers.CurrentPage;
-                    TotalPages = customers.TotalPages;
-
-                    IsSearchInProgress = false;
+                    Customers.Clear();
                 }
+
             }
             catch (Exception ex)
             {

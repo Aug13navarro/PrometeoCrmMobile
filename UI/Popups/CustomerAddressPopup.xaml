@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UI.Popups.CustomerAddressPopup"
+             xmlns:Popups="clr-namespace:UI.Popups;assembly=UI">
+    <Frame BorderColor="Gray" CornerRadius="10" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" HeightRequest="300">
+        <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label FontSize="Medium" TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="StartAndExpand" VerticalOptions="Center" x:Name="descriptionLabel" />
+                <Image Source="ic_close.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="CancelButtonClicked" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+            
+            <BoxView BackgroundColor="LightGray" HeightRequest="1" Margin="0,0,0,5" />
+
+            <ListView
+                x:Name="listAddress"
+                VerticalOptions="Center">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout>
+                                <Label
+                                    Text="{Binding Address}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"></TapGestureRecognizer>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </Frame>
+</Popups:BasePopupPage>

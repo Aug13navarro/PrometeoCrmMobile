@@ -123,29 +123,38 @@ namespace UI.Pages
             if (ViewModel.EstadoId >= 4)
             {
                 Application.Current.MainPage.DisplayAlert(
-                    "Info", AppResources.NoEditOpportunity, AppResources.Accept);
+                    AppResources.InfoTitle, AppResources.NoEditOpportunity, AppResources.Accept);
                 return;
             }
 
-            //ViewModel.AjustarBotonesEstados(4);
-
-            var label = (Image)sender;
-            object parameter = ((TapGestureRecognizer)label.GestureRecognizers[0]).CommandParameter;
-
-            var popup = new CerrarOportunidadPopup();
-
-            popup.GanadaTapped += (s, args) =>
+            if (ViewModel.Opportunity.Id > 0)
             {
-                ViewModel.WinOpportunityCommand.Execute(parameter);
-                PopupNavigation.Instance.PopAsync(false);
-            };
-            popup.PerdidaTapped += (s, args) =>
-            {
-                ViewModel.LostOpportunityCommand.Execute(parameter);
-                PopupNavigation.Instance.PopAsync(false);
-            };
+                //ViewModel.AjustarBotonesEstados(4);
 
-            PopupNavigation.Instance.PushAsync(popup);
+                var label = (Image)sender;
+                object parameter = ((TapGestureRecognizer)label.GestureRecognizers[0]).CommandParameter;
+
+                var popup = new CerrarOportunidadPopup();
+
+                popup.GanadaTapped += (s, args) =>
+                {
+                    ViewModel.WinOpportunityCommand.Execute(parameter);
+                    PopupNavigation.Instance.PopAsync(false);
+                };
+                popup.PerdidaTapped += (s, args) =>
+                {
+                    ViewModel.LostOpportunityCommand.Execute(parameter);
+                    PopupNavigation.Instance.PopAsync(false);
+                };
+
+                PopupNavigation.Instance.PushAsync(popup);
+            }
+            else
+            {
+                Application.Current.MainPage.DisplayAlert
+                    (AppResources.InfoTitle, AppResources.InfoTextCloseOpportunity, AppResources.Accept);
+                return;
+            }
         }
     }
 }

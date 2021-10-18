@@ -142,7 +142,7 @@
     <value>Raz. Soc.</value>
   </data>
   <data name="CloseOpportunity" xml:space="preserve">
-    <value>Close Opportunity</value>
+    <value>Cerrar Oportunidad</value>
   </data>
   <data name="CloseSession" xml:space="preserve">
     <value>Cerrar Sesión</value>
@@ -236,6 +236,12 @@
   </data>
   <data name="Hello" xml:space="preserve">
     <value>Hola</value>
+  </data>
+  <data name="InfoTextCloseOpportunity" xml:space="preserve">
+    <value>Debe registrar primero la oportunidad para poder cerrarla</value>
+  </data>
+  <data name="InfoTitle" xml:space="preserve">
+    <value>Información</value>
   </data>
   <data name="Loggin" xml:space="preserve">
     <value>Iniciando sesión...</value>
@@ -341,6 +347,9 @@
   </data>
   <data name="Select" xml:space="preserve">
     <value>Seleccionar</value>
+  </data>
+  <data name="SelectAddressTitle" xml:space="preserve">
+    <value>Seleccionar Dirección</value>
   </data>
   <data name="Since" xml:space="preserve">
     <value>Desde</value>

@@ -318,42 +318,29 @@
                         
 
                         <StackLayout Orientation="Horizontal"
-                                     Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.DeliveryAddress}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                                     Margin="0">
+                            <Label
+                                Text="{x:Static resources:AppResources.DeliveryAddress}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
 
-                            <Frame
-                                Margin="0"
-                                Padding="0"
-                                HorizontalOptions="FillAndExpand">
-                                <Picker
-                                    IsEnabled="{Binding EnableForEdit}"
-                                    HorizontalOptions="FillAndExpand"
-                                    Title="{x:Static resources:AppResources.Select}"
-                                    ItemsSource="{Binding SelectedCustomer.Addresses}" ItemDisplayBinding="{Binding Address}" SelectedItem="{Binding CustomerAddress,Mode=TwoWay}">
-
-                            </Picker>
-                            </Frame>
-                            <!--<ImageButton
+                            <ImageButton
                                 BackgroundColor="Transparent"
                                 Source="editar_imagen.png"
-                                WidthRequest="30"
-                                Margin="0"
-                                Padding="0">
-                                
-                            </ImageButton>-->
+                                WidthRequest="25"
+                                Command="{Binding CustomerAddressCommand}"
+                                IsEnabled="{Binding EnableForEdit}">
+
+                            </ImageButton>
                         </StackLayout>
-                        
-                        <!--<Frame
-                            HeightRequest="100"
+                        <Frame
                             Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
-                                <Editor Grid.Column="0"
-                                        Keyboard="Text"
-                                        Placeholder="Ingresar dirección">
-                                    
-                                </Editor>
-                        </Frame>-->
+                            Padding="5,0,0,0">
+                            <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" 
+                                    IsEnabled="{Binding EnableForEdit}"
+                                    Style="{StaticResource DefaultEditor}"
+                                    AutoSize="TextChanges" x:Name="editorAddress"
+                                    Text="{Binding Order.DeliveryAddress, Mode=TwoWay}" 
+                                    MaxLength="300" HeightRequest="100"/>
+                        </Frame>
 
                         <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}"/>
 
@@ -361,7 +348,8 @@
                             Margin="0"
                             Padding="5,0,0,0">
                             <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" Style="{StaticResource DefaultEditor}"
-                                    AutoSize="TextChanges" Text="{Binding Order.Description}" MaxLength="300" HeightRequest="100"/>
+                                    AutoSize="TextChanges" Text="{Binding Order.Description}" MaxLength="300" HeightRequest="100"
+                                    IsEnabled="{Binding EnableForEdit}"/>
                         </Frame>
 
                     </StackLayout>

@@ -237,6 +237,12 @@
   <data name="Hello" xml:space="preserve">
     <value>Hello</value>
   </data>
+  <data name="InfoTextCloseOpportunity" xml:space="preserve">
+    <value>You must first register the opportunity to be able to close it</value>
+  </data>
+  <data name="InfoTitle" xml:space="preserve">
+    <value>Information</value>
+  </data>
   <data name="Loggin" xml:space="preserve">
     <value>Logging in...</value>
   </data>
@@ -257,6 +263,9 @@
   </data>
   <data name="NOCCustomer" xml:space="preserve">
     <value>N of OC Customer</value>
+  </data>
+  <data name="NoCustomersFound" xml:space="preserve">
+    <value>No customers found</value>
   </data>
   <data name="NoEditOpportunity" xml:space="preserve">
     <value>If the Opportunity is closed is not possible edit it</value>
@@ -341,6 +350,9 @@
   </data>
   <data name="Select" xml:space="preserve">
     <value>Select</value>
+  </data>
+  <data name="SelectAddressTitle" xml:space="preserve">
+    <value>Select Addres</value>
   </data>
   <data name="Since" xml:space="preserve">
     <value>Since</value>

@@ -4,6 +4,7 @@ using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
 using System;
+using System.Collections.Generic;
 using UI.Popups;
 
 namespace UI.Pages
@@ -19,7 +20,25 @@ namespace UI.Pages
         {
             base.OnViewModelSet();
             ViewModel.ShowEditProductPopup += OnShowEditProductPopup;
+            ViewModel.ShowAddressPopup += OnShowCustomerAddressPopup;
 
+        }
+
+        private async void OnShowCustomerAddressPopup(object sender, List<CustomerAddress> addresses)
+        {
+            var popup = new CustomerAddressPopup(addresses);
+
+            popup.OkTapped += async (s, args) =>
+            {
+                await PopupNavigation.Instance.PopAsync(false);
+
+                if (!string.IsNullOrWhiteSpace(args))
+                {
+                    editorAddress.Text = args;
+                }
+            };
+
+            await PopupNavigation.Instance.PushAsync(popup);
         }
 
         private async void OnShowEditProductPopup(object sender, Product product)

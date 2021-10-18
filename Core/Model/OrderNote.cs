@@ -1,12 +1,13 @@
 ﻿using Core.Helpers;
 using MvvmCross.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 
 namespace Core.Model
 {
-    public class OrderNote
+    public class OrderNote 
     {
         public int  id { get; set; }
         public int? opportunityId { get; set; }
@@ -123,6 +124,23 @@ namespace Core.Model
         public int PlacePayment { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public string DeliveryResponsible { get; set; }
+
+        //private string deliveryAddress;
+
+        //public event PropertyChangedEventHandler PropertyChanged;
+
+        //public string DeliveryAddress
+        //{
+        //    get => deliveryAddress;
+        //    set
+        //    {
+        //        if (deliveryAddress != value)
+        //        {
+        //            deliveryAddress = value;
+        //            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(deliveryAddress)));
+        //        }
+        //    }
+        //}
         public string DeliveryAddress { get; set; }
 
         public class ProductOrder

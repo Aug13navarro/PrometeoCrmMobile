@@ -105,29 +105,6 @@ namespace Core.ViewModels
             }
         }
 
-        //private async void SearchQueryAsync()
-        //{
-        //    if (Query != null)
-        //    {
-        //        var requestData = new ProductList
-        //        {
-        //            companyId = 7,
-        //            currentPage = 50,
-        //            pageSize = 1,
-        //            query = Query,
-        //            sort = null,
-        //        };
-
-        //        if (Query == "")
-        //        {
-        //            await SearchProductsAsync(requestData);
-        //        }
-        //        else
-        //        {
-        //            await SearchProductsAsync(requestData, true);
-        //        }
-        //    }
-        //}
 
         public override async Task Initialize()
         {

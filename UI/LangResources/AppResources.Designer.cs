@@ -421,6 +421,24 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must first register the opportunity to be able to close it.
+        /// </summary>
+        internal static string InfoTextCloseOpportunity {
+            get {
+                return ResourceManager.GetString("InfoTextCloseOpportunity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information.
+        /// </summary>
+        internal static string InfoTitle {
+            get {
+                return ResourceManager.GetString("InfoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logging in....
         /// </summary>
         internal static string Loggin {
@@ -489,6 +507,15 @@ namespace UI.LangResources {
         internal static string NOCCustomer {
             get {
                 return ResourceManager.GetString("NOCCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No customers found.
+        /// </summary>
+        internal static string NoCustomersFound {
+            get {
+                return ResourceManager.GetString("NoCustomersFound", resourceCulture);
             }
         }
         
@@ -732,6 +759,15 @@ namespace UI.LangResources {
         internal static string Select {
             get {
                 return ResourceManager.GetString("Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Addres.
+        /// </summary>
+        internal static string SelectAddressTitle {
+            get {
+                return ResourceManager.GetString("SelectAddressTitle", resourceCulture);
             }
         }
         

@@ -141,18 +141,40 @@ namespace UI.Popups
                 }
                 else // para cuando el idioma esta en español
                 {
-                    var Price = double.Parse(priceInput.Text);
-                    var Quantity = int.Parse(quantityInput.Text);
-                    var Discount = int.Parse(discountInput.Text);
-
-                    double tempTotal = Price * Quantity;
-                    if (Discount == 0)
+                    var languages = CultureInfo.CurrentCulture.Name;
+                    if (languages == "es-US")
                     {
-                        return tempTotal;
+                        var labelPrice = priceInput.Text.Replace(",", ".");
+
+                        var Price = double.Parse(labelPrice);
+                        var Quantity = int.Parse(quantityInput.Text);
+                        var Discount = int.Parse(discountInput.Text);
+
+                        double tempTotal = Price * Quantity;
+                        if (Discount == 0)
+                        {
+                            return tempTotal;
+                        }
+                        else
+                        {
+                            return tempTotal - (tempTotal * Discount / 100);
+                        }
                     }
                     else
                     {
-                        return tempTotal - (tempTotal * Discount / 100);
+                        var Price = double.Parse(priceInput.Text);
+                        var Quantity = int.Parse(quantityInput.Text);
+                        var Discount = int.Parse(discountInput.Text);
+
+                        double tempTotal = Price * Quantity;
+                        if (Discount == 0)
+                        {
+                            return tempTotal;
+                        }
+                        else
+                        {
+                            return tempTotal - (tempTotal * Discount / 100);
+                        }
                     }
                 }
             }

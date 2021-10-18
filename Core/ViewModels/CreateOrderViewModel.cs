@@ -221,6 +221,7 @@ namespace Core.ViewModels
         // Events
         public event EventHandler<Product> ShowEditProductPopup;
         public event EventHandler NewOrderCreated;
+        public event EventHandler<List<CustomerAddress>> ShowAddressPopup;
 
         // Commands
         public Command SelectClientCommand { get; }
@@ -228,6 +229,7 @@ namespace Core.ViewModels
         public Command EditProductCommand { get; }
         public Command RemoveProductCommand { get; }
         public Command CerrarOportunidad { get; }
+        public Command CustomerAddressCommand { get; }
 
         public Command SavePedidoCommand { get; }
 
@@ -256,6 +258,7 @@ namespace Core.ViewModels
                 AddProductCommand = new Command(async () => await AddProductAsync());
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
+                CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
 
@@ -270,6 +273,27 @@ namespace Core.ViewModels
             catch(Exception e)
             {
                 Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
+            }
+        }
+
+        private async Task CustomerAddressMethod()
+        {
+            if (SelectedCustomer != null)
+            {
+                ShowAddressPopup?.Invoke(this, SelectedCustomer.Addresses.ToList());
+            }
+            else
+            {
+                if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                {
+                    await Application.Current.MainPage.DisplayAlert("","","Aceptar");
+                    return;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("", "", "Acept");
+                    return;
+                }
             }
         }
 
@@ -319,9 +343,8 @@ namespace Core.ViewModels
                     SelectedCustomer == null ||
                     Condition == null ||
                     TypeOfRemittance == null ||
-                    PlaceOfPayment == null ||
-                    CustomerAddress == null
-                    )
+                    PlaceOfPayment == null
+                    )//|| CustomerAddress == null
                 {
                     if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
                     {
@@ -352,7 +375,7 @@ namespace Core.ViewModels
                     tipoComprobante = 8,                 //puede ser null
                     tipoCuentaId = 1,                    //puede ser null
                     tipoServicioId = 50,                  //puede ser null
-                    DeliveryAddress = customerAddress.Address,
+                    DeliveryAddress = Order.DeliveryAddress,
                     DeliveryDate = Order.DeliveryDate,
                     DeliveryResponsible = Order.DeliveryResponsible,
                     OCCustomer = Order.OCCustomer,
@@ -415,8 +438,16 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); 
-                return;
+                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "Aceptar");
+                    return;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Attention", $"{e.Message}", "Acept");
+                    return;
+                }
             }
         }
 
@@ -727,6 +758,7 @@ namespace Core.ViewModels
         {
             editingOpportunityDetail = null;
         }
+
         private async Task SelectClientAsync()
         {
             var customer = await navigationService.Navigate<CustomersViewModel, Customer>();

@@ -39,11 +39,17 @@
                HorizontalTextAlignment="Center"
                Style="{StaticResource ErrorLabel}" />
 
-        <Label Text="No se encontraron clientes."
+        <!--<Label Text="No se encontraron clientes."
                Mvx:Bi.nd="IsVisible And(Customers.Count == 0, !Error, !IsSearchInProgress)"
                VerticalOptions="CenterAndExpand"
                HorizontalTextAlignment="Center"
-               Style="{StaticResource LoadingLabel}" />
+               Style="{StaticResource LoadingLabel}" />-->
+        
+        <StackLayout 
+            VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible And(Customers.Count == 0, !Error, !IsSearchInProgress)">
+            <Image Source="ic_no_cuenta.png" HorizontalOptions="Center"/>
+            <Label Text="{x:Static resources:AppResources.NoCustomersFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
+        </StackLayout>
 
         <ListView x:Name="customersList"
                   ItemsSource="{Binding Customers}"
