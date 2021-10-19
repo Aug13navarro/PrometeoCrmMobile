@@ -700,6 +700,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Registered.
+        /// </summary>
+        internal static string Registered {
+            get {
+                return ResourceManager.GetString("Registered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remittance Type.
         /// </summary>
         internal static string RemittanceType {

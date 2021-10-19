@@ -262,7 +262,7 @@ namespace Core.ViewModels
                 {
                     IsLoading = true;
 
-                    var opportunities = await prometeoApiService.GetOppByfilter(filtro,user.Token);
+                    var opportunities = await prometeoApiService.GetOppByfilter(filtro,user.Language.ToLower() , user.Token);
 
                     Opportunities.Clear();
 
@@ -303,7 +303,7 @@ namespace Core.ViewModels
                 
                 var request = new ProductList();
 
-                var opportunities = await prometeoApiService.GetOp(requestData, "/api/Opportunity/GetListByCustomerIdAsync", user.Token);
+                var opportunities = await prometeoApiService.GetOp(requestData, user.Language.ToLower(), user.Token);
 
                 if (newSearch)
                 {

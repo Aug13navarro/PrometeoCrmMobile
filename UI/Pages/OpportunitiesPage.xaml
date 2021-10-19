@@ -126,7 +126,7 @@
                                         <Label>
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="{x:Static resources:AppResources.Date}" FontAttributes="Bold" />
+                                                    <Span Text="{x:Static resources:AppResources.Registered}" FontAttributes="Bold" />
                                                     <Span Text=": " FontAttributes="Bold" />
                                                     <Span Text="{Binding createDt, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
@@ -159,15 +159,18 @@
                                                 <FormattedString>
                                                     <Span Text="{x:Static resources:AppResources.Products}" FontAttributes="Bold" />
                                                     <Span Text=": " FontAttributes="Bold" />
-                                                    <Span Text="{Binding ProductsDescription}" TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
 
-                                        <Label>
+                                        <Label Text="{Binding ProductsDescription}"
+                                               TextColor="{StaticResource PrimaryColor}">
+                                        </Label>
+
+                                        <Label HorizontalOptions="End" FontAttributes="Bold">
                                             <Label.FormattedText>
                                                 <FormattedString>
-                                                    <Span Text="Total: " FontAttributes="Bold" />
+                                                    <Span Text="Total: $" FontAttributes="Bold" />
                                                     <Span Text="{Binding totalPrice}" TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>

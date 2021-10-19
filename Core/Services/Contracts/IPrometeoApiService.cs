@@ -29,11 +29,11 @@ namespace Core.Services.Contracts
         Task UpdateCustomer(Customer customer);
         Task<PaginatedList<Product>> GetAvailableProducts(ProductList productList, string token);
         //Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData);
-        Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData, string cadena, string token);
+        Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData, string lang, string token);
         Task SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity);
 
         Task<List<Opportunity>> GetOpportunietesTest(int userId);
-        Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token);
+        Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro,string lang, string token);
         Task<Opportunity> GetOppById(int id);
         Task SaveOpportunityEdit(OpportunityPost send, int id, string token, Opportunity opportunity);
         Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token, int companyId);
@@ -41,6 +41,7 @@ namespace Core.Services.Contracts
         Task<PaginatedList<OrderNote>> GetOrderNote(OrdersNotesPaginatedRequest requestData, string token);
         Task<PaginatedList<Sale>> GetSales(OrdersNotesPaginatedRequest requestData, string token);
         Task<IEnumerable<OrderNote>> GetOrdersByfilter(FilterOrderModel filtro, string token);
+        Task<IEnumerable<OpportunityStatus>> GetOpportunityStatus(string lang, string token);
         Task<OrderNote> GetOrdersById(int id, string token);
     }
 }

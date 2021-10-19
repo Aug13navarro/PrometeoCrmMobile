@@ -289,30 +289,47 @@ namespace Core.ViewModels
             }
         }
 
-        private void CargarEstados()
+        private async void CargarEstados()
         {
-            OpportunityStatuses.Add(new OpportunityStatus
+            try
             {
-                Id = 1,
-                name = "Análisis"
-            });
-            OpportunityStatuses.Add(new OpportunityStatus
+                var status = await prometeoApiService.GetOpportunityStatus(data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
+
+                foreach (var item in status)
+                {
+                    OpportunityStatuses.Add(new OpportunityStatus
+                    {
+                        Id = item.Id,
+                        name = item.name,
+                    });
+                }
+            }
+            catch (Exception e)
             {
-                Id = 2,
-                name = "Propuesta"
-            }); OpportunityStatuses.Add(new OpportunityStatus
-            {
-                Id = 3,
-                name = "Negociación"
-            }); OpportunityStatuses.Add(new OpportunityStatus
-            {
-                Id = 4,
-                name = "Cerrada Ganada"
-            }); OpportunityStatuses.Add(new OpportunityStatus
-            {
-                Id = 5,
-                name = "Cerrada Perdida"
-            });
+                var s = e.Message;
+            }
+            //OpportunityStatuses.Add(new OpportunityStatus
+            //{
+            //    Id = 1,
+            //    name = "Análisis"
+            //});
+            //OpportunityStatuses.Add(new OpportunityStatus
+            //{
+            //    Id = 2,
+            //    name = "Propuesta"
+            //}); OpportunityStatuses.Add(new OpportunityStatus
+            //{
+            //    Id = 3,
+            //    name = "Negociación"
+            //}); OpportunityStatuses.Add(new OpportunityStatus
+            //{
+            //    Id = 4,
+            //    name = "Cerrada Ganada"
+            //}); OpportunityStatuses.Add(new OpportunityStatus
+            //{
+            //    Id = 5,
+            //    name = "Cerrada Perdida"
+            //});
 
         }
 

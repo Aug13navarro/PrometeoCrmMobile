@@ -509,12 +509,14 @@ namespace Core.Services
             }
         }
 
-        public async Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData,string cadena, string token)
+        public async Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData,string lang, string token)
         {
             try
             {
                 if (offlineDataService.IsWifiConection)
                 {
+                    var url = $"/api/Opportunity/GetListByCustomerIdAsync?language={lang}";
+
                     var lista = new List<Opportunity>();
 
                     var content = JsonConvert.SerializeObject(requestData);
@@ -524,7 +526,7 @@ namespace Core.Services
                     httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var response = await client.GetStringAsync($"{cadena}");
+                    var response = await client.GetStringAsync($"{url}");
 
                     if (response != null)
                     {
@@ -601,11 +603,11 @@ namespace Core.Services
             }
         }
 
-        public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string token)
+        public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro,string lang,  string token)
         {
             try
             {
-                var url = $"api/Opportunity/SearchOpportunityAsync";
+                var url = $"api/Opportunity/SearchOpportunityAsync?language={lang}";
 
                 var dto = JsonConvert.SerializeObject(filtro);
 
@@ -821,6 +823,26 @@ namespace Core.Services
             catch
             {
                 throw;
+            }
+        }
+
+        public async Task<IEnumerable<OpportunityStatus>> GetOpportunityStatus(string lang, string token)
+        {
+            try
+            {
+                var url = $"/api/OpportunityStatus?language={lang}";
+
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.GetAsync($"{url}");
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<IEnumerable<OpportunityStatus>>(resultado);
+            }
+            catch
+            {
+                throw new Exception("Error");
             }
         }
 

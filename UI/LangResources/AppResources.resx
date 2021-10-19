@@ -330,6 +330,9 @@
   <data name="RecoverPassInfo" xml:space="preserve">
     <value>You will receive an email with the instructions to recover your password</value>
   </data>
+  <data name="Registered" xml:space="preserve">
+    <value>Registered</value>
+  </data>
   <data name="RemittanceType" xml:space="preserve">
     <value>Remittance Type</value>
   </data>
