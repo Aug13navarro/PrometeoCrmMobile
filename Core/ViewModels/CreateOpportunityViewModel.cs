@@ -136,9 +136,10 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IToastService toastService;
+        private readonly IOfflineDataService offlineDataService;
 
         public CreateOpportunityViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
-                                          IToastService toastService)
+                                          IToastService toastService, IOfflineDataService offlineData)
         {
             try
             {
@@ -147,6 +148,7 @@ namespace Core.ViewModels
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
                 this.toastService = toastService;
+                this.offlineDataService = offlineData;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
@@ -173,9 +175,20 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
+                if (offlineDataService.IsWifiConection)
+                {
 
-                Company = Companies.FirstOrDefault();
+                    Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
+
+                    Company = Companies.FirstOrDefault();
+                }
+                else
+                {
+                    var d = await offlineDataService.SearchCompanies();
+
+                    Companies = new MvxObservableCollection<Company>(d);
+                    Company = Companies.FirstOrDefault();
+                }
             }
             catch (Exception e)
             {
@@ -482,9 +495,6 @@ namespace Core.ViewModels
 
         private async Task AddProductAsync()
         {
-            //var oppCompany = new Core.Model.OpportunityProducts{ CompanyId = Company.Id};
-            //var ViewModelProduct =new ProductsViewModel(prometeoApiService, navigationService, Company.Id);
-
             OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
 
             if (detail != null)
@@ -541,7 +551,7 @@ namespace Core.ViewModels
         {
             try
             {
-                if(EstadoId == 4 || EstadoId == 5)
+                if (EstadoId == 4 || EstadoId == 5)
                 {
                     toastService.ShowError("Si la Oportunidad se encuentra cerrada no es posible editarla.");
                     return;
@@ -576,21 +586,34 @@ namespace Core.ViewModels
                 send.opportunityProducts = listaProductos(Opportunity.Details);
 
                 var id = Opportunity.Id;
-
-                if (id == 0)
+                if (offlineDataService.IsWifiConection)
                 {
-                    await prometeoApiService.SaveOpportunityCommand(send, user.Token,Opportunity);
 
+                    if (id == 0)
+                    {
+                        await prometeoApiService.SaveOpportunityCommand(send, user.Token, Opportunity);
+
+                    }
+                    else
+                    {
+                        await prometeoApiService.SaveOpportunityEdit(send, id, user.Token, Opportunity);
+
+                    }
                 }
                 else
                 {
-                    await prometeoApiService.SaveOpportunityEdit(send, id, user.Token, Opportunity);
-                    
+                    if(id == 0)
+                    {
+                        offlineDataService.SaveOpportunity(Opportunity);
+                    }
+                    else
+                    {
+
+                    }
                 }
 
                 await navigationService.Close(this);
                 NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
-                
             }
             catch (Exception e)
             {

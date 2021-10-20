@@ -1,3 +1,4 @@
+using Core.Model;
 using Core.ViewModels;
 using Core.ViewModels.Model;
 using MvvmCross.Forms.Presenters.Attributes;
@@ -36,10 +37,10 @@ namespace UI.Pages
                 return;
             }
 
-            var currentCustomer = (CustomerVm)e.Item;
-            CustomerVm lastCustomerInList = ViewModel.Customers[ViewModel.Customers.Count - 1];
+            var currentCustomer = (Customer)e.Item;
+            Customer lastCustomerInList = ViewModel.Customers[ViewModel.Customers.Count - 1];
 
-            if (currentCustomer.Customer.Id == lastCustomerInList.Customer.Id)
+            if (currentCustomer.Id == lastCustomerInList.Id)
             {
                 await ViewModel.LoadMoreCustomersCommand.ExecuteAsync();
             }

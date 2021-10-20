@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
+using System.Threading;
 using Android.App;
 using Android.Content.PM;
 using Android.Content.Res;
@@ -10,7 +12,6 @@ using Core.Services.Contracts;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Forms.Platforms.Android.Views;
-//using Plugin.CurrentActivity;
 using PrometeoCrmMobile.Droid.Services;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
@@ -22,14 +23,14 @@ namespace PrometeoCrmMobile.Droid
 {
     [Activity(
         Label = "PrometeoCRM",
-        //Icon = "@drawable/icono",
-        //RoundIcon = "@drawable/ic_launcher",
         Theme = "@style/MainTheme",
     MainLauncher = false,
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
     LaunchMode = LaunchMode.SingleTask)]
     public class MainActivity : MvxFormsAppCompatActivity<MvxFormsAndroidSetup<App, FormsApp>, App, FormsApp>
     {
+        private ApplicationData data;
+
         private void initFontScale()
         {
             Configuration configuration = Resources.Configuration;
@@ -68,6 +69,38 @@ namespace PrometeoCrmMobile.Droid
                 var s = e.Message;
                 throw;
             }
+        }
+
+        protected override void OnStart() //cuando se inicia
+        {
+            base.OnStart();
+
+            data = new ApplicationData();
+
+            CultureInfo language;
+
+            if (data.LoggedUser != null)
+            {
+                string lang = data.LoggedUser.Language.ToLower();
+
+                if (lang == "es" || lang.Contains("spanish"))
+                    language = CultureInfo.GetCultures(CultureTypes.NeutralCultures).ToList().First(element => element.EnglishName.Contains("Spanish"));
+                else
+                    language = CultureInfo.GetCultures(CultureTypes.NeutralCultures).ToList().First(element => element.EnglishName.Contains("English"));
+
+                Thread.CurrentThread.CurrentUICulture = language;
+                MessagingCenter.Send(this, "LangChanged", language);
+            }
+        }
+
+        protected override void OnResume() //cuando se inicia
+        {
+            base.OnResume();
+        }
+
+        protected override void OnPause() //cuando se miniminiza
+        {
+            base.OnPause();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)

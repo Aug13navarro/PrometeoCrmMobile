@@ -17,7 +17,7 @@ namespace Core.Services.Contracts
         Task<PaginatedList<TreatmentAlert>> GetAllNotifications(NotificationsPaginatedRequest requestData);
         Task SetViewedNotification(int notificationId);
         Task<PaginatedList<Customer>> GetCustomers(CustomersPaginatedRequest requestData);
-        Task<List<Customer>> GetAllCustomer(int userId, bool isParent, int typeCustomer, string token);
+        Task<List<Customer>> GetAllCustomer(int userId, bool isParent, int typeCustomer, string token, int companyId);
         Task<List<Customer>> GetCustomersOld(CustomersOldRequest requestData);
         Task CreateCustomer(Customer requestData);
         Task<List<CustomerType>> GetCustomerTypes();

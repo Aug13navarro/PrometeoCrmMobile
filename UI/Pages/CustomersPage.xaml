@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <Views:MvxContentPage x:TypeArguments="ViewModels:CustomersViewModel"
                       xmlns="http://xamarin.com/schemas/2014/forms"
                       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -74,7 +73,7 @@
                                         <FormattedString>
                                             <Span Text="{x:Static resources:AppResources.Name}" FontAttributes="Bold" />
                                             <Span Text=": " FontAttributes="Bold"></Span>
-                                            <Span Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" />
+                                            <Span Text="{Binding CompanyName}" TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
@@ -83,7 +82,7 @@
                                         <FormattedString>
                                             <Span Text="{x:Static resources:AppResources.BusinessName}" FontAttributes="Bold" />
                                             <Span Text=": " FontAttributes="Bold"></Span>
-                                            <Span Text="{Binding Customer.BusinessName}" TextColor="{StaticResource PrimaryColor}" />
+                                            <Span Text="{Binding BusinessName}" TextColor="{StaticResource PrimaryColor}" />
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
@@ -102,8 +101,8 @@
                                     <Label Text="{x:Static resources:AppResources.Contacts}" FontAttributes="Bold" />
                                 </StackLayout>
 
-                                <Controls:Repeater ItemsSource="{Binding Customer.Contacts}"
-                                                   Mvx:Bi.nd="IsVisible And(IsContactsVisible, Customer.Contacts.Count > 0)">
+                                <Controls:Repeater ItemsSource="{Binding Contacts}"
+                                                   Mvx:Bi.nd="IsVisible And(IsContactsVisible, Contacts.Count > 0)">
                                     <Controls:Repeater.ItemTemplate>
                                         <DataTemplate>
                                             <ContentView>
@@ -126,7 +125,7 @@
                                     </Controls:Repeater.ItemTemplate>
                                 </Controls:Repeater>
 
-                                <Label Text="No hay contactos" Mvx:Bi.nd="IsVisible And(IsContactsVisible, Customer.Contacts.Count == 0)" />
+                                <Label Text="No hay contactos" Mvx:Bi.nd="IsVisible And(IsContactsVisible, Contacts.Count == 0)" />
                             </StackLayout>
                         </Frame>
                     </ViewCell>

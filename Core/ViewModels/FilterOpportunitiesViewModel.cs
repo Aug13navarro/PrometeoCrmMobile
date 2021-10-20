@@ -114,6 +114,7 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IToastService toastService;
+        private readonly IOfflineDataService offlineDataService;
 
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
         {
@@ -149,6 +150,7 @@ namespace Core.ViewModels
             this.navigationService = Mvx.Resolve<IMvxNavigationService>();
             this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
             this.toastService = Mvx.Resolve<IToastService>();
+            this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
 
             SelectClientCommand = new Command(async () => await SelectClientAsync());
             SelectProductCommand = new Command(async () => await SelectProdcutoAsync());
@@ -173,14 +175,24 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
-
-                foreach (var item in d)
+                if (offlineDataService.IsWifiConection)
                 {
-                    Companies.Add(item);
-                }
+                    var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
 
-                //CargarFiltroGuardado();
+                    foreach (var item in d)
+                    {
+                        Companies.Add(item);
+                    }
+                }
+                else
+                {
+                    var d = await offlineDataService.SearchCompanies();
+                    
+                    foreach (var item in d)
+                    {
+                        Companies.Add(item);
+                    }
+                }
 
             }
             catch (Exception e)
@@ -251,7 +263,6 @@ namespace Core.ViewModels
         private async Task SelectClientAsync()
         {
             var customer = await navigationService.Navigate<CustomersViewModel, Customer>();
-            //int customerI = await popupnavigation
             try
             {
                 //IsLoading = true;
@@ -308,29 +319,6 @@ namespace Core.ViewModels
             {
                 var s = e.Message;
             }
-            //OpportunityStatuses.Add(new OpportunityStatus
-            //{
-            //    Id = 1,
-            //    name = "Análisis"
-            //});
-            //OpportunityStatuses.Add(new OpportunityStatus
-            //{
-            //    Id = 2,
-            //    name = "Propuesta"
-            //}); OpportunityStatuses.Add(new OpportunityStatus
-            //{
-            //    Id = 3,
-            //    name = "Negociación"
-            //}); OpportunityStatuses.Add(new OpportunityStatus
-            //{
-            //    Id = 4,
-            //    name = "Cerrada Ganada"
-            //}); OpportunityStatuses.Add(new OpportunityStatus
-            //{
-            //    Id = 5,
-            //    name = "Cerrada Perdida"
-            //});
-
         }
 
         private async Task ApplyFilters()

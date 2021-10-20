@@ -129,6 +129,8 @@ namespace Core.ViewModels
                 appData.SetLoggedUser(user);
                 Identity.LanguageUser = user.Language;
 
+
+
                 //notificationService.StartListeningNotifications();
 
                 CultureInfo language;

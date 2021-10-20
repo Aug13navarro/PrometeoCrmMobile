@@ -94,14 +94,7 @@ namespace Core.ViewModels
                     sort = null,
                 };
 
-                //if (Query == "")
-                //{
-                //    await SearchProductsAsync(requestData);
-                //}
-                //else
-                //{
-                    await SearchProductsAsync(requestData, true);
-                //}
+                await SearchProductsAsync(requestData, true);
             }
         }
 
@@ -119,8 +112,6 @@ namespace Core.ViewModels
             };
 
             await SearchProductsAsync(requestData);
-            //var listProducts = await prometeoApiService.GetAvailableProducts(requestData);
-            //Products = new MvxObservableCollection<Product>(listProducts.results);
         }
 
         public async Task Close(OpportunityProducts opportunityDetail)

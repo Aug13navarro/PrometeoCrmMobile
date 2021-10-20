@@ -35,17 +35,17 @@ namespace Core.ViewModels
             set => SetProperty(ref clientsQuery, value);
         }
 
-        public MvxObservableCollection<CustomerVm> Customers { get; } = new MvxObservableCollection<CustomerVm>();
+        public MvxObservableCollection<Customer> Customers { get; } = new MvxObservableCollection<Customer>();
 
         public int CurrentPage { get; private set; } = 1;
         public int TotalPages { get; private set; }
 
         // Commands
         public IMvxAsyncCommand LoadMoreCustomersCommand { get; }
-        public IMvxCommand<CustomerVm> ToggleContactsVisibilityCommand { get; }
+        public IMvxCommand<Customer> ToggleContactsVisibilityCommand { get; }
         public IMvxAsyncCommand GoToCreateCustomerCommand { get; }
         public IMvxAsyncCommand NewClientsSearchCommand { get; }
-        public IMvxAsyncCommand<CustomerVm> SelectCustomerCommand { get; }
+        public IMvxAsyncCommand<Customer> SelectCustomerCommand { get; }
 
         // Constants
         private const int PageSize = 10;
@@ -56,32 +56,45 @@ namespace Core.ViewModels
         // Services
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
+        private readonly IOfflineDataService offlineDataService;
 
-        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService)
+        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)
         {
             this.prometeoApiService = prometeoApiService;
             this.appData = appData;
             this.navigationService = navigationService;
+            this.offlineDataService = offlineDataService;
 
             LoadMoreCustomersCommand = new MvxAsyncCommand(LoadMoreCustomersAsync);
-            ToggleContactsVisibilityCommand = new MvxCommand<CustomerVm>(ToggleContactsVisibility);
+            ToggleContactsVisibilityCommand = new MvxCommand<Customer>(ToggleContactsVisibility);
             GoToCreateCustomerCommand = new MvxAsyncCommand(GoToCreateCustomerAsync);
             NewClientsSearchCommand = new MvxAsyncCommand(NewClientsSearchAsync);
-            SelectCustomerCommand = new MvxAsyncCommand<CustomerVm>(SelectCustomerAsync);
+            SelectCustomerCommand = new MvxAsyncCommand<Customer>(SelectCustomerAsync);
         }
 
         public override async Task Initialize()
         {
             await base.Initialize();
 
-            var requestData = new CustomersPaginatedRequest()
+            if (offlineDataService.IsWifiConection)
             {
-                CurrentPage = CurrentPage,
-                PageSize = PageSize,
-                UserId = appData.LoggedUser.Id,
-            };
 
-            await SearchCustomersAsync(requestData);
+                var requestData = new CustomersPaginatedRequest()
+                {
+                    CurrentPage = CurrentPage,
+                    PageSize = PageSize,
+                    UserId = appData.LoggedUser.Id,
+                };
+
+                await SearchCustomersAsync(requestData);
+            }
+            else
+            {
+                var d = await offlineDataService.SearchCustomers();
+
+                Customers.Clear();
+                Customers.AddRange(d);
+            }
         }
 
         private async Task SearchCustomersAsync(CustomersPaginatedRequest requestData, bool newSearch = false)
@@ -103,7 +116,7 @@ namespace Core.ViewModels
 
                         Customers.Clear();
 
-                        Customers.AddRange(customers.Results.Select(x => new CustomerVm() { Customer = x }));
+                        Customers.AddRange(customers.Results);
 
                         IsSearchInProgress = false;
                     }
@@ -115,7 +128,7 @@ namespace Core.ViewModels
                             Customers.Clear();
                         }
 
-                        Customers.AddRange(customers.Results.Select(c => new CustomerVm() { Customer = c }));
+                        Customers.AddRange(customers.Results);
 
                         CurrentPage = customers.CurrentPage;
                         TotalPages = customers.TotalPages;
@@ -141,18 +154,21 @@ namespace Core.ViewModels
 
         private async Task LoadMoreCustomersAsync()
         {
-            var requestData = new CustomersPaginatedRequest()
+            if (offlineDataService.IsWifiConection)
             {
-                CurrentPage = CurrentPage + 1,
-                PageSize = PageSize,
-                UserId = appData.LoggedUser.Id,
-                Query = ClientsQuery,
-            };
+                var requestData = new CustomersPaginatedRequest()
+                {
+                    CurrentPage = CurrentPage + 1,
+                    PageSize = PageSize,
+                    UserId = appData.LoggedUser.Id,
+                    Query = ClientsQuery,
+                };
 
-            await SearchCustomersAsync(requestData);
+                await SearchCustomersAsync(requestData);
+            }
         }
 
-        private void ToggleContactsVisibility(CustomerVm customer)
+        private void ToggleContactsVisibility(Customer customer)
         {
             customer.IsContactsVisible = !customer.IsContactsVisible;
         }
@@ -175,9 +191,9 @@ namespace Core.ViewModels
             await SearchCustomersAsync(requestData, true);
         }
 
-        private async Task SelectCustomerAsync(CustomerVm customer)
+        private async Task SelectCustomerAsync(Customer customer)
         {
-            await navigationService.Close(this, customer.Customer);
+            await navigationService.Close(this, customer);
         }
     }
 }

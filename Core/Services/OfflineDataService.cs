@@ -51,7 +51,6 @@ namespace Core.Services
             catch (Exception e)
             {
                 var str = e.Message;
-                throw;
             }
         }
 
@@ -145,6 +144,8 @@ namespace Core.Services
 
             IsDataLoaded = false;
         }
+
+        #region SAVE
 
         public void SaveCustomerSearch(IList<Customer> customers)
         {
@@ -272,6 +273,7 @@ namespace Core.Services
             }
         }
 
+        #endregion
 
         public async Task SynchronizeToDisk()
         {
@@ -475,23 +477,31 @@ namespace Core.Services
 
         public async Task LoadCompanies()
         {
-            await SynchronizeItemsToDisk(companySearchCache, MaxCompanyToSave, CompanySearchCacheFileNAme);
-
-            await Task.Run(() =>
+            try
             {
-                string filename = Path.Combine(FileSystem.AppDataDirectory, CompanySearchCacheFileNAme);
-                using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
-                {
-                    var bf = new BinaryFormatter();
+                await SynchronizeItemsToDisk(companySearchCache, MaxCompanyToSave, CompanySearchCacheFileNAme);
+                await LoadData(companySearchCache, CompanySearchCacheFileNAme);
 
-                    file.Position = 0;
-                    var data = (List<CompanyExtern>)bf.Deserialize(file);
-                    companySearchCache.Clear();
-                    companySearchCache.AddRange(data);
-                }
-            });
+                //await Task.Run(() =>
+                //{
+                //    string filename = Path.Combine(FileSystem.AppDataDirectory, CompanySearchCacheFileNAme);
+                //    using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
+                //    {
+                //        var bf = new BinaryFormatter();
 
-            IsDataLoaded = true;
+                //        file.Position = 0;
+                //        var data = (List<CompanyExtern>)bf.Deserialize(file);
+                //        companySearchCache.Clear();
+                //        companySearchCache.AddRange(data);
+                //    }
+                //});
+
+                IsDataLoaded = true;
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+            }
         }
 
         public async Task LoadPresentation()

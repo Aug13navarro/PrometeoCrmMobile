@@ -8,18 +8,39 @@ using System;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Xamarin.Forms;
 
 namespace Core
 {
-    public class App : MvxApplication
+    public class App : MvxApplication 
     {
+        private OfflineDataService offlineDataService;
+
+        private OfflineCharging _offlineCharging;
+
         public static Uri PrometeoApiEndPoint { get; } = new Uri("https://neophos-testing-api.azurewebsites.net/");
         //public static Uri PrometeoApiEndPoint { get; } = new Uri("https://prometeo-produccion-api.azurewebsites.net/");
 
         public override void Initialize()
         {
+            offlineDataService = new OfflineDataService();
+            _offlineCharging = new OfflineCharging();
+
             RegisterServices();
             RegisterAppStart<RootViewModel>();
+            DataOffline();
+        }
+
+        private void DataOffline()
+        {
+            if(offlineDataService.IsWifiConection)
+            {
+                var dia = DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es"));
+
+                if(dia == "martes")
+                {
+                }
+            }
         }
 
         private void RegisterServices()

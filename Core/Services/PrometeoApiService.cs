@@ -192,7 +192,7 @@ namespace Core.Services
             //}
         }
 
-        public async Task<List<Customer>> GetAllCustomer(int userId, bool isParent, int typeCustomer, string token)
+        public async Task<List<Customer>> GetAllCustomer(int userId, bool isParent, int typeCustomer, string token, int companyId)
         {
             try
             {
@@ -200,7 +200,7 @@ namespace Core.Services
                 {
                     var lista = new List<Customer>();
 
-                    string url = $"api/Customer?idUser={userId}&companyId={0}&isParentCustomer=true&customerTypeId={typeCustomer}";
+                    string url = $"api/Customer?idUser={userId}&companyId={companyId}&isParentCustomer=true&customerTypeId={typeCustomer}";
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                     var response = await client.GetAsync($"{url}");

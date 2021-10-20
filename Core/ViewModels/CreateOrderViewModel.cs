@@ -358,6 +358,20 @@ namespace Core.ViewModels
                     }
                 }
 
+                if(Order.products == null || Order.products.Count() == 0)
+                {
+                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar prodcutos", "Aceptar");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "You need to associate products.", "Acept");
+                        return;
+                    }
+                }
+
                 var nuevaOrder = new OrderNote
                 {
                     companyId = Company.Id,

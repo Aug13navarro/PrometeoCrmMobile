@@ -107,16 +107,15 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IToastService toastService;
+        //private readonly IToastService toastService;
 
-        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
-                                          IToastService toastService)
+        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//,IToastService toastService
         {
             data = new ApplicationData();
 
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
-            this.toastService = toastService;
+            //this.toastService = toastService;
 
             NuevaNotaPedidoCommand = new Command(async () => await NuevaNotaPedido());
             FilterOrdersCommand = new Command(async () => await FilterOrders());
@@ -221,7 +220,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError($"{ex.Message}");
+                //toastService.ShowError($"{ex.Message}");
             }
             finally
             {
@@ -254,7 +253,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError($"{ex.Message}");
+                //toastService.ShowError($"{ex.Message}");
             }
             finally
             {

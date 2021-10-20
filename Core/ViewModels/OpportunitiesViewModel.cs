@@ -103,16 +103,16 @@ namespace Core.ViewModels
         // Services
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
-        private readonly IToastService toastService;
+        //private readonly IToastService toastService;
 
-        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IToastService toastService, IOfflineDataService offlineDataService)
+        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)//, IToastService toastService
         {
             data = new ApplicationData();
             this.offlineDataService = offlineDataService;
 
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
-            this.toastService = toastService;
+            //this.toastService = toastService;
 
             LoadMoreOpportunitiesCommand = new Command(async () => await LoadMoreOpportunitiesAsync());
             CreateOpportunityCommand = new Command(async () => await CreateOpportunityAsync());
@@ -135,7 +135,7 @@ namespace Core.ViewModels
                 Application.Current.MainPage.Navigation.PopModalAsync();
             });
 
-            Sincronizar();
+            //Sincronizar();
         }
 
         private async void Sincronizar()
@@ -272,7 +272,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError("Ocurrió un error al cargar el filtro. Compruebe su conexión a internet.");
+                //toastService.ShowError("Ocurrió un error al cargar el filtro. Compruebe su conexión a internet.");
             }
             finally
             {
@@ -300,10 +300,19 @@ namespace Core.ViewModels
                 var user = data.LoggedUser;
 
                 IsLoading = true;
-                
-                var request = new ProductList();
 
-                var opportunities = await prometeoApiService.GetOp(requestData, user.Language.ToLower(), user.Token);
+                IEnumerable<Opportunity> opportunities;
+
+                if (offlineDataService.IsWifiConection)
+                {
+                    opportunities = await prometeoApiService.GetOp(requestData, user.Language.ToLower(), user.Token);
+                }
+                else
+                {
+                    await offlineDataService.LoadOpportunities();
+                    opportunities = await offlineDataService.SearchOpportunities();
+                }
+
 
                 if (newSearch)
                 {
@@ -321,7 +330,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError($"{ex.Message}");
+                //toastService.ShowError($"{ex.Message}");
             }
             finally
             {

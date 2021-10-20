@@ -3,7 +3,7 @@ using System;
 
 namespace Core.Model
 {
-    public class Customer
+    public class Customer : MvxNotifyPropertyChanged
     {
         public int Id { get; set; }
         public string CompanyName { get; set; }
@@ -27,5 +27,12 @@ namespace Core.Model
 
         public MvxObservableCollection<CustomerContact> Contacts { get; } = new MvxObservableCollection<CustomerContact>();
         public MvxObservableCollection<CustomerAddress> Addresses { get; } = new MvxObservableCollection<CustomerAddress>();
+
+        private bool isContactsVisible;
+        public bool IsContactsVisible
+        {
+            get => isContactsVisible;
+            set => SetProperty(ref isContactsVisible, value);
+        }
     }
 }
