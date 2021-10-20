@@ -43,7 +43,7 @@ namespace Core.ViewModels
 
         private async void CargarObtenerDatos()
         {
-            if (!offlineDataService.IsWifiConection)
+            if (offlineDataService.IsWifiConection)
             {
                 var empresas = await prometeoApiService.GetCompaniesByUserId(LoggedUser.Id, LoggedUser.Token);
 
