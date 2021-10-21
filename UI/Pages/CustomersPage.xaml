@@ -10,7 +10,7 @@
                       x:Class="UI.Pages.CustomersPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" Margin="0,0,10,0">
-            <Grid
+            <Grid HorizontalOptions="FillAndExpand"
                 ColumnDefinitions="auto,*,auto">
                 <Controls:BackIconToolbar Grid.Column="0"/>
                 <Frame

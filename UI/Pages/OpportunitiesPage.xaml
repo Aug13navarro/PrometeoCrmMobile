@@ -19,8 +19,9 @@
                     Grid.Column="0"
                     HorizontalOptions="FillAndExpand"
                     Text="{x:Static resources:AppResources.Opportunities}"
-                    TextColor="White"
-                    FontSize="Medium">
+                    TextColor="{OnPlatform Android=White, iOS=#2b0048}"
+                    FontSize="Medium"
+                    VerticalTextAlignment="Center">
 
                 </Label>
                 <Frame
@@ -43,6 +44,7 @@
                     Grid.Column="1"
                     Source="ic_search.png" 
                     HorizontalOptions="End"
+                    WidthRequest="{OnPlatform iOS=30}"
                     Mvx:Bi.nd="IsVisible !SearchBarVisible">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ActivarSearchCommand}"/>

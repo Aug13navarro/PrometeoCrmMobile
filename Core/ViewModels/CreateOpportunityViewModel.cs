@@ -135,11 +135,11 @@ namespace Core.ViewModels
         // Services
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IToastService toastService;
+        //private readonly IToastService toastService;
         private readonly IOfflineDataService offlineDataService;
 
         public CreateOpportunityViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
-                                          IToastService toastService, IOfflineDataService offlineData)
+                                           IOfflineDataService offlineData)//IToastService toastService,
         {
             try
             {
@@ -147,7 +147,7 @@ namespace Core.ViewModels
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
-                this.toastService = toastService;
+                //this.toastService = toastService;
                 this.offlineDataService = offlineData;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
@@ -192,7 +192,9 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                toastService.ShowError($"{e.Message}");
+                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
+                return;
+                //toastService.ShowError($"{e.Message}");
             }
         }
 
@@ -209,7 +211,7 @@ namespace Core.ViewModels
                 string error = ValidateOpportunity(Opportunity);
                 if (!string.IsNullOrWhiteSpace(error))
                 {
-                    toastService.ShowError(error);
+                    await Application.Current.MainPage.DisplayAlert("", error, "Aceptar");
                     return;
                 }
 
@@ -302,7 +304,9 @@ namespace Core.ViewModels
 
                     if (Opportunity.opportunityStatus.Id >= 4)
                     {
-                        toastService.ShowError("Si la Oportunidad se encuentra cerrada no es posible editarla.");
+                        await Application.Current.MainPage.DisplayAlert("", "Si la Oportunidad se encuentra cerrada no es posible editarla.", "Aceptar");
+                        return;
+                        //toastService.ShowError("Si la Oportunidad se encuentra cerrada no es posible editarla.");
                     }
 
                     AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
@@ -485,7 +489,8 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError($"Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+                await Application.Current.MainPage.DisplayAlert("", "Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.", "Aceptar");
+                return;
             }
             finally
             {
@@ -553,7 +558,7 @@ namespace Core.ViewModels
             {
                 if (EstadoId == 4 || EstadoId == 5)
                 {
-                    toastService.ShowError("Si la Oportunidad se encuentra cerrada no es posible editarla.");
+                    await Application.Current.MainPage.DisplayAlert("", "Si la Oportunidad se encuentra cerrada no es posible editarla.", "Aceptar");
                     return;
                 }
 
@@ -566,7 +571,7 @@ namespace Core.ViewModels
                 string error = ValidateOpportunity(Opportunity);
                 if (!string.IsNullOrWhiteSpace(error))
                 {
-                    toastService.ShowError(error);
+                    await Application.Current.MainPage.DisplayAlert("", error, "Aceptar");
                     return;
                 }
 

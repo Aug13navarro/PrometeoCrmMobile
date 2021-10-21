@@ -16,11 +16,12 @@
             <Frame
                 Margin="0" Padding="0"
                 CornerRadius="20"
-                HorizontalOptions="Center">
+                HorizontalOptions="FillAndExpand">
                 <SearchBar 
                     SearchCommand="{Binding SearchQueryCommand}"
                     Text="{Binding Query, Mode=TwoWay}"
-                    BackgroundColor="White"
+                    BackgroundColor="{OnPlatform Android=White, iOS=LightGray}"                    
+                    PlaceholderColor="{OnPlatform iOS=Blue}"
                     Placeholder="{x:Static resources:AppResources.Search}"></SearchBar>
             </Frame>
         </StackLayout>

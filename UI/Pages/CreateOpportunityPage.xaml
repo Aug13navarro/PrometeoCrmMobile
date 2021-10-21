@@ -13,7 +13,7 @@
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
             <Label Text="{x:Static resources:AppResources.Opportunity}"
-                   TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="20"/>
+                   TextColor="{OnPlatform Android=White, iOS=#2b0048}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="20"/>
             <ImageButton Source="guardar.png" Command="{Binding SaveOpportunityCommand}"
                          BackgroundColor="Transparent" WidthRequest="40" Clicked="Cerrada_Clicked">
                 

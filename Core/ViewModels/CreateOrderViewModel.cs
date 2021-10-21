@@ -237,10 +237,10 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IToastService toastService;
+        //private readonly IToastService toastService;
 
-        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
-                                          IToastService toastService)
+        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService
+                                          )//IToastService toastService
         {
             try
             {
@@ -252,7 +252,7 @@ namespace Core.ViewModels
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
-                this.toastService = toastService;
+                //this.toastService = toastService;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
@@ -536,7 +536,8 @@ namespace Core.ViewModels
             }
             catch(Exception e)
             {
-                toastService.ShowError($"{e.Message}");
+                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
+                return;
             }
         }
 
@@ -565,7 +566,8 @@ namespace Core.ViewModels
             }
             catch ( Exception e)
             {
-                toastService.ShowError($"{e.Message}");
+                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
+                return;
             }
         }
 
@@ -641,7 +643,8 @@ namespace Core.ViewModels
             }
             catch(Exception e)
             {
-                toastService.ShowError($"{e.Message}");
+                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
+                return;
             }
         }
 
@@ -784,7 +787,9 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError($"Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+                await Application.Current.MainPage.DisplayAlert("", "Ocurrió un error al obtener el cliente.Compruebe su conexión a internet.", "Aceptar");
+                return;
+                
             }
             finally
             {

@@ -15,7 +15,7 @@
             <Label
                 HorizontalOptions="FillAndExpand"
                 Text="{x:Static resources:AppResources.Orders}"
-                TextColor="White"
+                TextColor="{OnPlatform Android=White, iOS=#2b0048}"
                 FontSize="Medium"
                 VerticalTextAlignment="Center">
 
@@ -148,7 +148,8 @@
                     BackgroundColor="{StaticResource PrimaryColor}"
                     TextColor="White"
                     HorizontalOptions="Center"
-                    Command="{Binding ApplyFiltersCommand}">
+                    Command="{Binding ApplyFiltersCommand}"
+                    Padding="{OnPlatform iOS='15,0'}">
                     
                 </Button>
             </Grid>

@@ -15,7 +15,7 @@
             <Label
                 HorizontalOptions="FillAndExpand"
                 Text="{x:Static resources:AppResources.Filter_Opportunity}"
-                TextColor="White"
+                TextColor="{OnPlatform Android=White, iOS=#2b0048}"
                 FontSize="Medium">
                 
             </Label>

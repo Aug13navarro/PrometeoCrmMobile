@@ -127,7 +127,7 @@ namespace Core.ViewModels
         //SERIVICIO
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IToastService toastService;
+        //private readonly IToastService toastService;
 
         //public FilterOrdersViewModel(PedidosViewModel pedidosViewModel)
         //{
@@ -161,7 +161,7 @@ namespace Core.ViewModels
 
             this.navigationService = Mvx.Resolve<IMvxNavigationService>();
             this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-            this.toastService = Mvx.Resolve<IToastService>();
+            //this.toastService = Mvx.Resolve<IToastService>();
 
             ApplyFiltersCommand = new Command(async () => await ApplyFilters());
             LimpiarFiltroCommand = new Command(async () => await ClearFilter());

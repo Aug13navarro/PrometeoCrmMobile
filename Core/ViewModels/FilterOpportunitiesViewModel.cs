@@ -113,7 +113,7 @@ namespace Core.ViewModels
         //SERIVICIO
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IToastService toastService;
+        //private readonly IToastService toastService;
         private readonly IOfflineDataService offlineDataService;
 
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
@@ -149,7 +149,7 @@ namespace Core.ViewModels
 
             this.navigationService = Mvx.Resolve<IMvxNavigationService>();
             this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-            this.toastService = Mvx.Resolve<IToastService>();
+            //this.toastService = Mvx.Resolve<IToastService>();
             this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
 
             SelectClientCommand = new Command(async () => await SelectClientAsync());
@@ -270,7 +270,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError("Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+                //toastService.ShowError("Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
             }
             finally
             {
@@ -296,7 +296,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                toastService.ShowError($"{e.Message}");
+                //toastService.ShowError($"{e.Message}");
             }
         }
 
