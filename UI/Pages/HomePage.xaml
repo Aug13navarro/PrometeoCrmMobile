@@ -19,10 +19,11 @@
     
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
-            <Controls:MenuIconToolbar />
+            <Controls:MenuIconToolbar WidthRequest="{OnPlatform iOS=30}"/>
             <Image Source="ic_logo_navbar.png" />
             <!--<Label Mvx:Bi.nd="Text 'Hola, ' + LoggedUser.FullName" TextColor="White" VerticalOptions="Center" FontSize="Medium" />-->
-            <Label Text="{Binding LoggedUser.FullName, Converter={StaticResource TitleConverter}}" TextColor="White" VerticalOptions="Center" FontSize="Medium" />
+            <Label Text="{Binding LoggedUser.FullName, Converter={StaticResource TitleConverter}}" 
+                   TextColor="{OnPlatform Android=white, iOS=#2B0048}" VerticalOptions="Center" FontSize="Medium" />
         </StackLayout>
     </NavigationPage.TitleView>
 

@@ -38,6 +38,7 @@ namespace Core.ViewModels
 
                 //await navigationService.Navigate<MenuViewModel>();
                 await navigationService.Navigate<LoginViewModel>();
+                await navigationService.Navigate<MenuViewModel>();//se necesita para que ande en iOs, probar si va antes o despues de Login
             }
             else
             {

@@ -10,18 +10,19 @@
                       x:Class="UI.Pages.PedidosPage">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
-            <Grid
+            <Grid HorizontalOptions="FillAndExpand"
                 ColumnDefinitions="auto,*,auto">
                 <Controls:BackIconToolbar Grid.Column="0"/>
                 <Frame
                     Grid.Column="1"
                     Margin="0"
                     Padding="0"
-                    CornerRadius="20">
+                    CornerRadius="{OnPlatform Android=20, iOS=0}">
                     <SearchBar Placeholder="{x:Static resources:AppResources.Search}" Text="{Binding Query}"
+                               PlaceholderColor="{OnPlatform iOS=Blue}"
                                HorizontalOptions="StartAndExpand" Keyboard="Text" SearchCommand="{Binding SearchQueryCommand}"/>
                 </Frame>
-                <Image Source="filtro_vacio.png" Grid.Column="2" WidthRequest="25">
+                <Image Source="filtro_vacio.png" Grid.Column="2" WidthRequest="{OnPlatform Android=25, iOS=30}">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding FilterOrdersCommand}" />
                     </Image.GestureRecognizers>

@@ -13,13 +13,17 @@
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
             <Entry Placeholder="{x:Static resources:AppResources.Search}" Text="{Binding Query}"
-                   TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />
-            <Image Source="ic_search.png">
+                   TextColor="{OnPlatform Android=White, iOS=#2b0048}" PlaceholderColor="{OnPlatform Android=LightGray, iOS=Blue}"
+                   HorizontalOptions="StartAndExpand" />
+            <Image Source="ic_search.png" WidthRequest="{OnPlatform iOS=30}">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding NewContactsSearchCommand}" />
                 </Image.GestureRecognizers>
             </Image>
-            <Button Text="{x:Static resources:AppResources.Create}" Command="{Binding GoToCreateContactCommand}" Style="{StaticResource MenuButton}" />
+            <Button Text="{x:Static resources:AppResources.Create}" 
+                    Command="{Binding GoToCreateContactCommand}" 
+                    Style="{StaticResource MenuButton}" 
+                    Padding="{OnPlatform iOS='10,0'}" />
         </StackLayout>
     </NavigationPage.TitleView>
 
