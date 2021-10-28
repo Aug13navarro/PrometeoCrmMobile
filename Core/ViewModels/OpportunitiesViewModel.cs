@@ -309,7 +309,10 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    await offlineDataService.LoadOpportunities();
+                    if (!offlineDataService.IsDataLoadesOpportunities)
+                    {
+                        await offlineDataService.LoadOpportunities();
+                    }
                     opportunities = await offlineDataService.SearchOpportunities();
                 }
 

@@ -237,9 +237,10 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
+        private readonly IOfflineDataService offlineDataService;
         //private readonly IToastService toastService;
 
-        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService
+        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService
                                           )//IToastService toastService
         {
             try
@@ -253,6 +254,7 @@ namespace Core.ViewModels
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
                 //this.toastService = toastService;
+                this.offlineDataService = offlineDataService;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
@@ -286,12 +288,12 @@ namespace Core.ViewModels
             {
                 if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
                 {
-                    await Application.Current.MainPage.DisplayAlert("","","Aceptar");
+                    await Application.Current.MainPage.DisplayAlert("Atención","Seleccione un Cliente","Aceptar");
                     return;
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("", "", "Acept");
+                    await Application.Current.MainPage.DisplayAlert("Atention", "Select a Customer.", "Acept");
                     return;
                 }
             }
@@ -362,7 +364,7 @@ namespace Core.ViewModels
                 {
                     if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
                     {
-                        await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar prodcutos", "Aceptar");
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar productos", "Aceptar");
                         return;
                     }
                     else
@@ -520,23 +522,55 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
-
-                if (Order != null)
+                if (offlineDataService.IsWifiConection)
                 {
-                    if (Order.paymentConditionId > 0)
+
+                    PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
+
+                    if (Order != null)
                     {
-                        Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                        if (Order.paymentConditionId > 0)
+                        {
+                            Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                        }
+                        else
+                        {
+                            Condition = PaymentConditions.FirstOrDefault();
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    if (!offlineDataService.IsDataLoadesPaymentConditions)
                     {
-                        Condition = PaymentConditions.FirstOrDefault();
+                        await offlineDataService.LoadDataPayment();
+                    }
+                    var data = await offlineDataService.SearchPaymentConditions();
+
+                    var d = data.Where(x => x.companyId == Company.Id).ToList();
+
+                    if (d != null || d.Count() > 0)
+                    {
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(d);
+                    }
+
+                    if (Order != null)
+                    {
+                        if (Order.paymentConditionId > 0)
+                        {
+                            Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                        }
+                        else
+                        {
+                            Condition = PaymentConditions.FirstOrDefault();
+                        }
                     }
                 }
             }
             catch(Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
+                //await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
+                var s = e.Message;
                 return;
             }
         }
@@ -547,19 +581,47 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
-
-                if(Order != null)
+                if (offlineDataService.IsWifiConection)
                 {
-                    if(Order.companyId > 0)
+
+                    Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
+
+                    if (Order != null)
                     {
-                        Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                        CargarCondiciones();
+                        if (Order.companyId > 0)
+                        {
+                            Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+                            CargarCondiciones();
+                        }
+                        else
+                        {
+                            Company = Companies.FirstOrDefault();
+                            CargarCondiciones();
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    if (!offlineDataService.IsDataLoadesCompanies)
                     {
-                        Company = Companies.FirstOrDefault();
-                        CargarCondiciones();
+                        await offlineDataService.LoadCompanies();
+                    }
+                    var d = await offlineDataService.SearchCompanies();
+
+                    Companies = new MvxObservableCollection<Company>(d);
+
+                    if (Order != null)
+                    {
+                        if (Order.companyId > 0)
+                        {
+                            Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+                            CargarCondiciones();
+                        }
+                        else
+                        {
+                            Company = Companies.FirstOrDefault();
+                            CargarCondiciones();
+                        }
                     }
                 }
 

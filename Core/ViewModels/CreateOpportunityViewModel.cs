@@ -184,6 +184,10 @@ namespace Core.ViewModels
                 }
                 else
                 {
+                    if (!offlineDataService.IsDataLoadesCompanies)
+                    {
+                        await offlineDataService.LoadCompanies();
+                    }
                     var d = await offlineDataService.SearchCompanies();
 
                     Companies = new MvxObservableCollection<Company>(d);
@@ -194,7 +198,6 @@ namespace Core.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
                 return;
-                //toastService.ShowError($"{e.Message}");
             }
         }
 
@@ -604,21 +607,34 @@ namespace Core.ViewModels
                         await prometeoApiService.SaveOpportunityEdit(send, id, user.Token, Opportunity);
 
                     }
+
+                    await navigationService.Close(this);
+
+                    NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
                     if(id == 0)
                     {
-                        offlineDataService.SaveOpportunity(Opportunity);
+
+                        opportunity.totalPrice = Convert.ToDecimal(send.totalPrice);
+                        opportunity.opportunityStatus.Id = send.opportunityStatusId;
+                        opportunity.Company = Company;
+
+                        offlineDataService.SaveOpportunity(opportunity);
+
+                        await offlineDataService.SynchronizeToDisk();
                     }
                     else
                     {
 
                     }
+
+                    await navigationService.Close(this);
+
+                    NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
                 }
 
-                await navigationService.Close(this);
-                NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception e)
             {

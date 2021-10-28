@@ -196,6 +196,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This Customer has got not assigned an Address.
+        /// </summary>
+        internal static string CustomerAddressAlert {
+            get {
+                return ResourceManager.GetString("CustomerAddressAlert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Customers.
         /// </summary>
         internal static string Customers {

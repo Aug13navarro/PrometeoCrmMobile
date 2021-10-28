@@ -162,6 +162,9 @@
   <data name="Customer" xml:space="preserve">
     <value>Cliente</value>
   </data>
+  <data name="CustomerAddressAlert" xml:space="preserve">
+    <value>Este Cliente no tiene asignada una Dirección</value>
+  </data>
   <data name="Customers" xml:space="preserve">
     <value>Clientes</value>
   </data>

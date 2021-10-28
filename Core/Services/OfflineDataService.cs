@@ -1,5 +1,4 @@
 ﻿using Core.Model;
-using Core.Model.Common;
 using Core.Model.Extern;
 using Core.Services.Contracts;
 using System;
@@ -7,10 +6,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace Core.Services
 {
@@ -18,41 +15,35 @@ namespace Core.Services
     {
         public bool IsWifiConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.WiFi);
         public bool IsMobileConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.Cellular);
-        public bool IsDataLoaded { get; private set; }
+
+        public bool IsDataLoadesCustomer { get; private set; }
+        public bool IsDataLoadesCompanies { get; private set; }
+        public bool IsDataLoadesPaymentConditions { get; private set; }
+        public bool IsDataLoadesPresentations { get; private set; }
+        public bool IsDataLoadesOpportunities { get; private set; }
+        public bool IsDataLoadesOrderNote { get; private set; }
 
         private readonly List<CustomerExtern> customerSearchCache = new List<CustomerExtern>();
         private readonly List<CompanyExtern> companySearchCache = new List<CompanyExtern>();
         private readonly List<PaymentConditionsExtern> paymentConditionsSearchCache = new List<PaymentConditionsExtern>();
         private readonly List<ProductExtern> presentationsSearchCache = new List<ProductExtern>();
         private readonly List<OpportunityExtern> opportunitiesSearchCache = new List<OpportunityExtern>();
+        private readonly List<OrderNoteExtern> orderNotesSearchCache = new List<OrderNoteExtern>();
 
 
         private const int MaxCustomerToSave = 5000;
         private const int MaxCompanyToSave = 15;
-        private const int MaxPaymentConditions = 50;
+        private const int MaxPaymentConditions = 600;
         private const int MaxPresentations = 500;
         private const int MaxOportunities = 50;
+        private const int MaxOrderNotes= 50;
 
         private const string CustomerSearchCacheFilename = "customersearchcache";
         private const string CompanySearchCacheFileNAme = "companysearchcache";
         private const string PaymentConditionsSearchCacheFilename = "paymentconditionssearchcache";
         private const string PresentationsSearchCacheFilename = "presentationssearchcache";
         private const string OpportunitiesSearchCacheFilename = "opportunitiessearchcache";
-
-        public async Task LoadAllData()
-        {
-            try
-            {
-                await SynchronizeItemsToDisk(customerSearchCache, MaxCustomerToSave, CustomerSearchCacheFilename);
-                await LoadData(customerSearchCache, CustomerSearchCacheFilename);
-
-                IsDataLoaded = true;
-            }
-            catch (Exception e)
-            {
-                var str = e.Message;
-            }
-        }
+        private const string OrderNotesSearchCacheFilename = "ordernotessearchcache";
 
         private async Task LoadData<T>(List<T> itemsInCache, string cacheFilename)
         {
@@ -126,54 +117,60 @@ namespace Core.Services
             {
                 case "Customer":
                     customerSearchCache.Clear();
+                    IsDataLoadesCustomer = false;
                     break;
                 case "Company":
                     companySearchCache.Clear();
+                    IsDataLoadesCompanies = false;
                     break;
                 case "Payment":
                     paymentConditionsSearchCache.Clear();
+                    IsDataLoadesPaymentConditions = false;
                     break;
                 case "Presentation":
                     presentationsSearchCache.Clear();
+                    IsDataLoadesPresentations = false;
                     break;
                 case "Opportunity":
                     opportunitiesSearchCache.Clear();
+                    IsDataLoadesOpportunities = false;
+                    break;
+                case "OrderNotes":
+                    orderNotesSearchCache.Clear();
+                    IsDataLoadesOrderNote = false;
                     break;
             }
-
-
-            IsDataLoaded = false;
         }
 
         #region SAVE
 
-        public void SaveCustomerSearch(IList<Customer> customers)
+        public void SaveCustomerSearch(IList<CustomerExtern> customers)
         {
-            var lista = new List<CustomerExtern>();
+            //var lista = new List<CustomerExtern>();
 
-            foreach (var item in customers)
-            {
-                lista.Add(new CustomerExtern
-                {
-                    Abbreviature = item.Abbreviature,
-                    AccountOwnerId = item.AccountOwnerId,
-                    AccountOwnerName = item.AccountOwnerName,
-                    BusinessName = item.BusinessName,
-                    CompanyName = item.CompanyName,
-                    Descriptions = item.Descriptions,
-                    DollarBalance = item.DollarBalance,
-                    ExternalId = item.ExternalId,
-                    Id = item.Id,
-                    IdParentCustomer = item.IdParentCustomer,
-                    TaxCondition = item.TaxCondition,
-                    IdNumber = item.IdNumber,
-                    PesosBalance = item.PesosBalance,
-                    TypeId = item.TypeId,
-                    UnitBalance = item.UnitBalance,
-                });
-            }
+            //foreach (var item in customers)
+            //{
+            //    lista.Add(new CustomerExtern
+            //    {
+            //        Abbreviature = item.Abbreviature,
+            //        AccountOwnerId = item.AccountOwnerId,
+            //        AccountOwnerName = item.AccountOwnerName,
+            //        BusinessName = item.BusinessName,
+            //        CompanyName = item.CompanyName,
+            //        Descriptions = item.Descriptions,
+            //        DollarBalance = item.DollarBalance,
+            //        ExternalId = item.ExternalId,
+            //        Id = item.Id,
+            //        IdParentCustomer = item.IdParentCustomer,
+            //        TaxCondition = item.TaxCondition,
+            //        IdNumber = item.IdNumber,
+            //        PesosBalance = item.PesosBalance,
+            //        TypeId = item.TypeId,
+            //        UnitBalance = item.UnitBalance,
+            //    });
+            //}
 
-            customerSearchCache.AddRange(lista);
+            customerSearchCache.AddRange(customers);
         }
 
         public void SaveCompanySearch(List<Company> companies)
@@ -248,17 +245,46 @@ namespace Core.Services
         {
             try
             {
+
+
+                var customerEx = new CustomerExtern
+                {
+                    Abbreviature = opportunity.customer.Abbreviature,
+                    AccountOwnerId = opportunity.customer.AccountOwnerId,
+                    AccountOwnerName = opportunity.customer.AccountOwnerName,
+                    BusinessName = opportunity.customer.BusinessName,
+                    CompanyName = opportunity.customer.CompanyName,
+                    Descriptions = opportunity.customer.Descriptions,
+                    DollarBalance = opportunity.customer.DollarBalance,
+                    ExternalId = opportunity.customer.ExternalId,
+                    Id = opportunity.customer.Id,
+                    IdParentCustomer = opportunity.customer.IdParentCustomer,
+                    TaxCondition = opportunity.customer.TaxCondition,
+                    IdNumber = opportunity.customer.IdNumber,
+                    PesosBalance = opportunity.customer.PesosBalance,
+                    TypeId = opportunity.customer.TypeId,
+                    UnitBalance = opportunity.customer.UnitBalance,
+                };
+
+                var statusEx = new OpportunityStatusExtern
+                {
+                    Id = opportunity.opportunityStatus.Id,
+                    name = opportunity.opportunityStatus.name,
+                };
+
+                var detail = ConvertirDetailExtern(opportunity.Details.ToList());
+
                 var opportunityEx = new OpportunityExtern
                 {
-                    customer = opportunity.customer,
-                    Details = opportunity.Details,
+                    customer = customerEx,
+                    Details = detail,
                     Id = opportunity.Id,
-                    opportunityStatus = opportunity.opportunityStatus,
+                    opportunityStatus = statusEx,
                     //ProductsDescription  = opportunity.ProductsDescription,
                     closedDate = opportunity.closedDate,
                     createDt = opportunity.createDt,
                     description = opportunity.description,
-                    opportunityProducts = opportunity.Details,
+                    opportunityProducts = detail,
                     totalPrice = opportunity.totalPrice,
                 };
 
@@ -273,6 +299,48 @@ namespace Core.Services
             }
         }
 
+        public void SaveOrderNotes(OrderNote orderNote)
+        {
+            try
+            {
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+            }
+        }
+
+        private List<OpportunityProductsExtern> ConvertirDetailExtern(List<OpportunityProducts> opportunityProducts)
+        {
+            var lista = new List<OpportunityProductsExtern>();
+
+            foreach (var item in opportunityProducts)
+            {
+                var product = new ProductExtern
+                {
+                    Discount = item.product.Discount,
+                    Id = item.product.Id,
+                    name = item.product.name,
+                    price = item.product.price,
+                    quantity = item.product.quantity,
+                    stock = item.product.stock
+                };
+
+                lista.Add(new OpportunityProductsExtern
+                {
+                    CompanyId = item.CompanyId,
+                    Discount = item.Discount,
+                    Price = item.Price,
+                    product = product,
+                    Quantity = item.Quantity,
+                    productId = item.productId,
+                    Total = item.Total
+                });
+            }
+
+            return lista;
+        }
+
         #endregion
 
         public async Task SynchronizeToDisk()
@@ -284,6 +352,7 @@ namespace Core.Services
                 await SynchronizeItemsToDisk(paymentConditionsSearchCache, MaxPaymentConditions, PaymentConditionsSearchCacheFilename);
                 await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
                 await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
+                await SynchronizeItemsToDisk(orderNotesSearchCache, MaxOrderNotes, OrderNotesSearchCacheFilename);
             }
             catch (Exception)
             {
@@ -302,6 +371,7 @@ namespace Core.Services
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, PaymentConditionsSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, PresentationsSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, OrderNotesSearchCacheFilename));
                 }
                 catch (Exception)
                 {
@@ -311,35 +381,11 @@ namespace Core.Services
         }
 
         #region SEARCH
-        public Task<List<Customer>> SearchCustomers()
+        public Task<List<CustomerExtern>> SearchCustomers()
         {
-            var lista = new List<Customer>();
-
             var fromCache = customerSearchCache;
 
-            foreach (var item in fromCache)
-            {
-                lista.Add(new Customer
-                {
-                    Abbreviature = item.Abbreviature,
-                    AccountOwnerId = item.AccountOwnerId,
-                    AccountOwnerName = item.AccountOwnerName,
-                    BusinessName = item.BusinessName,
-                    CompanyName = item.CompanyName,
-                    Descriptions = item.Descriptions,
-                    DollarBalance = item.DollarBalance,
-                    ExternalId = item.ExternalId,
-                    Id = item.Id,
-                    IdParentCustomer = item.IdParentCustomer,
-                    TaxCondition = item.TaxCondition,
-                    IdNumber = item.IdNumber,
-                    PesosBalance = item.PesosBalance,
-                    TypeId = item.TypeId,
-                    UnitBalance = item.UnitBalance,
-                });
-            }
-
-            return Task.FromResult(lista);
+            return Task.FromResult(fromCache);
         }
 
         public Task<List<Company>> SearchCompanies()
@@ -427,17 +473,44 @@ namespace Core.Services
 
                 foreach (var opportunity in fromCache)
                 {
+                    var customer = new Customer
+                    {
+                        Abbreviature = opportunity.customer.Abbreviature,
+                        AccountOwnerId = opportunity.customer.AccountOwnerId,
+                        AccountOwnerName = opportunity.customer.AccountOwnerName,
+                        BusinessName = opportunity.customer.BusinessName,
+                        CompanyName = opportunity.customer.CompanyName,
+                        Descriptions = opportunity.customer.Descriptions,
+                        DollarBalance = opportunity.customer.DollarBalance,
+                        ExternalId = opportunity.customer.ExternalId,
+                        Id = opportunity.customer.Id,
+                        IdParentCustomer = opportunity.customer.IdParentCustomer,
+                        TaxCondition = opportunity.customer.TaxCondition,
+                        IdNumber = opportunity.customer.IdNumber,
+                        PesosBalance = opportunity.customer.PesosBalance,
+                        TypeId = opportunity.customer.TypeId,
+                        UnitBalance = opportunity.customer.UnitBalance,
+                    };
+
+                    var status = new OpportunityStatus
+                    {
+                        Id = opportunity.opportunityStatus.Id,
+                        name = opportunity.opportunityStatus.name,
+                    };
+
+                    var detail = ConvertirExternDetail(opportunity.Details);
+
                     lista.Add(new Opportunity
                     {
-                        customer = opportunity.customer,
-                        Details = opportunity.Details,
+                        customer = customer,
+                        Details = new MvvmCross.ViewModels.MvxObservableCollection<OpportunityProducts>(detail),
                         Id = opportunity.Id,
-                        opportunityStatus = opportunity.opportunityStatus,
+                        opportunityStatus = status,
                         //ProductsDescription  = opportunity.ProductsDescription,
                         closedDate = opportunity.closedDate,
                         createDt = opportunity.createDt,
                         description = opportunity.description,
-                        opportunityProducts = opportunity.opportunityProducts,
+                        opportunityProducts = new MvvmCross.ViewModels.MvxObservableCollection<OpportunityProducts>(detail),
                         totalPrice = opportunity.totalPrice,
                     });
                 }
@@ -450,29 +523,74 @@ namespace Core.Services
                 throw;
             }
         }
+
+        public Task<List<OrderNote>> SearchOrderNotes()
+        {
+            try
+            {
+                return Task.FromResult(new List<OrderNote>());
+            }
+            catch (Exception e)
+            {
+                var s = e.Message;
+                throw;
+            }
+        }
+
+        private List<OpportunityProducts> ConvertirExternDetail(List<OpportunityProductsExtern> details)
+        {
+            var lista = new List<OpportunityProducts>();
+
+            foreach (var item in details)
+            {
+                var product = new Product
+                {
+                    Discount = item.product.Discount,
+                    Id = item.product.Id,
+                    name = item.product.name,
+                    price = item.product.price,
+                    quantity = item.product.quantity,
+                    stock = item.product.stock
+                };
+
+                lista.Add(new OpportunityProducts
+                {
+                    CompanyId = item.CompanyId,
+                    Discount = item.Discount,
+                    Price = item.Price,
+                    product = product,
+                    Quantity = item.Quantity,
+                    productId = item.productId,
+                    Total = item.Total
+                });
+            }
+
+            return lista;
+        }
         #endregion
 
         #region LOAD
+        public async Task LoadAllData()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(customerSearchCache, MaxCustomerToSave, CustomerSearchCacheFilename);
+                await LoadData(customerSearchCache, CustomerSearchCacheFilename);
+
+                IsDataLoadesCustomer = true;
+            }
+            catch (Exception e)
+            {
+                var str = e.Message;
+            }
+        }
 
         public async Task LoadDataPayment()
         {
             await SynchronizeItemsToDisk(paymentConditionsSearchCache, MaxPaymentConditions, PaymentConditionsSearchCacheFilename);
+            await LoadData(paymentConditionsSearchCache, PaymentConditionsSearchCacheFilename);
 
-            await Task.Run(() =>
-            {
-                string filename = Path.Combine(FileSystem.AppDataDirectory, PaymentConditionsSearchCacheFilename);
-                using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
-                {
-                    var bf = new BinaryFormatter();
-
-                    file.Position = 0;
-                    var data = (List<PaymentConditionsExtern>)bf.Deserialize(file);
-                    paymentConditionsSearchCache.Clear();
-                    paymentConditionsSearchCache.AddRange(data);
-                }
-            });
-
-            IsDataLoaded = true;
+            IsDataLoadesPaymentConditions = true;
         }
 
         public async Task LoadCompanies()
@@ -482,21 +600,7 @@ namespace Core.Services
                 await SynchronizeItemsToDisk(companySearchCache, MaxCompanyToSave, CompanySearchCacheFileNAme);
                 await LoadData(companySearchCache, CompanySearchCacheFileNAme);
 
-                //await Task.Run(() =>
-                //{
-                //    string filename = Path.Combine(FileSystem.AppDataDirectory, CompanySearchCacheFileNAme);
-                //    using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
-                //    {
-                //        var bf = new BinaryFormatter();
-
-                //        file.Position = 0;
-                //        var data = (List<CompanyExtern>)bf.Deserialize(file);
-                //        companySearchCache.Clear();
-                //        companySearchCache.AddRange(data);
-                //    }
-                //});
-
-                IsDataLoaded = true;
+                IsDataLoadesCompanies = true;
             }
             catch (Exception e)
             {
@@ -509,22 +613,9 @@ namespace Core.Services
             try
             {
                 await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
+                await LoadData(presentationsSearchCache, PresentationsSearchCacheFilename);
 
-                await Task.Run(() =>
-                {
-                    string filename = Path.Combine(FileSystem.AppDataDirectory, PresentationsSearchCacheFilename);
-                    using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
-                    {
-                        var bf = new BinaryFormatter();
-
-                        file.Position = 0;
-                        var data = (List<ProductExtern>)bf.Deserialize(file);
-                        presentationsSearchCache.Clear();
-                        presentationsSearchCache.AddRange(data);
-                    }
-                });
-
-                IsDataLoaded = true;
+                IsDataLoadesPresentations = true;
             }
             catch (Exception e)
             {
@@ -537,27 +628,28 @@ namespace Core.Services
             try
             {
                 await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
+                await LoadData(opportunitiesSearchCache, OpportunitiesSearchCacheFilename);
 
-                await Task.Run(() =>
-                {
-                    string filename = Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename);
-                    using (Stream file = File.Open(filename, FileMode.OpenOrCreate, FileAccess.Read))
-                    {
-                        var bf = new BinaryFormatter();
-
-                        file.Position = 0;
-                        var data = (List<OpportunityExtern>)bf.Deserialize(file);
-                        opportunitiesSearchCache.Clear();
-                        opportunitiesSearchCache.AddRange(data);
-                    }
-                });
-
-
-                IsDataLoaded = true;
+                IsDataLoadesOpportunities = true;
             }
             catch (Exception e)
             {
-                var s = e.Message;
+                throw new Exception($"Error en Opportunity Offline, {e.Message}");
+            }
+        }
+
+        public async Task LoadOrderNotes()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(orderNotesSearchCache, MaxOrderNotes, OrderNotesSearchCacheFilename);
+                await LoadData(orderNotesSearchCache, OrderNotesSearchCacheFilename);
+
+                IsDataLoadesOrderNote = true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error en Order Notes Offline");
             }
         }
 

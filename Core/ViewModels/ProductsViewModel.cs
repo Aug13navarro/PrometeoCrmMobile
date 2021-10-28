@@ -66,17 +66,24 @@ namespace Core.ViewModels
 
         public ProductsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)
         {
-            data = new ApplicationData();
+            try
+            {
+                data = new ApplicationData();
 
-            companyId = 7;
+                companyId = 7;
 
-            Query = "";
-            this.prometeoApiService = prometeoApiService;
-            this.navigationService = navigationService;
+                Query = "";
+                this.prometeoApiService = prometeoApiService;
+                this.navigationService = navigationService;
 
-            LoadMorePruductsCommand = new Command(async () => await LoadMoreProductsAsync());
-            SelectProductCommand = new Command<Product>(SelectProduct);
-            SearchQueryCommand = new Command(async () => await SearchQueryAsync());
+                LoadMorePruductsCommand = new Command(async () => await LoadMoreProductsAsync());
+                SelectProductCommand = new Command<Product>(SelectProduct);
+                SearchQueryCommand = new Command(async () => await SearchQueryAsync());
+            }
+            catch ( Exception e)
+            {
+                var s = e.Message;
+            }
         }
 
         private async Task SearchQueryAsync()

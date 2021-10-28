@@ -162,6 +162,9 @@
   <data name="Customer" xml:space="preserve">
     <value>Customer</value>
   </data>
+  <data name="CustomerAddressAlert" xml:space="preserve">
+    <value>This Customer has got not assigned an Address</value>
+  </data>
   <data name="Customers" xml:space="preserve">
     <value>Customers</value>
   </data>

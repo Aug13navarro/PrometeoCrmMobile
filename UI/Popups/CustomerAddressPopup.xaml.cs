@@ -28,7 +28,13 @@ namespace UI.Popups
 
             if(CustomerAddresses.Count() > 0)
             {
+                lblAviso.IsVisible = false;
                 listAddress.ItemsSource = CustomerAddresses;
+            }
+            else
+            {
+                lblAviso.IsVisible = true;
+                listAddress.IsVisible = false;
             }
 
             descriptionLabel.Text = AppResources.SelectAddressTitle;

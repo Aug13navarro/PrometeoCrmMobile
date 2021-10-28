@@ -11,14 +11,15 @@ namespace Core.Model.Extern
     {
         public int Id { get; set; }
 
-        public Customer customer { get; set; }
+        public CustomerExtern customer { get; set; }
 
-        public OpportunityStatus opportunityStatus { get; set; }
+        public OpportunityStatusExtern opportunityStatus { get; set; }
 
         public DateTime createDt { get; set; }
         public DateTime closedDate { get; set; }
 
-        public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
+        //public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
+        public List<OpportunityProductsExtern> opportunityProducts { get; set; } = new List<OpportunityProductsExtern>();
 
         public string description { get; set; }
 
@@ -34,6 +35,6 @@ namespace Core.Model.Extern
 
         public string ProductsDescription => string.Join(", ", opportunityProducts.Select(x => x.product.name));
 
-        public MvxObservableCollection<OpportunityProducts> Details { get; set; } = new MvxObservableCollection<OpportunityProducts>();
+        public List<OpportunityProductsExtern> Details { get; set; } = new List<OpportunityProductsExtern>();
     }
 }

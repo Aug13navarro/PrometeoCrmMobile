@@ -234,22 +234,26 @@
                             </Frame>
                         </StackLayout>
 
-                        <StackLayout Orientation="Horizontal" Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.PaymentCondition}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center">
-
-                            </Label>
-                            <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
-                                <Picker IsEnabled="{Binding EnableForEdit}"
-                                    Title="{x:Static resources:AppResources.Select}" 
-                                    ItemsSource="{Binding PaymentConditions, Mode=TwoWay}" 
-                                    ItemDisplayBinding="{Binding description}"
-                                    SelectedItem="{Binding Condition, Mode=TwoWay}">
-
-                                </Picker>
-                            </Frame>
+                        <StackLayout Margin="0,5">
+                            <Grid
+                                ColumnDefinitions="auto,*">
+                                <Label Text="{x:Static resources:AppResources.PaymentCondition}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
+                                       Grid.Column="0">
+                                </Label>
+                                <Frame
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    Padding="0"
+                                    HorizontalOptions="FillAndExpand">
+                                    <Picker IsEnabled="{Binding EnableForEdit}"
+                                            Title="{x:Static resources:AppResources.Select}" 
+                                            ItemsSource="{Binding PaymentConditions, Mode=TwoWay}" 
+                                            ItemDisplayBinding="{Binding description}"
+                                            SelectedItem="{Binding Condition, Mode=TwoWay}">
+                                        
+                                    </Picker>
+                                </Frame>
+                            </Grid>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal"

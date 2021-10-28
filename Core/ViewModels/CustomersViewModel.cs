@@ -1,10 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Core.Helpers;
 using Core.Model;
 using Core.Model.Common;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -47,6 +51,8 @@ namespace Core.ViewModels
         public IMvxAsyncCommand NewClientsSearchCommand { get; }
         public IMvxAsyncCommand<Customer> SelectCustomerCommand { get; }
 
+        //private readonly IMapper mapper;
+
         // Constants
         private const int PageSize = 10;
 
@@ -58,12 +64,15 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IOfflineDataService offlineDataService;
 
-        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)
+        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)//, IMapper mapper
         {
             this.prometeoApiService = prometeoApiService;
             this.appData = appData;
             this.navigationService = navigationService;
             this.offlineDataService = offlineDataService;
+
+            //mapper = Mvx.Resolve<IMapper>();
+            //_mapper = mapper;
 
             LoadMoreCustomersCommand = new MvxAsyncCommand(LoadMoreCustomersAsync);
             ToggleContactsVisibilityCommand = new MvxCommand<Customer>(ToggleContactsVisibility);
@@ -90,10 +99,25 @@ namespace Core.ViewModels
             }
             else
             {
+
+                var mapperConfig = new MapperConfiguration(m =>
+                {
+                    m.AddProfile(new MappingProfile());
+                });
+
+                IMapper mapper = mapperConfig.CreateMapper();
+
+                if (!offlineDataService.IsDataLoadesCustomer)
+                {
+                    await offlineDataService.LoadAllData();
+                }
+
                 var d = await offlineDataService.SearchCustomers();
 
+                var r = mapper.Map<List<Customer>>(d);
+
                 Customers.Clear();
-                Customers.AddRange(d);
+                Customers.AddRange(r);
             }
         }
 

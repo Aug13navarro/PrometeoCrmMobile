@@ -35,6 +35,12 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Label
+                x:Name="lblAviso"
+                Text="Este Cliente no tiene una Direccion Asignada."
+                HorizontalOptions="Center">
+                
+            </Label>
         </StackLayout>
     </Frame>
 </Popups:BasePopupPage>

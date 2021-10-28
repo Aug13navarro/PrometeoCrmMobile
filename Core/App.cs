@@ -1,3 +1,4 @@
+using AutoMapper;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels;
@@ -66,6 +67,7 @@ namespace Core
             Mvx.IoCProvider.RegisterType<IPrometeoApiService, PrometeoApiService>();
             Mvx.IoCProvider.ConstructAndRegisterSingleton<IOfflineDataService, OfflineDataService>();
             Mvx.IoCProvider.ConstructAndRegisterSingleton<INotificationService, NotificationService>();
+
         }
     }
 }
