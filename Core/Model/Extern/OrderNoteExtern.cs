@@ -35,7 +35,7 @@ namespace Core.Model.Extern
         //public string totalStr => CanvertirTotal(this.total);
 
         //public int createBy { get; set; }
-        //public MvxObservableCollection<ProductOrder> products { get; set; }
+        public List<ProductOrderExtern> products { get; set; }
         //public MvxObservableCollection<OpportunityProducts> Details { get; set; }
         public string OCCustomer { get; set; }
         public int RemittanceType { get; set; }
@@ -44,6 +44,7 @@ namespace Core.Model.Extern
         public string DeliveryResponsible { get; set; }
         public string DeliveryAddress { get; set; }
 
+        [Serializable]
         public class ProductOrderExtern
         {
             public ProductExtern companyProductPresentation { get; set; }

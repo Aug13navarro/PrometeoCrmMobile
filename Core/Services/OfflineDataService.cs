@@ -1,6 +1,7 @@
 ﻿using Core.Model;
 using Core.Model.Extern;
 using Core.Services.Contracts;
+using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +9,8 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
+using static Core.Model.Extern.OrderNoteExtern;
+using static Core.Model.OrderNote;
 
 namespace Core.Services
 {
@@ -303,11 +306,102 @@ namespace Core.Services
         {
             try
             {
+                var comp = new CompanyExtern
+                {
+                    BusinessName = orderNote.company.BusinessName,
+                    externalId = orderNote.company.externalId,
+                    Id = orderNote.company.Id
+                }; 
+                
+                var customerEx = new CustomerExtern
+                {
+                    Abbreviature = orderNote.customer.Abbreviature,
+                    AccountOwnerId = orderNote.customer.AccountOwnerId,
+                    AccountOwnerName = orderNote.customer.AccountOwnerName,
+                    BusinessName = orderNote.customer.BusinessName,
+                    CompanyName = orderNote.customer.CompanyName,
+                    Descriptions = orderNote.customer.Descriptions,
+                    DollarBalance = orderNote.customer.DollarBalance,
+                    ExternalId = orderNote.customer.ExternalId,
+                    Id = orderNote.customer.Id,
+                    IdParentCustomer = orderNote.customer.IdParentCustomer,
+                    TaxCondition = orderNote.customer.TaxCondition,
+                    IdNumber = orderNote.customer.IdNumber,
+                    PesosBalance = orderNote.customer.PesosBalance,
+                    TypeId = orderNote.customer.TypeId,
+                    UnitBalance = orderNote.customer.UnitBalance,
+                };
+
+                var prod = ConvertirProductsExtern(orderNote.products.ToList());
+
+                var orderExtern = new OrderNoteExtern
+                {
+                    company = comp,
+                    companyId = comp.Id,
+                    cuenta = orderNote.cuenta,
+                    currencyId = orderNote.currencyId,
+                    customer = customerEx,
+                    customerId = customerEx.Id,
+                    DeliveryAddress = orderNote.DeliveryAddress,
+                    DeliveryDate = orderNote.DeliveryDate,
+                    DeliveryResponsible = orderNote.DeliveryResponsible,
+                    Description = orderNote.Description,
+                    discount = orderNote.discount,
+                    divisionCuentaId = orderNote.divisionCuentaId,
+                    fecha = orderNote.fecha,
+                    numero = orderNote.numero,
+                    OCCustomer = orderNote.OCCustomer,
+                    orderStatus = orderNote.orderStatus,
+                    paymentConditionId = orderNote.paymentConditionId,
+                    PlacePayment = orderNote.PlacePayment,
+                    RemittanceType = orderNote.RemittanceType,
+                    talon = orderNote.talon,
+                    tipoComprobante = orderNote.tipoComprobante,
+                    tipoCuentaId = orderNote.tipoCuentaId,
+                    tipoServicioId = orderNote.tipoServicioId,
+                    total = orderNote.total,
+                    products = prod,
+                };
+
+                var lista = new List<OrderNoteExtern>();
+
+                lista.Add(orderExtern);
+
+                orderNotesSearchCache.AddRange(lista);
             }
             catch (Exception e)
             {
                 var s = e.Message;
             }
+        }
+
+        private List<ProductOrderExtern> ConvertirProductsExtern(List<ProductOrder> products)
+        {
+            var lista = new List<ProductOrderExtern>();
+
+            foreach (var item in products)
+            {
+                var prod = new ProductExtern
+                {
+                    name = item.companyProductPresentation.name
+                };
+
+                var product = new ProductOrderExtern
+                {
+                    arancel = item.arancel,
+                    bonificacion = item.bonificacion,
+                    companyProductPresentation = prod,
+                    companyProductPresentationId = item.companyProductPresentationId,
+                    discount = item.discount,
+                    price = item.price,
+                    quantity = item.quantity,
+                    subtotal = item.subtotal,
+                };
+
+                lista.Add(product);
+            }
+
+            return lista;
         }
 
         private List<OpportunityProductsExtern> ConvertirDetailExtern(List<OpportunityProducts> opportunityProducts)
@@ -528,13 +622,104 @@ namespace Core.Services
         {
             try
             {
-                return Task.FromResult(new List<OrderNote>());
+                var lista = new List<OrderNote>();
+
+                var fromCache = orderNotesSearchCache;
+
+                foreach (var item in fromCache)
+                {
+                    var comp = new Company
+                    {
+                        BusinessName = item.company.BusinessName,
+                        externalId = item.company.externalId,
+                        Id = item.company.Id
+                    };
+
+                    var cust = new Customer
+                    {
+                        Abbreviature = item.customer.Abbreviature,
+                        AccountOwnerId = item.customer.AccountOwnerId,
+                        AccountOwnerName = item.customer.AccountOwnerName,
+                        BusinessName = item.customer.BusinessName,
+                        CompanyName = item.customer.CompanyName,
+                        Descriptions = item.customer.Descriptions,
+                        DollarBalance = item.customer.DollarBalance,
+                        ExternalId = item.customer.ExternalId,
+                        Id = item.customer.Id,
+                        IdParentCustomer = item.customer.IdParentCustomer,
+                        TaxCondition = item.customer.TaxCondition,
+                        IdNumber = item.customer.IdNumber,
+                        PesosBalance = item.customer.PesosBalance,
+                        TypeId = item.customer.TypeId,
+                        UnitBalance = item.customer.UnitBalance,
+                    };
+
+                    var productsList = ConvertirExternProduct(item.products);
+
+                    lista.Add(new OrderNote
+                    {
+                        company = comp,
+                        companyId = comp.Id,
+                        cuenta = item.cuenta,
+                        currencyId = item.currencyId,
+                        customer = cust,
+                        customerId = cust.Id,
+                        DeliveryAddress = item.DeliveryAddress,
+                        DeliveryDate = item.DeliveryDate,
+                        DeliveryResponsible = item.DeliveryResponsible,
+                        Description = item.Description,
+                        discount = item.discount,
+                        divisionCuentaId = item.divisionCuentaId,
+                        fecha = item.fecha,
+                        numero = item.numero,
+                        OCCustomer = item.OCCustomer,
+                        orderStatus = item.orderStatus,
+                        paymentConditionId = item.paymentConditionId,
+                        PlacePayment = item.PlacePayment,
+                        RemittanceType = item.RemittanceType,
+                        talon = item.talon,
+                        tipoComprobante = item.tipoComprobante,
+                        tipoCuentaId = item.tipoCuentaId,
+                        tipoServicioId = item.tipoServicioId,
+                        total = item.total,
+                        products = new MvvmCross.ViewModels.MvxObservableCollection<ProductOrder>(productsList)
+                    });
+
+                }
+                return Task.FromResult(lista);
             }
             catch (Exception e)
             {
                 var s = e.Message;
                 throw;
             }
+        }
+
+        private List<ProductOrder> ConvertirExternProduct(List<OrderNoteExtern.ProductOrderExtern> products)
+        {
+            var lista = new List<ProductOrder>();
+
+            foreach (var item in products)
+            {
+                var prod = new Product
+                {
+                    name = item.companyProductPresentation.name
+                };
+
+                lista.Add(new ProductOrder
+                {
+                    arancel = item.arancel,
+                    bonificacion = item.bonificacion,
+                    companyProductPresentation = prod,
+                    companyProductPresentationId = item.companyProductPresentationId,
+                    discount = item.discount,
+                    price = item.price,
+                    quantity = item.quantity,
+                    subtotal = item.subtotal,
+                });
+            }
+
+            return lista;
         }
 
         private List<OpportunityProducts> ConvertirExternDetail(List<OpportunityProductsExtern> details)

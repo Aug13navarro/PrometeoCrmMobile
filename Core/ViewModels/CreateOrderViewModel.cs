@@ -345,7 +345,7 @@ namespace Core.ViewModels
                     SelectedCustomer == null ||
                     Condition == null ||
                     TypeOfRemittance == null ||
-                    PlaceOfPayment == null
+                    Place == null
                     )//|| CustomerAddress == null
                 {
                     if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
@@ -417,34 +417,49 @@ namespace Core.ViewModels
 
                 if (Order.id == 0)
                 {
-                    var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
-
-                    if (respuesta != null)
+                    if (offlineDataService.IsWifiConection)
                     {
-                        if (respuesta.opportunityId > 0)
+                        var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
+
+                        if (respuesta != null)
                         {
-                            var send = new OpportunityPost
+                            if (respuesta.opportunityId > 0)
                             {
-                                branchOfficeId = Order.customer.Id,
-                                closedDate = DateTime.Now,
-                                closedReason = "",
-                                customerId = Order.customer.Id,
-                                description = Order.oppDescription,
-                                opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                                opportunityStatusId = 4,
-                                totalPrice = Total
-                            };
+                                var send = new OpportunityPost
+                                {
+                                    branchOfficeId = Order.customer.Id,
+                                    closedDate = DateTime.Now,
+                                    closedReason = "",
+                                    customerId = Order.customer.Id,
+                                    description = Order.oppDescription,
+                                    opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                                    opportunityStatusId = 4,
+                                    totalPrice = Total
+                                };
 
-                            send.opportunityProducts = listaProductos(Order.Details);
+                                send.opportunityProducts = listaProductos(Order.Details);
 
-                            var opp = new Opportunity();
+                                var opp = new Opportunity();
 
-                            await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+                                await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+                            }
                         }
-                    }
 
-                    await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                    await navigationService.Navigate<PedidosViewModel>();
+                        await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                        await navigationService.Navigate<PedidosViewModel>();
+                    }
+                    else
+                    {
+                        nuevaOrder.company = Company;
+                        nuevaOrder.customer = SelectedCustomer;
+
+                        offlineDataService.SaveOrderNotes(nuevaOrder);
+                        await offlineDataService.SynchronizeToDisk();
+
+
+                        await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                        await navigationService.Navigate<PedidosViewModel>();
+                    }
                 }
                 else
                 {
@@ -688,7 +703,7 @@ namespace Core.ViewModels
                     }
                     if (Companies != null)
                     {
-                        Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
+                        Company = Companies.FirstOrDefault();
                     }
 
                     //CargarCondiciones();
@@ -876,6 +891,11 @@ namespace Core.ViewModels
                         companyProductPresentationId = detail.productId,
                         companyProductPresentation = detail.product,
                     };
+
+                    if (Order.products == null)
+                    {
+                        Order.products = new MvxObservableCollection<OrderNote.ProductOrder>();
+                    }
 
                     Order.products.Add(product);
 

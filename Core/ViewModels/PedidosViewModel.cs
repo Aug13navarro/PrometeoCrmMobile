@@ -108,14 +108,16 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         //private readonly IToastService toastService;
+        private readonly IOfflineDataService offlineDataService;
 
-        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//,IToastService toastService
+        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)//,IToastService toastService
         {
             data = new ApplicationData();
 
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
             //this.toastService = toastService;
+            this.offlineDataService = offlineDataService;
 
             NuevaNotaPedidoCommand = new Command(async () => await NuevaNotaPedido());
             FilterOrdersCommand = new Command(async () => await FilterOrders());
@@ -202,20 +204,38 @@ namespace Core.ViewModels
 
                 requestData.userId = user.Id;
 
-                //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
-                var ordersnote = await prometeoApiService.GetOrderNote(requestData, user.Token);
+                if (offlineDataService.IsWifiConection)
+                {
+                    //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
+                    var ordersnote = await prometeoApiService.GetOrderNote(requestData, user.Token);
 
-                if (newSearch)
+                    if (newSearch)
+                    {
+                        OrdersNote.Clear();
+                    }
+
+                    var ordenNotes = new MvxObservableCollection<OrderNote>(ordersnote.Results.OrderByDescending(x => x.fecha));
+                    OrdersNote.AddRange(ordenNotes);
+
+                    CurrentPage = CurrentPage++;
+                    IsLoading = false;
+                    //TotalPages = opportunities.TotalPages;
+                }
+                else
                 {
                     OrdersNote.Clear();
+
+                    if(!offlineDataService.IsDataLoadesOrderNote)
+                    {
+                        await offlineDataService.LoadOrderNotes();
+                    }
+
+                    var d = await offlineDataService.SearchOrderNotes();
+
+                    var orderNotes = new MvxObservableCollection<OrderNote>(d);
+                    OrdersNote.AddRange(orderNotes);
+                    IsLoading = false;
                 }
-
-                var ordenNotes = new MvxObservableCollection<OrderNote>(ordersnote.Results.OrderByDescending(x => x.fecha));
-                OrdersNote.AddRange(ordenNotes);
-
-                CurrentPage = CurrentPage++;
-                IsLoading = false;
-                //TotalPages = opportunities.TotalPages;
 
             }
             catch (Exception ex)

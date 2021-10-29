@@ -247,6 +247,15 @@ namespace Core.ViewModels
 
         private async Task WinOpportunityAsync(Opportunity o)
         {
+            Opportunity.customer = SelectedCustomer;
+
+            string error = ValidateOpportunity(Opportunity);
+            if (!string.IsNullOrWhiteSpace(error))
+            {
+                await Application.Current.MainPage.DisplayAlert("", error, "Aceptar");
+                return;
+            }
+
             var order = new OrderNote
             {
                 customerId = Opportunity.customer.Id,
