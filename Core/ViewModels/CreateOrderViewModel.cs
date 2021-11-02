@@ -606,12 +606,18 @@ namespace Core.ViewModels
                         if (Order.companyId > 0)
                         {
                             Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                            CargarCondiciones();
+                            if(PaymentConditions.Count <= 0)
+                            {
+                                CargarCondiciones();
+                            }
                         }
                         else
                         {
                             Company = Companies.FirstOrDefault();
-                            CargarCondiciones();
+                            if (PaymentConditions.Count <= 0)
+                            {
+                                CargarCondiciones();
+                            }
                         }
                     }
                 }
@@ -630,12 +636,18 @@ namespace Core.ViewModels
                         if (Order.companyId > 0)
                         {
                             Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                            CargarCondiciones();
+                            if (PaymentConditions.Count <= 0)
+                            {
+                                CargarCondiciones();
+                            }
                         }
                         else
                         {
                             Company = Companies.FirstOrDefault();
-                            CargarCondiciones();
+                            if (PaymentConditions.Count <= 0)
+                            {
+                                CargarCondiciones();
+                            }
                         }
                     }
                 }
@@ -703,13 +715,39 @@ namespace Core.ViewModels
                     }
                     if (Companies != null)
                     {
-                        Company = Companies.FirstOrDefault();
+                        if (Order.companyId > 0)
+                        {
+                            Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+                        }
+                        else
+                        {
+                            Company = Companies.FirstOrDefault();
+                        }
                     }
 
-                    //CargarCondiciones();
+                    if(Order.PlacePayment > 0)
+                    {
+                        Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
+                    }
+                    if(Order.RemittanceType > 0)
+                    {
+                        TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
+                    }
+                    if (Order.paymentConditionId > 0)
+                    {
+                        Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                    }
+
                     if (theOrder.Details == null)
                     {
-                        Order.products = new MvxObservableCollection<OrderNote.ProductOrder>();
+                        if (theOrder.products != null)
+                        {
+                            Order.products = theOrder.products;
+                        }
+                        else
+                        {
+                            Order.products = new MvxObservableCollection<OrderNote.ProductOrder>();
+                        }
                     }
                     else
                     {

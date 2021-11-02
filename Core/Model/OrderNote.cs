@@ -78,7 +78,7 @@ namespace Core.Model
 
         public int currencyId { get; set; }
         public Currency currency { get; set; }
-        public int companyId { get; set; }
+        public int? companyId { get; set; }
         public Company company { get; set; }
         public int tipoComprobante { get; set; }
         public int talon { get; set; }

@@ -105,14 +105,13 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         //private readonly IToastService toastService;
 
-        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)//, IToastService toastService
+        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)
         {
             data = new ApplicationData();
             this.offlineDataService = offlineDataService;
 
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
-            //this.toastService = toastService;
 
             LoadMoreOpportunitiesCommand = new Command(async () => await LoadMoreOpportunitiesAsync());
             CreateOpportunityCommand = new Command(async () => await CreateOpportunityAsync());
@@ -135,7 +134,7 @@ namespace Core.ViewModels
                 Application.Current.MainPage.Navigation.PopModalAsync();
             });
 
-            //Sincronizar();
+            Sincronizar();
         }
 
         private async void Sincronizar()
@@ -144,7 +143,11 @@ namespace Core.ViewModels
             {
                 if (offlineDataService.IsWifiConection)
                 {
-                    await offlineDataService.LoadOpportunities();
+                    if (!offlineDataService.IsDataLoadesOpportunities)
+                    {
+                        await offlineDataService.LoadOpportunities();
+                    }
+
                     var opportunities = await offlineDataService.SearchOpportunities();
 
                     if (opportunities.Count > 0)
@@ -168,8 +171,11 @@ namespace Core.ViewModels
 
                             send.opportunityProducts = listaProductos(item.Details);
 
-                            await prometeoApiService.SaveOpportunityCommand(send, data.LoggedUser.Token, item);
+                            //await prometeoApiService.SaveOpportunityCommand(send, data.LoggedUser.Token, item);
                         }
+
+                        await offlineDataService.DeleteOpportunities();
+                        offlineDataService.UnloadAllData();
 
                         await Application.Current.MainPage.DisplayAlert(
                             "Sincronizado", "Sincronizacion terminada", "Aceptar");
@@ -260,19 +266,100 @@ namespace Core.ViewModels
 
                 if (filtro != null)
                 {
-                    IsLoading = true;
+                    if (offlineDataService.IsWifiConection)
+                    {
+                        IsLoading = true;
 
-                    var opportunities = await prometeoApiService.GetOppByfilter(filtro,user.Language.ToLower() , user.Token);
+                        var opportunities = await prometeoApiService.GetOppByfilter(filtro, user.Language.ToLower(), user.Token);
 
-                    Opportunities.Clear();
+                        Opportunities.Clear();
 
-                    var ordenOportunidad = new MvxObservableCollection<Opportunity>(opportunities.OrderByDescending(x => x.closedDate));
-                    Opportunities.AddRange(ordenOportunidad);
+                        var ordenOportunidad = new MvxObservableCollection<Opportunity>(opportunities.OrderByDescending(x => x.closedDate));
+                        Opportunities.AddRange(ordenOportunidad);
+                    }
+                    else
+                    {
+                        IsLoading = true;
+
+                        if(!offlineDataService.IsDataLoadesOpportunities)
+                        {
+                            await offlineDataService.LoadOpportunities();
+                        }
+
+                        var opsCache = await offlineDataService.SearchOpportunities();
+
+                        var Opfiltro = new MvxObservableCollection<Opportunity>();
+
+                        if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo == null) //Company
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id 
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom == null && filtro.priceTo == null) //Status
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo == null) //Price From
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.totalPrice >= filtro.priceFrom
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo != null) //Price TO
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.totalPrice >= filtro.priceTo
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count > 0 && filtro.status.Count >= 0 && filtro.priceFrom == null && filtro.priceTo == null) //Company and Status
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.opportunityStatus.Id == filtro.status.FirstOrDefault().id
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo == null) //Company and Price From
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.totalPrice >= filtro.priceFrom
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo != null) //Company and Price To
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom != null && filtro.priceTo == null) //Status and Price From
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceFrom
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom == null && filtro.priceTo != null) //Status and Price To
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+                        if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo != null) //Price From and Price To
+                        {
+                            Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
+                                                            && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        }
+
+
+                        Opportunities.Clear();
+
+                        Opportunities.AddRange(Opfiltro);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                //toastService.ShowError("Ocurrió un error al cargar el filtro. Compruebe su conexión a internet.");
+                await Application.Current.MainPage.DisplayAlert("Información", ex.Message, "Aceptar"); return;
             }
             finally
             {
@@ -314,6 +401,21 @@ namespace Core.ViewModels
                         await offlineDataService.LoadOpportunities();
                     }
                     opportunities = await offlineDataService.SearchOpportunities();
+
+                    foreach (var item in opportunities) 
+                    {
+                        if(item.opportunityStatus.name == "" || item.opportunityStatus.name == null)
+                        {
+                            if(user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
+                            {
+                                item.opportunityStatus.name = item.opportunityStatus.nameCacheEsp;
+                            }
+                            else
+                            {
+                                item.opportunityStatus.name = item.opportunityStatus.nameCacheEn;
+                            }
+                        }
+                    }
                 }
 
 

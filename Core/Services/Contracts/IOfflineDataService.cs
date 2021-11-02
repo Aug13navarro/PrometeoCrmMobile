@@ -24,9 +24,10 @@ namespace Core.Services.Contracts
         Task LoadOpportunities();
         Task LoadOrderNotes();
 
-        void UnloadAllData(string tipo);
+        void UnloadAllData();
         Task SynchronizeToDisk();
         Task DeleteAllData();
+        Task DeleteOpportunities();
 
         void SaveCustomerSearch(IList<CustomerExtern> policies);
         void SaveCompanySearch(List<Company> companies);

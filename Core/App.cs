@@ -17,15 +17,12 @@ namespace Core
     {
         private OfflineDataService offlineDataService;
 
-        private OfflineCharging _offlineCharging;
-
         public static Uri PrometeoApiEndPoint { get; } = new Uri("https://neophos-testing-api.azurewebsites.net/");
         //public static Uri PrometeoApiEndPoint { get; } = new Uri("https://prometeo-produccion-api.azurewebsites.net/");
 
         public override void Initialize()
         {
             offlineDataService = new OfflineDataService();
-            _offlineCharging = new OfflineCharging();
 
             RegisterServices();
             RegisterAppStart<RootViewModel>();

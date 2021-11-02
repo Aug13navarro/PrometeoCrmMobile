@@ -50,11 +50,13 @@ namespace Core.ViewModels
         // Services
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
+        private readonly IOfflineDataService offlineDataService;
 
-        public ContactsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)
+        public ContactsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)
         {
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
+            this.offlineDataService = offlineDataService;
 
             LoadMoreContactsCommand = new Command(async () => await LoadMoreContactsAsync());
             GoToCreateContactCommand = new Command(async () => await GoToCreateContactAsync());
@@ -78,20 +80,27 @@ namespace Core.ViewModels
         {
             try
             {
-                IsSearchInProgress = true;
-                Error = false;
-
-                PaginatedList<CustomerContact> contacts = await prometeoApiService.SearchCustomerContacts(requestData);
-
-                if (newSearch)
+                if (offlineDataService.IsWifiConection)
                 {
-                    Contacts.Clear();
+                    IsSearchInProgress = true;
+                    Error = false;
+
+                    PaginatedList<CustomerContact> contacts = await prometeoApiService.SearchCustomerContacts(requestData);
+
+                    if (newSearch)
+                    {
+                        Contacts.Clear();
+                    }
+
+                    Contacts.AddRange(contacts.Results);
+
+                    CurrentPage = contacts.CurrentPage;
+                    TotalPages = contacts.TotalPages;
                 }
-
-                Contacts.AddRange(contacts.Results);
-
-                CurrentPage = contacts.CurrentPage;
-                TotalPages = contacts.TotalPages;
+                else
+                {
+                    //
+                }
             }
             catch (Exception ex)
             {

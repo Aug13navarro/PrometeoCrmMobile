@@ -232,8 +232,24 @@ namespace Core.ViewModels
                 };
 
                 send.opportunityProducts = listaProductos(Opportunity.Details);
-                
-                await prometeoApiService.SaveOpportunityEdit(send,Opportunity.Id, user.Token, Opportunity);
+
+                if (offlineDataService.IsWifiConection)
+                {
+                    await prometeoApiService.SaveOpportunityEdit(send, Opportunity.Id, user.Token, Opportunity);
+                }
+                else
+                {
+                    if (user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Debe sincronizar la oportunidad antes de cerrarla.", "aceptar");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atention", "You must sync the opportunity before closing it.", "aceptar");
+                        return;
+                    }
+                }
 
                 await navigationService.Close(this);
                 NewOpportunityCreated?.Invoke(this, EventArgs.Empty);
@@ -247,30 +263,45 @@ namespace Core.ViewModels
 
         private async Task WinOpportunityAsync(Opportunity o)
         {
-            Opportunity.customer = SelectedCustomer;
-
-            string error = ValidateOpportunity(Opportunity);
-            if (!string.IsNullOrWhiteSpace(error))
+            if (offlineDataService.IsWifiConection)
             {
-                await Application.Current.MainPage.DisplayAlert("", error, "Aceptar");
-                return;
+                Opportunity.customer = SelectedCustomer;
+
+                string error = ValidateOpportunity(Opportunity);
+                if (!string.IsNullOrWhiteSpace(error))
+                {
+                    await Application.Current.MainPage.DisplayAlert("", error, "Aceptar");
+                    return;
+                }
+
+                var order = new OrderNote
+                {
+                    customerId = Opportunity.customer.Id,
+                    customer = SelectedCustomer,
+                    fecha = Opportunity.createDt,
+                    opportunityId = Opportunity.Id,
+                    Details = Opportunity.opportunityProducts,
+                    total = Opportunity.totalPrice,
+                    oppDescription = Opportunity.description,
+                    companyId = Company.Id,
+                };
+
+                //int customerId = await navigationService.Navigate<CustomersViewModel, int>();
+                await navigationService.Navigate<CreateOrderViewModel, OrderNote>(order);
             }
-
-            var order = new OrderNote
+            else
             {
-                customerId = Opportunity.customer.Id,
-                customer = SelectedCustomer,
-                fecha = Opportunity.createDt,
-                opportunityId = Opportunity.Id,
-                Details = Opportunity.opportunityProducts,
-                total = Opportunity.totalPrice,
-                oppDescription = Opportunity.description,
-                companyId = Company.Id,
-            };
-
-            //int customerId = await navigationService.Navigate<CustomersViewModel, int>();
-            await navigationService.Navigate<CreateOrderViewModel, OrderNote>(order);
-
+                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "Debe sincronizar la oportunidad antes de cerrarla.", "aceptar");
+                    return;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atention", "You must sync the opportunity before closing it.", "aceptar");
+                    return;
+                }
+            }
         }
 
         public void CargarIconosEstados()
@@ -327,6 +358,12 @@ namespace Core.ViewModels
                 {
                     Opportunity = theOpportunity;
                     Opportunity.createDt = DateTime.Today;
+
+
+                    if(Opportunity.Company != null)
+                    {
+                        Company = Companies.FirstOrDefault(x => x.Id == Opportunity.Company.Id);
+                    }
                 }
 
                 selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
@@ -636,7 +673,7 @@ namespace Core.ViewModels
                     }
                     else
                     {
-
+                        //editar oportunidad en cache
                     }
 
                     await navigationService.Close(this);

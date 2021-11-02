@@ -260,20 +260,99 @@ namespace Core.ViewModels
                 {
                     IsLoading = true;
 
-                    var orders = await prometeoApiService.GetOrdersByfilter(filtro, user.Token);
-
                     FechaInicioFiltro = filtro.dateFrom.ToString("d");
                     FechaFinFiltro = filtro.dateTo.ToString("d");
 
-                    OrdersNote.Clear();
+                    if (offlineDataService.IsWifiConection)
+                    {
+                        var orders = await prometeoApiService.GetOrdersByfilter(filtro, user.Token);
 
-                    var ordenOportunidad = new MvxObservableCollection<OrderNote>(orders.OrderByDescending(x => x.fecha));
-                    OrdersNote.AddRange(ordenOportunidad);
+                        OrdersNote.Clear();
+
+                        var ordenOportunidad = new MvxObservableCollection<OrderNote>(orders.OrderByDescending(x => x.fecha));
+                        OrdersNote.AddRange(ordenOportunidad);
+                    }
+                    else
+                    {
+                        if (!offlineDataService.IsDataLoadesOrderNote)
+                        {
+                            await offlineDataService.LoadOrderNotes();
+                        }
+
+                        var ordsCache = await offlineDataService.SearchOrderNotes();
+
+                        var OrdFiltro = new List<OrderNote>();
+
+                        if (filtro.companyId != null && filtro.orderStatusId == null && filtro.priceFrom == null && filtro.priceTo == null) //Company
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.companyId == filtro.companyId
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId == null && filtro.orderStatusId != null && filtro.priceFrom == null && filtro.priceTo == null) //Status
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.orderStatus == filtro.orderStatusId
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId == null && filtro.orderStatusId == null && filtro.priceFrom != null && filtro.priceTo == null) //Price From
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.total >= Convert.ToDecimal(filtro.priceFrom)
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId == null && filtro.orderStatusId == null && filtro.priceFrom == null && filtro.priceTo != null) //Price To
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.total == Convert.ToDecimal(filtro.priceTo)
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId != null && filtro.orderStatusId != null && filtro.priceFrom == null && filtro.priceTo == null) //Company and Status
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.companyId == filtro.companyId && x.orderStatus == filtro.orderStatusId
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId != null && filtro.orderStatusId == null && filtro.priceFrom != null && filtro.priceTo == null) //Company and Price From
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.companyId == filtro.companyId && x.total >= Convert.ToDecimal(filtro.priceFrom)
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId != null && filtro.orderStatusId == null && filtro.priceFrom == null && filtro.priceTo != null) //Company and Price To
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.companyId == filtro.companyId && x.total <= Convert.ToDecimal(filtro.priceTo)
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId == null && filtro.orderStatusId != null && filtro.priceFrom == null && filtro.priceTo != null) //Status and Price From
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.orderStatus == filtro.orderStatusId && x.total <= Convert.ToDecimal(filtro.priceFrom)
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId == null && filtro.orderStatusId != null && filtro.priceFrom == null && filtro.priceTo != null) //Status and Price To
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.orderStatus == filtro.orderStatusId && x.total <= Convert.ToDecimal(filtro.priceTo)
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        if (filtro.companyId == null && filtro.orderStatusId == null && filtro.priceFrom != null && filtro.priceTo != null) //Price From and Price To
+                        {
+                            OrdFiltro.AddRange(ordsCache.Where(x => x.total >= Convert.ToDecimal(filtro.priceFrom) && x.total <= Convert.ToDecimal(filtro.priceTo)
+                                                            && x.fecha >= filtro.dateFrom && x.fecha <= filtro.dateTo));
+                        }
+
+                        OrdersNote.Clear();
+
+                        OrdersNote.AddRange(OrdFiltro);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 //toastService.ShowError($"{ex.Message}");
+                var s = ex.Message;
             }
             finally
             {

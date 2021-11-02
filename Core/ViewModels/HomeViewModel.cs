@@ -16,9 +16,10 @@ namespace Core.ViewModels
 {
     public class HomeViewModel : MvxViewModel
     {
+        
         // Properties
         public User LoggedUser { get; }
-
+        
         // Commands
         public IMvxAsyncCommand GoToOpportunitiesCommand { get; }
         public IMvxAsyncCommand GoToOrderCommand { get; }
@@ -52,73 +53,96 @@ namespace Core.ViewModels
             {
                 //REVISAR SI EXISTEN OPORTUNIDADES Y PEDIDODOS EN LA MEMORIA PARA PUBLICAR
 
-                
-
-                //if (DateTime.Now.Date.Day.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "lunes")
-                //{
-
-                //INIO AUTOMAPER PARA IGUALAR LOS MODELS
-                var mapperConfig = new MapperConfiguration(m =>
+                if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "martes")
                 {
-                    m.AddProfile(new MappingProfile());
-                });
 
-                IMapper mapper = mapperConfig.CreateMapper();
+                    //INIO AUTOMAPER PARA IGUALAR LOS MODELS
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
 
-                //OBTENGO TODAS LAS EMPRESAS POR USUARIO
-                var empresas = await prometeoApiService.GetCompaniesByUserId(LoggedUser.Id, LoggedUser.Token);
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    //OBTENGO TODAS LAS EMPRESAS POR USUARIO
+                    var empresas = await prometeoApiService.GetCompaniesByUserId(LoggedUser.Id, LoggedUser.Token);
 
                     //offlineDataService.UnloadAllData("Company");
                     //offlineDataService.UnloadAllData("Customer");
                     //offlineDataService.UnloadAllData("Payment");
                     //offlineDataService.UnloadAllData("Presentation");
 
-                //ELIMINO CACHE VIEJO
-                await offlineDataService.DeleteAllData();
+                    //ELIMINO CACHE VIEJO
+                    await offlineDataService.DeleteAllData();
+                    offlineDataService.UnloadAllData();
 
-                //GUARDO EMPRESAS EM CACHE
-                offlineDataService.SaveCompanySearch(empresas);
+                    //GUARDO EMPRESAS EM CACHE
+                    offlineDataService.SaveCompanySearch(empresas);
 
-                var clientes = new List<Customer>();
-                //foreach (var item in empresas)
-                //{
-                //    var allCustomer = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, item.Id);
+                    var clientes = new List<Customer>();
+                    //foreach (var item in empresas)
+                    //{
+                    //    var allCustomer = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, item.Id);
 
-                //    clientes.AddRange(allCustomer);
-                //}
+                    //    clientes.AddRange(allCustomer);
+                    //}
 
-                //OBTENGO TODOS LOS CLIENTES
-                var cliente = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, empresas.FirstOrDefault().Id);
+                    //OBTENGO TODOS LOS CLIENTES
+                    var cliente = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, empresas.FirstOrDefault().Id);
 
-                clientes.AddRange(cliente);
+                    clientes.AddRange(cliente);
 
-                //GUARDO LOS CLIENTES EN CACHE
-                var r = mapper.Map<List<CustomerExtern>>(clientes);
-                offlineDataService.SaveCustomerSearch(r);
+                    //GUARDO LOS CLIENTES EN CACHE
+                    var r = mapper.Map<List<CustomerExtern>>(clientes);
+                    offlineDataService.SaveCustomerSearch(r);
 
-                var condiciones = new List<PaymentCondition>();
+                    var condiciones = new List<PaymentCondition>();
 
-                //OBTENGO TODAS LAS CONDICIONES DE PAGOS POR LAS EMPRESAS
-                foreach (var item in empresas)
-                {
-                    var condic = await prometeoApiService.GetPaymentConditions(LoggedUser.Token, item.Id);
+                    //OBTENGO TODAS LAS CONDICIONES DE PAGOS POR LAS EMPRESAS
+                    foreach (var item in empresas)
+                    {
+                        var condic = await prometeoApiService.GetPaymentConditions(LoggedUser.Token, item.Id);
 
-                    condiciones.AddRange(condic);
-                }
+                        condiciones.AddRange(condic);
+                    }
 
-                //GUARDO LAS CONDICIONES DE PAGO
-                offlineDataService.SavePaymentConditions(condiciones);
+                    //GUARDO LAS CONDICIONES DE PAGO
+                    offlineDataService.SavePaymentConditions(condiciones);
 
-                //SINCRONIZO LA DATA CON LOS ARCHIVOS EN LA CACHE
+                    //SINCRONIZO LA DATA CON LOS ARCHIVOS EN LA CACHE
                     await offlineDataService.SynchronizeToDisk();
-                //}
+                }
             }
             else
             {
-                //await offlineDataService.LoadCompanies();
-                //await offlineDataService.LoadAllData();
+
             }
 
+        }
+        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
+        {
+            var lista = new List<OpportunityPost.ProductSend>();
+
+            foreach (var item in details)
+            {
+                double tempTotal = item.Price * item.Quantity;
+
+                if (item.Discount != 0)
+                {
+                    tempTotal = tempTotal - ((tempTotal * item.Discount) / 100);
+                }
+
+                lista.Add(new OpportunityPost.ProductSend
+                {
+                    discount = item.Discount,
+                    productId = item.productId,
+                    quantity = item.Quantity,
+                    total = tempTotal,
+                    price = item.Price
+                });
+            }
+
+            return lista;
         }
 
         private async Task GoToOrderAsync()

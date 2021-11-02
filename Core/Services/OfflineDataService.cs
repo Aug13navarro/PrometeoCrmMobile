@@ -114,65 +114,31 @@ namespace Core.Services
             });
         }
 
-        public void UnloadAllData(string tipo)
+        public void UnloadAllData()
         {
-            switch (tipo)
-            {
-                case "Customer":
-                    customerSearchCache.Clear();
-                    IsDataLoadesCustomer = false;
-                    break;
-                case "Company":
-                    companySearchCache.Clear();
-                    IsDataLoadesCompanies = false;
-                    break;
-                case "Payment":
-                    paymentConditionsSearchCache.Clear();
-                    IsDataLoadesPaymentConditions = false;
-                    break;
-                case "Presentation":
-                    presentationsSearchCache.Clear();
-                    IsDataLoadesPresentations = false;
-                    break;
-                case "Opportunity":
-                    opportunitiesSearchCache.Clear();
-                    IsDataLoadesOpportunities = false;
-                    break;
-                case "OrderNotes":
-                    orderNotesSearchCache.Clear();
-                    IsDataLoadesOrderNote = false;
-                    break;
-            }
+            customerSearchCache.Clear();
+            IsDataLoadesCustomer = false;
+
+            companySearchCache.Clear();
+            IsDataLoadesCompanies = false;
+
+            paymentConditionsSearchCache.Clear();
+            IsDataLoadesPaymentConditions = false;
+
+            presentationsSearchCache.Clear();
+            IsDataLoadesPresentations = false;
+
+            opportunitiesSearchCache.Clear();
+            IsDataLoadesOpportunities = false;
+
+            orderNotesSearchCache.Clear();
+            IsDataLoadesOrderNote = false;
         }
 
         #region SAVE
 
         public void SaveCustomerSearch(IList<CustomerExtern> customers)
         {
-            //var lista = new List<CustomerExtern>();
-
-            //foreach (var item in customers)
-            //{
-            //    lista.Add(new CustomerExtern
-            //    {
-            //        Abbreviature = item.Abbreviature,
-            //        AccountOwnerId = item.AccountOwnerId,
-            //        AccountOwnerName = item.AccountOwnerName,
-            //        BusinessName = item.BusinessName,
-            //        CompanyName = item.CompanyName,
-            //        Descriptions = item.Descriptions,
-            //        DollarBalance = item.DollarBalance,
-            //        ExternalId = item.ExternalId,
-            //        Id = item.Id,
-            //        IdParentCustomer = item.IdParentCustomer,
-            //        TaxCondition = item.TaxCondition,
-            //        IdNumber = item.IdNumber,
-            //        PesosBalance = item.PesosBalance,
-            //        TypeId = item.TypeId,
-            //        UnitBalance = item.UnitBalance,
-            //    });
-            //}
-
             customerSearchCache.AddRange(customers);
         }
 
@@ -473,6 +439,20 @@ namespace Core.Services
                 }
             });
         }
+        public async Task DeleteOpportunities()
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename));
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            });
+        }
 
         #region SEARCH
         public Task<List<CustomerExtern>> SearchCustomers()
@@ -760,9 +740,12 @@ namespace Core.Services
             try
             {
                 await SynchronizeItemsToDisk(customerSearchCache, MaxCustomerToSave, CustomerSearchCacheFilename);
-                await LoadData(customerSearchCache, CustomerSearchCacheFilename);
 
-                IsDataLoadesCustomer = true;
+                if (customerSearchCache.Count > 0)
+                {
+                    await LoadData(customerSearchCache, CustomerSearchCacheFilename);
+                    IsDataLoadesCustomer = true;
+                }
             }
             catch (Exception e)
             {
@@ -773,9 +756,13 @@ namespace Core.Services
         public async Task LoadDataPayment()
         {
             await SynchronizeItemsToDisk(paymentConditionsSearchCache, MaxPaymentConditions, PaymentConditionsSearchCacheFilename);
-            await LoadData(paymentConditionsSearchCache, PaymentConditionsSearchCacheFilename);
 
-            IsDataLoadesPaymentConditions = true;
+            if (paymentConditionsSearchCache.Count > 0)
+            {
+                await LoadData(paymentConditionsSearchCache, PaymentConditionsSearchCacheFilename);
+
+                IsDataLoadesPaymentConditions = true;
+            }
         }
 
         public async Task LoadCompanies()
@@ -783,9 +770,13 @@ namespace Core.Services
             try
             {
                 await SynchronizeItemsToDisk(companySearchCache, MaxCompanyToSave, CompanySearchCacheFileNAme);
-                await LoadData(companySearchCache, CompanySearchCacheFileNAme);
 
-                IsDataLoadesCompanies = true;
+                if (companySearchCache.Count > 0)
+                {
+                    await LoadData(companySearchCache, CompanySearchCacheFileNAme);
+
+                    IsDataLoadesCompanies = true;
+                }
             }
             catch (Exception e)
             {
@@ -798,9 +789,13 @@ namespace Core.Services
             try
             {
                 await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
-                await LoadData(presentationsSearchCache, PresentationsSearchCacheFilename);
 
-                IsDataLoadesPresentations = true;
+                if (presentationsSearchCache.Count > 0)
+                {
+                    await LoadData(presentationsSearchCache, PresentationsSearchCacheFilename);
+
+                    IsDataLoadesPresentations = true;
+                }
             }
             catch (Exception e)
             {
@@ -813,9 +808,13 @@ namespace Core.Services
             try
             {
                 await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
-                await LoadData(opportunitiesSearchCache, OpportunitiesSearchCacheFilename);
 
-                IsDataLoadesOpportunities = true;
+                if (opportunitiesSearchCache.Count > 0)
+                {
+                    await LoadData(opportunitiesSearchCache, OpportunitiesSearchCacheFilename);
+
+                    IsDataLoadesOpportunities = true;
+                }
             }
             catch (Exception e)
             {
@@ -828,9 +827,13 @@ namespace Core.Services
             try
             {
                 await SynchronizeItemsToDisk(orderNotesSearchCache, MaxOrderNotes, OrderNotesSearchCacheFilename);
-                await LoadData(orderNotesSearchCache, OrderNotesSearchCacheFilename);
 
-                IsDataLoadesOrderNote = true;
+                if (orderNotesSearchCache.Count > 0)
+                {
+                    await LoadData(orderNotesSearchCache, OrderNotesSearchCacheFilename);
+
+                    IsDataLoadesOrderNote = true;
+                }
             }
             catch (Exception e)
             {

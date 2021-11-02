@@ -186,6 +186,11 @@ namespace Core.ViewModels
                 }
                 else
                 {
+                    if(!offlineDataService.IsDataLoadesCompanies)
+                    {
+                        await offlineDataService.LoadCompanies();
+                    }
+
                     var d = await offlineDataService.SearchCompanies();
                     
                     foreach (var item in d)
@@ -270,7 +275,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                //toastService.ShowError("Ocurrió un error al obtener el cliente. Compruebe su conexión a internet.");
+                await Application.Current.MainPage.DisplayAlert("Información", ex.Message, "Aceptar"); return;
             }
             finally
             {
@@ -288,15 +293,11 @@ namespace Core.ViewModels
                 {
                     Product = product;
 
-                    //detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
-                    //Opportunity.Details.Add(detail);
-
-                    //Total = Opportunity.ComputeTotal();
                 }
             }
             catch (Exception e)
             {
-                //toastService.ShowError($"{e.Message}");
+                await Application.Current.MainPage.DisplayAlert("Información", e.Message, "Aceptar"); return;
             }
         }
 
@@ -317,7 +318,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                var s = e.Message;
+                await Application.Current.MainPage.DisplayAlert("Información", e.Message, "Aceptar"); return;
             }
         }
 
