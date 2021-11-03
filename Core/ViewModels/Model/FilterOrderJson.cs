@@ -9,6 +9,7 @@ namespace Core.ViewModels.Model
         public DateTime dateTo { get; set; }
         public OpportunityStatus status { get; set; }
         public Company company { get; set; }
+        public Seller Seller { get; set; }
         public double? priceFrom { get; set; }
         public double? priceTo { get; set; }
     }

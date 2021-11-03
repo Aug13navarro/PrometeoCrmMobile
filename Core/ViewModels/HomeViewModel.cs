@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.Helpers;
 using Core.Model;
 using Core.Model.Extern;
+using Core.Services;
 using Core.Services.Contracts;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -49,11 +50,13 @@ namespace Core.ViewModels
 
         private async void CargarObtenerDatos()
         {
-            if (offlineDataService.IsWifiConection)
+            var red = await Connection.SeeConnection();
+
+            if (red)
             {
                 //REVISAR SI EXISTEN OPORTUNIDADES Y PEDIDODOS EN LA MEMORIA PARA PUBLICAR
 
-                if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "martes")
+                if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "miércoles")
                 {
 
                     //INIO AUTOMAPER PARA IGUALAR LOS MODELS
@@ -77,7 +80,8 @@ namespace Core.ViewModels
                     offlineDataService.UnloadAllData();
 
                     //GUARDO EMPRESAS EM CACHE
-                    offlineDataService.SaveCompanySearch(empresas);
+                    var e = mapper.Map<List<CompanyExtern>>(empresas);
+                    offlineDataService.SaveCompanySearch(e);
 
                     var clientes = new List<Customer>();
                     //foreach (var item in empresas)
@@ -96,9 +100,17 @@ namespace Core.ViewModels
                     var r = mapper.Map<List<CustomerExtern>>(clientes);
                     offlineDataService.SaveCustomerSearch(r);
 
-                    var condiciones = new List<PaymentCondition>();
+                    //OBTENGOS LOS ESTADOS DE OPORTUNIDADES
+
+                    var status = await prometeoApiService.GetOpportunityStatus(LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+                    //GUARDO LOS ESTADOS 
+                    var s = mapper.Map<List<OpportunityStatusExtern>>(status);
+                    offlineDataService.SaveOpportunityStatus(s);
 
                     //OBTENGO TODAS LAS CONDICIONES DE PAGOS POR LAS EMPRESAS
+                    var condiciones = new List<PaymentCondition>();
+
                     foreach (var item in empresas)
                     {
                         var condic = await prometeoApiService.GetPaymentConditions(LoggedUser.Token, item.Id);

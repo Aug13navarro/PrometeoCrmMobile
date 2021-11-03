@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using System.Globalization;
+using Core.Services;
+using AutoMapper;
+using Core.Helpers;
 
 namespace Core.ViewModels
 {
@@ -75,7 +78,9 @@ namespace Core.ViewModels
         }
 
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
-        public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
+        public MvxObservableCollection<PaymentMethod> PaymentMethods { get; set; } = new MvxObservableCollection<PaymentMethod>();
+        public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>(); 
+        public MvxObservableCollection<FreightInCharge> FreightInCharges { get; set; } = new MvxObservableCollection<FreightInCharge>();
 
         private TypeStandard place;
         public TypeStandard Place
@@ -89,6 +94,13 @@ namespace Core.ViewModels
         {
             get => typeOfRemittance;
             set => SetProperty(ref typeOfRemittance, value);
+        }
+
+        private PaymentMethod paymentMethod;
+        public PaymentMethod PaymentMethod
+        {
+            get => paymentMethod;
+            set => SetProperty(ref paymentMethod, value);
         }
 
         private OpportunityStatus status;
@@ -149,6 +161,13 @@ namespace Core.ViewModels
         {
             get => condition;
             set => SetProperty(ref condition, value);
+        }
+
+        private FreightInCharge freightInCharge;
+        public FreightInCharge FreightInCharge
+        {
+            get => freightInCharge;
+            set => SetProperty(ref freightInCharge, value);
         }
 
         private double valorDescuento;
@@ -270,11 +289,30 @@ namespace Core.ViewModels
                 CargarEmpresas();
                 CargarTipoRemito();
                 CargarLugarPago();
+                CargarFleteCargo();
 
             }
             catch(Exception e)
             {
                 Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
+            }
+        }
+
+        private void CargarFleteCargo()
+        {
+            var user = data.LoggedUser;
+
+            string lang = user.Language.ToLower();
+
+            if (lang == "es" || lang.Contains("spanish"))
+            {
+                FreightInCharges.Add(new FreightInCharge { id = 1, name = "Empresa" });
+                FreightInCharges.Add(new FreightInCharge { id = 2, name = "Cliente" });
+            }
+            else
+            {
+                FreightInCharges.Add(new FreightInCharge { id = 1, name = "Company" });
+                FreightInCharges.Add(new FreightInCharge { id = 2, name = "Customer" });
             }
         }
 
@@ -343,10 +381,8 @@ namespace Core.ViewModels
             {
                 if (Company == null ||
                     SelectedCustomer == null ||
-                    Condition == null ||
                     TypeOfRemittance == null ||
-                    Place == null
-                    )//|| CustomerAddress == null
+                    Place == null)
                 {
                     if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
                     {
@@ -357,6 +393,23 @@ namespace Core.ViewModels
                     {
                         await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
                         return;
+                    }
+                }
+                
+                if (TypeOfRemittance.Description != "En Consignación" && TypeOfRemittance.Description != "On Consignment")
+                {
+                    if(Condition == null)
+                    {
+                        if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
+                            return;
+                        }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
+                            return;
+                        }
                     }
                 }
 
@@ -417,7 +470,9 @@ namespace Core.ViewModels
 
                 if (Order.id == 0)
                 {
-                    if (offlineDataService.IsWifiConection)
+                    var red = await Connection.SeeConnection();
+
+                    if (red)
                     {
                         var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
@@ -537,7 +592,9 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
 
                     PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
@@ -550,13 +607,13 @@ namespace Core.ViewModels
                         }
                         else
                         {
-                            Condition = PaymentConditions.FirstOrDefault();
+                            //Condition = PaymentConditions.FirstOrDefault();
                         }
                     }
                 }
                 else
                 {
-                    if (!offlineDataService.IsDataLoadesPaymentConditions)
+                    if (!offlineDataService.IsDataLoadedPaymentConditions)
                     {
                         await offlineDataService.LoadDataPayment();
                     }
@@ -577,7 +634,7 @@ namespace Core.ViewModels
                         }
                         else
                         {
-                            Condition = PaymentConditions.FirstOrDefault();
+                            //Condition = PaymentConditions.FirstOrDefault();
                         }
                     }
                 }
@@ -596,57 +653,66 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
 
                     Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
 
                     if (Order != null)
                     {
-                        if (Order.companyId > 0)
+                        if (order.companyId != null)
                         {
-                            Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                            if(PaymentConditions.Count <= 0)
+                            if (Order.companyId > 0)
                             {
-                                CargarCondiciones();
+                                Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
                             }
                         }
                         else
                         {
                             Company = Companies.FirstOrDefault();
-                            if (PaymentConditions.Count <= 0)
-                            {
-                                CargarCondiciones();
-                            }
                         }
                     }
                 }
                 else
                 {
-                    if (!offlineDataService.IsDataLoadesCompanies)
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if (!offlineDataService.IsDataLoadedCompanies)
                     {
                         await offlineDataService.LoadCompanies();
                     }
-                    var d = await offlineDataService.SearchCompanies();
+                    var empresas = await offlineDataService.SearchCompanies();
 
-                    Companies = new MvxObservableCollection<Company>(d);
+                    var e = mapper.Map<List<Company>>(empresas);
+
+                    Companies = new MvxObservableCollection<Company>(e);
 
                     if (Order != null)
                     {
-                        if (Order.companyId > 0)
+                        if (order.companyId != null)
                         {
-                            Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                            if (PaymentConditions.Count <= 0)
+                            if (Order.companyId > 0)
                             {
-                                CargarCondiciones();
-                            }
+                                Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+                                if (PaymentConditions.Count <= 0)
+                                {
+                                    CargarCondiciones();
+                                }
+                            }                            
                         }
                         else
                         {
                             Company = Companies.FirstOrDefault();
                             if (PaymentConditions.Count <= 0)
                             {
-                                CargarCondiciones();
+                                //CargarCondiciones();
                             }
                         }
                     }

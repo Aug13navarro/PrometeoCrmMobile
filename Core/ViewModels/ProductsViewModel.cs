@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Model;
+using Core.Services;
 using Core.Services.Contracts;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -146,23 +147,26 @@ namespace Core.ViewModels
         {
             try
             {
-                IsSearchInProgress = true;
-                Error = false;
-
-                var products = await prometeoApiService.GetAvailableProducts(requestData, data.LoggedUser.Token);
-                
-                if(products.Results.Count > 0)
+                var red = await Connection.SeeConnection();
+                if (red)
                 {
-                    CurrentPage++;
+                    IsSearchInProgress = true;
+                    Error = false;
+
+                    var products = await prometeoApiService.GetAvailableProducts(requestData, data.LoggedUser.Token);
+
+                    if (products.Results.Count > 0)
+                    {
+                        CurrentPage++;
+                    }
+
+                    if (newSearch)
+                    {
+                        Products.Clear();
+                    }
+
+                    Products.AddRange(products.Results);
                 }
-
-                if (newSearch)
-                {
-                    Products.Clear();
-                }
-
-                Products.AddRange(products.Results);
-
                 //CurrentPage = contacts.currentPage;
                 //TotalPages = contacts.totalPages;
             }

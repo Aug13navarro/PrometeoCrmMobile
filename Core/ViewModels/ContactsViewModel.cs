@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Core.Model;
 using Core.Model.Common;
+using Core.Services;
 using Core.Services.Contracts;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -80,9 +81,12 @@ namespace Core.ViewModels
         {
             try
             {
-                if (offlineDataService.IsWifiConection)
+                IsSearchInProgress = true;
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
-                    IsSearchInProgress = true;
                     Error = false;
 
                     PaginatedList<CustomerContact> contacts = await prometeoApiService.SearchCustomerContacts(requestData);

@@ -43,5 +43,6 @@ namespace Core.Services.Contracts
         Task<IEnumerable<OrderNote>> GetOrdersByfilter(FilterOrderModel filtro, string token);
         Task<IEnumerable<OpportunityStatus>> GetOpportunityStatus(string lang, string token);
         Task<OrderNote> GetOrdersById(int id, string token);
+        Task<IEnumerable<Seller>> GetUsersByRol(int companyId, string rol);
     }
 }

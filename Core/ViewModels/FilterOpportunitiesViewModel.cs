@@ -13,6 +13,9 @@ using Xamarin.Forms;
 using MvvmCross;
 using Core.ViewModels.Model;
 using Newtonsoft.Json;
+using Core.Services;
+using AutoMapper;
+using Core.Helpers;
 
 namespace Core.ViewModels
 {
@@ -175,7 +178,9 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
                     var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
 
@@ -186,14 +191,23 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    if(!offlineDataService.IsDataLoadesCompanies)
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if (!offlineDataService.IsDataLoadedCompanies)
                     {
                         await offlineDataService.LoadCompanies();
                     }
 
-                    var d = await offlineDataService.SearchCompanies();
+                    var empresas = await offlineDataService.SearchCompanies();
+
+                    var e = mapper.Map<List<Company>>(empresas);
                     
-                    foreach (var item in d)
+                    foreach (var item in e)
                     {
                         Companies.Add(item);
                     }
@@ -305,15 +319,38 @@ namespace Core.ViewModels
         {
             try
             {
-                var status = await prometeoApiService.GetOpportunityStatus(data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
+                var red = await Connection.SeeConnection();
 
-                foreach (var item in status)
+                if (red)
                 {
-                    OpportunityStatuses.Add(new OpportunityStatus
+                    var status = await prometeoApiService.GetOpportunityStatus(data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
+
+                    foreach (var item in status)
                     {
-                        Id = item.Id,
-                        name = item.name,
-                    });
+                        OpportunityStatuses.Add(new OpportunityStatus
+                        {
+                            Id = item.Id,
+                            name = item.name,
+                        });
+                    }
+                }
+                else
+                {
+                    if(!offlineDataService.IsDataLoadedOpportunityStatus)
+                    {
+                        await offlineDataService.LoadOpportunityStatus();
+                    }
+
+                    var d = await offlineDataService.SearchOpportunityStatuses();
+
+                    foreach (var item in d)
+                    {
+                        OpportunityStatuses.Add(new OpportunityStatus
+                        {
+                            Id = item.Id,
+                            name = item.name,
+                        });
+                    }
                 }
             }
             catch (Exception e)
@@ -368,7 +405,5 @@ namespace Core.ViewModels
 
             await navigationService.Close(this, filtro);
         }
-
-
     }
 }

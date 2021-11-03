@@ -1,4 +1,5 @@
 ﻿using Core.Model;
+using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.IoC;
@@ -204,7 +205,9 @@ namespace Core.ViewModels
 
                 requestData.userId = user.Id;
 
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
                     //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
                     var ordersnote = await prometeoApiService.GetOrderNote(requestData, user.Token);
@@ -225,7 +228,7 @@ namespace Core.ViewModels
                 {
                     OrdersNote.Clear();
 
-                    if(!offlineDataService.IsDataLoadesOrderNote)
+                    if(!offlineDataService.IsDataLoadedOrderNote)
                     {
                         await offlineDataService.LoadOrderNotes();
                     }
@@ -263,7 +266,9 @@ namespace Core.ViewModels
                     FechaInicioFiltro = filtro.dateFrom.ToString("d");
                     FechaFinFiltro = filtro.dateTo.ToString("d");
 
-                    if (offlineDataService.IsWifiConection)
+                    var red = await Connection.SeeConnection();
+
+                    if (red)
                     {
                         var orders = await prometeoApiService.GetOrdersByfilter(filtro, user.Token);
 
@@ -274,7 +279,7 @@ namespace Core.ViewModels
                     }
                     else
                     {
-                        if (!offlineDataService.IsDataLoadesOrderNote)
+                        if (!offlineDataService.IsDataLoadedOrderNote)
                         {
                             await offlineDataService.LoadOrderNotes();
                         }

@@ -1,4 +1,5 @@
-﻿using Core.Services.Contracts;
+﻿using Core.Services;
+using Core.Services.Contracts;
 using MvvmCross.Navigation;
 using MvvmCross.Presenters.Hints;
 using MvvmCross.ViewModels;
@@ -37,29 +38,47 @@ namespace Core.ViewModels
         {
             try
             {
-                var exito = await prometeoApiService.RecoverPassword(Mail);
-
-                if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
+                var red = await Connection.SeeConnection();
+                if (red)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Recover Password", $"Check your email", "Acept");
+                    var exito = await prometeoApiService.RecoverPassword(Mail);
+
+                    if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Recover Password", $"Check your email", "Acept");
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Recuperar Contraseña", $"Revise su correo electrónico", "Aceptar");
+                    }
+
+                    await navigationService.Navigate<LoginViewModel>();
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Recuperar Contraseña", $"Revise su correo electrónico", "Aceptar");
+                    if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", $"Check internet connection.", "Acept");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", $"Revisar conexión a internet.", "Aceptar");
+                        return;
+                    }
                 }
-
-                await navigationService.Navigate<LoginViewModel>();
-
             }
             catch (Exception )
             {
                 if (CultureInfo.InstalledUICulture.EnglishName.Contains("English"))
                 {
-                    await Application.Current.MainPage.DisplayAlert("Attention", $"The user is incorrect or does not exist", "Acept"); return;
+                    await Application.Current.MainPage.DisplayAlert("Attention", $"The user is incorrect or does not exist", "Acept");
+                    return;
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Atención", $"El usuario es incorrecto o no existe", "Aceptar"); return;
+                    await Application.Current.MainPage.DisplayAlert("Atención", $"El usuario es incorrecto o no existe", "Aceptar");
+                    return;
                 }
             }
         }

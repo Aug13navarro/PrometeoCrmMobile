@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Core.Helpers;
 using Core.Model;
 using Core.Model.Enums;
+using Core.Services;
 using Core.Services.Contracts;
 using Core.Utils;
 using MvvmCross.IoC;
@@ -24,6 +27,7 @@ namespace Core.ViewModels
         private string iconNegociacion;
         private string iconCerrada;
 
+        #region Propiedades
         public string IconAnalisis
         {
             get => iconAnalisis;
@@ -107,9 +111,7 @@ namespace Core.ViewModels
             get => total;
             set => SetProperty(ref total, value);
         }
-
-        //public List<string> StatusesDescription { get; } =
-            //((OpportunityStatus[])Enum.GetValues(typeof(OpportunityStatus))).Select(v => v.GetEnumDescription()).ToList();
+        #endregion
 
         public List<string> ClosedLostStatusCausesDescription { get; } =
             ((ClosedLostStatusCause[])Enum.GetValues(typeof(ClosedLostStatusCause))).Select(v => v.GetEnumDescription()).ToList();
@@ -135,11 +137,10 @@ namespace Core.ViewModels
         // Services
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        //private readonly IToastService toastService;
         private readonly IOfflineDataService offlineDataService;
 
         public CreateOpportunityViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
-                                           IOfflineDataService offlineData)//IToastService toastService,
+                                           IOfflineDataService offlineData)
         {
             try
             {
@@ -175,7 +176,9 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
 
                     Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
@@ -184,13 +187,22 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    if (!offlineDataService.IsDataLoadesCompanies)
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if (!offlineDataService.IsDataLoadedCompanies)
                     {
                         await offlineDataService.LoadCompanies();
                     }
-                    var d = await offlineDataService.SearchCompanies();
+                    var empresas = await offlineDataService.SearchCompanies();
 
-                    Companies = new MvxObservableCollection<Company>(d);
+                    var e = mapper.Map<List<Company>>(empresas);
+
+                    Companies = new MvxObservableCollection<Company>(e);
                     Company = Companies.FirstOrDefault();
                 }
             }
@@ -233,7 +245,9 @@ namespace Core.ViewModels
 
                 send.opportunityProducts = listaProductos(Opportunity.Details);
 
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
                     await prometeoApiService.SaveOpportunityEdit(send, Opportunity.Id, user.Token, Opportunity);
                 }
@@ -263,7 +277,9 @@ namespace Core.ViewModels
 
         private async Task WinOpportunityAsync(Opportunity o)
         {
-            if (offlineDataService.IsWifiConection)
+            var red = await Connection.SeeConnection();
+
+            if (red)
             {
                 Opportunity.customer = SelectedCustomer;
 
@@ -349,7 +365,6 @@ namespace Core.ViewModels
                     {
                         await Application.Current.MainPage.DisplayAlert("", "Si la Oportunidad se encuentra cerrada no es posible editarla.", "Aceptar");
                         return;
-                        //toastService.ShowError("Si la Oportunidad se encuentra cerrada no es posible editarla.");
                     }
 
                     AjustarBotonesEstados(Opportunity.opportunityStatus.Id);
@@ -640,7 +655,10 @@ namespace Core.ViewModels
                 send.opportunityProducts = listaProductos(Opportunity.Details);
 
                 var id = Opportunity.Id;
-                if (offlineDataService.IsWifiConection)
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
 
                     if (id == 0)

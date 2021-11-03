@@ -43,6 +43,10 @@ namespace Core.Model.Extern
         public DateTime? DeliveryDate { get; set; }
         public string DeliveryResponsible { get; set; }
         public string DeliveryAddress { get; set; }
+        public PaymentMethodExtern paymentMethod { get; set; }
+        public int PaymentMethodId { get; set; }
+        public FreightInChargeExtern FreightInCharge { get; set; }
+        public int FreightInChargeId { get; set; }
 
         [Serializable]
         public class ProductOrderExtern

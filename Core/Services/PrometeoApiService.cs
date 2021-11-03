@@ -857,5 +857,23 @@ namespace Core.Services
             return JsonConvert.DeserializeObject<string>(respuesta);
 
         }
+
+        public async Task<IEnumerable<Seller>> GetUsersByRol(int companyId, string rol)
+        {
+            try
+            {
+                var url = $"/api/User/GetUserByRolName?name={rol}&companyId={companyId}";
+
+                var respuesta = await client.GetAsync($"{url}");
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<IEnumerable<Seller>>(resultado);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error al obtener los vendedores");
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ using AutoMapper;
 using Core.Helpers;
 using Core.Model;
 using Core.Model.Common;
+using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross;
@@ -84,8 +85,10 @@ namespace Core.ViewModels
         public override async Task Initialize()
         {
             await base.Initialize();
+             
+            var red = await Connection.SeeConnection();
 
-            if (offlineDataService.IsWifiConection)
+            if (red)
             {
 
                 var requestData = new CustomersPaginatedRequest()
@@ -107,7 +110,7 @@ namespace Core.ViewModels
 
                 IMapper mapper = mapperConfig.CreateMapper();
 
-                if (!offlineDataService.IsDataLoadesCustomer)
+                if (!offlineDataService.IsDataLoadedCustomer)
                 {
                     await offlineDataService.LoadAllData();
                 }
@@ -178,7 +181,9 @@ namespace Core.ViewModels
 
         private async Task LoadMoreCustomersAsync()
         {
-            if (offlineDataService.IsWifiConection)
+            var red = await Connection.SeeConnection();
+
+            if (red)
             {
                 var requestData = new CustomersPaginatedRequest()
                 {
@@ -204,15 +209,20 @@ namespace Core.ViewModels
 
         private async Task NewClientsSearchAsync()
         {
-            var requestData = new CustomersPaginatedRequest()
-            {
-                CurrentPage = 1,
-                PageSize = PageSize,
-                UserId = appData.LoggedUser.Id,
-                Query = ClientsQuery,
-            };
+            var red = await Connection.SeeConnection();
 
-            await SearchCustomersAsync(requestData, true);
+            if (red)
+            {
+                var requestData = new CustomersPaginatedRequest()
+                {
+                    CurrentPage = 1,
+                    PageSize = PageSize,
+                    UserId = appData.LoggedUser.Id,
+                    Query = ClientsQuery,
+                };
+
+                await SearchCustomersAsync(requestData, true);
+            }
         }
 
         private async Task SelectCustomerAsync(Customer customer)

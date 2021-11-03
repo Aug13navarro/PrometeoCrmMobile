@@ -1,4 +1,7 @@
-﻿using Core.Model;
+﻿using AutoMapper;
+using Core.Helpers;
+using Core.Model;
+using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross;
@@ -97,11 +100,30 @@ namespace Core.ViewModels
         public Company Company
         {
             get => company;
-            set => SetProperty(ref company, value);
+            set
+            {
+                SetProperty(ref company, value);
+                CargarVendedores();
+            }
+        }
+
+        private Seller seller;
+        public Seller Seller
+        {
+            get => seller;
+            set => SetProperty(ref seller, value);
+        }
+
+        private bool isEnableSeller;
+        public bool IsEnableSeller
+        {
+            get => isEnableSeller;
+            set => SetProperty(ref isEnableSeller, value);
         }
 
         //private MvxObservableCollection<Company> companies;
         public MvxObservableCollection<Company> Companies { get; set; } = new MvxObservableCollection<Company>();
+        public MvxObservableCollection<Seller> Vendors { get; set; } = new MvxObservableCollection<Seller>();
 
         private double totalDesde;
         public double TotalDesde
@@ -127,6 +149,7 @@ namespace Core.ViewModels
         //SERIVICIO
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
+        private readonly IOfflineDataService offlineDataService;
         //private readonly IToastService toastService;
 
         //public FilterOrdersViewModel(PedidosViewModel pedidosViewModel)
@@ -161,6 +184,7 @@ namespace Core.ViewModels
 
             this.navigationService = Mvx.Resolve<IMvxNavigationService>();
             this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
+            this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
             //this.toastService = Mvx.Resolve<IToastService>();
 
             ApplyFiltersCommand = new Command(async () => await ApplyFilters());
@@ -173,6 +197,17 @@ namespace Core.ViewModels
 
             CargarEstados();
             CargarCompanies();
+
+            IsEnableSeller = true;
+
+            foreach (var item in data.LoggedUser.Roles)
+            {
+                if(item.Name == "Vendedor")
+                {
+                    IsEnableSeller = false;
+                    break;
+                }
+            }
             //CargarFiltroGuardado();
         }
 
@@ -189,7 +224,34 @@ namespace Core.ViewModels
 
             return Task.FromResult(0);
         }
-        
+
+        private async void CargarVendedores()
+        {
+            try
+            {
+                var red = await Connection.SeeConnection();
+
+                if(red)
+                {
+                    var users = await prometeoApiService.GetUsersByRol(Company.Id, "vendedor");
+
+                    if(users != null)
+                    {
+                        Vendors.Clear();
+                        Vendors.AddRange(users);
+                    }
+                }
+                else
+                {
+                    //guardar el cache y buscar por empresa
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private void CargarEstados()
         {
             var user = data.LoggedUser;
@@ -268,14 +330,39 @@ namespace Core.ViewModels
         {
             try
             {
-                var user = data.LoggedUser;
+                var red = await Connection.SeeConnection();
 
-                var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
+                if (red)
+                {
+                    var user = data.LoggedUser;
 
-                Companies.AddRange(d);
+                    var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
 
-                CargarFiltroGuardado();
+                    Companies.AddRange(d);
 
+                    CargarFiltroGuardado();
+                }
+                {
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if (!offlineDataService.IsDataLoadedCompanies)
+                    {
+                        await offlineDataService.LoadCompanies();
+                    }
+
+                    var empresas = await offlineDataService.SearchCompanies();
+
+                    var e = mapper.Map<List<Company>>(empresas);
+
+                    Companies.AddRange(e);
+
+                    CargarFiltroGuardado();
+                }
             }
             catch (Exception e)
             {
@@ -326,10 +413,11 @@ namespace Core.ViewModels
                 {
                     filtro.companyId = Company.Id;
                 }
-                //else
-                //{
-                //    filtro.companyId = 0;
-                //}
+                if(Seller != null)
+                {
+                    filtro.sellerId = Seller.id;
+                }
+
                 if (filtro.priceFrom == 0) filtro.priceFrom = null;
                 if (filtro.priceTo == 0) filtro.priceTo = null;
 
@@ -342,6 +430,7 @@ namespace Core.ViewModels
                 };
 
                 if (Company != null) filtroJson.company = Company;
+                if (Seller != null) filtroJson.Seller = seller;
                 if (Status != null) filtroJson.status = Status;
                 if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
                 if (filtroJson.priceTo == 0) filtroJson.priceTo = null;

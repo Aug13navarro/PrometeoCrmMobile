@@ -16,15 +16,16 @@ namespace Core.Services
 {
     public class OfflineDataService : IOfflineDataService
     {
-        public bool IsWifiConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.WiFi);
-        public bool IsMobileConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.Cellular);
+        //public bool IsWifiConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.WiFi);
+        //public bool IsMobileConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.Cellular);
 
-        public bool IsDataLoadesCustomer { get; private set; }
-        public bool IsDataLoadesCompanies { get; private set; }
-        public bool IsDataLoadesPaymentConditions { get; private set; }
-        public bool IsDataLoadesPresentations { get; private set; }
-        public bool IsDataLoadesOpportunities { get; private set; }
-        public bool IsDataLoadesOrderNote { get; private set; }
+        public bool IsDataLoadedCustomer { get; private set; }
+        public bool IsDataLoadedCompanies { get; private set; }
+        public bool IsDataLoadedPaymentConditions { get; private set; }
+        public bool IsDataLoadedPresentations { get; private set; }
+        public bool IsDataLoadedOpportunities { get; private set; }
+        public bool IsDataLoadedOrderNote { get; private set; }
+        public bool IsDataLoadedOpportunityStatus { get; private set; }
 
         private readonly List<CustomerExtern> customerSearchCache = new List<CustomerExtern>();
         private readonly List<CompanyExtern> companySearchCache = new List<CompanyExtern>();
@@ -32,6 +33,7 @@ namespace Core.Services
         private readonly List<ProductExtern> presentationsSearchCache = new List<ProductExtern>();
         private readonly List<OpportunityExtern> opportunitiesSearchCache = new List<OpportunityExtern>();
         private readonly List<OrderNoteExtern> orderNotesSearchCache = new List<OrderNoteExtern>();
+        private readonly List<OpportunityStatusExtern> opportunityStatusSearchCache = new List<OpportunityStatusExtern>();
 
 
         private const int MaxCustomerToSave = 5000;
@@ -40,6 +42,7 @@ namespace Core.Services
         private const int MaxPresentations = 500;
         private const int MaxOportunities = 50;
         private const int MaxOrderNotes= 50;
+        private const int MaxOppStatus = 10;
 
         private const string CustomerSearchCacheFilename = "customersearchcache";
         private const string CompanySearchCacheFileNAme = "companysearchcache";
@@ -47,6 +50,7 @@ namespace Core.Services
         private const string PresentationsSearchCacheFilename = "presentationssearchcache";
         private const string OpportunitiesSearchCacheFilename = "opportunitiessearchcache";
         private const string OrderNotesSearchCacheFilename = "ordernotessearchcache";
+        private const string OpportunityStatusSearchCacheFilename = "opportunitystatussearchcache";
 
         private async Task LoadData<T>(List<T> itemsInCache, string cacheFilename)
         {
@@ -117,22 +121,25 @@ namespace Core.Services
         public void UnloadAllData()
         {
             customerSearchCache.Clear();
-            IsDataLoadesCustomer = false;
+            IsDataLoadedCustomer = false;
 
             companySearchCache.Clear();
-            IsDataLoadesCompanies = false;
+            IsDataLoadedCompanies = false;
 
             paymentConditionsSearchCache.Clear();
-            IsDataLoadesPaymentConditions = false;
+            IsDataLoadedPaymentConditions = false;
 
             presentationsSearchCache.Clear();
-            IsDataLoadesPresentations = false;
+            IsDataLoadedPresentations = false;
 
             opportunitiesSearchCache.Clear();
-            IsDataLoadesOpportunities = false;
+            IsDataLoadedOpportunities = false;
 
             orderNotesSearchCache.Clear();
-            IsDataLoadesOrderNote = false;
+            IsDataLoadedOrderNote = false;
+
+            opportunityStatusSearchCache.Clear();
+            IsDataLoadedOpportunityStatus = false;
         }
 
         #region SAVE
@@ -142,21 +149,9 @@ namespace Core.Services
             customerSearchCache.AddRange(customers);
         }
 
-        public void SaveCompanySearch(List<Company> companies)
+        public void SaveCompanySearch(List<CompanyExtern> companies)
         {
-            var lista = new List<CompanyExtern>();
-
-            foreach (var item in companies)
-            {
-                lista.Add(new CompanyExtern
-                {
-                    BusinessName = item.BusinessName,
-                    externalId = item.externalId,
-                    Id = item.Id,
-                });
-            }
-
-            companySearchCache.AddRange(lista);
+            companySearchCache.AddRange(companies);
         }
 
         public void SavePaymentConditions(List<PaymentCondition> paymentConditions)
@@ -341,6 +336,11 @@ namespace Core.Services
             }
         }
 
+        public void SaveOpportunityStatus(List<OpportunityStatusExtern> opportunityStatuses)
+        {
+            opportunityStatusSearchCache.AddRange(opportunityStatuses);
+        }
+
         private List<ProductOrderExtern> ConvertirProductsExtern(List<ProductOrder> products)
         {
             var lista = new List<ProductOrderExtern>();
@@ -413,6 +413,7 @@ namespace Core.Services
                 await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
                 await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
                 await SynchronizeItemsToDisk(orderNotesSearchCache, MaxOrderNotes, OrderNotesSearchCacheFilename);
+                await SynchronizeItemsToDisk(opportunityStatusSearchCache, MaxOppStatus, OpportunitiesSearchCacheFilename);
             }
             catch (Exception)
             {
@@ -432,6 +433,7 @@ namespace Core.Services
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, PresentationsSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OrderNotesSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunityStatusSearchCacheFilename));
                 }
                 catch (Exception)
                 {
@@ -462,24 +464,11 @@ namespace Core.Services
             return Task.FromResult(fromCache);
         }
 
-        public Task<List<Company>> SearchCompanies()
+        public Task<List<CompanyExtern>> SearchCompanies()
         {
-            var lista = new List<Company>();
-
             var fromCache = companySearchCache;
 
-            foreach (var item in fromCache)
-            {
-                lista.Add(new Company
-                {
-                    BusinessName = item.BusinessName,
-                    externalId = item.externalId,
-                    Id = item.Id,
-                });
-
-            }
-
-            return Task.FromResult(lista);
+            return Task.FromResult(fromCache);
         }
 
         public Task<List<PaymentCondition>> SearchPaymentConditions()
@@ -636,6 +625,18 @@ namespace Core.Services
 
                     var productsList = ConvertirExternProduct(item.products);
 
+                    var paymentMethod = new PaymentMethod
+                    {
+                        id = item.paymentMethod.id,
+                        name = item.paymentMethod.name,
+                    };
+
+                    var freight = new FreightInCharge
+                    {
+                        id = item.FreightInCharge.id,
+                        name = item.FreightInCharge.name,
+                    };
+
                     lista.Add(new OrderNote
                     {
                         company = comp,
@@ -662,7 +663,11 @@ namespace Core.Services
                         tipoCuentaId = item.tipoCuentaId,
                         tipoServicioId = item.tipoServicioId,
                         total = item.total,
-                        products = new MvvmCross.ViewModels.MvxObservableCollection<ProductOrder>(productsList)
+                        products = new MvvmCross.ViewModels.MvxObservableCollection<ProductOrder>(productsList),
+                        paymentMethod = paymentMethod,
+                        PaymentMethodId = paymentMethod.id,
+                        FreightInCharge = freight,
+                        FreightInChargeId = freight.id,
                     });
 
                 }
@@ -673,6 +678,13 @@ namespace Core.Services
                 var s = e.Message;
                 throw;
             }
+        }
+
+        public Task<List<OpportunityStatusExtern>> SearchOpportunityStatuses()
+        {
+            var fromCache = opportunityStatusSearchCache;
+
+            return Task.FromResult(fromCache);
         }
 
         private List<ProductOrder> ConvertirExternProduct(List<OrderNoteExtern.ProductOrderExtern> products)
@@ -744,7 +756,7 @@ namespace Core.Services
                 if (customerSearchCache.Count > 0)
                 {
                     await LoadData(customerSearchCache, CustomerSearchCacheFilename);
-                    IsDataLoadesCustomer = true;
+                    IsDataLoadedCustomer = true;
                 }
             }
             catch (Exception e)
@@ -761,7 +773,7 @@ namespace Core.Services
             {
                 await LoadData(paymentConditionsSearchCache, PaymentConditionsSearchCacheFilename);
 
-                IsDataLoadesPaymentConditions = true;
+                IsDataLoadedPaymentConditions = true;
             }
         }
 
@@ -775,7 +787,7 @@ namespace Core.Services
                 {
                     await LoadData(companySearchCache, CompanySearchCacheFileNAme);
 
-                    IsDataLoadesCompanies = true;
+                    IsDataLoadedCompanies = true;
                 }
             }
             catch (Exception e)
@@ -794,7 +806,7 @@ namespace Core.Services
                 {
                     await LoadData(presentationsSearchCache, PresentationsSearchCacheFilename);
 
-                    IsDataLoadesPresentations = true;
+                    IsDataLoadedPresentations = true;
                 }
             }
             catch (Exception e)
@@ -813,7 +825,7 @@ namespace Core.Services
                 {
                     await LoadData(opportunitiesSearchCache, OpportunitiesSearchCacheFilename);
 
-                    IsDataLoadesOpportunities = true;
+                    IsDataLoadedOpportunities = true;
                 }
             }
             catch (Exception e)
@@ -832,7 +844,7 @@ namespace Core.Services
                 {
                     await LoadData(orderNotesSearchCache, OrderNotesSearchCacheFilename);
 
-                    IsDataLoadesOrderNote = true;
+                    IsDataLoadedOrderNote = true;
                 }
             }
             catch (Exception e)
@@ -841,6 +853,18 @@ namespace Core.Services
             }
         }
 
+        public async Task LoadOpportunityStatus()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(opportunityStatusSearchCache, MaxOppStatus, OpportunityStatusSearchCacheFilename);
+                await LoadData(opportunityStatusSearchCache, OpportunityStatusSearchCacheFilename);
+            }
+            catch ( Exception e)
+            {
+                throw new Exception("Error en Opportunity Status Offline");
+            }
+        }
         #endregion
     }
 }

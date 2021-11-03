@@ -101,7 +101,6 @@ namespace Core.ViewModels
 
                 LoginData loginData = await prometeoApiService.Login(UserName, Password);
                 UserData userData = await prometeoApiService.GetUserData(loginData.Id);
-                //var opps = await prometeoApiService.GetOpportunietesTest(loginData.Id);
 
                 var user = new User()
                 {
@@ -110,7 +109,7 @@ namespace Core.ViewModels
                     Expiration = loginData.Expiration,
                     FullName = userData.FullName,
                     Email = userData.Email,
-                    Language = string.IsNullOrEmpty(userData.Language) ? "en" : userData.Language
+                    Language = string.IsNullOrEmpty(userData.Language) ? "en" : userData.Language,
                 };
 
                 user.Roles = new List<Role>();

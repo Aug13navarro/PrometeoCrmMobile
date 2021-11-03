@@ -26,20 +26,20 @@ namespace Core
 
             RegisterServices();
             RegisterAppStart<RootViewModel>();
-            DataOffline();
+            //DataOffline();
         }
 
-        private void DataOffline()
-        {
-            if(offlineDataService.IsWifiConection)
-            {
-                var dia = DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es"));
+        //private void DataOffline()
+        //{
+        //    if(offlineDataService.IsWifiConection)
+        //    {
+        //        var dia = DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es"));
 
-                if(dia == "martes")
-                {
-                }
-            }
-        }
+        //        if(dia == "martes")
+        //        {
+        //        }
+        //    }
+        //}
 
         private void RegisterServices()
         {

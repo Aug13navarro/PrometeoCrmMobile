@@ -228,6 +228,9 @@
   <data name="FormaDate" xml:space="preserve">
     <value>dd/MM/yyyy</value>
   </data>
+  <data name="FreightCharge" xml:space="preserve">
+    <value>Flete a Cargo</value>
+  </data>
   <data name="FromDate" xml:space="preserve">
     <value>Fecha Desde</value>
   </data>
@@ -303,6 +306,9 @@
   <data name="PaymentCondition" xml:space="preserve">
     <value>Condición de Pago</value>
   </data>
+  <data name="PaymentMethod" xml:space="preserve">
+    <value>Medio de Pago</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Teléfono</value>
   </data>
@@ -356,6 +362,9 @@
   </data>
   <data name="SelectAddressTitle" xml:space="preserve">
     <value>Seleccionar Dirección</value>
+  </data>
+  <data name="Seller" xml:space="preserve">
+    <value>Vendedor</value>
   </data>
   <data name="Since" xml:space="preserve">
     <value>Desde</value>

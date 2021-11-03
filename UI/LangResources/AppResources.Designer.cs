@@ -394,6 +394,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Freight in Charge.
+        /// </summary>
+        internal static string FreightCharge {
+            get {
+                return ResourceManager.GetString("FreightCharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From Date.
         /// </summary>
         internal static string FromDate {
@@ -628,6 +637,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Payment Method.
+        /// </summary>
+        internal static string PaymentMethod {
+            get {
+                return ResourceManager.GetString("PaymentMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone.
         /// </summary>
         internal static string Phone {
@@ -786,6 +804,15 @@ namespace UI.LangResources {
         internal static string SelectAddressTitle {
             get {
                 return ResourceManager.GetString("SelectAddressTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seller.
+        /// </summary>
+        internal static string Seller {
+            get {
+                return ResourceManager.GetString("Seller", resourceCulture);
             }
         }
         

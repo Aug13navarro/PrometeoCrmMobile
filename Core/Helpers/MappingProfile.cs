@@ -11,8 +11,12 @@ namespace Core.Helpers
     {
         public MappingProfile()
         {
+            CreateMap<CompanyExtern, Company>();
+
             CreateMap<CustomerExtern, Customer>();
             //FormMember(d => d.name, o=> .MapFrom( s => s.nombre ));
+
+            CreateMap<OpportunityStatusExtern, OpportunityStatus>();
         }
     }
 }

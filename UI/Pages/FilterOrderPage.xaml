@@ -37,7 +37,7 @@
                >
             <Grid
                 ColumnDefinitions="*,*"
-                RowDefinitions="auto,auto,auto,auto,auto,auto,auto">
+                RowDefinitions="auto,auto,auto,auto,auto,auto,auto,auto">
                 <StackLayout Orientation="Horizontal"
                              Grid.Row="0"
                              Grid.ColumnSpan="2">
@@ -59,6 +59,25 @@
                 <StackLayout Orientation="Horizontal"
                              Grid.Row="1"
                              Grid.ColumnSpan="2">
+                    <Label Text="{x:Static resources:AppResources.Seller}" Style="{StaticResource DefaultLabel}"
+                           VerticalOptions="Center">
+
+                    </Label>
+                    <Frame Margin="0" Padding="0"
+                           HorizontalOptions="FillAndExpand">
+                        <Picker
+                            IsEnabled="{Binding IsEnableSeller}"
+                            Title="{x:Static resources:AppResources.Seller}"
+                            ItemsSource="{Binding Vendors, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding fullName}"
+                            SelectedItem="{Binding Seller, Mode=TwoWay}">
+
+                        </Picker>
+                    </Frame>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal"
+                             Grid.Row="2"
+                             Grid.ColumnSpan="2">
                     <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}"
                            VerticalOptions="Center">
 
@@ -74,7 +93,7 @@
                     </Frame>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal"
-                             Grid.Row="2"
+                             Grid.Row="3"
                              Grid.ColumnSpan="2">
                     <Label Style="{StaticResource DefaultLabel}"
                            Text="{x:Static resources:AppResources.FromDate}"
@@ -91,7 +110,7 @@
                     </Frame>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal"
-                             Grid.Row="3"
+                             Grid.Row="4"
                              Grid.ColumnSpan="2">
                     <Label Style="{StaticResource DefaultLabel}"
                            Text="{x:Static resources:AppResources.EndDate}"
@@ -108,7 +127,7 @@
                     </Frame>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal"
-                             Grid.Row="4"
+                             Grid.Row="5"
                              Grid.ColumnSpan="2">
                     <Label Text="{x:Static resources:AppResources.FromPrice}"
                            Style="{StaticResource DefaultLabel}"
@@ -125,7 +144,7 @@
                     </Frame>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal"
-                             Grid.Row="5"
+                             Grid.Row="6"
                              Grid.ColumnSpan="2">
                     <Label  Text="{x:Static resources:AppResources.EndPrice}"
                            Style="{StaticResource DefaultLabel}"
@@ -141,8 +160,9 @@
                         </Entry>
                     </Frame>
                 </StackLayout>
+                
                 <Button
-                    Grid.Row="6"
+                    Grid.Row="7"
                     Grid.ColumnSpan="2"
                     Text="{x:Static resources:AppResources.Accept}"
                     BackgroundColor="{StaticResource PrimaryColor}"

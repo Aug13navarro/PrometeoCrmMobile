@@ -124,24 +124,11 @@ namespace Core.Model
         public int PlacePayment { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public string DeliveryResponsible { get; set; }
-
-        //private string deliveryAddress;
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-
-        //public string DeliveryAddress
-        //{
-        //    get => deliveryAddress;
-        //    set
-        //    {
-        //        if (deliveryAddress != value)
-        //        {
-        //            deliveryAddress = value;
-        //            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(deliveryAddress)));
-        //        }
-        //    }
-        //}
         public string DeliveryAddress { get; set; }
+        public PaymentMethod paymentMethod { get; set; }
+        public int PaymentMethodId { get; set; }
+        public FreightInCharge FreightInCharge { get; set; }
+        public int FreightInChargeId { get; set; }
 
         public class ProductOrder
         {

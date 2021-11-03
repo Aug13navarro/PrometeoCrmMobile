@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Model;
+using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.IoC;
@@ -141,9 +142,11 @@ namespace Core.ViewModels
         {
             try
             {
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
-                    if (!offlineDataService.IsDataLoadesOpportunities)
+                    if (!offlineDataService.IsDataLoadedOpportunities)
                     {
                         await offlineDataService.LoadOpportunities();
                     }
@@ -266,7 +269,9 @@ namespace Core.ViewModels
 
                 if (filtro != null)
                 {
-                    if (offlineDataService.IsWifiConection)
+                    var red = await Connection.SeeConnection();
+
+                    if (red)
                     {
                         IsLoading = true;
 
@@ -281,7 +286,7 @@ namespace Core.ViewModels
                     {
                         IsLoading = true;
 
-                        if(!offlineDataService.IsDataLoadesOpportunities)
+                        if(!offlineDataService.IsDataLoadedOpportunities)
                         {
                             await offlineDataService.LoadOpportunities();
                         }
@@ -390,13 +395,15 @@ namespace Core.ViewModels
 
                 IEnumerable<Opportunity> opportunities;
 
-                if (offlineDataService.IsWifiConection)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
                     opportunities = await prometeoApiService.GetOp(requestData, user.Language.ToLower(), user.Token);
                 }
                 else
                 {
-                    if (!offlineDataService.IsDataLoadesOpportunities)
+                    if (!offlineDataService.IsDataLoadedOpportunities)
                     {
                         await offlineDataService.LoadOpportunities();
                     }
