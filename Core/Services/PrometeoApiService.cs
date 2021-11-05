@@ -875,5 +875,18 @@ namespace Core.Services
                 throw new Exception("Error al obtener los vendedores");
             }
         }
+
+        public async Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language,string token)
+        {
+            var url = $"/api/PaymentMethod?companyId={companyId}&language={language}";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<IEnumerable<PaymentMethod>>(resultado);
+        }
     }
 }

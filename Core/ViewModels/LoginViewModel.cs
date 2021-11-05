@@ -12,6 +12,7 @@ using Core.Services.Exceptions;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using Xamarin.Forms;
 
 namespace Core.ViewModels
@@ -112,18 +113,18 @@ namespace Core.ViewModels
                     Language = string.IsNullOrEmpty(userData.Language) ? "en" : userData.Language,
                 };
 
-                user.Roles = new List<Role>();
+                user.Roles = JsonConvert.SerializeObject(userData.Roles);
 
-                foreach (var item in userData.Roles)
-                {
-                    user.Roles.Add(new Role
-                    {
-                        Id = item.Id,  //or item.RoleId ?
-                        Company = item.Company,
-                        Name = item.Name,
-                        Permissions = item.RolePermissions.Select(x => x.Permission).ToList()
-                    });
-                }
+                //foreach (var item in userData.Roles)
+                //{
+                //    user.Roles.Add(new Role
+                //    {
+                //        Id = item.Id,  //or item.RoleId ?
+                //        Company = item.Company,
+                //        Name = item.Name,
+                //        Permissions = item.RolePermissions.Select(x => x.Permission).ToList()
+                //    });
+                //}
 
                 appData.SetLoggedUser(user);
                 Identity.LanguageUser = user.Language;

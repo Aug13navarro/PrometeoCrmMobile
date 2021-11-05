@@ -126,7 +126,7 @@ namespace Core.Model
         public string DeliveryResponsible { get; set; }
         public string DeliveryAddress { get; set; }
         public PaymentMethod paymentMethod { get; set; }
-        public int PaymentMethodId { get; set; }
+        public int? PaymentMethodId { get; set; }
         public FreightInCharge FreightInCharge { get; set; }
         public int FreightInChargeId { get; set; }
 

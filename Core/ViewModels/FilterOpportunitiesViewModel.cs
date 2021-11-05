@@ -68,7 +68,11 @@ namespace Core.ViewModels
         public Company Company
         {
             get => company;
-            set => SetProperty(ref company, value);
+            set
+            {
+                SetProperty(ref company, value);
+                CargarVendedores();
+            }
         }
 
 
@@ -99,11 +103,26 @@ namespace Core.ViewModels
             set => SetProperty(ref totalHasta, value);
         }
 
+        private bool isEnableSeller;
+        public  bool IsEnableSeller
+        {
+            get => isEnableSeller;
+            set => SetProperty(ref isEnableSeller, value);
+        }
+
+        private Seller seller;
+        public Seller Seller
+        {
+            get => seller;
+            set => SetProperty(ref seller, value);
+        }
+
         public ObservableCollection<OpportunityStatus> OpportunityStatuses { get; set; }
         public ObservableCollection<Company> Companies { get; set; }
         public ObservableCollection<Customer> Customers { get; set; }
         public ObservableCollection<Product> Products { get; set; }
         public ObservableCollection<double> Totals { get; set; }
+        public MvxObservableCollection<Seller> Vendors { get; set; } = new MvxObservableCollection<Seller>();
 
         public OpportunitiesViewModel OpportunitiesViewModel { get; set; }
 
@@ -169,7 +188,25 @@ namespace Core.ViewModels
             CargarEstados();
             CargarCompanies();
 
+            IsEnableSeller = true;
+
+            VerificarRol(data.LoggedUser.Roles);
+
             CargarFiltroGuardado();
+        }
+
+        private void VerificarRol(string rolesJson)
+        {
+            var roles = JsonConvert.DeserializeObject<List<Role>>(rolesJson);
+
+            foreach (var item in roles)
+            {
+                if (item.Name == "Vendedor")
+                {
+                    IsEnableSeller = false;
+                    break;
+                }
+            }
         }
 
         private async void CargarCompanies()
@@ -235,6 +272,33 @@ namespace Core.ViewModels
             return Task.FromResult(0);
         }
 
+        private async void CargarVendedores()
+        {
+            try
+            {
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var users = await prometeoApiService.GetUsersByRol(Company.Id, "vendedor");
+
+                    if (users != null)
+                    {
+                        Vendors.Clear();
+                        Vendors.AddRange(users);
+                    }
+                }
+                else
+                {
+                    //guardar el cache y buscar por empresa
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         private void CargarFiltroGuardado()
         {
             var filtroJson = data.InitialFilter;
@@ -267,6 +331,10 @@ namespace Core.ViewModels
                 if (filtro.products.Count() > 0)
                 {
                     Product = filtro.products.FirstOrDefault();
+                }
+                if(filtro.seller != null)
+                {
+                    Seller = filtro.seller;
                 }
 
                 if (filtro.priceFrom != null) TotalDesde = filtro.priceFrom.Value;
@@ -377,6 +445,7 @@ namespace Core.ViewModels
             if (Status != null) filtro.status.Add(new oppSta { id = Status.Id });
             if (Product != null) filtro.products.Add(new prod { id = Product.Id });
             if (Company != null) filtro.companies.Add(new comp { id = Company.Id });
+            if (seller != null) filtro.sellerId = Seller.id;
             if (filtro.priceFrom == 0) filtro.priceFrom = null;
             if (filtro.priceTo == 0) filtro.priceTo = null;
 
@@ -398,6 +467,7 @@ namespace Core.ViewModels
             if (Company != null) filtroJson.companies.Add(Company);
             if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
             if (filtroJson.priceTo == 0) filtroJson.priceTo = null;
+            if (Seller != null) filtroJson.seller = seller;
 
             var filtroString = JsonConvert.SerializeObject(filtroJson);
 

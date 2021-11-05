@@ -30,17 +30,13 @@
         </StackLayout>
     </NavigationPage.TitleView>
     <AbsoluteLayout>
-        <Frame BorderColor="Black" Margin="5" 
+        <ScrollView>
+            <Frame BorderColor="Black" Margin="5" 
                HorizontalOptions="StartAndExpand">
-            <ScrollView>
                 <StackLayout BackgroundColor="White" 
                      VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-
-                    <StackLayout Orientation="Horizontal">
-                    </StackLayout>
-
                     <Grid RowSpacing="3" ColumnSpacing="5" 
-                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                               ColumnDefinitions=".5*,.5*">
 
                         <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
@@ -72,8 +68,16 @@
                                         ItemDisplayBinding="{Binding BusinessName}"/>
                             </StackLayout>
                         </Frame>
-
+                        
                         <Frame Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Picker Title="{x:Static resources:AppResources.Seller}" ItemsSource="{Binding Vendors, Mode=TwoWay}" SelectedItem="{Binding Seller, Mode=TwoWay}"
+                                        ItemDisplayBinding="{Binding fullName}"
+                                        IsEnabled="{Binding IsEnableSeller}"/>
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Horizontal" HeightRequest="40">
                                 <Entry HorizontalOptions="FillAndExpand" Style="{StaticResource DefaultEntry}" Placeholder="{x:Static resources:AppResources.Customer}" IsReadOnly="True" Text="{Binding Customer.CompanyName, Mode=TwoWay}">
                                 </Entry>
@@ -83,7 +87,7 @@
                             </StackLayout>
                         </Frame>
 
-                        <Frame Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                        <Frame Grid.Row="5" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
                             <Grid 
                                 ColumnDefinitions="*,auto"
                                 RowDefinitions="auto">
@@ -98,7 +102,7 @@
                             </Grid>
                         </Frame>
 
-                        <Frame Grid.Row="5" Style="{StaticResource filterFrame}">
+                        <Frame Grid.Row="6" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Vertical" Spacing="0">
                                 <Label Text="{x:Static resources:AppResources.FromPrice}" FontSize="Small"/>
                                 <Entry Keyboard="Numeric" Text="{Binding TotalDesde}"></Entry>
@@ -107,7 +111,7 @@
                             </StackLayout>
                         </Frame>
 
-                        <Frame Grid.Row="5" Grid.Column="1" Style="{StaticResource filterFrame}">
+                        <Frame Grid.Row="6" Grid.Column="1" Style="{StaticResource filterFrame}">
                             <StackLayout Orientation="Vertical" Spacing="0">
                                 <Label Text="{x:Static resources:AppResources.EndPrice}" FontSize="Small"/>
                                 <Entry Keyboard="Numeric" Text="{Binding TotalHasta}"></Entry>
@@ -116,14 +120,12 @@
                             </StackLayout>
                         </Frame>
 
-                        <Button Grid.Row="6" Grid.ColumnSpan="2" Text="{x:Static resources:AppResources.Accept}" Padding="0"
-                            Style="{StaticResource DefaultBtn}" Command="{Binding ApplyFiltersCommand}"/>
+                        <Button Grid.Row="7" Grid.ColumnSpan="2" Text="{x:Static resources:AppResources.Accept}" Padding="0"
+                            Style="{StaticResource DefaultBtn}" Command="{Binding ApplyFiltersCommand}"
+                                />
                     </Grid>
-
-
                 </StackLayout>
-
-            </ScrollView>
-        </Frame>
+            </Frame>
+        </ScrollView>
     </AbsoluteLayout>
 </Views:MvxContentPage>

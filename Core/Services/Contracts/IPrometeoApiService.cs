@@ -44,5 +44,6 @@ namespace Core.Services.Contracts
         Task<IEnumerable<OpportunityStatus>> GetOpportunityStatus(string lang, string token);
         Task<OrderNote> GetOrdersById(int id, string token);
         Task<IEnumerable<Seller>> GetUsersByRol(int companyId, string rol);
+        Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language, string token);
     }
 }

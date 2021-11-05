@@ -36,12 +36,14 @@ namespace Core
                         string email = Preferences.Get("email", null, "loginData");
                         string language = Preferences.Get("language", null, "loginData");
                         string tokenExpirationDate = Preferences.Get("tokenExpirationDate", null, "loginData");
+                        string roles = Preferences.Get("roles", null, "loginData");
 
                         user.Id = id;
                         user.Email = email;
                         user.FullName = fullName;
                         user.Token = token;
                         user.Language = language;
+                        user.Roles = roles;
                         //user.Expiration = !string.IsNullOrWhiteSpace(tokenExpirationDate)
                         //                      ? DateTime.Parse(tokenExpirationDate)
                         //                      : (DateTime?)null;
@@ -116,6 +118,7 @@ namespace Core
             Preferences.Set("token", user.Token, "loginData");
             Preferences.Set("language", user.Language, "loginData");
             Preferences.Set("tokenExpirationDate", user.Expiration.ToString(), "loginData");
+            Preferences.Set("roles", user.Roles, "loginData");
 
             LoggedUser = user;
         }

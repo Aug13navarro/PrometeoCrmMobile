@@ -200,17 +200,23 @@ namespace Core.ViewModels
 
             IsEnableSeller = true;
 
-            foreach (var item in data.LoggedUser.Roles)
+            VerificarRol(data.LoggedUser.Roles);
+            //CargarFiltroGuardado();
+        }
+
+        private void VerificarRol(string rolesJson)
+        {
+            var roles = JsonConvert.DeserializeObject<List<Role>>(rolesJson);
+
+            foreach (var item in roles)
             {
-                if(item.Name == "Vendedor")
+                if (item.Name == "Vendedor")
                 {
                     IsEnableSeller = false;
                     break;
                 }
             }
-            //CargarFiltroGuardado();
         }
-
 
         private Task ClearFilter()
         {

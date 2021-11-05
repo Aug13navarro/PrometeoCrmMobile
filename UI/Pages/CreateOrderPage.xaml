@@ -246,7 +246,7 @@
                                     IsEnabled="{Binding EnableForEdit}"
                                     HorizontalOptions="FillAndExpand"
                                     Title="{x:Static resources:AppResources.Select}" 
-                                    ItemsSource="{Binding PaymentMethods}" ItemDisplayBinding="{Binding name}" SelectedItem="{Binding PaymentMethod, Mode=TwoWay}">
+                                    ItemsSource="{Binding PaymentMethods, Mode=TwoWay}" ItemDisplayBinding="{Binding name}" SelectedItem="{Binding PaymentMethod, Mode=TwoWay}">
 
                                 </Picker>
                             </Frame>

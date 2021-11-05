@@ -125,8 +125,10 @@ namespace Core.ViewModels
             {
                 SetProperty(ref company, value);
                 CargarCondiciones();
+                CargarMedioPago();
             }
         }
+
 
         private string selectedClosedLostStatusCause;
         public string SelectedClosedLostStatusCause
@@ -297,6 +299,38 @@ namespace Core.ViewModels
                 Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
             }
         }
+        private async void CargarMedioPago()
+        {
+            try
+            {
+                var red = await Connection.SeeConnection();
+
+                if(red)
+                {
+                    var mediosPago = await prometeoApiService.GetPaymentMethod(Company.Id, data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
+
+                    if(mediosPago != null)
+                    {
+                        PaymentMethods.Clear();
+                        PaymentMethods.AddRange(mediosPago);
+
+                        if(Order.PaymentMethodId != null)
+                        {
+                            PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
+                        }
+                    }
+                }
+                else
+                {
+                    //obtener de Cache
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         private void CargarFleteCargo()
         {
@@ -382,7 +416,8 @@ namespace Core.ViewModels
                 if (Company == null ||
                     SelectedCustomer == null ||
                     TypeOfRemittance == null ||
-                    Place == null)
+                    Place == null ||
+                    PaymentMethod == null)
                 {
                     if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
                     {
@@ -450,6 +485,7 @@ namespace Core.ViewModels
                     OCCustomer = Order.OCCustomer,
                     PlacePayment = Place.Id,
                     RemittanceType = typeOfRemittance.Id,
+                    PaymentMethodId = PaymentMethod.id,
                 };
 
                 if (nuevaOrder.DeliveryDate == null)
@@ -749,9 +785,10 @@ namespace Core.ViewModels
                     AjustarEstado(user.Language, Order.orderStatus);
 
                     SelectedCustomer = Order.customer;
-                    Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
+                    //Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
                     TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
+                    //PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
 
                     SelectedCustomer.Addresses.Add(new CustomerAddress { Address = Order.DeliveryAddress });
 
