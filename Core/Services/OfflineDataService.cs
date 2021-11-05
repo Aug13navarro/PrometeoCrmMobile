@@ -753,11 +753,8 @@ namespace Core.Services
             {
                 await SynchronizeItemsToDisk(customerSearchCache, MaxCustomerToSave, CustomerSearchCacheFilename);
 
-                if (customerSearchCache.Count > 0)
-                {
                     await LoadData(customerSearchCache, CustomerSearchCacheFilename);
                     IsDataLoadedCustomer = true;
-                }
             }
             catch (Exception e)
             {
@@ -769,12 +766,9 @@ namespace Core.Services
         {
             await SynchronizeItemsToDisk(paymentConditionsSearchCache, MaxPaymentConditions, PaymentConditionsSearchCacheFilename);
 
-            if (paymentConditionsSearchCache.Count > 0)
-            {
                 await LoadData(paymentConditionsSearchCache, PaymentConditionsSearchCacheFilename);
 
                 IsDataLoadedPaymentConditions = true;
-            }
         }
 
         public async Task LoadCompanies()
@@ -783,12 +777,9 @@ namespace Core.Services
             {
                 await SynchronizeItemsToDisk(companySearchCache, MaxCompanyToSave, CompanySearchCacheFileNAme);
 
-                if (companySearchCache.Count > 0)
-                {
                     await LoadData(companySearchCache, CompanySearchCacheFileNAme);
 
                     IsDataLoadedCompanies = true;
-                }
             }
             catch (Exception e)
             {
@@ -802,12 +793,9 @@ namespace Core.Services
             {
                 await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
 
-                if (presentationsSearchCache.Count > 0)
-                {
                     await LoadData(presentationsSearchCache, PresentationsSearchCacheFilename);
 
                     IsDataLoadedPresentations = true;
-                }
             }
             catch (Exception e)
             {
@@ -821,12 +809,9 @@ namespace Core.Services
             {
                 await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
 
-                if (opportunitiesSearchCache.Count > 0)
-                {
                     await LoadData(opportunitiesSearchCache, OpportunitiesSearchCacheFilename);
 
                     IsDataLoadedOpportunities = true;
-                }
             }
             catch (Exception e)
             {
@@ -840,12 +825,9 @@ namespace Core.Services
             {
                 await SynchronizeItemsToDisk(orderNotesSearchCache, MaxOrderNotes, OrderNotesSearchCacheFilename);
 
-                if (orderNotesSearchCache.Count > 0)
-                {
                     await LoadData(orderNotesSearchCache, OrderNotesSearchCacheFilename);
 
                     IsDataLoadedOrderNote = true;
-                }
             }
             catch (Exception e)
             {

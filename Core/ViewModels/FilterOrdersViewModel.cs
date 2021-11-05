@@ -338,7 +338,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
                     var user = data.LoggedUser;
 

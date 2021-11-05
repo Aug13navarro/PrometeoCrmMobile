@@ -305,7 +305,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if(red)
+                if(!red)
                 {
                     var mediosPago = await prometeoApiService.GetPaymentMethod(Company.Id, data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
 
@@ -508,7 +508,7 @@ namespace Core.ViewModels
                 {
                     var red = await Connection.SeeConnection();
 
-                    if (red)
+                    if (!red)
                     {
                         var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
@@ -630,7 +630,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
 
                     PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
@@ -691,7 +691,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
 
                     Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
@@ -746,10 +746,10 @@ namespace Core.ViewModels
                         else
                         {
                             Company = Companies.FirstOrDefault();
-                            if (PaymentConditions.Count <= 0)
-                            {
-                                //CargarCondiciones();
-                            }
+                            //if (PaymentConditions.Count <= 0)
+                            //{
+                            //    //CargarCondiciones();
+                            //}
                         }
                     }
                 }

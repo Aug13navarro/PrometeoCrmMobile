@@ -56,7 +56,7 @@ namespace Core.ViewModels
             {
                 //REVISAR SI EXISTEN OPORTUNIDADES Y PEDIDODOS EN LA MEMORIA PARA PUBLICAR
 
-                if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "miércoles")
+                if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "viernes")
                 {
 
                     //INIO AUTOMAPER PARA IGUALAR LOS MODELS
