@@ -205,6 +205,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importer.
+        /// </summary>
+        internal static string CustomerImporter {
+            get {
+                return ResourceManager.GetString("CustomerImporter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Customers.
         /// </summary>
         internal static string Customers {
@@ -340,6 +349,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter Customer.
+        /// </summary>
+        internal static string EnterCustomer {
+            get {
+                return ResourceManager.GetString("EnterCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter Email.
         /// </summary>
         internal static string EnterEmail {
@@ -354,6 +372,15 @@ namespace UI.LangResources {
         internal static string ErrorLoginMsg {
             get {
                 return ResourceManager.GetString("ErrorLoginMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Estimated Time of Delivery.
+        /// </summary>
+        internal static string EstimatedTimeDelivery {
+            get {
+                return ResourceManager.GetString("EstimatedTimeDelivery", resourceCulture);
             }
         }
         
@@ -390,6 +417,15 @@ namespace UI.LangResources {
         internal static string FormatDate {
             get {
                 return ResourceManager.GetString("FormatDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Freight.
+        /// </summary>
+        internal static string Freight {
+            get {
+                return ResourceManager.GetString("Freight", resourceCulture);
             }
         }
         
@@ -457,6 +493,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Is Final Client.
+        /// </summary>
+        internal static string IsFinalClient {
+            get {
+                return ResourceManager.GetString("IsFinalClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logging in....
         /// </summary>
         internal static string Loggin {
@@ -507,6 +552,15 @@ namespace UI.LangResources {
         internal static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Order.
+        /// </summary>
+        internal static string NewOrder {
+            get {
+                return ResourceManager.GetString("NewOrder", resourceCulture);
             }
         }
         

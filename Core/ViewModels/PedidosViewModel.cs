@@ -106,6 +106,9 @@ namespace Core.ViewModels
         public Command SearchQueryCommand { get; }
         public Command RefreshListCommand { get; }
 
+        //EVENTS
+        public event EventHandler<List<Company>> NewOrderPopup;
+
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
@@ -171,11 +174,42 @@ namespace Core.ViewModels
 
         private async Task NuevaNotaPedido()
         {
-            var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
-            var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now };
+            try
+            {
+                var red = await Connection.SeeConnection();
 
-            createViewModel.NewOrderCreated += async (sender, args) => await NewOrderSearchAsync();
-            await navigationService.Navigate(createViewModel, order);
+                if (red)
+                {
+                    var empresas = await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
+
+                    NewOrderPopup?.Invoke(this, empresas);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        public async Task IrNuevaNotaPedido(Company company, bool export)
+        {
+            if(!export)
+            {
+                var order = new OrderNote
+                {
+                    company = company,
+                };
+
+                var s = await navigationService.Navigate<CreateOrderExportViewModel, OrderNote>(order);
+            }
+            else
+            {
+                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
+                var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now , company = company};
+
+                createViewModel.NewOrderCreated += async (sender, args) => await NewOrderSearchAsync();
+                await navigationService.Navigate(createViewModel, order);
+            }
         }
 
         private Task NewOrderSearchAsync()

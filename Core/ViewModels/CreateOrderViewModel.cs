@@ -79,8 +79,15 @@ namespace Core.ViewModels
 
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
         public MvxObservableCollection<PaymentMethod> PaymentMethods { get; set; } = new MvxObservableCollection<PaymentMethod>();
-        public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>(); 
+        public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
         public MvxObservableCollection<FreightInCharge> FreightInCharges { get; set; } = new MvxObservableCollection<FreightInCharge>();
+
+        private FreightInCharge freightInCharge;
+        public FreightInCharge FreightInCharge
+        {
+            get => freightInCharge;
+            set => SetProperty(ref freightInCharge, value);
+        }
 
         private TypeStandard place;
         public TypeStandard Place
@@ -124,8 +131,8 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref company, value);
-                CargarCondiciones();
-                CargarMedioPago();
+                //CargarCondiciones();
+                //CargarMedioPago();
             }
         }
 
@@ -165,12 +172,6 @@ namespace Core.ViewModels
             set => SetProperty(ref condition, value);
         }
 
-        private FreightInCharge freightInCharge;
-        public FreightInCharge FreightInCharge
-        {
-            get => freightInCharge;
-            set => SetProperty(ref freightInCharge, value);
-        }
 
         private double valorDescuento;
         public double ValorDescuento
@@ -288,7 +289,7 @@ namespace Core.ViewModels
                 OrderStatus = new MvxObservableCollection<OpportunityStatus>();
 
                 CargarEstados();
-                CargarEmpresas();
+                //CargarEmpresas();
                 CargarTipoRemito();
                 CargarLugarPago();
                 CargarFleteCargo();
@@ -305,7 +306,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if(!red)
+                if(red)
                 {
                     var mediosPago = await prometeoApiService.GetPaymentMethod(Company.Id, data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
 
@@ -332,22 +333,39 @@ namespace Core.ViewModels
             }
         }
 
-        private void CargarFleteCargo()
+        private async void CargarFleteCargo()
         {
             var user = data.LoggedUser;
 
             string lang = user.Language.ToLower();
 
-            if (lang == "es" || lang.Contains("spanish"))
+            var red = await Connection.SeeConnection();
+
+            if (red)
             {
-                FreightInCharges.Add(new FreightInCharge { id = 1, name = "Empresa" });
-                FreightInCharges.Add(new FreightInCharge { id = 2, name = "Cliente" });
+                var fletes = await prometeoApiService.GetFreight(lang, user.Token, "Transport");
+
+                if(fletes != null)
+                {
+                    FreightInCharges = new MvxObservableCollection<FreightInCharge>(fletes);
+                }
             }
             else
             {
-                FreightInCharges.Add(new FreightInCharge { id = 1, name = "Company" });
-                FreightInCharges.Add(new FreightInCharge { id = 2, name = "Customer" });
+
             }
+
+
+            //if (lang == "es" || lang.Contains("spanish"))
+            //{
+            //    FreightInCharges.Add(new FreightInCharge { id = 1, name = "Empresa" });
+            //    FreightInCharges.Add(new FreightInCharge { id = 2, name = "Cliente" });
+            //}
+            //else
+            //{
+            //    FreightInCharges.Add(new FreightInCharge { id = 1, name = "Company" });
+            //    FreightInCharges.Add(new FreightInCharge { id = 2, name = "Customer" });
+            //}
         }
 
         private async Task CustomerAddressMethod()
@@ -816,16 +834,11 @@ namespace Core.ViewModels
                     {
                         SelectedCustomer = Order.customer;
                     }
-                    if (Companies != null)
+                    if (Order.company != null)
                     {
-                        if (Order.companyId > 0)
-                        {
-                            Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                        }
-                        else
-                        {
-                            Company = Companies.FirstOrDefault();
-                        }
+                        Company = Order.company;
+                        CargarCondiciones();
+                        CargarMedioPago();
                     }
 
                     if(Order.PlacePayment > 0)

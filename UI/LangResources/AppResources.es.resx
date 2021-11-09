@@ -165,6 +165,9 @@
   <data name="CustomerAddressAlert" xml:space="preserve">
     <value>Este Cliente no tiene asignada una Dirección</value>
   </data>
+  <data name="CustomerImporter" xml:space="preserve">
+    <value>Importador</value>
+  </data>
   <data name="Customers" xml:space="preserve">
     <value>Clientes</value>
   </data>
@@ -213,8 +216,14 @@
   <data name="Enter Email" xml:space="preserve">
     <value>Ingrese su Correo Electrónico</value>
   </data>
+  <data name="EnterCustomer" xml:space="preserve">
+    <value>Ingresar Cliente</value>
+  </data>
   <data name="ErrorLoginMsg" xml:space="preserve">
     <value>An error occurred while logging in. Check your internet connection.</value>
+  </data>
+  <data name="EstimatedTimeDelivery" xml:space="preserve">
+    <value>Tiempo estimado de entrega</value>
   </data>
   <data name="Files" xml:space="preserve">
     <value>Archivos</value>
@@ -227,6 +236,9 @@
   </data>
   <data name="FormaDate" xml:space="preserve">
     <value>dd/MM/yyyy</value>
+  </data>
+  <data name="Freight" xml:space="preserve">
+    <value>Flete</value>
   </data>
   <data name="FreightCharge" xml:space="preserve">
     <value>Flete a Cargo</value>
@@ -249,6 +261,9 @@
   <data name="InfoTitle" xml:space="preserve">
     <value>Información</value>
   </data>
+  <data name="IsFinalClient" xml:space="preserve">
+    <value>Es Cliente Final</value>
+  </data>
   <data name="Loggin" xml:space="preserve">
     <value>Iniciando sesión...</value>
   </data>
@@ -266,6 +281,9 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>Nombre</value>
+  </data>
+  <data name="NewOrder" xml:space="preserve">
+    <value>Nuevo Pedido</value>
   </data>
   <data name="NOCCustomer" xml:space="preserve">
     <value>Nro de CO Cliente</value>

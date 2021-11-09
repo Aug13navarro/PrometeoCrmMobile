@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Core.Dtos;
 using Core.Model;
 using Core.Model.Common;
 using Core.ViewModels.Model;
@@ -45,5 +44,7 @@ namespace Core.Services.Contracts
         Task<OrderNote> GetOrdersById(int id, string token);
         Task<IEnumerable<Seller>> GetUsersByRol(int companyId, string rol);
         Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language, string token);
+        Task<IEnumerable<Incoterm>> GetIncoterms(string token);
+        Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token, string api);
     }
 }

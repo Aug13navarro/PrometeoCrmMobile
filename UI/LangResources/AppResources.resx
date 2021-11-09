@@ -165,6 +165,9 @@
   <data name="CustomerAddressAlert" xml:space="preserve">
     <value>This Customer has got not assigned an Address</value>
   </data>
+  <data name="CustomerImporter" xml:space="preserve">
+    <value>Importer</value>
+  </data>
   <data name="Customers" xml:space="preserve">
     <value>Customers</value>
   </data>
@@ -210,11 +213,17 @@
   <data name="Enter" xml:space="preserve">
     <value>LogIn</value>
   </data>
+  <data name="EnterCustomer" xml:space="preserve">
+    <value>Enter Customer</value>
+  </data>
   <data name="EnterEmail" xml:space="preserve">
     <value>Enter Email</value>
   </data>
   <data name="ErrorLoginMsg" xml:space="preserve">
     <value>Error </value>
+  </data>
+  <data name="EstimatedTimeDelivery" xml:space="preserve">
+    <value>Estimated Time of Delivery</value>
   </data>
   <data name="Files" xml:space="preserve">
     <value>Files</value>
@@ -227,6 +236,9 @@
   </data>
   <data name="FormatDate" xml:space="preserve">
     <value>MM/dd/yyyy</value>
+  </data>
+  <data name="Freight" xml:space="preserve">
+    <value>Freight</value>
   </data>
   <data name="FreightCharge" xml:space="preserve">
     <value>Freight in Charge</value>
@@ -249,6 +261,9 @@
   <data name="InfoTitle" xml:space="preserve">
     <value>Information</value>
   </data>
+  <data name="IsFinalClient" xml:space="preserve">
+    <value>Is Final Client</value>
+  </data>
   <data name="Loggin" xml:space="preserve">
     <value>Logging in...</value>
   </data>
@@ -266,6 +281,9 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="NewOrder" xml:space="preserve">
+    <value>New Order</value>
   </data>
   <data name="NOCCustomer" xml:space="preserve">
     <value>N of OC Customer</value>

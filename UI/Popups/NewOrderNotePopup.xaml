@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Popups:BasePopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UI.Popups.NewOrderNotePopup"
+             xmlns:Popups="clr-namespace:UI.Popups;assembly=UI"
+                      xmlns:resources="clr-namespace:UI.LangResources"
+             >
+    <Frame BorderColor="Gray" CornerRadius="10" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" >
+        <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label FontSize="Medium" TextColor="{StaticResource PrimaryColor}"
+                       HorizontalOptions="StartAndExpand" VerticalOptions="Center" x:Name="descriptionLabel" />
+                <Image Source="ic_close.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="CancelButtonClicked" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+
+            <BoxView BackgroundColor="LightGray" HeightRequest="1" Margin="0,0,0,5"></BoxView>
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="{x:Static resources:AppResources.Company}" Style="{x:StaticResource DefaultLabel}"
+                       VerticalOptions="Center"></Label>
+                <Picker x:Name="cmbCompanies" Title="{x:Static resources:AppResources.Company}"
+                        ItemDisplayBinding="{Binding BusinessName}" HorizontalOptions="FillAndExpand"
+                        SelectedIndexChanged="cmbCompanies_SelectedIndexChanged"></Picker>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Local" Style="{x:StaticResource DefaultLabel}" VerticalOptions="Center"></Label>
+                <CheckBox VerticalOptions="Center" Color="{x:StaticResource SecondaryColor}"></CheckBox>
+
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Exportación" Style="{x:StaticResource DefaultLabel}" VerticalOptions="Center"></Label>
+                <CheckBox VerticalOptions="Center" Color="{x:StaticResource SecondaryColor}"></CheckBox>
+
+            </StackLayout>
+
+            <Button Text="{x:Static resources:AppResources.Accept}" BackgroundColor="{x:StaticResource PrimaryColor}" TextColor="White"
+                    Clicked="AceptButtonClicked"></Button>
+        </StackLayout>
+    </Frame>
+</Popups:BasePopupPage>

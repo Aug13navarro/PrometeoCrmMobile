@@ -6,10 +6,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Dtos;
 using Core.Model;
 using Core.Model.Common;
-using Core.Model.Enums;
 using Core.Model.Extern;
 using Core.Services.Contracts;
 using Core.Services.Exceptions;
@@ -160,21 +158,21 @@ namespace Core.Services
                 requestData.PageSize,
                 requestData.Query,
             };
-            
+
             using (var request = new HttpRequestMessage(HttpMethod.Post, url))
             using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
             {
                 //string req = await content.ReadAsStringAsync();
                 request.Content = content;
                 PaginatedList<Customer> result = await client.SendAsyncAs<PaginatedList<Customer>>(request);
-            
+
                 //if(offlineDataService.IsDataLoaded)
                 //{
                 //    offlineDataService.UnloadAllData("Customer");
                 //}
-            
+
                 //offlineDataService.SaveCustomerSearch(result.Results);
-            
+
                 return result;
             }
             //}
@@ -198,27 +196,27 @@ namespace Core.Services
             {
                 //if(offlineDataService.IsWifiConection)
                 //{
-                    var lista = new List<Customer>();
+                var lista = new List<Customer>();
 
-                    string url = $"api/Customer?idUser={userId}&companyId={companyId}&isParentCustomer=true&customerTypeId={typeCustomer}";
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                string url = $"api/Customer?idUser={userId}&companyId={companyId}&isParentCustomer=true&customerTypeId={typeCustomer}";
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var response = await client.GetAsync($"{url}");
-                    var resultado = await response.Content.ReadAsStringAsync();
+                var response = await client.GetAsync($"{url}");
+                var resultado = await response.Content.ReadAsStringAsync();
 
-                    if(!string.IsNullOrWhiteSpace(resultado))
-                    {
-                        lista = JsonConvert.DeserializeObject<List<Customer>>(resultado);
-                        
-                        //if (offlineDataService.IsDataLoaded)
-                        //{
-                        //    offlineDataService.UnloadAllData("Customer");
-                        //}
+                if (!string.IsNullOrWhiteSpace(resultado))
+                {
+                    lista = JsonConvert.DeserializeObject<List<Customer>>(resultado);
 
-                        //offlineDataService.SaveCustomerSearch(lista);
-                    }
+                    //if (offlineDataService.IsDataLoaded)
+                    //{
+                    //    offlineDataService.UnloadAllData("Customer");
+                    //}
 
-                    return lista;
+                    //offlineDataService.SaveCustomerSearch(lista);
+                }
+
+                return lista;
                 //}
                 //else
                 //{
@@ -232,7 +230,7 @@ namespace Core.Services
                 //    return result;
                 //}
             }
-            catch (Exception e )
+            catch (Exception e)
             {
                 var s = e.Message;
                 throw;
@@ -359,29 +357,29 @@ namespace Core.Services
                 //if (offlineDataService.IsWifiConection)
                 //{
 
-                    string url = $"/api/Company/GetCompanyByUserId/{userId}";
+                string url = $"/api/Company/GetCompanyByUserId/{userId}";
 
-                    var lista = new List<Company>();
+                var lista = new List<Company>();
 
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var response = await client.GetAsync($"{url}");
+                var response = await client.GetAsync($"{url}");
 
-                    var resultado = await response.Content.ReadAsStringAsync();
+                var resultado = await response.Content.ReadAsStringAsync();
 
-                    if (resultado != null)
-                    {
-                        lista = JsonConvert.DeserializeObject<IEnumerable<Company>>(resultado).ToList();
+                if (resultado != null)
+                {
+                    lista = JsonConvert.DeserializeObject<IEnumerable<Company>>(resultado).ToList();
 
-                        //if(offlineDataService.IsDataLoaded)
-                        //{
-                        //    offlineDataService.UnloadAllData("Company");
-                        //}
+                    //if(offlineDataService.IsDataLoaded)
+                    //{
+                    //    offlineDataService.UnloadAllData("Company");
+                    //}
 
-                        //offlineDataService.SaveCompanySearch(lista);
-                    }
+                    //offlineDataService.SaveCompanySearch(lista);
+                }
 
-                    return lista;
+                return lista;
                 //}
                 //else
                 //{
@@ -463,30 +461,30 @@ namespace Core.Services
             {
                 //if (offlineDataService.IsWifiConection)
                 //{
-                    //string url = $"api/Product/GetCompanyProductPresentationByUserIdAsync";
-                    string url = $"api/Product/SearchCompanyProductPresentationCanBeSold";
+                //string url = $"api/Product/GetCompanyProductPresentationByUserIdAsync";
+                string url = $"api/Product/SearchCompanyProductPresentationCanBeSold";
 
-                    var content = JsonConvert.SerializeObject(productList);
+                var content = JsonConvert.SerializeObject(productList);
 
-                    HttpContent httpContent = new StringContent(content);
+                HttpContent httpContent = new StringContent(content);
 
-                    httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var objeto = await client.PostAsync(string.Format(url), httpContent);
+                var objeto = await client.PostAsync(string.Format(url), httpContent);
 
-                    var resultado = await objeto.Content.ReadAsStringAsync();
+                var resultado = await objeto.Content.ReadAsStringAsync();
 
-                    var lista = JsonConvert.DeserializeObject<PaginatedList<Product>>(resultado);
+                var lista = JsonConvert.DeserializeObject<PaginatedList<Product>>(resultado);
 
-                    //if(offlineDataService.IsDataLoaded)
-                    //{
-                    //    offlineDataService.UnloadAllData("Presentation");
-                    //}
+                //if(offlineDataService.IsDataLoaded)
+                //{
+                //    offlineDataService.UnloadAllData("Presentation");
+                //}
 
-                    //offlineDataService.SavePresentations(lista);
+                //offlineDataService.SavePresentations(lista);
 
-                    return lista;
+                return lista;
                 //}
                 //else
                 //{
@@ -509,36 +507,36 @@ namespace Core.Services
             }
         }
 
-        public async Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData,string lang, string token)
+        public async Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData, string lang, string token)
         {
             try
             {
                 //if (offlineDataService.IsWifiConection)
                 //{
-                    var url = $"/api/Opportunity/GetListByCustomerIdAsync?language={lang}";
+                var url = $"/api/Opportunity/GetListByCustomerIdAsync?language={lang}";
 
-                    var lista = new List<Opportunity>();
+                var lista = new List<Opportunity>();
 
-                    var content = JsonConvert.SerializeObject(requestData);
+                var content = JsonConvert.SerializeObject(requestData);
 
-                    HttpContent httpContent = new StringContent(content);
+                HttpContent httpContent = new StringContent(content);
 
-                    httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var response = await client.GetStringAsync($"{url}");
+                var response = await client.GetStringAsync($"{url}");
 
-                    if (response != null)
-                    {
-                        lista = JsonConvert.DeserializeObject<IEnumerable<Opportunity>>(response).ToList();
-                        
-                        //if (offlineDataService.IsDataLoaded)
-                        //{
-                        //    offlineDataService.UnloadAllData("Opportunity");
-                        //}
-                    }
+                if (response != null)
+                {
+                    lista = JsonConvert.DeserializeObject<IEnumerable<Opportunity>>(response).ToList();
 
-                    return lista;
+                    //if (offlineDataService.IsDataLoaded)
+                    //{
+                    //    offlineDataService.UnloadAllData("Opportunity");
+                    //}
+                }
+
+                return lista;
                 //}
                 //else
                 //{
@@ -558,37 +556,37 @@ namespace Core.Services
         {
             //if (offlineDataService.IsWifiConection)
             //{
-                var cadena = "api/Opportunity";
+            var cadena = "api/Opportunity";
 
-                //var dto = new
-                //{
-                //    customerId = opportunity.customer.Id,
-                //    branchOfficeId = 1,
-                //    opportunityStatusId = opportunity.opportunityStatus.Id,
-                //    opportunityProducts = opportunity.Details,
-                //    totalPrice = opportunity.totalPrice,
-                //    closedDate = opportunity.closedDate,
-                //    description = opportunity.description
-                //};
+            //var dto = new
+            //{
+            //    customerId = opportunity.customer.Id,
+            //    branchOfficeId = 1,
+            //    opportunityStatusId = opportunity.opportunityStatus.Id,
+            //    opportunityProducts = opportunity.Details,
+            //    totalPrice = opportunity.totalPrice,
+            //    closedDate = opportunity.closedDate,
+            //    description = opportunity.description
+            //};
 
-                var objeto = JsonConvert.SerializeObject(opportunityPost);
+            var objeto = JsonConvert.SerializeObject(opportunityPost);
 
-                HttpContent httpContent = new StringContent(objeto);
+            HttpContent httpContent = new StringContent(objeto);
 
-                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
+            var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
 
-                var resultado = await respuesta.Content.ReadAsStringAsync();
+            var resultado = await respuesta.Content.ReadAsStringAsync();
 
-                //if (opportunity.Id == 0)
-                //{
-                //    opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
-                //}
+            //if (opportunity.Id == 0)
+            //{
+            //    opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
+            //}
 
-                //Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
-                await Task.FromResult(0);
+            //Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
+            await Task.FromResult(0);
             //}
             //else
             //{
@@ -603,7 +601,7 @@ namespace Core.Services
             //}
         }
 
-        public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro,string lang,  string token)
+        public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string lang, string token)
         {
             try
             {
@@ -636,12 +634,12 @@ namespace Core.Services
             try
             {
                 Opportunity opp = new Opportunity();
-                
+
                 var url = $"/api/Opportunity/{id}";
 
                 var respuesta = await client.GetStringAsync(url);
 
-                if(respuesta != null)
+                if (respuesta != null)
                 {
                     opp = JsonConvert.DeserializeObject<Opportunity>(respuesta);
                 }
@@ -681,29 +679,29 @@ namespace Core.Services
                 //if (offlineDataService.IsWifiConection)
                 //{
 
-                    var lista = new List<PaymentCondition>();
+                var lista = new List<PaymentCondition>();
 
-                    var url = $"/api/PaymentCondition/GetPaymentTermsByCompanyIdAsync?companyId={companyId}";
+                var url = $"/api/PaymentCondition/GetPaymentTermsByCompanyIdAsync?companyId={companyId}";
 
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-                    var respuesta = await client.GetAsync(url);
+                var respuesta = await client.GetAsync(url);
 
-                    var resultado = await respuesta.Content.ReadAsStringAsync();
+                var resultado = await respuesta.Content.ReadAsStringAsync();
 
-                    if (!string.IsNullOrWhiteSpace(resultado))
-                    {
-                        lista = JsonConvert.DeserializeObject<List<PaymentCondition>>(resultado);
+                if (!string.IsNullOrWhiteSpace(resultado))
+                {
+                    lista = JsonConvert.DeserializeObject<List<PaymentCondition>>(resultado);
 
-                        //if(offlineDataService.IsDataLoaded)
-                        //{
-                        //    offlineDataService.UnloadAllData("Payment");
-                        //}
+                    //if(offlineDataService.IsDataLoaded)
+                    //{
+                    //    offlineDataService.UnloadAllData("Payment");
+                    //}
 
-                        //offlineDataService.SavePaymentConditions(lista.ToList());
-                    }
+                    //offlineDataService.SavePaymentConditions(lista.ToList());
+                }
 
-                    return lista;
+                return lista;
                 //}
                 //else
                 //{
@@ -740,12 +738,12 @@ namespace Core.Services
 
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
-            if(respuesta.ReasonPhrase == "Bad Request")
+            if (respuesta.ReasonPhrase == "Bad Request")
             {
                 throw new Exception(resultado);
             }
 
-            if(respuesta.ReasonPhrase == "Internal Server Error")
+            if (respuesta.ReasonPhrase == "Internal Server Error")
             {
                 throw new Exception("Error al Impactar en un Servicio Externo");
             }
@@ -876,7 +874,7 @@ namespace Core.Services
             }
         }
 
-        public async Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language,string token)
+        public async Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language, string token)
         {
             var url = $"/api/PaymentMethod?companyId={companyId}&language={language}";
 
@@ -887,6 +885,32 @@ namespace Core.Services
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<IEnumerable<PaymentMethod>>(resultado);
+        }
+
+        public async Task<IEnumerable<Incoterm>> GetIncoterms(string token)
+        {
+            var url = $"/api/Incoterm";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<IEnumerable<Incoterm>>(resultado);
+        }
+
+        public async Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token, string api)
+        {
+            var url = $"/api/{api}?language={language}";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<IEnumerable<FreightInCharge>>(resultado);
         }
     }
 }
