@@ -900,9 +900,9 @@ namespace Core.Services
             return JsonConvert.DeserializeObject<IEnumerable<Incoterm>>(resultado);
         }
 
-        public async Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token, string api)
+        public async Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token)
         {
-            var url = $"/api/{api}?language={language}";
+            var url = $"/api/Freight?language={language}";
 
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -911,6 +911,19 @@ namespace Core.Services
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<IEnumerable<FreightInCharge>>(resultado);
+        }
+
+        public async Task<IEnumerable<Transport>> GetTransport(string language, string token)
+        {
+            var url = $"/api/Transport?language={language}";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<IEnumerable<Transport>>(resultado);
         }
     }
 }

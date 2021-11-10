@@ -80,7 +80,13 @@ namespace Core.ViewModels
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
         public MvxObservableCollection<PaymentMethod> PaymentMethods { get; set; } = new MvxObservableCollection<PaymentMethod>();
         public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
-        public MvxObservableCollection<FreightInCharge> FreightInCharges { get; set; } = new MvxObservableCollection<FreightInCharge>();
+
+        private MvxObservableCollection<Transport> freightInCharges;
+        public MvxObservableCollection<Transport> FreightInCharges
+        {
+            get => freightInCharges;
+            set => SetProperty(ref freightInCharges, value);
+        }
 
         private FreightInCharge freightInCharge;
         public FreightInCharge FreightInCharge
@@ -343,16 +349,17 @@ namespace Core.ViewModels
 
             if (red)
             {
-                var fletes = await prometeoApiService.GetFreight(lang, user.Token, "Transport");
+                var fletes = await prometeoApiService.GetTransport(lang, user.Token);
 
                 if(fletes != null)
                 {
-                    FreightInCharges = new MvxObservableCollection<FreightInCharge>(fletes);
+                    FreightInCharges = new MvxObservableCollection<Transport>(fletes);
                 }
             }
             else
             {
-
+                await Application.Current.MainPage.DisplayAlert("Atención", "Flete - No disponible Offline", "Aceptar");
+                return;
             }
 
 

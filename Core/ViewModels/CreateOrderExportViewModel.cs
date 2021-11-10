@@ -4,10 +4,8 @@ using Core.Services.Contracts;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -18,6 +16,27 @@ namespace Core.ViewModels
         private ApplicationData data;
 
         #region PROPIEDADES
+        private bool stackDetail;
+        public bool StackDetail
+        {
+            get => stackDetail;
+            set => SetProperty(ref stackDetail, value);
+        }
+
+        private bool stackProductos;
+        public bool StackProductos
+        {
+            get => stackProductos;
+            set => SetProperty(ref stackProductos, value);
+        }
+
+        private bool isLoading;
+        public bool IsLoading
+        {
+            get => isLoading;
+            set => SetProperty(ref isLoading, value);
+        }
+
         private OrderNote order;
         public OrderNote Order
         {
@@ -124,7 +143,12 @@ namespace Core.ViewModels
             var s = TotalOfOrderStr;
         }
 
-        public MvxObservableCollection<FreightInCharge> FreightInCharges { get; set; } = new MvxObservableCollection<FreightInCharge>();
+        private MvxObservableCollection<FreightInCharge> freightInCharges;
+        public MvxObservableCollection<FreightInCharge> FreightInCharges
+        {
+            get => freightInCharges;
+            set => SetProperty(ref freightInCharges, value);
+        }
 
         private FreightInCharge freightInCharge;
         public FreightInCharge FreightInCharge
@@ -139,6 +163,7 @@ namespace Core.ViewModels
             get => enableForEdit;
             set => SetProperty(ref enableForEdit, value);
         }
+
         #endregion
 
         //EVENTS
@@ -147,6 +172,9 @@ namespace Core.ViewModels
 
         //COMMAND
         public Command SavePedidoCommand { get; }
+        public Command AddProductCommand { get; }
+        public Command EditProductCommand { get; }
+        public Command RemoveProductCommand { get; }
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
@@ -158,9 +186,8 @@ namespace Core.ViewModels
         {
             try
             {
-                //StackInfo = true;
-                //StackProductos = false;
-                //StackAdjunto = false;
+                stackDetail = true;
+                StackProductos = false;
 
                 data = new ApplicationData();
 
@@ -170,9 +197,9 @@ namespace Core.ViewModels
                 this.offlineDataService = offlineDataService;
 
                 //SelectClientCommand = new Command(async () => await SelectClientAsync());
-                //AddProductCommand = new Command(async () => await AddProductAsync());
-                //RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
-                //EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
+                AddProductCommand = new Command(async () => await AddProductAsync());
+                RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
+                EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
                 //CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
@@ -194,11 +221,20 @@ namespace Core.ViewModels
         {
             try
             {
-                var incoterms = await prometeoApiService.GetIncoterms(data.LoggedUser.Token);
-
-                if(incoterms != null)
+                var red = await Connection.SeeConnection();
+                if (red)
                 {
-                    Incoterms = new MvxObservableCollection<Incoterm>(incoterms);
+                    var incoterms = await prometeoApiService.GetIncoterms(data.LoggedUser.Token);
+
+                    if (incoterms != null)
+                    {
+                        Incoterms = new MvxObservableCollection<Incoterm>(incoterms);
+                    }
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "Incoterms - No disponible Offline", "Aceptar");
+                    return;
                 }
             }
             catch (Exception e)
@@ -209,24 +245,32 @@ namespace Core.ViewModels
 
         private async void CargarFlete()
         {
-            var user = data.LoggedUser;
-
-            string lang = user.Language.ToLower();
-
-            var red = await Connection.SeeConnection();
-
-            if(red)
+            try
             {
-                var fletes = await prometeoApiService.GetFreight(lang, user.Token,"Freight");
+                var user = data.LoggedUser;
 
-                if(fletes != null)
+                string lang = user.Language.ToLower();
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
-                    FreightInCharges = new MvxObservableCollection<FreightInCharge>(fletes);
+                    var fletes = await prometeoApiService.GetFreight(lang, user.Token);
+
+                    if (fletes != null)
+                    {
+                        FreightInCharges = new MvxObservableCollection<FreightInCharge>(fletes);
+                    }
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "Flete - No disponible Offline", "Aceptar");
+                    return;
                 }
             }
-            else
+            catch (Exception e)
             {
-
+                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
         }
 
@@ -405,7 +449,91 @@ namespace Core.ViewModels
 
             return listaProductos;
         }
+        private async Task AddProductAsync()
+        {
+            try
+            {
+                OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
 
+                if (detail != null)
+                {
+                    var product = new OrderNote.ProductOrder
+                    {
+                        discount = detail.Discount,
+                        price = detail.product.price,
+                        quantity = detail.Quantity,
+                        subtotal = detail.Total,
+                        companyProductPresentationId = detail.productId,
+                        companyProductPresentation = detail.product,
+                    };
+
+                    if (Order.products == null)
+                    {
+                        Order.products = new MvxObservableCollection<OrderNote.ProductOrder>();
+                    }
+
+                    Order.products.Add(product);
+
+                    ActualizarTotal(Order.products);
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
+        }
+
+        private void RemoveProduct(OrderNote.ProductOrder detail)
+        {
+            try
+            {
+                Order.products.Remove(detail);
+                ActualizarTotal(Order.products);
+
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
+        }
+
+        private void EditProduct(OrderNote.ProductOrder detail)
+        {
+            try
+            {
+                var product = new Product()
+                {
+
+                    name = detail.companyProductPresentation.name,
+                    price = detail.price,
+                    Id = detail.companyProductPresentationId,
+                    //stock = detail.quantity,
+                    Discount = detail.discount,
+                    quantity = detail.quantity,
+                };
+
+                editingOpportunityDetail = ConvertProduct(detail);
+                ShowEditProductPopup?.Invoke(this, product);
+
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
+        }
+
+        private OpportunityProducts ConvertProduct(OrderNote.ProductOrder detail)
+        {
+            return new OpportunityProducts
+            {
+                Discount = detail.discount,
+                Price = detail.price,
+                productId = detail.companyProductPresentationId,
+                //product = detail.
+                Quantity = detail.quantity,
+                Total = detail.subtotal,
+            };
+        }
         public void FinishEditProduct((double Price, int Quantity, int Discount) args)
         {
             if (editingOpportunityDetail == null)

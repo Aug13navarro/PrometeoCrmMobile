@@ -193,7 +193,7 @@ namespace Core.ViewModels
 
         public async Task IrNuevaNotaPedido(Company company, bool export)
         {
-            if(!export)
+            if(export)
             {
                 var order = new OrderNote
                 {

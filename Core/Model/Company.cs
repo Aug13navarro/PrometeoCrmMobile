@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Core.Model
 {
     public class Company
@@ -5,5 +7,6 @@ namespace Core.Model
         public int Id { get; set; }
         public string BusinessName { get; set; }
         public int? externalId { get; set; }
+        public List<CompanyOrderType> CompanyOrderTypes{ get; set; }
     }
 }

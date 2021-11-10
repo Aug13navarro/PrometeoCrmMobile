@@ -45,6 +45,7 @@ namespace Core.Services.Contracts
         Task<IEnumerable<Seller>> GetUsersByRol(int companyId, string rol);
         Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language, string token);
         Task<IEnumerable<Incoterm>> GetIncoterms(string token);
-        Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token, string api);
+        Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token);
+        Task<IEnumerable<Transport>> GetTransport(string language, string token);
     }
 }

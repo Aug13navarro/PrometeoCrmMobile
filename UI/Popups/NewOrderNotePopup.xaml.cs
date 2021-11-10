@@ -15,6 +15,7 @@ namespace UI.Popups
 
         public IEnumerable<Company> Companies { get; set; }
         public Company Company { get; set; }
+        public bool Export { get; set; }
 
         public NewOrderNotePopup(List<Company> companies)
         {
@@ -24,7 +25,9 @@ namespace UI.Popups
             
             Companies = companies;
 
-            if(Companies.Count() > 0 )
+            CheckExportación.IsEnabled = false;
+
+            if (Companies.Count() > 0 )
             {
                 cmbCompanies.ItemsSource = Companies.ToList();
             }
@@ -44,20 +47,37 @@ namespace UI.Popups
             var comp = Companies.ToList()[index];
 
             Company = comp;
+
+            if(Company.CompanyOrderTypes.Count > 0)
+            {
+                foreach (var item in Company.CompanyOrderTypes)
+                {
+                    if(item.OrderType.Name == "Exportación")
+                    {
+                        CheckExportación.IsEnabled = true;
+                    }
+                }
+            }
         }
 
         private void AceptButtonClicked(object sender , EventArgs e)
         {
             if(Company != null)
             {
-                var result = (Company, true);
+                var result = (Company, Export);
 
                 OkTapped?.Invoke(this, result);
             }
             else
             {
-                Application.Current.MainPage.DisplayAlert("", "", "aceptar"); return;
+                Application.Current.MainPage.DisplayAlert(LangResources.AppResources.Attention, LangResources.AppResources.SelectCompany, LangResources.AppResources.Accept); return;
             }
         }
+
+        private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            Export = e.Value;
+        }
+
     }
 }

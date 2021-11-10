@@ -106,6 +106,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attention.
+        /// </summary>
+        internal static string Attention {
+            get {
+                return ResourceManager.GetString("Attention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available Stock.
         /// </summary>
         internal static string Available_Stock {
@@ -858,6 +867,15 @@ namespace UI.LangResources {
         internal static string SelectAddressTitle {
             get {
                 return ResourceManager.GetString("SelectAddressTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a Company.
+        /// </summary>
+        internal static string SelectCompany {
+            get {
+                return ResourceManager.GetString("SelectCompany", resourceCulture);
             }
         }
         

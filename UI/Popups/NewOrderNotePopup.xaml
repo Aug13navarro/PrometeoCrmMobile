@@ -26,14 +26,10 @@
                         ItemDisplayBinding="{Binding BusinessName}" HorizontalOptions="FillAndExpand"
                         SelectedIndexChanged="cmbCompanies_SelectedIndexChanged"></Picker>
             </StackLayout>
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Local" Style="{x:StaticResource DefaultLabel}" VerticalOptions="Center"></Label>
-                <CheckBox VerticalOptions="Center" Color="{x:StaticResource SecondaryColor}"></CheckBox>
-
-            </StackLayout>
+            
             <StackLayout Orientation="Horizontal">
                 <Label Text="Exportación" Style="{x:StaticResource DefaultLabel}" VerticalOptions="Center"></Label>
-                <CheckBox VerticalOptions="Center" Color="{x:StaticResource SecondaryColor}"></CheckBox>
+                <CheckBox x:Name="CheckExportación" VerticalOptions="Center" Color="{x:StaticResource SecondaryColor}" CheckedChanged="CheckBox_CheckedChanged"></CheckBox>
 
             </StackLayout>
 

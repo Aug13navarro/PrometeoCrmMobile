@@ -132,6 +132,9 @@
   <data name="AttachFile" xml:space="preserve">
     <value>Adjuntar archivo</value>
   </data>
+  <data name="Attention" xml:space="preserve">
+    <value>Atención</value>
+  </data>
   <data name="Available_Stock" xml:space="preserve">
     <value>Stock Disponible</value>
   </data>
@@ -380,6 +383,9 @@
   </data>
   <data name="SelectAddressTitle" xml:space="preserve">
     <value>Seleccionar Dirección</value>
+  </data>
+  <data name="SelectCompany" xml:space="preserve">
+    <value>Seleccione una empresa</value>
   </data>
   <data name="Seller" xml:space="preserve">
     <value>Vendedor</value>
