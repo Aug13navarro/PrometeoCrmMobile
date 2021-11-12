@@ -408,6 +408,9 @@
   <data name="User" xml:space="preserve">
     <value>Usuario</value>
   </data>
+  <data name="WithoutExternalId" xml:space="preserve">
+    <value>Para cerrar la oportunidad, el cliente debe estar registrado en el servicio externo</value>
+  </data>
   <data name="Won" xml:space="preserve">
     <value>Ganada</value>
   </data>

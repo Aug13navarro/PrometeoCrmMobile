@@ -26,6 +26,7 @@ namespace UI.Popups
             Companies = companies;
 
             CheckExportación.IsEnabled = false;
+            CheckExportación.Color = Color.Gray;
 
             if (Companies.Count() > 0 )
             {
@@ -48,13 +49,17 @@ namespace UI.Popups
 
             Company = comp;
 
-            if(Company.CompanyOrderTypes.Count > 0)
+            CheckExportación.IsEnabled = false;
+            CheckExportación.Color = Color.Gray;
+
+            if (Company.CompanyOrderTypes.Count > 0)
             {
                 foreach (var item in Company.CompanyOrderTypes)
                 {
                     if(item.OrderType.Name == "Exportación")
                     {
                         CheckExportación.IsEnabled = true;
+                        CheckExportación.Color = Color.FromHex("#FF4081");
                     }
                 }
             }

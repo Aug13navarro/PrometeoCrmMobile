@@ -71,7 +71,10 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref company, value);
-                CargarVendedores();
+                if (company != null)
+                {
+                    CargarVendedores();
+                }
             }
         }
 
@@ -115,6 +118,13 @@ namespace Core.ViewModels
         {
             get => seller;
             set => SetProperty(ref seller, value);
+        }
+
+        private Seller sellerGuardado;
+        public Seller SellerGuardado
+        {
+            get => sellerGuardado;
+            set => SetProperty(ref sellerGuardado, value);
         }
 
         public ObservableCollection<OpportunityStatus> OpportunityStatuses { get; set; }
@@ -179,7 +189,7 @@ namespace Core.ViewModels
             ApplyFiltersCommand = new Command(async () => await ApplyFilters());
             LimpiarFiltroCommand = new Command(async () => await ClearFilter());
 
-            BeginDate = DateTime.Now.Date;
+            BeginDate = DateTime.Now.AddMonths(-6);
             EndDate = DateTime.Now.Date;
 
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
@@ -192,7 +202,6 @@ namespace Core.ViewModels
 
             VerificarRol(data.LoggedUser.Roles);
 
-            CargarFiltroGuardado();
         }
 
         private void VerificarRol(string rolesJson)
@@ -225,6 +234,8 @@ namespace Core.ViewModels
                     {
                         Companies.Add(item);
                     }
+
+                    CargarFiltroGuardado();
                 }
                 else
                 {
@@ -259,7 +270,7 @@ namespace Core.ViewModels
 
         private Task ClearFilter()
         {
-            BeginDate = DateTime.Now.Date.AddMonths(-6);
+            BeginDate = DateTime.Now.AddMonths(-6);
             EndDate = DateTime.Now.Date;
             IndexStatus = -1;
             Status = null;
@@ -268,6 +279,7 @@ namespace Core.ViewModels
             Company = null;
             TotalDesde = 0;
             TotalHasta = 0;
+            Seller = null;
 
             return Task.FromResult(0);
         }
@@ -286,6 +298,11 @@ namespace Core.ViewModels
                     {
                         Vendors.Clear();
                         Vendors.AddRange(users);
+
+                        if(SellerGuardado != null)
+                        {
+                            Seller = Vendors.FirstOrDefault(x => x.id == SellerGuardado.id);
+                        }
                     }
                 }
                 else
@@ -293,58 +310,73 @@ namespace Core.ViewModels
                     //guardar el cache y buscar por empresa
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
         }
 
         private void CargarFiltroGuardado()
         {
-            var filtroJson = data.InitialFilter;
-            if (filtroJson != null)
+            try
             {
-                var filtro = JsonConvert.DeserializeObject<FilterOpportunityJson>(filtroJson);
+                var filtroJson = data.InitialFilter;
+                if (filtroJson != null)
+                {
+                    var filtro = JsonConvert.DeserializeObject<FilterOpportunityJson>(filtroJson);
 
-                BeginDate = filtro.dateFrom;
-                EndDate = filtro.dateTo;
+                    if (filtro.seller != null)
+                    {
+                        SellerGuardado = filtro.seller;
+                    }
 
-                if(filtro.customers.Count() > 0)
-                {
-                    Customer = filtro.customers.FirstOrDefault();
-                }
-                if (filtro.status.Count() > 0)
-                {
-                    var estado = filtro.status.FirstOrDefault();
+                    BeginDate = filtro.dateFrom;
+                    EndDate = filtro.dateTo;
 
-                    Status = OpportunityStatuses.FirstOrDefault(x => x.Id == estado.Id);
-                    IndexStatus = Status.Id - 1;
-                }
-                if(filtro.companies.Count() > 0)
-                {
-                    Company = filtro.companies.FirstOrDefault();
-                }
-                else
-                {
-                    IndexStatus = -1;
-                }
-                if (filtro.products.Count() > 0)
-                {
-                    Product = filtro.products.FirstOrDefault();
-                }
-                if(filtro.seller != null)
-                {
-                    Seller = filtro.seller;
-                }
+                    if (filtro.customers.Count() > 0)
+                    {
+                        Customer = filtro.customers.FirstOrDefault();
+                    }
+                    if (filtro.status.Count() > 0)
+                    {
+                        var estado = filtro.status.FirstOrDefault();
 
-                if (filtro.priceFrom != null) TotalDesde = filtro.priceFrom.Value;
-                if (filtro.priceTo != null) TotalHasta = filtro.priceTo.Value;
+                        Status = OpportunityStatuses.FirstOrDefault(x => x.Id == estado.Id);
+                        IndexStatus = Status.Id - 1;
+                    }
+                    if (filtro.companies.Count() > 0)
+                    {
+                        Company = Companies.FirstOrDefault(x => x.Id == filtro.companies.FirstOrDefault().Id);
+                    }
+                    else
+                    {
+                        IndexStatus = -1;
+                    }
+                    if (filtro.products.Count() > 0)
+                    {
+                        Product = filtro.products.FirstOrDefault();
+                    }
+
+                    if (filtro.priceFrom != null) TotalDesde = filtro.priceFrom.Value;
+                    if (filtro.priceTo != null) TotalHasta = filtro.priceTo.Value;
+                }
+            }
+            catch
+            {
+
             }
         }
 
         public override Task Initialize()
         {
-            return base.Initialize();
+            try
+            {
+                return base.Initialize();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         private async Task SelectClientAsync()
@@ -445,7 +477,7 @@ namespace Core.ViewModels
             if (Status != null) filtro.status.Add(new oppSta { id = Status.Id });
             if (Product != null) filtro.products.Add(new prod { id = Product.Id });
             if (Company != null) filtro.companies.Add(new comp { id = Company.Id });
-            if (seller != null) filtro.sellerId = Seller.id;
+            if (seller != null) filtro.userId = Seller.id;
             if (filtro.priceFrom == 0) filtro.priceFrom = null;
             if (filtro.priceTo == 0) filtro.priceTo = null;
 

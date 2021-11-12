@@ -934,6 +934,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To close the opportunity, the client must be registered in the external service..
+        /// </summary>
+        internal static string WithoutExternId {
+            get {
+                return ResourceManager.GetString("WithoutExternId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Won.
         /// </summary>
         internal static string Won {

@@ -1,9 +1,11 @@
 ﻿using Core.Model;
 using Core.Services;
 using Core.Services.Contracts;
+using MvvmCross;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -89,6 +91,7 @@ namespace Core.ViewModels
             get => condition;
             set => SetProperty(ref condition, value);
         }
+
         private double valorDescuento;
         public double ValorDescuento
         {
@@ -164,6 +167,23 @@ namespace Core.ViewModels
             set => SetProperty(ref enableForEdit, value);
         }
 
+        private bool isChecked;
+        public bool IsChecked
+        {
+            get => isChecked;
+            set
+            {
+                SetProperty(ref isChecked, value);
+                HabilitarClienteFinal();
+            }
+        }
+
+        private bool enableFinalClient;
+        public bool EnableFinalClient
+        {
+            get => enableFinalClient;
+            set => SetProperty(ref enableFinalClient, value);
+        }
         #endregion
 
         //EVENTS
@@ -175,6 +195,7 @@ namespace Core.ViewModels
         public Command AddProductCommand { get; }
         public Command EditProductCommand { get; }
         public Command RemoveProductCommand { get; }
+        public Command SelectClientCommand { get; }
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
@@ -196,7 +217,7 @@ namespace Core.ViewModels
                 //this.toastService = toastService;
                 this.offlineDataService = offlineDataService;
 
-                //SelectClientCommand = new Command(async () => await SelectClientAsync());
+                SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
@@ -278,7 +299,121 @@ namespace Core.ViewModels
         {
             try
             {
+                var lang = data.LoggedUser.Language.ToLower();
 
+                if(SelectedCustomer == null
+                    || Condition == null
+                    || Incoterm == null
+                    || FreightInCharge == null)
+                {
+                    if (lang == "es")
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Falta completar datos Obligatorios.", "Aceptar");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
+                        return;
+
+                    }
+                }
+
+                if (Order.products == null || Order.products.Count() == 0)
+                {
+                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar productos", "Aceptar");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "You need to associate products.", "Acept");
+                        return;
+                    }
+                }
+
+                var nuevaOrder = new OrderNote
+                {
+                    discount = OrderDiscount,
+                    total = Convert.ToDecimal(Total),
+                    cuenta = SelectedCustomer.ExternalId,
+                    divisionCuentaId = Company.externalId.Value,
+                    talon = 88,                          //puede ser null
+                    tipoComprobante = 8,                 //puede ser null
+                    tipoCuentaId = 1,                    //puede ser null
+                    tipoServicioId = 50,                  //puede ser null
+
+                    companyId = Company.Id,
+                    Description = Order.Description,
+                    paymentConditionId = Condition.id,
+                    ImporterCustomerId = SelectedCustomer.Id,
+                    IsExport = true,
+                    IsFinalClient = IsChecked,
+                    IncotermId = Incoterm.Id,
+                    FreightId = FreightInCharge.id,
+                };
+
+                if (FreightInCharge != null)
+                {
+                    nuevaOrder.FreightId = FreightInCharge.id;
+                }
+
+                nuevaOrder.products = DefinirProductos(Order.Details.ToList());
+
+                if (Order.id == 0)
+                {
+                    var red = await Connection.SeeConnection();
+
+                    if (red)
+                    {
+                        var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
+
+                        if (respuesta != null)
+                        {
+                            //if (respuesta.opportunityId > 0)
+                            //{
+                            //    var send = new OpportunityPost
+                            //    {
+                            //        branchOfficeId = Order.customer.Id,
+                            //        closedDate = DateTime.Now,
+                            //        closedReason = "",
+                            //        customerId = Order.customer.Id,
+                            //        description = Order.oppDescription,
+                            //        opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                            //        opportunityStatusId = 4,
+                            //        totalPrice = Total
+                            //    };
+
+                            //    send.opportunityProducts = listaProductos(Order.Details);
+
+                            //    var opp = new Opportunity();
+
+                            //    await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+                            //}
+                        }
+
+                        //await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                        //await navigationService.Navigate<PedidosViewModel>();
+                    }
+                    else
+                    {
+                        nuevaOrder.company = Company;
+                        nuevaOrder.customer = SelectedCustomer;
+
+                        offlineDataService.SaveOrderNotes(nuevaOrder);
+                        await offlineDataService.SynchronizeToDisk();
+
+
+                        //await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                        //await navigationService.Navigate<PedidosViewModel>();
+                    }
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "Por Ahora no se puede modificar un Pedido de Venta.", "Aceptar");
+                    return;
+                }
             }
             catch (Exception)
             {
@@ -286,6 +421,30 @@ namespace Core.ViewModels
                 throw;
             }
         }
+
+        private MvxObservableCollection<OrderNote.ProductOrder> DefinirProductos(List<OpportunityProducts> details)
+        {
+            var lista = new MvxObservableCollection<OrderNote.ProductOrder>();
+
+            foreach (var item in details)
+            {
+                var prod = new OrderNote.ProductOrder
+                {
+                    arancel = 0,
+                    bonificacion = 0,
+                    companyProductPresentationId = item.productId,
+                    discount = item.Discount,
+                    price = item.Price,
+                    quantity = item.Quantity,
+                    subtotal = item.Total
+                };
+
+                lista.Add(prod);
+            }
+
+            return lista;
+        }
+
         private async void CargarCondiciones()
         {
             try
@@ -356,6 +515,7 @@ namespace Core.ViewModels
                 if (orderNote.id > 0)
                 {
                     EnableForEdit = false;
+                    EnableFinalClient = false;
 
                     Order = await prometeoApiService.GetOrdersById(orderNote.id, user.Token);
 
@@ -449,11 +609,17 @@ namespace Core.ViewModels
 
             return listaProductos;
         }
+
         private async Task AddProductAsync()
         {
             try
             {
-                OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
+                var viewModel = Mvx.Resolve<ProductsViewModel>();
+
+                //viewModel.CustomerTypeId = 26;
+                var model = new OpportunityProducts();
+
+                OpportunityProducts detail = await navigationService.Navigate(viewModel, (IMvxBundle)model);
 
                 if (detail != null)
                 {
@@ -480,6 +646,34 @@ namespace Core.ViewModels
             catch (Exception e)
             {
                 await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+            }
+        }
+
+        private async Task SelectClientAsync()
+        {
+            var viewModel = Mvx.Resolve<CustomersViewModel>();
+
+            viewModel.CustomerTypeId = 26;
+            viewModel.CompanyId = Company.Id;
+
+            var model = new Customer();
+
+            var customer = await navigationService.Navigate(viewModel, (IMvxBundle)model);
+
+            try
+            {
+                IsLoading = true;
+                SelectedCustomer = customer;
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("", "Ocurrió un error al obtener el cliente.Compruebe su conexión a internet.", "Aceptar");
+                return;
+
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 
@@ -599,6 +793,19 @@ namespace Core.ViewModels
             {
                 Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
+        }
+
+        private void HabilitarClienteFinal()
+        {
+            if (IsChecked)
+            {
+                EnableFinalClient = true;
+            }
+            else
+            {
+                EnableFinalClient = false;
+            }
+
         }
     }
 }

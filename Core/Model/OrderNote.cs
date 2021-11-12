@@ -125,10 +125,19 @@ namespace Core.Model
         public DateTime? DeliveryDate { get; set; }
         public string DeliveryResponsible { get; set; }
         public string DeliveryAddress { get; set; }
+        public Transport Transport { get; set; }
+        public int? TransportId { get; set; }
         public PaymentMethod paymentMethod { get; set; }
         public int? PaymentMethodId { get; set; }
         public FreightInCharge FreightInCharge { get; set; }
         public int FreightInChargeId { get; set; }
+        public bool IsExport { get; set;}
+        public int? ImporterCustomerId { get; set; }
+        public DateTime ETD { get; set; }
+        public bool IsFinalClient { get; set; }
+        public string FinalClient { get; set; }
+        public int? FreightId { get; set; }
+        public int? IncotermId { get; set; }
 
         public class ProductOrder
         {

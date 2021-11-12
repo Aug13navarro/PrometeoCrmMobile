@@ -138,13 +138,31 @@ namespace UI.Pages
 
                 popup.GanadaTapped += (s, args) =>
                 {
-                    ViewModel.WinOpportunityCommand.Execute(parameter);
-                    PopupNavigation.Instance.PopAsync(false);
+                    if (ViewModel.SelectedCustomer.ExternalId > 0)
+                    {
+                        ViewModel.WinOpportunityCommand.Execute(parameter);
+                        PopupNavigation.Instance.PopAsync(false);
+                    }
+                    else
+                    {
+                        Application.Current.MainPage.DisplayAlert(
+                            AppResources.InfoTitle, AppResources.WithoutExternId, AppResources.Accept);
+                        return;
+                    }
                 };
                 popup.PerdidaTapped += (s, args) =>
                 {
-                    ViewModel.LostOpportunityCommand.Execute(parameter);
-                    PopupNavigation.Instance.PopAsync(false);
+                    if (ViewModel.SelectedCustomer.ExternalId > 0)
+                    {
+                        ViewModel.LostOpportunityCommand.Execute(parameter);
+                        PopupNavigation.Instance.PopAsync(false);
+                    }
+                    else
+                    {
+                        Application.Current.MainPage.DisplayAlert(
+                            AppResources.InfoTitle, AppResources.WithoutExternId, AppResources.Accept);
+                        return;
+                    }
                 };
 
                 PopupNavigation.Instance.PushAsync(popup);

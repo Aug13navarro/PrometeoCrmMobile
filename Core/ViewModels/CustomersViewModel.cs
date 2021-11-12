@@ -8,11 +8,10 @@ using Core.Model;
 using Core.Model.Common;
 using Core.Services;
 using Core.Services.Contracts;
-using Core.ViewModels.Model;
-using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
@@ -41,6 +40,20 @@ namespace Core.ViewModels
         }
 
         public MvxObservableCollection<Customer> Customers { get; } = new MvxObservableCollection<Customer>();
+
+        private int customerTypeId;
+        public int CustomerTypeId
+        {
+            get => customerTypeId;
+            set => SetProperty(ref customerTypeId, value);
+        }
+
+        private int companyId;
+        public int CompanyId
+        {
+            get => companyId;
+            set => SetProperty(ref companyId, value);
+        }
 
         public int CurrentPage { get; private set; } = 1;
         public int TotalPages { get; private set; }
@@ -90,15 +103,22 @@ namespace Core.ViewModels
 
             if (red)
             {
-
-                var requestData = new CustomersPaginatedRequest()
+                if (CustomerTypeId > 0)
                 {
-                    CurrentPage = CurrentPage,
-                    PageSize = PageSize,
-                    UserId = appData.LoggedUser.Id,
-                };
+                    SearByType(CustomerTypeId);
+                }
+                else
+                {
 
-                await SearchCustomersAsync(requestData);
+                    var requestData = new CustomersPaginatedRequest()
+                    {
+                        CurrentPage = CurrentPage,
+                        PageSize = PageSize,
+                        UserId = appData.LoggedUser.Id,
+                    };
+
+                    await SearchCustomersAsync(requestData);
+                }
             }
             else
             {
@@ -121,6 +141,24 @@ namespace Core.ViewModels
 
                 Customers.Clear();
                 Customers.AddRange(r);
+            }
+        }
+
+        private async void SearByType(int customerType)
+        {
+            try
+            {
+                var customers = await prometeoApiService.GetAllCustomer(appData.LoggedUser.Id, true, customerType, appData.LoggedUser.Token, CompanyId);
+
+                if(customers.Count > 0)
+                {
+                    Customers.Clear();
+                    Customers.AddRange(customers);
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("", $"{e.Message}", "Aceptar"); return;
             }
         }
 
@@ -193,7 +231,7 @@ namespace Core.ViewModels
                     Query = ClientsQuery,
                 };
 
-                await SearchCustomersAsync(requestData);
+                if(customerTypeId > 0) await SearchCustomersAsync(requestData);
             }
         }
 
@@ -221,7 +259,14 @@ namespace Core.ViewModels
                     Query = ClientsQuery,
                 };
 
-                await SearchCustomersAsync(requestData, true);
+                if (customerTypeId > 0)
+                {
+                    await SearchCustomersAsync(requestData, true);
+                }
+                else
+                {
+                    SearByType(CustomerTypeId);
+                }
             }
         }
 

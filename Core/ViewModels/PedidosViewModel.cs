@@ -342,7 +342,14 @@ namespace Core.ViewModels
 
         private async Task AbrirNota(OrderNote orderNote)
         {
-            await navigationService.Navigate<CreateOrderViewModel, OrderNote>(orderNote);
+            if (orderNote.IsExport)
+            {
+                await navigationService.Navigate<CreateOrderExportViewModel, OrderNote>(orderNote);
+            }
+            else
+            {
+                await navigationService.Navigate<CreateOrderViewModel, OrderNote>(orderNote);
+            }
         }
     }
 }

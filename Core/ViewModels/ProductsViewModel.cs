@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Core.Model;
 using Core.Services;
@@ -13,7 +12,9 @@ namespace Core.ViewModels
     public class ProductsViewModel : MvxViewModelResult<OpportunityProducts>
     {
         private ApplicationData data;
-        // Properties
+
+        #region PROPIEDADES
+
         private bool isSearchInProgress;
         public bool IsSearchInProgress
         {
@@ -42,7 +43,16 @@ namespace Core.ViewModels
             }
         }
 
+        private int customerTypeId;
+        public int CustomerTypeId
+        {
+            get => customerTypeId;
+            set => SetProperty(ref customerTypeId, value);
+        }
+
         public MvxObservableCollection<Product> Products { get; } = new MvxObservableCollection<Product>();
+
+        #endregion
 
         // Events
         public event EventHandler<Product> ShowSelectProductPopup;

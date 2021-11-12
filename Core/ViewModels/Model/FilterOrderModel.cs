@@ -10,6 +10,6 @@ namespace Core.ViewModels.Model
         public int? orderStatusId { get; set; }
         public double? priceFrom { get; set; }
         public double? priceTo { get; set; }
-        public int? sellerId { get; set; }
+        public int? userId { get; set; }
     }
 }

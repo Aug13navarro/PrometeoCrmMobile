@@ -114,6 +114,13 @@ namespace Core.ViewModels
             set => SetProperty(ref seller, value);
         }
 
+        private Seller sellerGuardado;
+        public Seller SellerGuardado
+        {
+            get => sellerGuardado;
+            set => SetProperty(ref sellerGuardado, value);
+        }
+
         private bool isEnableSeller;
         public bool IsEnableSeller
         {
@@ -245,6 +252,11 @@ namespace Core.ViewModels
                     {
                         Vendors.Clear();
                         Vendors.AddRange(users);
+
+                        if(SellerGuardado != null)
+                        {
+                            Seller = Vendors.FirstOrDefault(x => x.id == SellerGuardado.id);
+                        }
                     }
                 }
                 else
@@ -384,6 +396,8 @@ namespace Core.ViewModels
             {
                 var filtro = JsonConvert.DeserializeObject<FilterOrderJson>(filtroJson);
 
+                if (filtro.Seller != null) SellerGuardado = filtro.Seller;
+
                 BeginDate = filtro.dateFrom;
                 EndDate = filtro.dateTo;
 
@@ -421,7 +435,7 @@ namespace Core.ViewModels
                 }
                 if(Seller != null)
                 {
-                    filtro.sellerId = Seller.id;
+                    filtro.userId = Seller.id;
                 }
 
                 if (filtro.priceFrom == 0) filtro.priceFrom = null;

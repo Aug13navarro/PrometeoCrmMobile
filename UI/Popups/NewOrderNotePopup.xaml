@@ -29,7 +29,7 @@
             
             <StackLayout Orientation="Horizontal">
                 <Label Text="Exportación" Style="{x:StaticResource DefaultLabel}" VerticalOptions="Center"></Label>
-                <CheckBox x:Name="CheckExportación" VerticalOptions="Center" Color="{x:StaticResource SecondaryColor}" CheckedChanged="CheckBox_CheckedChanged"></CheckBox>
+                <CheckBox x:Name="CheckExportación" VerticalOptions="Center" CheckedChanged="CheckBox_CheckedChanged"></CheckBox>
 
             </StackLayout>
 

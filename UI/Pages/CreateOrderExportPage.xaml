@@ -121,8 +121,11 @@
                             </Label>
                             <CheckBox
                                 Color="{StaticResource SecondaryColor}"
-                                ></CheckBox>
-                            
+                                IsChecked="{Binding IsChecked}"
+                                IsEnabled="{Binding EnableForEdit}"
+                                >
+                                
+                            </CheckBox>                            
                         </StackLayout>
 
                         <StackLayout
@@ -131,7 +134,9 @@
                                        Grid.Column="0"/>
                             <Entry
                                 HorizontalOptions="FillAndExpand"
-                                Placeholder="{x:Static resources:AppResources.EnterCustomer}">
+                                Placeholder="{x:Static resources:AppResources.EnterCustomer}"
+                                IsEnabled="{Binding EnableFinalClient}"
+                                Text="{Binding Order.FinalClient}">
                                 
                             </Entry>
                         </StackLayout>
@@ -142,7 +147,7 @@
                             Margin="0"
                             Padding="0"
                             HorizontalOptions="FillAndExpand">
-                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
+                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Order.ETD}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
                             </Frame>
                         </StackLayout>
 

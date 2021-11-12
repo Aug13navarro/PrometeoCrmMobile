@@ -198,7 +198,7 @@ namespace Core.Services
                 //{
                 var lista = new List<Customer>();
 
-                string url = $"api/Customer?idUser={userId}&companyId={companyId}&isParentCustomer=true&customerTypeId={typeCustomer}";
+                string url = $"api/Customer?idUser={userId}&companyId={companyId}&isParentCustomer={isParent}&customerTypeId={typeCustomer}";
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 var response = await client.GetAsync($"{url}");
@@ -745,7 +745,7 @@ namespace Core.Services
 
             if (respuesta.ReasonPhrase == "Internal Server Error")
             {
-                throw new Exception("Error al Impactar en un Servicio Externo");
+                throw new Exception("Error al Impactar en un Servicio Externo, posiblemente el Cliente no se encuentra registrado");
             }
 
             return JsonConvert.DeserializeObject<OrderNote>(resultado);

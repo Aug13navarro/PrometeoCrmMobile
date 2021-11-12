@@ -1,7 +1,5 @@
-﻿using Core.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Core.ViewModels.Model
 {
@@ -15,7 +13,7 @@ namespace Core.ViewModels.Model
         public decimal? priceFrom { get; set; }
         public decimal? priceTo { get; set; }
         public List<comp> companies { get; set; }
-        public int sellerId { get; set; }
+        public int userId { get; set; }
     }
 
     public class cust

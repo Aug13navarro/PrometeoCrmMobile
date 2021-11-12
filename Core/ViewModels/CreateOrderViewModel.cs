@@ -19,7 +19,9 @@ namespace Core.ViewModels
     public class CreateOrderViewModel : MvxViewModel<OrderNote>
     {
         private ApplicationData data;
+
         // Properties
+        #region PROPIEDADES
 
         private bool stackInfo;
         public bool StackInfo
@@ -88,8 +90,8 @@ namespace Core.ViewModels
             set => SetProperty(ref freightInCharges, value);
         }
 
-        private FreightInCharge freightInCharge;
-        public FreightInCharge FreightInCharge
+        private Transport freightInCharge;
+        public Transport FreightInCharge
         {
             get => freightInCharge;
             set => SetProperty(ref freightInCharge, value);
@@ -137,8 +139,6 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref company, value);
-                //CargarCondiciones();
-                //CargarMedioPago();
             }
         }
 
@@ -245,6 +245,7 @@ namespace Core.ViewModels
             get => enableForEdit;
             set => SetProperty(ref enableForEdit, value);
         }
+        #endregion
 
         // Events
         public event EventHandler<Product> ShowEditProductPopup;
@@ -268,8 +269,7 @@ namespace Core.ViewModels
         private readonly IOfflineDataService offlineDataService;
         //private readonly IToastService toastService;
 
-        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService
-                                          )//IToastService toastService
+        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)
         {
             try
             {
@@ -281,7 +281,6 @@ namespace Core.ViewModels
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
-                //this.toastService = toastService;
                 this.offlineDataService = offlineDataService;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
@@ -354,6 +353,11 @@ namespace Core.ViewModels
                 if(fletes != null)
                 {
                     FreightInCharges = new MvxObservableCollection<Transport>(fletes);
+
+                    if(Order.TransportId != null)
+                    {
+                        FreightInCharge = FreightInCharges.FirstOrDefault(x => x.Id == Order.TransportId);
+                    }
                 }
             }
             else
@@ -361,18 +365,6 @@ namespace Core.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Atención", "Flete - No disponible Offline", "Aceptar");
                 return;
             }
-
-
-            //if (lang == "es" || lang.Contains("spanish"))
-            //{
-            //    FreightInCharges.Add(new FreightInCharge { id = 1, name = "Empresa" });
-            //    FreightInCharges.Add(new FreightInCharge { id = 2, name = "Cliente" });
-            //}
-            //else
-            //{
-            //    FreightInCharges.Add(new FreightInCharge { id = 1, name = "Company" });
-            //    FreightInCharges.Add(new FreightInCharge { id = 2, name = "Customer" });
-            //}
         }
 
         private async Task CustomerAddressMethod()
@@ -513,6 +505,11 @@ namespace Core.ViewModels
                     PaymentMethodId = PaymentMethod.id,
                 };
 
+                if(FreightInCharge != null)
+                {
+                    nuevaOrder.TransportId = FreightInCharge.Id;
+                }
+
                 if (nuevaOrder.DeliveryDate == null)
                 {
                     nuevaOrder.DeliveryDate = DateTime.Now.Date;
@@ -533,7 +530,7 @@ namespace Core.ViewModels
                 {
                     var red = await Connection.SeeConnection();
 
-                    if (!red)
+                    if (red)
                     {
                         var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
@@ -708,84 +705,84 @@ namespace Core.ViewModels
             }
         }
 
-        private async void CargarEmpresas()
-        {
-            try
-            {
-                var user = data.LoggedUser;
+        //private async void CargarEmpresas()
+        //{
+        //    try
+        //    {
+        //        var user = data.LoggedUser;
 
-                var red = await Connection.SeeConnection();
+        //        var red = await Connection.SeeConnection();
 
-                if (!red)
-                {
+        //        if (!red)
+        //        {
 
-                    Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
+        //            Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
 
-                    if (Order != null)
-                    {
-                        if (order.companyId != null)
-                        {
-                            if (Order.companyId > 0)
-                            {
-                                Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                            }
-                        }
-                        else
-                        {
-                            Company = Companies.FirstOrDefault();
-                        }
-                    }
-                }
-                else
-                {
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
+        //            if (Order != null)
+        //            {
+        //                if (order.companyId != null)
+        //                {
+        //                    if (Order.companyId > 0)
+        //                    {
+        //                        Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    Company = Companies.FirstOrDefault();
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            var mapperConfig = new MapperConfiguration(m =>
+        //            {
+        //                m.AddProfile(new MappingProfile());
+        //            });
 
-                    IMapper mapper = mapperConfig.CreateMapper();
+        //            IMapper mapper = mapperConfig.CreateMapper();
 
-                    if (!offlineDataService.IsDataLoadedCompanies)
-                    {
-                        await offlineDataService.LoadCompanies();
-                    }
-                    var empresas = await offlineDataService.SearchCompanies();
+        //            if (!offlineDataService.IsDataLoadedCompanies)
+        //            {
+        //                await offlineDataService.LoadCompanies();
+        //            }
+        //            var empresas = await offlineDataService.SearchCompanies();
 
-                    var e = mapper.Map<List<Company>>(empresas);
+        //            var e = mapper.Map<List<Company>>(empresas);
 
-                    Companies = new MvxObservableCollection<Company>(e);
+        //            Companies = new MvxObservableCollection<Company>(e);
 
-                    if (Order != null)
-                    {
-                        if (order.companyId != null)
-                        {
-                            if (Order.companyId > 0)
-                            {
-                                Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-                                if (PaymentConditions.Count <= 0)
-                                {
-                                    CargarCondiciones();
-                                }
-                            }                            
-                        }
-                        else
-                        {
-                            Company = Companies.FirstOrDefault();
-                            //if (PaymentConditions.Count <= 0)
-                            //{
-                            //    //CargarCondiciones();
-                            //}
-                        }
-                    }
-                }
+        //            if (Order != null)
+        //            {
+        //                if (order.companyId != null)
+        //                {
+        //                    if (Order.companyId > 0)
+        //                    {
+        //                        Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
+        //                        if (PaymentConditions.Count <= 0)
+        //                        {
+        //                            CargarCondiciones();
+        //                        }
+        //                    }                            
+        //                }
+        //                else
+        //                {
+        //                    Company = Companies.FirstOrDefault();
+        //                    //if (PaymentConditions.Count <= 0)
+        //                    //{
+        //                    //    //CargarCondiciones();
+        //                    //}
+        //                }
+        //            }
+        //        }
 
-            }
-            catch ( Exception e)
-            {
-                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
-                return;
-            }
-        }
+        //    }
+        //    catch ( Exception e)
+        //    {
+        //        await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
+        //        return;
+        //    }
+        //}
 
         private void CargarEstados()
         {
@@ -810,10 +807,20 @@ namespace Core.ViewModels
                     AjustarEstado(user.Language, Order.orderStatus);
 
                     SelectedCustomer = Order.customer;
-                    //Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
+                    Company = Order.company;
                     TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
-                    //PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
+                    
+                    CargarFleteCargo();
+
+                    if(PaymentMethods.Count > 0)
+                    {
+                        PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
+                    }
+                    else
+                    {
+                        CargarMedioPago();
+                    }
 
                     SelectedCustomer.Addresses.Add(new CustomerAddress { Address = Order.DeliveryAddress });
 
