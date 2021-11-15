@@ -61,14 +61,7 @@
                     </Image.GestureRecognizers>
                 </Image>
             </Grid>
-            <!--<Entry Placeholder="{x:Static resources:AppResources.SearchOpportunity}" Text="{Binding OpportunitiesQuery}"
-                   TextColor="White" PlaceholderColor="LightGray" HorizontalOptions="StartAndExpand" />-->
-            <!--<Image Source="ic_search.png">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding NewOpportunitiesSearchCommand}" />
-                </Image.GestureRecognizers>
-            </Image>-->
-            
+
         </StackLayout>
     </NavigationPage.TitleView>
 
@@ -130,7 +123,7 @@
                                                 <FormattedString>
                                                     <Span Text="{x:Static resources:AppResources.Registered}" FontAttributes="Bold" />
                                                     <Span Text=": " FontAttributes="Bold" />
-                                                    <Span Text="{Binding createDt, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
+                                                    <Span Text="{Binding closedDate, StringFormat='{0:dd/MM/yyyy}'}" TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
@@ -145,16 +138,6 @@
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-
-                                        <!--<Label>
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{x:Static resources:AppResources.BranchOffice}" FontAttributes="Bold" />
-                                                <Span Text=": " FontAttributes="Bold" />
-                                                <Span Text="{Binding Customer.CompanyName}" TextColor="{StaticResource PrimaryColor}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>-->
 
                                         <Label>
                                             <Label.FormattedText>

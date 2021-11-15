@@ -137,7 +137,7 @@ namespace UI.Pages
 
                 popup.GanadaTapped += (s, args) =>
                 {
-                    if (ViewModel.SelectedCustomer.ExternalId > 0)
+                    if (ViewModel.SelectedCustomer.externalCustomerId > 0)
                     {
                         ViewModel.WinOpportunityCommand.Execute(parameter);
                         PopupNavigation.Instance.PopAsync(false);
@@ -151,7 +151,7 @@ namespace UI.Pages
                 };
                 popup.PerdidaTapped += (s, args) =>
                 {
-                    if (ViewModel.SelectedCustomer.ExternalId > 0)
+                    if (ViewModel.SelectedCustomer.externalCustomerId > 0)
                     {
                         ViewModel.LostOpportunityCommand.Execute(parameter);
                         PopupNavigation.Instance.PopAsync(false);

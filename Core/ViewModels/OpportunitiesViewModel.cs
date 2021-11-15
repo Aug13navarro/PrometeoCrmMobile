@@ -442,7 +442,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                //toastService.ShowError($"{ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("", ex.Message, "Aceptar");
             }
             finally
             {

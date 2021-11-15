@@ -266,7 +266,7 @@ namespace Core.ViewModels
                 var send = new OpportunityPost
                 {
                     branchOfficeId = Opportunity.customer.Id,
-                    closedDate = Opportunity.createDt,
+                    closedDate = Opportunity.closedDate,
                     closedReason = "",
                     customerId = Opportunity.customer.Id,
                     description = Opportunity.description,
@@ -327,7 +327,7 @@ namespace Core.ViewModels
                 {
                     customerId = Opportunity.customer.Id,
                     customer = SelectedCustomer,
-                    fecha = Opportunity.createDt,
+                    fecha = Opportunity.closedDate,
                     opportunityId = Opportunity.Id,
                     Details = Opportunity.opportunityProducts,
                     total = Opportunity.totalPrice,
@@ -695,7 +695,7 @@ namespace Core.ViewModels
                 var send = new OpportunityPost
                 {
                     branchOfficeId = Opportunity.customer.Id,
-                    closedDate = Opportunity.createDt,
+                    closedDate = Opportunity.closedDate,
                     closedReason = "",
                     customerId = Opportunity.customer.Id,
                     description = Opportunity.description,

@@ -488,7 +488,7 @@ namespace Core.ViewModels
                     orderStatus = 1,
                     paymentConditionId = Condition.id,
                     total = Convert.ToDecimal(Total),
-                    cuenta = SelectedCustomer.ExternalId,
+                    cuenta = SelectedCustomer.externalCustomerId.Value,
                     divisionCuentaId = Company.externalId.Value,
                     talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
