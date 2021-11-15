@@ -184,7 +184,14 @@ namespace Core.ViewModels
 
                     Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
 
-                    Company = Companies.FirstOrDefault();
+                    if (Opportunity.Company != null)
+                    {
+                        Company = Companies.FirstOrDefault(x => x.Id == Opportunity.Company.Id);
+                    }
+                    else
+                    {
+                        Company = Companies.FirstOrDefault();
+                    }
                 }
                 else
                 {
@@ -349,18 +356,21 @@ namespace Core.ViewModels
         {
             try
             {
+                if (Companies == null)
+                {
+                    CargarEmpresas();
+                }
+
                 if (theOpportunity.Id > 0)
                 {
                     var result = await prometeoApiService.GetOppById(theOpportunity.Id);
                     Opportunity = result;
                     Opportunity.Details.AddRange(result.opportunityProducts);
 
-                    if(Companies == null)
-                    {
-                        CargarEmpresas();
-                    }
-
-                    Company = Companies.FirstOrDefault(x => x.Id == Opportunity.Company.Id);
+                    //if (Companies != null && Companies.Count > 0)
+                    //{
+                    //    Company = Companies.FirstOrDefault(x => x.Id == Opportunity.Company.Id);
+                    //}
 
                     if (Opportunity.opportunityStatus.Id >= 4)
                     {
@@ -382,7 +392,7 @@ namespace Core.ViewModels
                     }
                 }
 
-                selectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
+                SelectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
                 SelectedCustomer = Opportunity.customer;
                 
                 ActualizarTotal(Opportunity.Details);
