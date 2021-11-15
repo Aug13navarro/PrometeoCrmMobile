@@ -8,6 +8,7 @@ using Core.Model;
 using Core.Model.Common;
 using Core.Services;
 using Core.Services.Contracts;
+using Core.ViewModels.Model;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -15,7 +16,7 @@ using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
-    public class CustomersViewModel : MvxViewModelResult<Customer>
+    public class CustomersViewModel : MvxViewModel<DataExport,Customer>
     {
         // Properties
         private bool isSearchInProgress;
@@ -93,6 +94,12 @@ namespace Core.ViewModels
             GoToCreateCustomerCommand = new MvxAsyncCommand(GoToCreateCustomerAsync);
             NewClientsSearchCommand = new MvxAsyncCommand(NewClientsSearchAsync);
             SelectCustomerCommand = new MvxAsyncCommand<Customer>(SelectCustomerAsync);
+        }
+
+        public override void Prepare(DataExport parameter)
+        {
+            CompanyId = parameter.CompanyId;
+            CustomerTypeId = parameter.CustomerTypeId;
         }
 
         public override async Task Initialize()
@@ -231,7 +238,7 @@ namespace Core.ViewModels
                     Query = ClientsQuery,
                 };
 
-                if(customerTypeId > 0) await SearchCustomersAsync(requestData);
+                if(CustomerTypeId == 0) await SearchCustomersAsync(requestData);
             }
         }
 
@@ -259,13 +266,13 @@ namespace Core.ViewModels
                     Query = ClientsQuery,
                 };
 
-                if (customerTypeId > 0)
+                if (CustomerTypeId > 0)
                 {
-                    await SearchCustomersAsync(requestData, true);
+                    SearByType(CustomerTypeId);
                 }
                 else
                 {
-                    SearByType(CustomerTypeId);
+                    await SearchCustomersAsync(requestData, true);
                 }
             }
         }

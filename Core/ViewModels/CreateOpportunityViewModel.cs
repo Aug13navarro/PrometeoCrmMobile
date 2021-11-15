@@ -10,6 +10,7 @@ using Core.Model.Enums;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.Utils;
+using Core.ViewModels.Model;
 using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -541,7 +542,12 @@ namespace Core.ViewModels
 
         private async Task SelectClientAsync()
         {
-            var customer = await navigationService.Navigate<CustomersViewModel, Customer>();
+            var dExport = new DataExport()
+            {
+                CompanyId = Company.Id,
+            };
+
+            var customer = await navigationService.Navigate<CustomersViewModel, DataExport, Customer>(dExport);
 
             try
             {
@@ -564,16 +570,28 @@ namespace Core.ViewModels
 
         private async Task AddProductAsync()
         {
-            OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
-
-            if (detail != null)
+            try
             {
-                detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
-                detail.Price = detail.product.price;
-                detail.Total = CalcularTotal(detail);
-                Opportunity.Details.Add(detail);
+                var dataExport = new DataExport()
+                {
+                    CompanyId = Company.Id
+                };
 
-                ActualizarTotal(Opportunity.Details);
+                var detail = await navigationService.Navigate<ProductsViewModel, DataExport, OpportunityProducts>(dataExport);
+
+                if (detail != null)
+                {
+                    detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
+                    detail.Price = detail.product.price;
+                    detail.Total = CalcularTotal(detail);
+                    Opportunity.Details.Add(detail);
+
+                    ActualizarTotal(Opportunity.Details);
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
         }
 

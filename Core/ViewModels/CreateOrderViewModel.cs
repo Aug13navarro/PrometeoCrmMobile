@@ -13,6 +13,7 @@ using System.Globalization;
 using Core.Services;
 using AutoMapper;
 using Core.Helpers;
+using Core.ViewModels.Model;
 
 namespace Core.ViewModels
 {
@@ -1023,7 +1024,12 @@ namespace Core.ViewModels
 
         private async Task SelectClientAsync()
         {
-            var customer = await navigationService.Navigate<CustomersViewModel, Customer>();
+            var dExport = new DataExport()
+            {
+                CompanyId = Company.Id,
+            };
+
+            var customer = await navigationService.Navigate<CustomersViewModel, DataExport, Customer>(dExport);
 
             try
             {
@@ -1046,7 +1052,12 @@ namespace Core.ViewModels
         {
             try
             {
-                OpportunityProducts detail = await navigationService.Navigate<ProductsViewModel, OpportunityProducts>();
+                var dExport = new DataExport()
+                {
+                    CompanyId = Company.Id
+                };
+
+                var detail = await navigationService.Navigate<ProductsViewModel, DataExport, OpportunityProducts>(dExport);
 
                 if (detail != null)
                 {

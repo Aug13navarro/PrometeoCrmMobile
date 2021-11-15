@@ -1,7 +1,9 @@
 ﻿using Core.Model;
 using Core.Services;
 using Core.Services.Contracts;
+using Core.ViewModels.Model;
 using MvvmCross;
+using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
@@ -614,12 +616,12 @@ namespace Core.ViewModels
         {
             try
             {
-                var viewModel = Mvx.Resolve<ProductsViewModel>();
+                var dExport = new DataExport()
+                {
+                    CompanyId = Company.Id
+                };
 
-                //viewModel.CustomerTypeId = 26;
-                var model = new OpportunityProducts();
-
-                OpportunityProducts detail = await navigationService.Navigate(viewModel, (IMvxBundle)model);
+                var detail = await navigationService.Navigate<ProductsViewModel,DataExport,OpportunityProducts>(dExport);
 
                 if (detail != null)
                 {
@@ -651,14 +653,13 @@ namespace Core.ViewModels
 
         private async Task SelectClientAsync()
         {
-            var viewModel = Mvx.Resolve<CustomersViewModel>();
+            var dExport = new DataExport()
+            {
+                CompanyId = Company.Id,
+                CustomerTypeId = 26,
+            };
 
-            viewModel.CustomerTypeId = 26;
-            viewModel.CompanyId = Company.Id;
-
-            var model = new Customer();
-
-            var customer = await navigationService.Navigate(viewModel, (IMvxBundle)model);
+            var customer = await navigationService.Navigate<CustomersViewModel, DataExport, Customer>(dExport);
 
             try
             {

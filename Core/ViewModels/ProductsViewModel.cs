@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using Core.Model;
 using Core.Services;
 using Core.Services.Contracts;
+using Core.ViewModels.Model;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
-    public class ProductsViewModel : MvxViewModelResult<OpportunityProducts>
+    public class ProductsViewModel : MvxViewModel<DataExport ,OpportunityProducts>
     {
         private ApplicationData data;
 
@@ -81,7 +82,7 @@ namespace Core.ViewModels
             {
                 data = new ApplicationData();
 
-                companyId = 7;
+                //companyId = 7;
 
                 Query = "";
                 this.prometeoApiService = prometeoApiService;
@@ -95,6 +96,11 @@ namespace Core.ViewModels
             {
                 var s = e.Message;
             }
+        }
+
+        public override void Prepare(DataExport parameter)
+        {
+            companyId = parameter.CompanyId;
         }
 
         private async Task SearchQueryAsync()
