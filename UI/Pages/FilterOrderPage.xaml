@@ -30,12 +30,12 @@
             </ImageButton>
         </StackLayout>
     </NavigationPage.TitleView>
-    <StackLayout
-        Padding="10">
+    <StackLayout>
+        <ScrollView>
         <Frame HorizontalOptions="Center"
-               BorderColor="{StaticResource PrimaryColor}"
-               >
-            <Grid
+               BorderColor="{StaticResource PrimaryColor}">
+                <StackLayout>
+                    <Grid
                 ColumnDefinitions="*,*"
                 RowDefinitions="auto,auto,auto,auto,auto,auto,auto,auto">
                 <StackLayout Orientation="Horizontal"
@@ -173,6 +173,8 @@
                     
                 </Button>
             </Grid>
-        </Frame>
+                </StackLayout>
+            </Frame>
+        </ScrollView>
     </StackLayout>
 </Views:MvxContentPage>

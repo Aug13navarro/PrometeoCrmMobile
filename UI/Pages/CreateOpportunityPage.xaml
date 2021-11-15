@@ -157,8 +157,10 @@
                                         </StackLayout>
 
                                         <StackLayout Orientation="Horizontal">
-                                            <Label Text="{x:Static resources:AppResources.Price}" HorizontalOptions="StartAndExpand" />
-                                            <Label Mvx:Bi.nd="Text Format('${0:N2}', Price)" />
+                                            <Label Text="{x:Static resources:AppResources.Price}" HorizontalOptions="StartAndExpand"/>
+                                            <Label Mvx:Bi.nd="Text Format('${0:N2}', PriceStr)" >
+                                                
+                                            </Label>
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="{x:Static resources:AppResources.Quantity}" HorizontalOptions="StartAndExpand" />
@@ -170,7 +172,7 @@
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="Subtotal" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
-                                            <Label Mvx:Bi.nd="Text Format('${0:N2}', Total)" TextColor="{StaticResource PrimaryColor}" />
+                                            <Label Mvx:Bi.nd="Text Format('${0:N2}', TotalStr)" TextColor="{StaticResource PrimaryColor}" />
                                         </StackLayout>
                                         <BoxView BackgroundColor="LightGray" HeightRequest="1" />
                                     </StackLayout>
@@ -196,7 +198,8 @@
                 <Label Text="TOTAL" Mvx:Bi.nd="IsVisible Opportunity.Details.Count > 0"
                        TextColor="{StaticResource PrimaryColor}" FontAttributes="Bold" VerticalTextAlignment="Center"/>
                 <!--HorizontalOptions="End"  Margin="0,20,0,0" -->
-                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', Total); IsVisible Opportunity.Details.Count > 0" 
+                <Label Mvx:Bi.nd="IsVisible Opportunity.Details.Count > 0" 
+                       Text="{Binding TotalStr}"
                        TextColor="{StaticResource SecondaryColor}" 
                        FontAttributes="Bold" FontSize="Medium" 
                        VerticalTextAlignment="Center" >

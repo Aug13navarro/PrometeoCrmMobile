@@ -278,7 +278,7 @@
 
                                             <StackLayout Orientation="Horizontal">
                                                 <Label Text="{x:Static resources:AppResources.Price}" HorizontalOptions="StartAndExpand" />
-                                                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', price)" />
+                                                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', PriceStr)" />
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
                                                 <Label Text="{x:Static resources:AppResources.Quantity}" HorizontalOptions="StartAndExpand" />
@@ -290,7 +290,7 @@
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
                                                 <Label Text="Subtotal" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
-                                                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', subtotal)" TextColor="{StaticResource PrimaryColor}" />
+                                                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', SubTotalStr)" TextColor="{StaticResource PrimaryColor}" />
                                             </StackLayout>
                                             <BoxView BackgroundColor="LightGray" HeightRequest="1" />
                                         </StackLayout>

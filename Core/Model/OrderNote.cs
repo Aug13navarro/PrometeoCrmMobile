@@ -151,8 +151,27 @@ namespace Core.Model
             public int bonificacion { get; set; }
 
 
+
+            public string PriceStr => TransformarStr(this.price);
+            public string SubTotalStr => TransformarStr(this.subtotal);
+            private string TransformarStr(double value)
+            {
+                string str = string.Empty;
+
+                if (Identity.LanguageUser.ToLower() == "es" || Identity.LanguageUser.Contains("spanish"))
+                {
+                    str = value.ToString("N2", new CultureInfo("es-ES"));
+                }
+                else
+                {
+                    str = value.ToString("N2", new CultureInfo("en-US"));
+                }
+
+                return str;
+            }
         }
 
         public string error { get; set; }
+
     }    
 }

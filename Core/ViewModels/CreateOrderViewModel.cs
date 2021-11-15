@@ -8,11 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Essentials;
 using System.Globalization;
 using Core.Services;
-using AutoMapper;
-using Core.Helpers;
 using Core.ViewModels.Model;
 
 namespace Core.ViewModels

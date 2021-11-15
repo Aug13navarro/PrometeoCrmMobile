@@ -1,4 +1,6 @@
+using Core.Helpers;
 using MvvmCross.ViewModels;
+using System.Globalization;
 
 namespace Core.Model
 {
@@ -29,9 +31,29 @@ namespace Core.Model
 
         public double Price { get; set; }
 
+        public string PriceStr => TransformarStr(this.Price);
+
         public double Total { get; set; }
-        
+
+        public string TotalStr => TransformarStr(this.Total);
+
         //para pasar company a producto
         public int CompanyId { get; set; }
+
+        private string TransformarStr(double value)
+        {
+            string str = string.Empty;
+
+            if (Identity.LanguageUser.ToLower() == "es" || Identity.LanguageUser.Contains("spanish"))
+            {
+                str = value.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                str = value.ToString("N2", new CultureInfo("en-US"));
+            }
+
+            return str;
+        }
     }
 }

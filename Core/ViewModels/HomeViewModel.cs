@@ -50,6 +50,8 @@ namespace Core.ViewModels
 
         private async void CargarObtenerDatos()
         {
+            Identity.LanguageUser = LoggedUser.Language;
+
             var red = await Connection.SeeConnection();
 
             if (red)

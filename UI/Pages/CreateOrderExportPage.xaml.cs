@@ -4,6 +4,7 @@ using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
 using System;
+using System.Globalization;
 using UI.Popups;
 
 namespace UI.Pages
@@ -41,49 +42,49 @@ namespace UI.Pages
         {
             try
             {
-                //if (lblDiscount.Text == "Discount")
-                //{
-                //    ViewModel.ResetTotal(ViewModel.Order.products);
+                if (lblDiscount.Text == "Discount")
+                {
+                    ViewModel.ResetTotal(ViewModel.Order.products);
 
-                //    if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
-                //    {
-                //        ViewModel.OrderDiscount = 0;
-                //        lblDiscountResult.Text = 0.ToString();
-                //    }
+                    if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
+                    {
+                        ViewModel.OrderDiscount = 0;
+                        lblDiscountResult.Text = 0.ToString();
+                    }
 
-                //    if (ViewModel.OrderDiscount > 0)
-                //    {
-                //        ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
-                //        lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N2");
+                    if (ViewModel.OrderDiscount > 0)
+                    {
+                        ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
+                        lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N2", new CultureInfo("es-US"));
 
-                //        ViewModel.ActualizarTotal(ViewModel.Order.products);
-                //    }
-                //}
-                //else
-                //{
-                //    if (!string.IsNullOrWhiteSpace(lblOrderDiscount.Text))
-                //    {
-                //        ViewModel.ResetTotal(ViewModel.Order.products);
+                        ViewModel.ActualizarTotal(ViewModel.Order.products);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(lblOrderDiscount.Text))
+                    {
+                        ViewModel.ResetTotal(ViewModel.Order.products);
 
-                //        if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
-                //        {
-                //            ViewModel.OrderDiscount = 0;
-                //            lblDiscountResult.Text = 0.ToString();
-                //        }
+                        if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
+                        {
+                            ViewModel.OrderDiscount = 0;
+                            lblDiscountResult.Text = 0.ToString();
+                        }
 
-                //        if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
-                //        {
-                //            var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
+                        if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
+                        {
+                            var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
 
-                //            var descuento = Convert.ToDouble($"0.{o}");
+                            var descuento = Convert.ToDouble($"0.{o}");
 
-                //            ViewModel.ValorDescuento = ViewModel.Total * descuento;
-                //            lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N2");
+                            ViewModel.ValorDescuento = ViewModel.Total * descuento;
+                            lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N2", new CultureInfo("es-ES"));
 
-                //            ViewModel.ActualizarTotal(ViewModel.Order.products);
-                //        }
-                //    }
-                //}
+                            ViewModel.ActualizarTotal(ViewModel.Order.products);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {

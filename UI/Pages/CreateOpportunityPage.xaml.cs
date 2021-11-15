@@ -16,7 +16,6 @@ namespace UI.Pages
         public CreateOpportunityPage()
         {
             InitializeComponent();
-
         }
 
         protected override void OnViewModelSet()

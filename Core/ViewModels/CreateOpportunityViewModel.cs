@@ -110,7 +110,32 @@ namespace Core.ViewModels
         public decimal Total
         {
             get => total;
-            set => SetProperty(ref total, value);
+            set
+            {
+                SetProperty(ref total, value);
+                ConvertirTotalStr(this.total);
+            }
+        }
+
+        private string totalStr;
+        public string TotalStr
+        {
+            get => totalStr;
+            set
+            {
+                SetProperty(ref totalStr, value);
+            }
+        }
+        private void ConvertirTotalStr(decimal totalOfAll)
+        {
+            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            {
+                TotalStr = totalOfAll.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                TotalStr = totalOfAll.ToString("N2", new CultureInfo("en-US"));
+            }
         }
         #endregion
 

@@ -2,8 +2,6 @@
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
-using MvvmCross;
-using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
@@ -807,6 +805,10 @@ namespace Core.ViewModels
                 EnableFinalClient = false;
             }
 
+        }
+        public void ResetTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
+        {
+            Total = details.Sum(x => x.subtotal);
         }
     }
 }

@@ -29,7 +29,7 @@
             </ImageButton>
         </StackLayout>
     </NavigationPage.TitleView>
-    <AbsoluteLayout>
+    <StackLayout>
         <ScrollView>
             <Frame BorderColor="Black" Margin="5" 
                HorizontalOptions="StartAndExpand">
@@ -127,5 +127,5 @@
                 </StackLayout>
             </Frame>
         </ScrollView>
-    </AbsoluteLayout>
+    </StackLayout>
 </Views:MvxContentPage>
