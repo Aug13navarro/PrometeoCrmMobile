@@ -8,5 +8,6 @@ namespace Core.Model
         public string BusinessName { get; set; }
         public int? externalId { get; set; }
         public List<CompanyOrderType> CompanyOrderTypes{ get; set; }
+        public int? externalErpId { get; set; }
     }
 }

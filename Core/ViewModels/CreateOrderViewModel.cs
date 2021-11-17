@@ -137,9 +137,23 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref company, value);
+                CargarAsistentes();
             }
         }
 
+        private MvxObservableCollection<User> assistants;
+        public MvxObservableCollection<User> Assistants
+        {
+            get => assistants;
+            set => SetProperty(ref assistants, value);
+        }
+
+        private User assistant;
+        public User Assistant
+        {
+            get => assistant;
+            set => SetProperty(ref assistant, value);
+        }
 
         private string selectedClosedLostStatusCause;
         public string SelectedClosedLostStatusCause
@@ -365,6 +379,39 @@ namespace Core.ViewModels
             }
         }
 
+        private async void CargarAsistentes()
+        {
+            try
+            {
+                var user = data.LoggedUser;
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var asistentes = await prometeoApiService.GetUsersByRol(Company.Id, "Asistente Comercial");
+
+                    Assistants = new MvxObservableCollection<User>(asistentes);
+
+                    if (Order != null)
+                    {
+                        if (Order.userId != null)
+                        {
+                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.userId);
+                        }
+                    }
+                }
+                else
+                {
+                    // modo offline
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("", $"{e.Message}", "Aceptar");
+            }
+        }
+
         private async Task CustomerAddressMethod()
         {
             if (SelectedCustomer != null)
@@ -446,22 +493,38 @@ namespace Core.ViewModels
                     }
                 }
                 
-                if (TypeOfRemittance.Description != "En Consignación" && TypeOfRemittance.Description != "On Consignment")
+                if(Company.externalErpId == null)
                 {
-                    if(Condition == null)
+                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
                     {
-                        if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
-                            return;
-                        }
-                        else
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
-                            return;
-                        }
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
+                        return;
                     }
                 }
+                else
+                {
+                    if (TypeOfRemittance.Description != "En Consignación" && TypeOfRemittance.Description != "On Consignment")
+                    {
+                        if (Condition == null)
+                        {
+                            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
+                                return;
+                            }
+                            else
+                            {
+                                await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
+                                return;
+                            }
+                        }
+                    }
+                }                
 
                 if(Order.products == null || Order.products.Count() == 0)
                 {
@@ -486,9 +549,8 @@ namespace Core.ViewModels
                     discount = OrderDiscount,
                     fecha = Order.fecha,
                     orderStatus = 1,
-                    paymentConditionId = Condition.id,
                     total = Convert.ToDecimal(Total),
-                    cuenta = SelectedCustomer.externalCustomerId.Value,
+                    //cuenta = SelectedCustomer.externalCustomerId.Value,
                     divisionCuentaId = Company.externalId.Value,
                     talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
@@ -503,6 +565,11 @@ namespace Core.ViewModels
                     PaymentMethodId = PaymentMethod.id,
                 };
 
+                if(Condition != null)
+                {
+                    nuevaOrder.paymentConditionId = Condition.id;
+                }
+
                 if(FreightInCharge != null)
                 {
                     nuevaOrder.TransportId = FreightInCharge.Id;
@@ -511,6 +578,11 @@ namespace Core.ViewModels
                 if (nuevaOrder.DeliveryDate == null)
                 {
                     nuevaOrder.DeliveryDate = DateTime.Now.Date;
+                    nuevaOrder.ETD = DateTime.Now.Date;
+                }
+                else
+                {
+                    nuevaOrder.ETD = Order.DeliveryDate.Value;
                 }
 
                 if (Order.opportunityId == 0 || Order.opportunityId == null)
@@ -653,19 +725,25 @@ namespace Core.ViewModels
                 if (!red)
                 {
 
-                    PaymentConditions = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
+                    var condiciones = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
 
-                    if (Order != null)
+                    if (Company.externalErpId == null)
                     {
-                        if (Order.paymentConditionId > 0)
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(condiciones);
+
+                        if (Order != null)
                         {
-                            Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
-                        }
-                        else
-                        {
-                            //Condition = PaymentConditions.FirstOrDefault();
+                            if (Order.paymentConditionId > 0)
+                            {
+                                Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                            }
                         }
                     }
+                    else
+                    {
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(condiciones.Where(x => x.externaId != null));
+                    }
+
                 }
                 else
                 {

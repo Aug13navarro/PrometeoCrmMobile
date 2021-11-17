@@ -107,15 +107,15 @@ namespace Core.ViewModels
             }
         }
 
-        private Seller seller;
-        public Seller Seller
+        private User seller;
+        public User Seller
         {
             get => seller;
             set => SetProperty(ref seller, value);
         }
 
-        private Seller sellerGuardado;
-        public Seller SellerGuardado
+        private User sellerGuardado;
+        public User SellerGuardado
         {
             get => sellerGuardado;
             set => SetProperty(ref sellerGuardado, value);
@@ -130,7 +130,7 @@ namespace Core.ViewModels
 
         //private MvxObservableCollection<Company> companies;
         public MvxObservableCollection<Company> Companies { get; set; } = new MvxObservableCollection<Company>();
-        public MvxObservableCollection<Seller> Vendors { get; set; } = new MvxObservableCollection<Seller>();
+        public MvxObservableCollection<User> Vendors { get; set; } = new MvxObservableCollection<User>();
 
         private double totalDesde;
         public double TotalDesde
@@ -207,7 +207,7 @@ namespace Core.ViewModels
 
             IsEnableSeller = true;
 
-            VerificarRol(data.LoggedUser.Roles);
+            VerificarRol(data.LoggedUser.RolesStr);
             //CargarFiltroGuardado();
         }
 
@@ -255,7 +255,7 @@ namespace Core.ViewModels
 
                         if(SellerGuardado != null)
                         {
-                            Seller = Vendors.FirstOrDefault(x => x.id == SellerGuardado.id);
+                            Seller = Vendors.FirstOrDefault(x => x.Id == SellerGuardado.Id);
                         }
                     }
                 }
@@ -435,7 +435,7 @@ namespace Core.ViewModels
                 }
                 if(Seller != null)
                 {
-                    filtro.userId = Seller.id;
+                    filtro.userId = Seller.Id;
                 }
 
                 if (filtro.priceFrom == 0) filtro.priceFrom = null;

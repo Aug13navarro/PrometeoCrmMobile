@@ -12,7 +12,7 @@ namespace Core.Model
         public DateTime? Expiration { get; set; }
         public string Language { get; set; }
 
-        public string Roles { get; set; } 
+        public string RolesStr { get; set; } 
 
     }
 }

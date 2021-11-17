@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Model.Extern
 {
@@ -28,7 +27,7 @@ namespace Core.Model.Extern
         public int tipoServicioId { get; set; }
         public int customerId { get; set; }
         public CustomerExtern customer { get; set; }
-        public int paymentConditionId { get; set; }
+        public int? paymentConditionId { get; set; }
         public int discount { get; set; }
         public decimal total { get; set; }
 

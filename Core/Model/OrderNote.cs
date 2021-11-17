@@ -80,6 +80,7 @@ namespace Core.Model
         public Currency currency { get; set; }
         public int? companyId { get; set; }
         public Company company { get; set; }
+        public int? userId { get; set; }
         public int tipoComprobante { get; set; }
         public int talon { get; set; }
         public int numero { get; set; }
@@ -91,7 +92,7 @@ namespace Core.Model
         public int tipoServicioId { get; set; }
         public int customerId { get; set; }
         public Customer customer { get; set; }
-        public int paymentConditionId { get; set; }
+        public int? paymentConditionId { get; set; }
         public int discount { get; set; }
         public decimal total { get; set; }
 

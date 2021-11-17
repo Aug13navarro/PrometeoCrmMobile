@@ -2,13 +2,11 @@
 using MvvmCross.ViewModels;
 using MvvmCross.Navigation;
 using System;
-using Core.Utils;
 using Core.Services.Contracts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Xamarin.Forms;
 using MvvmCross;
 using Core.ViewModels.Model;
@@ -113,15 +111,15 @@ namespace Core.ViewModels
             set => SetProperty(ref isEnableSeller, value);
         }
 
-        private Seller seller;
-        public Seller Seller
+        private User seller;
+        public User Seller
         {
             get => seller;
             set => SetProperty(ref seller, value);
         }
 
-        private Seller sellerGuardado;
-        public Seller SellerGuardado
+        private User sellerGuardado;
+        public User SellerGuardado
         {
             get => sellerGuardado;
             set => SetProperty(ref sellerGuardado, value);
@@ -132,7 +130,7 @@ namespace Core.ViewModels
         public ObservableCollection<Customer> Customers { get; set; }
         public ObservableCollection<Product> Products { get; set; }
         public ObservableCollection<double> Totals { get; set; }
-        public MvxObservableCollection<Seller> Vendors { get; set; } = new MvxObservableCollection<Seller>();
+        public MvxObservableCollection<User> Vendors { get; set; } = new MvxObservableCollection<User>();
 
         public OpportunitiesViewModel OpportunitiesViewModel { get; set; }
 
@@ -200,7 +198,7 @@ namespace Core.ViewModels
 
             IsEnableSeller = true;
 
-            VerificarRol(data.LoggedUser.Roles);
+            VerificarRol(data.LoggedUser.RolesStr);
 
         }
 
@@ -301,7 +299,7 @@ namespace Core.ViewModels
 
                         if(SellerGuardado != null)
                         {
-                            Seller = Vendors.FirstOrDefault(x => x.id == SellerGuardado.id);
+                            Seller = Vendors.FirstOrDefault(x => x.Id == SellerGuardado.Id);
                         }
                     }
                 }
@@ -477,7 +475,7 @@ namespace Core.ViewModels
             if (Status != null) filtro.status.Add(new oppSta { id = Status.Id });
             if (Product != null) filtro.products.Add(new prod { id = Product.Id });
             if (Company != null) filtro.companies.Add(new comp { id = Company.Id });
-            if (seller != null) filtro.userId = Seller.id;
+            if (seller != null) filtro.userId = Seller.Id;
             if (filtro.priceFrom == 0) filtro.priceFrom = null;
             if (filtro.priceTo == 0) filtro.priceTo = null;
 

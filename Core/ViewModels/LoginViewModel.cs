@@ -113,7 +113,7 @@ namespace Core.ViewModels
                     Language = string.IsNullOrEmpty(userData.Language) ? "en" : userData.Language,
                 };
 
-                user.Roles = JsonConvert.SerializeObject(userData.Roles);
+                user.RolesStr = JsonConvert.SerializeObject(userData.Roles);
 
                 //foreach (var item in userData.Roles)
                 //{

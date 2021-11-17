@@ -676,9 +676,6 @@ namespace Core.Services
         {
             try
             {
-                //if (offlineDataService.IsWifiConection)
-                //{
-
                 var lista = new List<PaymentCondition>();
 
                 var url = $"/api/PaymentCondition/GetPaymentTermsByCompanyIdAsync?companyId={companyId}";
@@ -693,27 +690,9 @@ namespace Core.Services
                 {
                     lista = JsonConvert.DeserializeObject<List<PaymentCondition>>(resultado);
 
-                    //if(offlineDataService.IsDataLoaded)
-                    //{
-                    //    offlineDataService.UnloadAllData("Payment");
-                    //}
-
-                    //offlineDataService.SavePaymentConditions(lista.ToList());
                 }
 
                 return lista;
-                //}
-                //else
-                //{
-                //    if (!offlineDataService.IsDataLoaded)
-                //    {
-                //        await offlineDataService.LoadDataPayment();
-                //    }
-
-                //    var result = await offlineDataService.SearchPaymentConditions();
-
-                //    return result;
-                //}
             }
             catch (Exception)
             {
@@ -771,10 +750,6 @@ namespace Core.Services
             return JsonConvert.DeserializeObject<PaginatedList<OrderNote>>(resultado);
         }
 
-        public Task<PaginatedList<Sale>> GetSales(OrdersNotesPaginatedRequest requestData, string token)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<IEnumerable<OrderNote>> GetOrdersByfilter(FilterOrderModel filtro, string token)
         {
@@ -856,7 +831,7 @@ namespace Core.Services
 
         }
 
-        public async Task<IEnumerable<Seller>> GetUsersByRol(int companyId, string rol)
+        public async Task<IEnumerable<User>> GetUsersByRol(int companyId, string rol)
         {
             try
             {
@@ -866,11 +841,11 @@ namespace Core.Services
 
                 var resultado = await respuesta.Content.ReadAsStringAsync();
 
-                return JsonConvert.DeserializeObject<IEnumerable<Seller>>(resultado);
+                return JsonConvert.DeserializeObject<IEnumerable<User>>(resultado);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new Exception("Error al obtener los vendedores");
+                throw new Exception($"{e.Message}");
             }
         }
 

@@ -54,7 +54,22 @@ namespace Core.ViewModels
             {
                 SetProperty(ref company, value);
                 CargarCondiciones();
+                CargarAsistentes();
             }
+        }
+
+        private MvxObservableCollection<User> assistants;
+        public MvxObservableCollection<User> Assistants
+        {
+            get => assistants;
+            set => SetProperty(ref assistants, value);
+        }
+
+        private User assistant;
+        public User Assistant
+        {
+            get => assistant;
+            set => SetProperty(ref assistant, value);
         }
 
         private Customer selectedCustomer;
@@ -121,7 +136,6 @@ namespace Core.ViewModels
             }
         }
 
-
         private string totalOfOrderStr;
         public string TotalOfOrderStr
         {
@@ -184,6 +198,20 @@ namespace Core.ViewModels
             get => enableFinalClient;
             set => SetProperty(ref enableFinalClient, value);
         }
+
+        private DateTime etd;
+        public DateTime ETD
+        {
+            get => etd;
+            set => SetProperty(ref etd, value);
+        }
+
+        private DateTime minimunDate;
+        public DateTime MinimunDate
+        {
+            get => minimunDate;
+            set => SetProperty(ref minimunDate, value);
+        }
         #endregion
 
         //EVENTS
@@ -226,6 +254,9 @@ namespace Core.ViewModels
                 SavePedidoCommand = new Command(async () => await SaveOrder());
 
                 //OrderStatus = new MvxObservableCollection<OpportunityStatus>();
+
+                ETD = DateTime.Now.AddDays(15);
+                MinimunDate = DateTime.Now;
 
                 CargarIncoterms();
                 CargarFlete();
@@ -304,7 +335,8 @@ namespace Core.ViewModels
                 if(SelectedCustomer == null
                     || Condition == null
                     || Incoterm == null
-                    || FreightInCharge == null)
+                    || FreightInCharge == null
+                    || Assistant == null)
                 {
                     if (lang == "es")
                     {
@@ -531,6 +563,7 @@ namespace Core.ViewModels
 
                     //CustomerAddress = SelectedCustomer.Addresses.FirstOrDefault();
 
+                    CargarAsistentes();
                     CargarCondiciones();
 
                     //Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
@@ -586,6 +619,39 @@ namespace Core.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
                 return;
+            }
+        }
+
+        private async void CargarAsistentes()
+        {
+            try
+            {
+                var user = data.LoggedUser;
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var asistentes = await prometeoApiService.GetUsersByRol(Company.Id, "Asistente Comercial");
+
+                    Assistants = new MvxObservableCollection<User>(asistentes);
+
+                    if (Order != null)
+                    {
+                        if (Order.userId != null)
+                        {
+                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.userId);
+                        }
+                    }
+                }
+                else
+                {
+                    // modo offline
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("", $"{e.Message}", "Aceptar");
             }
         }
 
@@ -727,6 +793,7 @@ namespace Core.ViewModels
                 Total = detail.subtotal,
             };
         }
+
         public void FinishEditProduct((double Price, int Quantity, int Discount) args)
         {
             if (editingOpportunityDetail == null)
@@ -806,6 +873,7 @@ namespace Core.ViewModels
             }
 
         }
+
         public void ResetTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
             Total = details.Sum(x => x.subtotal);

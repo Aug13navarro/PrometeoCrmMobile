@@ -88,6 +88,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Commercial Assistant.
+        /// </summary>
+        internal static string Assistant {
+            get {
+                return ResourceManager.GetString("Assistant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Associated products.
         /// </summary>
         internal static string Associated_Products {
@@ -624,6 +633,15 @@ namespace UI.LangResources {
         internal static string NoOrdersFound {
             get {
                 return ResourceManager.GetString("NoOrdersFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Products found.
+        /// </summary>
+        internal static string NoProductsFound {
+            get {
+                return ResourceManager.GetString("NoProductsFound", resourceCulture);
             }
         }
         

@@ -126,6 +126,9 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="Assistant" xml:space="preserve">
+    <value>Commercial Assistant</value>
+  </data>
   <data name="Associated_Products" xml:space="preserve">
     <value>Associated products</value>
   </data>
@@ -302,6 +305,9 @@
   </data>
   <data name="NoOrdersFound" xml:space="preserve">
     <value>No Orders Found</value>
+  </data>
+  <data name="NoProductsFound" xml:space="preserve">
+    <value>No Products found</value>
   </data>
   <data name="No_Associated_Products" xml:space="preserve">
     <value>There are no associated products</value>

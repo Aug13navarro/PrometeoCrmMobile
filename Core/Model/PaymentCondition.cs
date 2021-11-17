@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Model
 {
@@ -15,6 +13,7 @@ namespace Core.Model
         public int surcharge { get; set; }
         public DateTime? baseDate { get; set; }
         public bool active { get; set; }
+        public int? externaId { get; set; }
 
     }
 }

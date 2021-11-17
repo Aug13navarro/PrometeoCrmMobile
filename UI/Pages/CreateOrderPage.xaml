@@ -132,18 +132,29 @@
 
                         <StackLayout Margin="0,5">
                             <Grid
-                                ColumnDefinitions="auto,*">
-                                <Label Text="Assitent" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
-                                       Grid.Column="0"/>
+                                ColumnDefinitions=".3*,*">
+                                <Label Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
+                                       Grid.Column="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{x:Static resources:AppResources.Assistant}"></Span>
+                                            <Span Text="*"></Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
                                 <Frame
                                     Grid.Column="1"
                                     Margin="0"
-                                    Padding="10,10"
+                                    Padding="0"
                                     HorizontalOptions="FillAndExpand">
-                                    <Label Text="Ernesto " VerticalOptions="Center" Style="{x:StaticResource DefaultLabel}"
-                                           >
-                                    </Label>
+                                    <Picker IsEnabled="{Binding EnableForEdit}"
+                                            Title="{x:Static resources:AppResources.Select}" 
+                                            ItemsSource="{Binding Assistants, Mode=TwoWay}" 
+                                            ItemDisplayBinding="{Binding FullName}"
+                                            SelectedItem="{Binding Assistant, Mode=TwoWay}">
+
+                                    </Picker>
                                 </Frame>
                             </Grid>
                         </StackLayout>
@@ -151,8 +162,15 @@
                         <StackLayout Margin="0,5">
                             <Grid
                                 ColumnDefinitions="auto,*,auto">
-                                <Label Text="{x:Static resources:AppResources.Customer}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
-                                       Grid.Column="0"/>
+                                <Label Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
+                                       Grid.Column="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{x:Static resources:AppResources.Customer}"></Span>
+                                            <Span Text="*"></Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Frame
                                     Grid.Column="1"
                                     Margin="0"
@@ -170,8 +188,15 @@
                         <StackLayout Margin="0,5">
                             <Grid
                                 ColumnDefinitions="auto,*">
-                                <Label Text="{x:Static resources:AppResources.OCCustomer}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
-                                   Grid.Column="0"/>
+                                <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
+                                   Grid.Column="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{x:Static resources:AppResources.OCCustomer}"></Span>
+                                            <Span Text="*"></Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
                                 <Frame
                                 Grid.Column="1"
                                 Margin="0"
@@ -193,61 +218,50 @@
                         <StackLayout Orientation="Horizontal" Margin="0,5">
                             <Label Text="{x:Static resources:AppResources.Date}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
                             <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
+                                Margin="0"
+                                Padding="0"
+                                HorizontalOptions="FillAndExpand">
                                 <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
                             </Frame>
                             <Label
-                            Style="{StaticResource DefaultLabel}"
-                            VerticalOptions="Center"
-                            Text="{x:Static resources:AppResources.Currency}">
+                                Style="{StaticResource DefaultLabel}"
+                                VerticalOptions="Center"
+                                Text="{x:Static resources:AppResources.Currency}">
 
                             </Label>
                             <Frame
-                            Margin="0"
-                            Padding="5,0">
+                                Margin="0"
+                                Padding="5,0">
                                 <Picker
-                            IsEnabled="False" 
-                            Title="US$"
-                            HorizontalTextAlignment="Center"
-                            WidthRequest="100">
-
+                                    IsEnabled="False" 
+                                    Title="US$"
+                                    HorizontalTextAlignment="Center"
+                                    WidthRequest="100">
+                                    
                                 </Picker>
                             </Frame>
                         </StackLayout>
 
                         <StackLayout Orientation="Horizontal"
                                  Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.RemittanceType}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                            <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{x:Static resources:AppResources.RemittanceType}"></Span>
+                                        <Span Text="*"></Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
 
                             <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
+                                Margin="0"
+                                Padding="0"
+                                HorizontalOptions="FillAndExpand">
                                 <Picker
                                     IsEnabled="{Binding EnableForEdit}"
                                     HorizontalOptions="FillAndExpand"
                                     Title="{x:Static resources:AppResources.Select}" 
                                     ItemsSource="{Binding TypeOfRemittances}" ItemDisplayBinding="{Binding Description}" SelectedItem="{Binding TypeOfRemittance, Mode=TwoWay}">
-
-                                </Picker>
-                            </Frame>
-                        </StackLayout>
-
-                        <StackLayout Orientation="Horizontal"
-                                 Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.PaymentMethod}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
-
-                            <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
-                                <Picker
-                                    IsEnabled="{Binding EnableForEdit}"
-                                    HorizontalOptions="FillAndExpand"
-                                    Title="{x:Static resources:AppResources.Select}" 
-                                    ItemsSource="{Binding PaymentMethods, Mode=TwoWay}" ItemDisplayBinding="{Binding name}" SelectedItem="{Binding PaymentMethod, Mode=TwoWay}">
 
                                 </Picker>
                             </Frame>
@@ -274,19 +288,51 @@
                                 </Frame>
                             </Grid>
                         </StackLayout>
+                        
+                        <StackLayout Orientation="Horizontal"
+                                 Margin="0,5">
+                            <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{x:Static resources:AppResources.PaymentMethod}"></Span>
+                                        <Span Text="*"></Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Frame
+                                Margin="0"
+                                Padding="0"
+                                HorizontalOptions="FillAndExpand">
+                                <Picker
+                                    IsEnabled="{Binding EnableForEdit}"
+                                    HorizontalOptions="FillAndExpand"
+                                    Title="{x:Static resources:AppResources.Select}" 
+                                    ItemsSource="{Binding PaymentMethods, Mode=TwoWay}" ItemDisplayBinding="{Binding name}" SelectedItem="{Binding PaymentMethod, Mode=TwoWay}">
+
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
 
                         <StackLayout Orientation="Horizontal"
                                  Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.PlacePayment}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                            <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{x:Static resources:AppResources.PlacePayment}"></Span>
+                                        <Span Text="*"></Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
 
                             <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
+                                Margin="0"
+                                Padding="0"
+                                HorizontalOptions="FillAndExpand">
                                 <Picker
-                                IsEnabled="{Binding EnableForEdit}"
-                                HorizontalOptions="FillAndExpand"
-                                Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding PlaceOfPayment}" ItemDisplayBinding="{Binding Description}" SelectedItem="{Binding Place, Mode=TwoWay}">
+                                    IsEnabled="{Binding EnableForEdit}"
+                                    HorizontalOptions="FillAndExpand"
+                                    Title="{x:Static resources:AppResources.Select}" ItemsSource="{Binding PlaceOfPayment}" ItemDisplayBinding="{Binding Description}" SelectedItem="{Binding Place, Mode=TwoWay}">
 
                                 </Picker>
                             </Frame>
@@ -338,25 +384,6 @@
                                 </Entry>
                             </Frame>
                         </StackLayout>
-
-                        <!--<StackLayout Orientation="Horizontal" Margin="0,5">
-                            <Label Text="{x:Static resources:AppResources.DeliveryBranch}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
-                            <Frame
-                            Margin="0"
-                            Padding="0"
-                            HorizontalOptions="FillAndExpand">
-                                <Entry Text="{Binding SelectedCustomer.CompanyName}" Style="{StaticResource DefaultEntry}" IsReadOnly="True"
-                                   IsEnabled="{Binding EnableForEdit}"
-                                   Grid.Row="0" Grid.Column="0"/>
-                            </Frame>
-                            <ImageButton Source="ic_menu_cuentas.png" Command="{Binding SelectClientCommand}"
-                                     IsEnabled="{Binding EnableForEdit}"
-                                     HorizontalOptions="End"
-                                     Grid.Row="0" Grid.Column="1"
-                                     BackgroundColor="Transparent"/>
-                        </StackLayout>-->
-
-                        
 
                         <StackLayout Orientation="Horizontal"
                                      Margin="0">

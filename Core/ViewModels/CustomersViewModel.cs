@@ -180,21 +180,11 @@ namespace Core.ViewModels
 
                 PaginatedList<Customer> customers = await prometeoApiService.GetCustomers(requestData);
 
-                if (customers.Results.Count() > 0)
+                if (requestData.CurrentPage <= customers.TotalPages)
                 {
-                    if (requestData.CurrentPage == 1)
+
+                    if (customers.Results.Count() > 0)
                     {
-                        //var allCustomer = await prometeoApiService.GetAllCustomer(requestData.UserId, true, 3, user.Token);
-
-                        Customers.Clear();
-
-                        Customers.AddRange(customers.Results);
-
-                        IsSearchInProgress = false;
-                    }
-                    else
-                    {
-
                         if (newSearch)
                         {
                             Customers.Clear();
@@ -207,10 +197,10 @@ namespace Core.ViewModels
 
                         IsSearchInProgress = false;
                     }
-                }
-                else
-                {
-                    Customers.Clear();
+                    else
+                    {
+                        Customers.Clear();
+                    }
                 }
 
             }

@@ -43,7 +43,7 @@ namespace Core
                         user.FullName = fullName;
                         user.Token = token;
                         user.Language = language;
-                        user.Roles = roles;
+                        user.RolesStr = roles;
                         //user.Expiration = !string.IsNullOrWhiteSpace(tokenExpirationDate)
                         //                      ? DateTime.Parse(tokenExpirationDate)
                         //                      : (DateTime?)null;
@@ -118,7 +118,7 @@ namespace Core
             Preferences.Set("token", user.Token, "loginData");
             Preferences.Set("language", user.Language, "loginData");
             Preferences.Set("tokenExpirationDate", user.Expiration.ToString(), "loginData");
-            Preferences.Set("roles", user.Roles, "loginData");
+            Preferences.Set("roles", user.RolesStr, "loginData");
 
             LoggedUser = user;
         }

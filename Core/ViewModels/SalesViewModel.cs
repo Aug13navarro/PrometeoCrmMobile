@@ -23,14 +23,8 @@ namespace Core.ViewModels
             get => isLoading;
             private set => SetProperty(ref isLoading, value);
         }
-        private decimal total;
-        public decimal Total
-        {
-            get => Sales.Sum(x => x.total);
-            set => SetProperty(ref total, value);
-        }
+        
 
-        public MvxObservableCollection<Sale> Sales { get; set; } = new MvxObservableCollection<Sale>();
 
         public int CurrentPage { get; private set; } = 1;
         private const int PageSize = 10;
@@ -54,10 +48,6 @@ namespace Core.ViewModels
             FilterOrdersCommand = new Command(async () => await FilterOrders());
             NuevaNotaPedidoCommand = new Command(async () => NuevaNotaPedido());
 
-            Sales.CollectionChanged += (sender, arg) =>
-            {
-                Total = Sales.Sum(x => x.total);
-            };
         }
 
 
@@ -85,15 +75,15 @@ namespace Core.ViewModels
                 requestData.userId = user.Id;
 
                 //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
-                var salesList = await prometeoApiService.GetSales(requestData, user.Token);
+                //var salesList = await prometeoApiService.GetSales(requestData, user.Token);
 
                 if (newSearch)
                 {
-                    Sales.Clear();
+                    
                 }
 
-                var sales = new MvxObservableCollection<Sale>(salesList.Results.OrderByDescending(x => x.fecha));
-                Sales.AddRange(sales);
+                //var sales = new MvxObservableCollection<Sale>(salesList.Results.OrderByDescending(x => x.fecha));
+                //Sales.AddRange(sales);
 
                 //CurrentPage = opportunities.CurrentPage;
                 //TotalPages = opportunities.TotalPages;

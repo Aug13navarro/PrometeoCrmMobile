@@ -14,6 +14,6 @@ namespace Core.ViewModels.Model
         public decimal? priceFrom { get; set; }
         public decimal? priceTo { get; set; }
         public List<Company> companies { get; set; }
-        public Seller seller { get; set; }
+        public User seller { get; set; }
     }
 }

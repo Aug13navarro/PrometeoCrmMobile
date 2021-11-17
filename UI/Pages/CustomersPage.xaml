@@ -38,12 +38,6 @@
                HorizontalTextAlignment="Center"
                Style="{StaticResource ErrorLabel}" />
 
-        <!--<Label Text="No se encontraron clientes."
-               Mvx:Bi.nd="IsVisible And(Customers.Count == 0, !Error, !IsSearchInProgress)"
-               VerticalOptions="CenterAndExpand"
-               HorizontalTextAlignment="Center"
-               Style="{StaticResource LoadingLabel}" />-->
-        
         <StackLayout 
             VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible And(Customers.Count == 0, !Error, !IsSearchInProgress)">
             <Image Source="ic_no_cuenta.png" HorizontalOptions="Center"/>

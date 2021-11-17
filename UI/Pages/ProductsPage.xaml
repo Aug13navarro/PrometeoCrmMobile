@@ -12,7 +12,6 @@
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
-            <!--<Label Text="Productos" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />-->
             <Frame
                 Margin="0" Padding="0"
                 CornerRadius="20"
@@ -28,8 +27,15 @@
     </NavigationPage.TitleView>
 
     <StackLayout Spacing="0">
+        <StackLayout 
+            VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible And(Products.Count == 0, !Error, !IsSearchInProgress)">
+            <Image Source="ic_planta_rodadora.png" HorizontalOptions="Center"/>
+            <Label Text="{x:Static resources:AppResources.NoProductsFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
+        </StackLayout>
+        
         <ListView x:Name="productsList"
                   ItemsSource="{Binding Products}"
+                  Mvx:Bi.nd="IsVisible And(Products.Count > 0, !Error)"
                   ItemAppearing="productsList_ItemAppearing"
                   CachingStrategy="RecycleElement"
                   SelectionMode="None"

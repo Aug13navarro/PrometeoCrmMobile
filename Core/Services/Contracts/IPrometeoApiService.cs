@@ -38,11 +38,10 @@ namespace Core.Services.Contracts
         Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token, int companyId);
         Task<OrderNote> CreateOrderNote(OrderNote nuevaOrder);
         Task<PaginatedList<OrderNote>> GetOrderNote(OrdersNotesPaginatedRequest requestData, string token);
-        Task<PaginatedList<Sale>> GetSales(OrdersNotesPaginatedRequest requestData, string token);
         Task<IEnumerable<OrderNote>> GetOrdersByfilter(FilterOrderModel filtro, string token);
         Task<IEnumerable<OpportunityStatus>> GetOpportunityStatus(string lang, string token);
         Task<OrderNote> GetOrdersById(int id, string token);
-        Task<IEnumerable<Seller>> GetUsersByRol(int companyId, string rol);
+        Task<IEnumerable<User>> GetUsersByRol(int companyId, string rol);
         Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language, string token);
         Task<IEnumerable<Incoterm>> GetIncoterms(string token);
         Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token);
