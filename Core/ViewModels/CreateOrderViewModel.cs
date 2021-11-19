@@ -337,8 +337,7 @@ namespace Core.ViewModels
 
                     if(mediosPago != null)
                     {
-                        PaymentMethods.Clear();
-                        PaymentMethods.AddRange(mediosPago);
+                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(mediosPago);
 
                         if(Order.PaymentMethodId != null)
                         {
@@ -371,7 +370,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("", $"{e.Message} - Metodo de Pago", "Aceptar"); return;
             }
         }
 
@@ -437,9 +436,9 @@ namespace Core.ViewModels
 
                     if (Order != null)
                     {
-                        if (Order.userId != null)
+                        if (Order.commercialAssistantId != null)
                         {
-                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.userId);
+                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
                         }
                     }
                 }
@@ -463,12 +462,20 @@ namespace Core.ViewModels
                     {
                         var d = mapper.Map<List<User>>(data);
                         Assistants = new MvxObservableCollection<User>(d);
+
+                        if (Order != null)
+                        {
+                            if (Order.commercialAssistantId != null)
+                            {
+                                Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
+                            }
+                        }
                     }
                 }
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("", $"{e.Message}", "Aceptar");
+                await Application.Current.MainPage.DisplayAlert("", $"{e.Message} - Asistente Comercial", "Aceptar");
             }
         }
 
@@ -840,8 +847,7 @@ namespace Core.ViewModels
             }
             catch(Exception e)
             {
-                //await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
-                var s = e.Message;
+                await Application.Current.MainPage.DisplayAlert("", $"{e.Message} - Condiciones de pago", "Aceptar");
                 return;
             }
         }
@@ -949,6 +955,9 @@ namespace Core.ViewModels
 
                     SelectedCustomer = Order.customer;
                     Company = Order.company;
+
+                    CargarAsistentes();
+
                     TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
                     
@@ -970,6 +979,7 @@ namespace Core.ViewModels
                     //    CargarMedioPago();
                     //}
 
+                    CargarMedioPago();
                     SelectedCustomer.Addresses.Add(new CustomerAddress { Address = Order.DeliveryAddress });
 
                     CustomerAddress = SelectedCustomer.Addresses.FirstOrDefault();

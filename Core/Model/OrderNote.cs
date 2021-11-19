@@ -1,8 +1,6 @@
 ﻿using Core.Helpers;
 using MvvmCross.ViewModels;
 using System;
-using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
 
 namespace Core.Model
@@ -80,7 +78,6 @@ namespace Core.Model
         public Currency currency { get; set; }
         public int? companyId { get; set; }
         public Company company { get; set; }
-        public int? userId { get; set; }
         public int tipoComprobante { get; set; }
         public int talon { get; set; }
         public int numero { get; set; }

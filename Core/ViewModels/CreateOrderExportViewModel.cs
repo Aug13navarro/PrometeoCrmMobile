@@ -675,9 +675,9 @@ namespace Core.ViewModels
 
                     if (Order != null)
                     {
-                        if (Order.userId != null)
+                        if (Order.commercialAssistantId != null)
                         {
-                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.userId);
+                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
                         }
                     }
                 }
@@ -701,6 +701,14 @@ namespace Core.ViewModels
                     {
                         var d = mapper.Map<List<User>>(data);
                         Assistants = new MvxObservableCollection<User>(d);
+
+                        if (Order != null)
+                        {
+                            if (Order.commercialAssistantId != null)
+                            {
+                                Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
+                            }
+                        }
                     }
                 }
             }

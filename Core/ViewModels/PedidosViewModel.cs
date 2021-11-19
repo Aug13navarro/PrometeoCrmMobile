@@ -98,7 +98,7 @@ namespace Core.ViewModels
         public MvxObservableCollection<OrderNote> OrdersNote { get; set; } = new MvxObservableCollection<OrderNote>();
 
         public int CurrentPage { get; private set; } = 1; 
-        private const int PageSize = 20;
+        private const int PageSize = 40;
 
         public Command NuevaNotaPedidoCommand { get; }
         public Command FilterOrdersCommand { get; }
@@ -153,7 +153,7 @@ namespace Core.ViewModels
             var requestData = new OrdersNotesPaginatedRequest()
             {
                 CurrentPage = 1,
-                PageSize = 20,
+                PageSize = PageSize,
                 query = Query
             };
 
