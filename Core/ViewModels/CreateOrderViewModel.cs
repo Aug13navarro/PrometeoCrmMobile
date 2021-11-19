@@ -11,6 +11,8 @@ using Xamarin.Forms;
 using System.Globalization;
 using Core.Services;
 using Core.ViewModels.Model;
+using AutoMapper;
+using Core.Helpers;
 
 namespace Core.ViewModels
 {
@@ -78,7 +80,6 @@ namespace Core.ViewModels
         }
 
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
-        public MvxObservableCollection<PaymentMethod> PaymentMethods { get; set; } = new MvxObservableCollection<PaymentMethod>();
         public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
 
         private MvxObservableCollection<Transport> freightInCharges;
@@ -107,6 +108,13 @@ namespace Core.ViewModels
         {
             get => typeOfRemittance;
             set => SetProperty(ref typeOfRemittance, value);
+        }
+
+        private MvxObservableCollection<PaymentMethod> paymentMethods;
+        public MvxObservableCollection<PaymentMethod> PaymentMethods
+        {
+            get => paymentMethods;
+            set => SetProperty(ref paymentMethods, value);
         }
 
         private PaymentMethod paymentMethod;
@@ -340,13 +348,30 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    //obtener de Cache
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if(!offlineDataService.IsDataLoadedPaymentMethod)
+                    {
+                        await offlineDataService.LoadPaymentMethod();
+                    }
+
+                    var data = await offlineDataService.SearchPaymentMethod();
+
+                    if (data != null || data.Count() > 0)
+                    {
+                        var d = mapper.Map<List<PaymentMethod>>(data);
+                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(d);
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar"); return;
             }
         }
 
@@ -358,7 +383,7 @@ namespace Core.ViewModels
 
             var red = await Connection.SeeConnection();
 
-            if (red)
+            if (!red)
             {
                 var fletes = await prometeoApiService.GetTransport(lang, user.Token);
 
@@ -374,8 +399,25 @@ namespace Core.ViewModels
             }
             else
             {
-                await Application.Current.MainPage.DisplayAlert("Atención", "Flete - No disponible Offline", "Aceptar");
-                return;
+                var mapperConfig = new MapperConfiguration(m =>
+                {
+                    m.AddProfile(new MappingProfile());
+                });
+
+                IMapper mapper = mapperConfig.CreateMapper();
+
+                if(!offlineDataService.IsDataLoadedTransports)
+                {
+                    await offlineDataService.LoadTransports();
+                }
+
+                var data = await offlineDataService.SearchTransports();
+
+                if(data != null)
+                {
+                    var tra = mapper.Map<List<Transport>>(data);
+                    FreightInCharges = new MvxObservableCollection<Transport>(tra);
+                }
             }
         }
 
@@ -387,7 +429,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
                     var asistentes = await prometeoApiService.GetUsersByRol(Company.Id, "Asistente Comercial");
 
@@ -403,7 +445,25 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    // modo offline
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if (!offlineDataService.IsDataLoadedAssistant)
+                    {
+                        await offlineDataService.LoadAssistant();
+                    }
+
+                    var data = await offlineDataService.SearchAssistant();
+                    
+                    if (data != null || data.Count() > 0)
+                    {
+                        var d = mapper.Map<List<User>>(data);
+                        Assistants = new MvxObservableCollection<User>(d);
+                    }
                 }
             }
             catch (Exception e)
@@ -479,7 +539,8 @@ namespace Core.ViewModels
                     SelectedCustomer == null ||
                     TypeOfRemittance == null ||
                     Place == null ||
-                    PaymentMethod == null)
+                    PaymentMethod == null ||
+                    Assistant == null)
                 {
                     if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
                     {
@@ -493,17 +554,20 @@ namespace Core.ViewModels
                     }
                 }
                 
-                if(Company.externalErpId == null)
+                if(Company.externalErpId != null)
                 {
-                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    if (Condition == null)
                     {
-                        await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
-                        return;
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
-                        return;
+                        if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
+                            return;
+                        }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
+                            return;
+                        }
                     }
                 }
                 else
@@ -563,6 +627,7 @@ namespace Core.ViewModels
                     PlacePayment = Place.Id,
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
+                    commercialAssistantId = Assistant.Id,
                 };
 
                 if(Condition != null)
@@ -889,14 +954,21 @@ namespace Core.ViewModels
                     
                     CargarFleteCargo();
 
-                    if(PaymentMethods.Count > 0)
-                    {
-                        PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
-                    }
-                    else
-                    {
-                        CargarMedioPago();
-                    }
+                    //if (paymentMethods != null)
+                    //{
+                    //    if (PaymentMethods.Count > 0)
+                    //    {
+                    //        PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
+                    //    }
+                    //    else
+                    //    {
+                    //        CargarMedioPago();
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    CargarMedioPago();
+                    //}
 
                     SelectedCustomer.Addresses.Add(new CustomerAddress { Address = Order.DeliveryAddress });
 

@@ -1,4 +1,6 @@
-﻿using Core.Model;
+﻿using AutoMapper;
+using Core.Helpers;
+using Core.Model;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
@@ -274,6 +276,7 @@ namespace Core.ViewModels
             try
             {
                 var red = await Connection.SeeConnection();
+
                 if (red)
                 {
                     var incoterms = await prometeoApiService.GetIncoterms(data.LoggedUser.Token);
@@ -285,8 +288,25 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Atención", "Incoterms - No disponible Offline", "Aceptar");
-                    return;
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if (!offlineDataService.IsDataLoadedIncoterms)
+                    {
+                        await offlineDataService.LoadIncoterms();
+                    }
+
+                    var data = await offlineDataService.SearchIncoterms();
+
+                    if(data != null)
+                    {
+                        var inc = mapper.Map<List<Incoterm>>(data);
+                        Incoterms = new MvxObservableCollection<Incoterm>(inc);
+                    }
                 }
             }
             catch (Exception e)
@@ -316,8 +336,25 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Atención", "Flete - No disponible Offline", "Aceptar");
-                    return;
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if(!offlineDataService.IsDataLoadedFreigths)
+                    {
+                        await offlineDataService.LoadFreights();
+                    }
+
+                    var data = await offlineDataService.SearchFreights();
+
+                    if( data != null)
+                    {
+                        var f = mapper.Map<List<FreightInCharge>>(data);
+                        FreightInCharges = new MvxObservableCollection<FreightInCharge>(f);
+                    }
                 }
             }
             catch (Exception e)
@@ -646,7 +683,25 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    // modo offline
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if (!offlineDataService.IsDataLoadedAssistant)
+                    {
+                        await offlineDataService.LoadAssistant();
+                    }
+
+                    var data = await offlineDataService.SearchAssistant();
+
+                    if (data != null || data.Count() > 0)
+                    {
+                        var d = mapper.Map<List<User>>(data);
+                        Assistants = new MvxObservableCollection<User>(d);
+                    }
                 }
             }
             catch (Exception e)

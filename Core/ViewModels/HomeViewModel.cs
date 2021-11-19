@@ -72,10 +72,6 @@ namespace Core.ViewModels
                     //OBTENGO TODAS LAS EMPRESAS POR USUARIO
                     var empresas = await prometeoApiService.GetCompaniesByUserId(LoggedUser.Id, LoggedUser.Token);
 
-                    //offlineDataService.UnloadAllData("Company");
-                    //offlineDataService.UnloadAllData("Customer");
-                    //offlineDataService.UnloadAllData("Payment");
-                    //offlineDataService.UnloadAllData("Presentation");
 
                     //ELIMINO CACHE VIEJO
                     await offlineDataService.DeleteAllData();
@@ -122,6 +118,55 @@ namespace Core.ViewModels
 
                     //GUARDO LAS CONDICIONES DE PAGO
                     offlineDataService.SavePaymentConditions(condiciones);
+
+                    //OBTENGO LOS USUARIOS ASISTENTES
+                    var asistentes = new List<User>();
+
+                    foreach (var item in empresas)
+                    {
+                        var asistant = await prometeoApiService.GetUsersByRol(item.Id, "Asistente Comercial");
+
+                        asistentes.AddRange(asistant);
+                    }
+
+                    //GUARDO LOS ASISTENTES COMERCIALES
+                    var ass = mapper.Map<List<UserExtern>>(asistentes);
+                    offlineDataService.SaveAssitant(ass);
+
+                    //OBTENGO TODOS LOS MEDIOS DE PAGO
+                    var medios = new List<PaymentMethod>();
+
+                    foreach (var item in empresas)
+                    {
+                        var mediosPago = await prometeoApiService.GetPaymentMethod(item.Id, LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+                        medios.AddRange(mediosPago);
+                    }
+
+                    //GUARDO LOS MEDIOS DE PAGOS 
+                    var mp = mapper.Map<List<PaymentMethodExtern>>(medios);
+                    offlineDataService.SavePaymentMethod(mp);
+
+                    //OBTENER LOS INCOTERMS
+                    var incoterms = await prometeoApiService.GetIncoterms(LoggedUser.Token);
+
+                    //GUARDO LOS INCOTERMS
+                    var inc = mapper.Map<List<IncotermExtern>>(incoterms);
+                    offlineDataService.SaveIncoterms(inc);
+
+                    //OBTENER FLETES PARA PEDIDO EXPORTACIÓN 
+                    var fletes = await prometeoApiService.GetFreight(LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+                    //GUARDO LOS FLETES
+                    var freigths = mapper.Map<List<FreightInChargeExtern>>(fletes);
+                    offlineDataService.SaveFreights(freigths);
+
+                    //ONTENGO TODOS LOS TRANSPORTES
+                    var transportes = await prometeoApiService.GetTransport(LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+                    //GUARDO LOS TRANSPORTES
+                    var tra = mapper.Map<List<TransportExtern>>(transportes);
+                    offlineDataService.SaveTransports(tra);
 
                     //SINCRONIZO LA DATA CON LOS ARCHIVOS EN LA CACHE
                     await offlineDataService.SynchronizeToDisk();

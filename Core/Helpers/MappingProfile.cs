@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Core.Model;
 using Core.Model.Extern;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Helpers
 {
@@ -17,6 +14,16 @@ namespace Core.Helpers
             //FormMember(d => d.name, o=> .MapFrom( s => s.nombre ));
 
             CreateMap<OpportunityStatusExtern, OpportunityStatus>();
+
+            CreateMap<UserExtern, User>();
+
+            CreateMap<PaymentMethodExtern, PaymentMethod>();
+
+            CreateMap<IncotermExtern, Incoterm>();
+
+            CreateMap<FreightInChargeExtern, FreightInCharge>();
+
+            CreateMap<TransportExtern, Transport>();
         }
     }
 }

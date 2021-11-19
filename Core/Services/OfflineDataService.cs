@@ -1,7 +1,6 @@
 ﻿using Core.Model;
 using Core.Model.Extern;
 using Core.Services.Contracts;
-using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,9 +15,6 @@ namespace Core.Services
 {
     public class OfflineDataService : IOfflineDataService
     {
-        //public bool IsWifiConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.WiFi);
-        //public bool IsMobileConection => Connectivity.ConnectionProfiles.Contains(ConnectionProfile.Cellular);
-
         public bool IsDataLoadedCustomer { get; private set; }
         public bool IsDataLoadedCompanies { get; private set; }
         public bool IsDataLoadedPaymentConditions { get; private set; }
@@ -26,6 +22,11 @@ namespace Core.Services
         public bool IsDataLoadedOpportunities { get; private set; }
         public bool IsDataLoadedOrderNote { get; private set; }
         public bool IsDataLoadedOpportunityStatus { get; private set; }
+        public bool IsDataLoadedAssistant { get; private set; }
+        public bool IsDataLoadedPaymentMethod { get; private set; }
+        public bool IsDataLoadedIncoterms { get; private set; }
+        public bool IsDataLoadedFreigths{ get; private set; }
+        public bool IsDataLoadedTransports { get; private set; }
 
         private readonly List<CustomerExtern> customerSearchCache = new List<CustomerExtern>();
         private readonly List<CompanyExtern> companySearchCache = new List<CompanyExtern>();
@@ -34,6 +35,11 @@ namespace Core.Services
         private readonly List<OpportunityExtern> opportunitiesSearchCache = new List<OpportunityExtern>();
         private readonly List<OrderNoteExtern> orderNotesSearchCache = new List<OrderNoteExtern>();
         private readonly List<OpportunityStatusExtern> opportunityStatusSearchCache = new List<OpportunityStatusExtern>();
+        private readonly List<UserExtern> assistantSearchCache = new List<UserExtern>();
+        private readonly List<PaymentMethodExtern> paymentMethodSearchCache = new List<PaymentMethodExtern>();
+        private readonly List<IncotermExtern> incotermsSearchCache = new List<IncotermExtern>();
+        private readonly List<FreightInChargeExtern> freightsSearchCache = new List<FreightInChargeExtern>();
+        private readonly List<TransportExtern> transportsSearchCache = new List<TransportExtern>();
 
 
         private const int MaxCustomerToSave = 5000;
@@ -43,6 +49,12 @@ namespace Core.Services
         private const int MaxOportunities = 50;
         private const int MaxOrderNotes= 50;
         private const int MaxOppStatus = 10;
+        private const int MaxAssistant = 10;
+        private const int MaxPaymentMethod = 100;
+        private const int MaxIncoterms= 20;
+        private const int MaxFreights= 10;
+        private const int MaxTransports= 5;
+
 
         private const string CustomerSearchCacheFilename = "customersearchcache";
         private const string CompanySearchCacheFileNAme = "companysearchcache";
@@ -51,6 +63,11 @@ namespace Core.Services
         private const string OpportunitiesSearchCacheFilename = "opportunitiessearchcache";
         private const string OrderNotesSearchCacheFilename = "ordernotessearchcache";
         private const string OpportunityStatusSearchCacheFilename = "opportunitystatussearchcache";
+        private const string AssistantSearchCacheFilename = "assistantsearchcache";
+        private const string PaymentMethodSearchCacheFilename = "paymentMethodsearchcache";
+        private const string IncotermsSearchCacheFilename = "incotermssearchcache";
+        private const string FreightsSearchCacheFilename = "freightssearchcache";
+        private const string TransportsSearchCacheFilename = "transportssearchcache";
 
         private async Task LoadData<T>(List<T> itemsInCache, string cacheFilename)
         {
@@ -140,6 +157,21 @@ namespace Core.Services
 
             opportunityStatusSearchCache.Clear();
             IsDataLoadedOpportunityStatus = false;
+
+            assistantSearchCache.Clear();
+            IsDataLoadedAssistant = false;
+
+            paymentMethodSearchCache.Clear();
+            IsDataLoadedPaymentMethod = false;
+
+            incotermsSearchCache.Clear();
+            IsDataLoadedIncoterms = false;
+
+            freightsSearchCache.Clear();
+            IsDataLoadedFreigths = false;
+
+            transportsSearchCache.Clear();
+            IsDataLoadedTransports = false;
         }
 
         #region SAVE
@@ -220,7 +252,7 @@ namespace Core.Services
                     CompanyName = opportunity.customer.CompanyName,
                     Descriptions = opportunity.customer.Descriptions,
                     DollarBalance = opportunity.customer.DollarBalance,
-                    ExternalId = opportunity.customer.externalCustomerId.Value,
+                    externalCustomerId = opportunity.customer.externalCustomerId.Value,
                     Id = opportunity.customer.Id,
                     IdParentCustomer = opportunity.customer.IdParentCustomer,
                     TaxCondition = opportunity.customer.TaxCondition,
@@ -283,7 +315,7 @@ namespace Core.Services
                     CompanyName = orderNote.customer.CompanyName,
                     Descriptions = orderNote.customer.Descriptions,
                     DollarBalance = orderNote.customer.DollarBalance,
-                    ExternalId = orderNote.customer.externalCustomerId.Value,
+                    externalCustomerId = orderNote.customer.externalCustomerId.Value,
                     Id = orderNote.customer.Id,
                     IdParentCustomer = orderNote.customer.IdParentCustomer,
                     TaxCondition = orderNote.customer.TaxCondition,
@@ -340,6 +372,32 @@ namespace Core.Services
         {
             opportunityStatusSearchCache.AddRange(opportunityStatuses);
         }
+
+        public void SaveAssitant(List<UserExtern> userExterns)
+        {
+            assistantSearchCache.AddRange(userExterns);
+        }
+
+        public void SavePaymentMethod(List<PaymentMethodExtern> paymentMethodExterns)
+        {
+            paymentMethodSearchCache.AddRange(paymentMethodExterns);
+        }
+
+        public void SaveIncoterms(List<IncotermExtern> incotermExterns)
+        {
+            incotermsSearchCache.AddRange(incotermExterns);
+        }
+
+        public void SaveFreights(List<FreightInChargeExtern> freightInChargeExterns)
+        {
+            freightsSearchCache.AddRange(freightInChargeExterns);
+        }
+
+        public void SaveTransports(List<TransportExtern> transportExterns)
+        {
+            transportsSearchCache.AddRange(transportExterns);
+        }
+
 
         private List<ProductOrderExtern> ConvertirProductsExtern(List<ProductOrder> products)
         {
@@ -414,6 +472,11 @@ namespace Core.Services
                 await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
                 await SynchronizeItemsToDisk(orderNotesSearchCache, MaxOrderNotes, OrderNotesSearchCacheFilename);
                 await SynchronizeItemsToDisk(opportunityStatusSearchCache, MaxOppStatus, OpportunitiesSearchCacheFilename);
+                await SynchronizeItemsToDisk(assistantSearchCache, MaxAssistant, AssistantSearchCacheFilename);
+                await SynchronizeItemsToDisk(paymentMethodSearchCache, MaxPaymentMethod, PaymentMethodSearchCacheFilename);
+                await SynchronizeItemsToDisk(incotermsSearchCache, MaxIncoterms, IncotermsSearchCacheFilename);
+                await SynchronizeItemsToDisk(freightsSearchCache, MaxFreights, FreightsSearchCacheFilename);
+                await SynchronizeItemsToDisk(transportsSearchCache, MaxTransports, TransportsSearchCacheFilename);
             }
             catch (Exception)
             {
@@ -434,6 +497,11 @@ namespace Core.Services
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OrderNotesSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunityStatusSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, AssistantSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, PaymentMethodSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, IncotermsSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, FreightsSearchCacheFilename));
+                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, TransportsSearchCacheFilename));
                 }
                 catch (Exception)
                 {
@@ -441,6 +509,7 @@ namespace Core.Services
                 }
             });
         }
+
         public async Task DeleteOpportunities()
         {
             await Task.Run(() =>
@@ -545,7 +614,7 @@ namespace Core.Services
                         CompanyName = opportunity.customer.CompanyName,
                         Descriptions = opportunity.customer.Descriptions,
                         DollarBalance = opportunity.customer.DollarBalance,
-                        externalCustomerId = opportunity.customer.ExternalId,
+                        externalCustomerId = opportunity.customer.externalCustomerId,
                         Id = opportunity.customer.Id,
                         IdParentCustomer = opportunity.customer.IdParentCustomer,
                         TaxCondition = opportunity.customer.TaxCondition,
@@ -613,7 +682,7 @@ namespace Core.Services
                         CompanyName = item.customer.CompanyName,
                         Descriptions = item.customer.Descriptions,
                         DollarBalance = item.customer.DollarBalance,
-                        externalCustomerId = item.customer.ExternalId,
+                        externalCustomerId = item.customer.externalCustomerId,
                         Id = item.customer.Id,
                         IdParentCustomer = item.customer.IdParentCustomer,
                         TaxCondition = item.customer.TaxCondition,
@@ -686,6 +755,42 @@ namespace Core.Services
 
             return Task.FromResult(fromCache);
         }
+
+        public Task<List<UserExtern>> SearchAssistant()
+        {
+            var fromCache = assistantSearchCache;
+
+            return Task.FromResult(fromCache);
+        }
+
+        public Task<List<PaymentMethodExtern>> SearchPaymentMethod()
+        {
+            var fromCache = paymentMethodSearchCache;
+
+            return Task.FromResult(fromCache);
+        }
+        
+        public Task<List<IncotermExtern>> SearchIncoterms()
+        {
+            var fromCache = incotermsSearchCache;
+
+            return Task.FromResult(fromCache);
+        }
+
+        public Task<List<FreightInChargeExtern>> SearchFreights()
+        {
+            var fromCache = freightsSearchCache;
+
+            return Task.FromResult(fromCache);
+        }
+        
+        public Task<List<TransportExtern>> SearchTransports()
+        {
+            var fromCache = transportsSearchCache;
+
+            return Task.FromResult(fromCache);
+        }
+
 
         private List<ProductOrder> ConvertirExternProduct(List<OrderNoteExtern.ProductOrderExtern> products)
         {
@@ -841,10 +946,88 @@ namespace Core.Services
             {
                 await SynchronizeItemsToDisk(opportunityStatusSearchCache, MaxOppStatus, OpportunityStatusSearchCacheFilename);
                 await LoadData(opportunityStatusSearchCache, OpportunityStatusSearchCacheFilename);
+
+                IsDataLoadedOpportunityStatus = true;
             }
             catch ( Exception e)
             {
                 throw new Exception("Error en Opportunity Status Offline");
+            }
+        }
+
+        public async Task LoadAssistant()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(assistantSearchCache, MaxAssistant, AssistantSearchCacheFilename);
+                await LoadData(assistantSearchCache, AssistantSearchCacheFilename);
+
+                IsDataLoadedAssistant = true;
+            }
+            catch (Exception e)
+
+            {
+                throw new Exception("Error en Assistant Offline");
+            }
+        }
+
+        public async Task LoadPaymentMethod()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(paymentMethodSearchCache, MaxPaymentMethod, PaymentMethodSearchCacheFilename);
+                await LoadData(paymentMethodSearchCache, PaymentMethodSearchCacheFilename);
+
+                IsDataLoadedPaymentMethod = true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en Payment Method Offline");
+            }
+        }
+        
+        public async Task LoadIncoterms()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(incotermsSearchCache, MaxIncoterms, IncotermsSearchCacheFilename);
+                await LoadData(incotermsSearchCache, IncotermsSearchCacheFilename);
+
+                IsDataLoadedIncoterms = true;
+            }
+            catch 
+            {
+                throw new Exception("Error en Incoterms Offline");
+            }
+        }
+
+        public async Task LoadFreights()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(freightsSearchCache, MaxFreights, FreightsSearchCacheFilename);
+                await LoadData(freightsSearchCache, FreightsSearchCacheFilename);
+
+                IsDataLoadedFreigths = true;
+            }
+            catch
+            {
+                throw new Exception("Error en Freigts Offline");
+            }
+        }
+
+        public async Task LoadTransports()
+        {
+            try
+            {
+                await SynchronizeItemsToDisk(transportsSearchCache, MaxTransports, TransportsSearchCacheFilename);
+                await LoadData(transportsSearchCache, TransportsSearchCacheFilename);
+
+                IsDataLoadedTransports = true;
+            }
+            catch
+            {
+                throw new Exception("Error en Transports Offline");
             }
         }
         #endregion

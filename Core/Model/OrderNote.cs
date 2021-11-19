@@ -139,6 +139,7 @@ namespace Core.Model
         public string FinalClient { get; set; }
         public int? FreightId { get; set; }
         public int? IncotermId { get; set; }
+        public int? commercialAssistantId { get; set; }
 
         public class ProductOrder
         {

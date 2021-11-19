@@ -7,9 +7,6 @@ namespace Core.Services.Contracts
 {
     public interface IOfflineDataService
     {
-        //bool IsWifiConection { get; }
-        //bool IsMobileConection { get; }
-
         bool IsDataLoadedCustomer { get; }
         bool IsDataLoadedCompanies { get; }
         bool IsDataLoadedPaymentConditions { get; }
@@ -17,6 +14,11 @@ namespace Core.Services.Contracts
         bool IsDataLoadedOpportunities { get; }
         bool IsDataLoadedOrderNote { get; }
         bool IsDataLoadedOpportunityStatus { get; }
+        bool IsDataLoadedAssistant { get;}
+        bool IsDataLoadedPaymentMethod { get; }
+        bool IsDataLoadedIncoterms { get; }
+        bool IsDataLoadedFreigths { get; }
+        bool IsDataLoadedTransports { get; }
 
         Task LoadAllData();
         Task LoadCompanies();
@@ -25,6 +27,12 @@ namespace Core.Services.Contracts
         Task LoadOpportunities();
         Task LoadOrderNotes();
         Task LoadOpportunityStatus();
+        Task LoadAssistant();
+        Task LoadPaymentMethod();
+        Task LoadIncoterms();
+        Task LoadFreights();
+        Task LoadTransports();
+
 
         void UnloadAllData();
         Task SynchronizeToDisk();
@@ -38,6 +46,11 @@ namespace Core.Services.Contracts
         void SaveOpportunity(Opportunity opportunity);
         void SaveOrderNotes(OrderNote orderNote);
         void SaveOpportunityStatus(List<OpportunityStatusExtern> opportunityStatuses);
+        void SaveAssitant(List<UserExtern> userExterns);
+        void SavePaymentMethod(List<PaymentMethodExtern> paymentMethodExterns);
+        void SaveIncoterms(List<IncotermExtern> incotermExterns);
+        void SaveFreights(List<FreightInChargeExtern> freightInChargeExterns);
+        void SaveTransports(List<TransportExtern> transportExterns);
 
         Task<List<CustomerExtern>> SearchCustomers();
         Task<List<CompanyExtern>> SearchCompanies();
@@ -46,5 +59,10 @@ namespace Core.Services.Contracts
         Task<List<Opportunity>> SearchOpportunities();
         Task<List<OrderNote>> SearchOrderNotes();
         Task<List<OpportunityStatusExtern>> SearchOpportunityStatuses();
+        Task<List<UserExtern>> SearchAssistant();
+        Task<List<PaymentMethodExtern>> SearchPaymentMethod();
+        Task<List<IncotermExtern>> SearchIncoterms();
+        Task<List<FreightInChargeExtern>> SearchFreights();
+        Task<List<TransportExtern>> SearchTransports();
     }
 }

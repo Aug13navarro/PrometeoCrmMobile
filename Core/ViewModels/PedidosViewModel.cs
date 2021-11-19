@@ -158,18 +158,41 @@ namespace Core.ViewModels
             };
 
             await GetOrdersNoteAsync(requestData, true);
+
         }
 
         private async Task SearchQuery()
         {
-            var requestData = new OrdersNotesPaginatedRequest()
-            {
-                CurrentPage = 1,
-                PageSize = 20,
-                query = Query
-            };
+            var red = await Connection.SeeConnection();
 
-            await GetOrdersNoteAsync(requestData, true);
+            if (red)
+            {
+                var requestData = new OrdersNotesPaginatedRequest()
+                {
+                    CurrentPage = 1,
+                    PageSize = 30,
+                    query = Query
+                };
+
+
+                await GetOrdersNoteAsync(requestData, true);
+            }
+            else
+            {
+                if (!offlineDataService.IsDataLoadedOrderNote)
+                {
+                    await offlineDataService.LoadOrderNotes();
+                }
+
+                var d = await offlineDataService.SearchOrderNotes();
+
+                var orderNotes = new MvxObservableCollection<OrderNote>(d);
+
+                OrdersNote.Clear();
+
+                OrdersNote.AddRange(orderNotes.Where(x => x.customer.CompanyName.Contains(Query)).ToList());
+
+            }
         }
 
         private async Task NuevaNotaPedido()
@@ -314,25 +337,105 @@ namespace Core.ViewModels
                     }
                     else
                     {
-                        if (!offlineDataService.IsDataLoadedOrderNote)
+                        #region MODO OFFLINE
+
+                        if (user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
                         {
-                            await offlineDataService.LoadOrderNotes();
+                            await Application.Current.MainPage.DisplayAlert("Atención", "Revise su conexión a internet.", "Aceptar");
+                            return;
                         }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Attention", "Check your internet connection.", "Acept");
+                            return;
+                        }
+                        //else
+                        //{
+                        //    IsLoading = true;
 
-                        var ordsCache = await offlineDataService.SearchOrderNotes();
+                        //    if(!offlineDataService.IsDataLoadedOpportunities)
+                        //    {
+                        //        await offlineDataService.LoadOpportunities();
+                        //    }
 
-                        var OrdFiltro = FiltroOffline.SearchOrders(ordsCache, filtro);                        
+                        //    var opsCache = await offlineDataService.SearchOpportunities();
 
-                        OrdersNote.Clear();
+                        //    var Opfiltro = new MvxObservableCollection<Opportunity>();
 
-                        OrdersNote.AddRange(OrdFiltro);
+                        //    if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo == null) //Company
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id 
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom == null && filtro.priceTo == null) //Status
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo == null) //Price From
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.totalPrice >= filtro.priceFrom
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo != null) //Price TO
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.totalPrice >= filtro.priceTo
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count > 0 && filtro.status.Count >= 0 && filtro.priceFrom == null && filtro.priceTo == null) //Company and Status
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.opportunityStatus.Id == filtro.status.FirstOrDefault().id
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo == null) //Company and Price From
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.totalPrice >= filtro.priceFrom
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo != null) //Company and Price To
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom != null && filtro.priceTo == null) //Status and Price From
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceFrom
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom == null && filtro.priceTo != null) //Status and Price To
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+                        //    if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo != null) //Price From and Price To
+                        //    {
+                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
+                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
+                        //    }
+
+
+                        //    Opportunities.Clear();
+
+                        //    Opportunities.AddRange(Opfiltro);
+                        //}
+
+                        #endregion
                     }
                 }
             }
             catch (Exception ex)
             {
-                //toastService.ShowError($"{ex.Message}");
-                var s = ex.Message;
+                await Application.Current.MainPage.DisplayAlert("", ex.Message, "Aceptar");
+                return;
             }
             finally
             {

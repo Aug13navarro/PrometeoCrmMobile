@@ -1,8 +1,4 @@
-﻿using MvvmCross.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System;
 
 namespace Core.Model.Extern
 {
@@ -23,7 +19,7 @@ namespace Core.Model.Extern
         public decimal? DollarBalance { get; set; }
         public int? UnitBalance { get; set; }
         public string Descriptions { get; set; }
-        public int ExternalId { get; set; }
+        public int? externalCustomerId { get; set; }
 
         //public ObservableCollection<int> CompanyUserId { get; } = new ObservableCollection<int>();
         //public ObservableCollection<int> CompanyUserIds { get; } = new ObservableCollection<int>();

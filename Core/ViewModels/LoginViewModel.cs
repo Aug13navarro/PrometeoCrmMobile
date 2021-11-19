@@ -115,17 +115,6 @@ namespace Core.ViewModels
 
                 user.RolesStr = JsonConvert.SerializeObject(userData.Roles);
 
-                //foreach (var item in userData.Roles)
-                //{
-                //    user.Roles.Add(new Role
-                //    {
-                //        Id = item.Id,  //or item.RoleId ?
-                //        Company = item.Company,
-                //        Name = item.Name,
-                //        Permissions = item.RolePermissions.Select(x => x.Permission).ToList()
-                //    });
-                //}
-
                 appData.SetLoggedUser(user);
                 Identity.LanguageUser = user.Language;
 
