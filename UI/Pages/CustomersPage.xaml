@@ -15,36 +15,44 @@
                 <Controls:BackIconToolbar Grid.Column="0"/>
                 <Frame
                     Grid.Column="1"
-                CornerRadius="20"
-                Margin="0"
-                Padding="0">
+                    CornerRadius="20"
+                    Margin="0"
+                    Padding="0">
                     <SearchBar
                         Text="{Binding ClientsQuery}"
-                BackgroundColor="White"
-                Placeholder="{x:Static resources:AppResources.Search}"
+                        BackgroundColor="White"
+                        Placeholder="{x:Static resources:AppResources.Search}"
                         SearchCommand="{Binding NewClientsSearchCommand}">
 
                     </SearchBar>
                 </Frame>
-                <Button Grid.Column="2" Text="{x:Static resources:AppResources.Create}" Command="{Binding GoToCreateCustomerCommand}" BorderWidth="1" BorderColor="White" BackgroundColor="Transparent" TextColor="White"/>
             </Grid>            
         </StackLayout>
     </NavigationPage.TitleView>
 
     <StackLayout Spacing="0">
-        <Label Text="Ocurrió un error al obtener los clientes. Compruebe su conexión a internet."
+        <!--<Label Text="Ocurrió un error al obtener los clientes. Compruebe su conexión a internet."
                IsVisible="{Binding Error}"
                VerticalOptions="CenterAndExpand"
                HorizontalTextAlignment="Center"
-               Style="{StaticResource ErrorLabel}" />
+               Style="{StaticResource ErrorLabel}" />-->
 
-        <StackLayout 
-            VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible And(Customers.Count == 0, !Error, !IsSearchInProgress)">
-            <Image Source="ic_no_cuenta.png" HorizontalOptions="Center"/>
-            <Label Text="{x:Static resources:AppResources.NoCustomersFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
-        </StackLayout>
+        
 
-        <ListView x:Name="customersList"
+        <Grid
+            RowDefinitions="*,auto"
+            ColumnDefinitions="*,auto">
+            <StackLayout 
+                Grid.Row="0" Grid.ColumnSpan="2"
+                VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible And(Customers.Count == 0, !Error, !IsSearchInProgress)">
+                <Image Source="ic_no_cuenta.png" HorizontalOptions="Center"/>
+                <Label Text="{x:Static resources:AppResources.NoCustomersFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
+            </StackLayout>
+            
+            <ListView x:Name="customersList"
+                      Grid.Row="0"
+                      Grid.ColumnSpan="2"
+                      Grid.RowSpan="2"
                   ItemsSource="{Binding Customers}"
                   Mvx:Bi.nd="IsVisible And(Customers.Count > 0, !Error)"                  
                   CachingStrategy="RecycleElement"
@@ -52,83 +60,99 @@
                   HasUnevenRows="True"
                   SeparatorColor="Transparent"
                   ItemAppearing="OnCustomersListItemAppearing">
-            <!---->
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Frame Style="{StaticResource CardFrame}">
-                            <StackLayout Spacing="5">
-                                <StackLayout.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={x:Reference customersList}, Path=BindingContext.SelectCustomerCommand}" 
-                                                          CommandParameter="{Binding .}" />
-                                </StackLayout.GestureRecognizers>
-                                <Label>
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{x:Static resources:AppResources.Name}" FontAttributes="Bold" />
-                                            <Span Text=": " FontAttributes="Bold"></Span>
-                                            <Span Text="{Binding CompanyName}" TextColor="{StaticResource PrimaryColor}" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <Label>
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="{x:Static resources:AppResources.BusinessName}" FontAttributes="Bold" />
-                                            <Span Text=": " FontAttributes="Bold"></Span>
-                                            <Span Text="{Binding BusinessName}" TextColor="{StaticResource PrimaryColor}" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-
-                                <BoxView BackgroundColor="LightGray" HeightRequest="1" />
-
-                                <StackLayout Orientation="Horizontal">
+                <!---->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame Style="{StaticResource CardFrame}">
+                                <StackLayout Spacing="5">
                                     <StackLayout.GestureRecognizers>
-                                        <TapGestureRecognizer
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference customersList}, Path=BindingContext.SelectCustomerCommand}" 
+                                                          CommandParameter="{Binding .}" />
+                                    </StackLayout.GestureRecognizers>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{x:Static resources:AppResources.Name}" FontAttributes="Bold" />
+                                                <Span Text=": " FontAttributes="Bold"></Span>
+                                                <Span Text="{Binding CompanyName}" TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{x:Static resources:AppResources.BusinessName}" FontAttributes="Bold" />
+                                                <Span Text=": " FontAttributes="Bold"></Span>
+                                                <Span Text="{Binding BusinessName}" TextColor="{StaticResource PrimaryColor}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                    <BoxView BackgroundColor="LightGray" HeightRequest="1" />
+
+                                    <StackLayout Orientation="Horizontal">
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer
                                             Command="{Binding Source={x:Reference customersList}, Path=BindingContext.ToggleContactsVisibilityCommand}"
                                             CommandParameter="{Binding .}"
                                             NumberOfTapsRequired="1" />
-                                    </StackLayout.GestureRecognizers>
+                                        </StackLayout.GestureRecognizers>
 
-                                    <Label Text="&#xf0da;" FontFamily="{StaticResource FontAwesomeSolid}" VerticalOptions="Center" />
-                                    <Label Text="{x:Static resources:AppResources.Contacts}" FontAttributes="Bold" />
-                                </StackLayout>
+                                        <Label Text="&#xf0da;" FontFamily="{StaticResource FontAwesomeSolid}" VerticalOptions="Center" />
+                                        <Label Text="{x:Static resources:AppResources.Contacts}" FontAttributes="Bold" />
+                                    </StackLayout>
 
-                                <Controls:Repeater ItemsSource="{Binding Contacts}"
+                                    <Controls:Repeater ItemsSource="{Binding Contacts}"
                                                    Mvx:Bi.nd="IsVisible And(IsContactsVisible, Contacts.Count > 0)">
-                                    <Controls:Repeater.ItemTemplate>
-                                        <DataTemplate>
-                                            <ContentView>
-                                                <StackLayout Orientation="Horizontal">
-                                                    <Label Text="&#xf111;" FontFamily="{StaticResource FontAwesomeRegular}" VerticalOptions="Center"
+                                        <Controls:Repeater.ItemTemplate>
+                                            <DataTemplate>
+                                                <ContentView>
+                                                    <StackLayout Orientation="Horizontal">
+                                                        <Label Text="&#xf111;" FontFamily="{StaticResource FontAwesomeRegular}" VerticalOptions="Center"
                                                            FontSize="6" />
-                                                    <Label>
-                                                        <Label.FormattedText>
-                                                            <FormattedString>
-                                                                <Span Text="{Binding Name}" />
-                                                                <Span Text="{Binding LastName}" />
-                                                                <Span Text=" - " />
-                                                                <Span Text="{Binding Email}" />
-                                                            </FormattedString>
-                                                        </Label.FormattedText>
-                                                    </Label>
-                                                </StackLayout>
-                                            </ContentView>
-                                        </DataTemplate>
-                                    </Controls:Repeater.ItemTemplate>
-                                </Controls:Repeater>
+                                                        <Label>
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <Span Text="{Binding Name}" />
+                                                                    <Span Text="{Binding LastName}" />
+                                                                    <Span Text=" - " />
+                                                                    <Span Text="{Binding Email}" />
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </StackLayout>
+                                                </ContentView>
+                                            </DataTemplate>
+                                        </Controls:Repeater.ItemTemplate>
+                                    </Controls:Repeater>
 
-                                <Label Text="No hay contactos" Mvx:Bi.nd="IsVisible And(IsContactsVisible, Contacts.Count == 0)" />
-                            </StackLayout>
-                        </Frame>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                                    <Label Text="No hay contactos" Mvx:Bi.nd="IsVisible And(IsContactsVisible, Contacts.Count == 0)" />
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
 
-        <ActivityIndicator IsVisible="{Binding IsSearchInProgress}"
-                           IsRunning="{Binding IsSearchInProgress}"
-                           VerticalOptions="CenterAndExpand" />
+            <ActivityIndicator 
+                IsVisible="{Binding IsSearchInProgress}"
+                IsRunning="{Binding IsSearchInProgress}"
+                VerticalOptions="CenterAndExpand" 
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="0"
+                Grid.RowSpan="2"/>
+            
+            <ImageButton
+                Grid.Row="1"
+                Grid.Column="1"
+                Source="ic_edit_hdpi.png"
+                Margin="10,10"
+                Command="{Binding GoToCreateCustomerCommand}">
+                
+            </ImageButton>
+        </Grid>
+
     </StackLayout>
 </Views:MvxContentPage>

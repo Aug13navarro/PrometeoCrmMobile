@@ -13,7 +13,7 @@
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Controls:BackIconToolbar />
             <Label Text="Crear Cliente" TextColor="White" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="Large" />
-            <Button Text="Guardar" Command="{Binding SaveCustomerCommand}" Style="{StaticResource OutlinePrimaryButton}" />
+            <ImageButton Command="{Binding SaveCustomerCommand}" Source="guardar.png" BackgroundColor="Transparent" WidthRequest="40"/>
         </StackLayout>
     </NavigationPage.TitleView>
 
