@@ -156,7 +156,7 @@
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Total: $" FontAttributes="Bold" />
-                                                    <Span Text="{Binding totalPrice}" TextColor="{StaticResource PrimaryColor}" />
+                                                    <Span Text="{Binding totalPriceStr}" TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>

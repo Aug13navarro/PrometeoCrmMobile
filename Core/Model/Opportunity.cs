@@ -1,5 +1,7 @@
 using System;
+using System.Globalization;
 using System.Linq;
+using Core.Helpers;
 using Core.Model.Enums;
 using MvvmCross.ViewModels;
 
@@ -34,5 +36,23 @@ namespace Core.Model
         public string ProductsDescription => string.Join(", ", opportunityProducts.Select(x => x.product.name));
 
         public MvxObservableCollection<OpportunityProducts> Details { get; set; } = new MvxObservableCollection<OpportunityProducts>();
+
+        public string totalPriceStr => TransformarStr(this.totalPrice);
+
+        private string TransformarStr(decimal value)
+        {
+            string str = string.Empty;
+
+            if (Identity.LanguageUser.ToLower() == "es" || Identity.LanguageUser.Contains("spanish"))
+            {
+                str = value.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                str = value.ToString("N2", new CultureInfo("en-US"));
+            }
+
+            return str;
+        }
     }
 }
