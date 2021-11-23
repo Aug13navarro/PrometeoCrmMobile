@@ -148,8 +148,6 @@ namespace Core.Services
 
         public async Task<PaginatedList<Customer>> GetCustomers(CustomersPaginatedRequest requestData)
         {
-            //if (offlineDataService.IsWifiConection)
-            //{
             const string url = "api/Customer/GetList";
             var body = new
             {
@@ -162,40 +160,17 @@ namespace Core.Services
             using (var request = new HttpRequestMessage(HttpMethod.Post, url))
             using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
             {
-                //string req = await content.ReadAsStringAsync();
                 request.Content = content;
                 PaginatedList<Customer> result = await client.SendAsyncAs<PaginatedList<Customer>>(request);
 
-                //if(offlineDataService.IsDataLoaded)
-                //{
-                //    offlineDataService.UnloadAllData("Customer");
-                //}
-
-                //offlineDataService.SaveCustomerSearch(result.Results);
-
                 return result;
             }
-            //}
-            //else
-            //{
-            //    if(!offlineDataService.IsDataLoaded)
-            //    {
-            //        await offlineDataService.LoadAllData();
-            //    }
-
-            //    //var result = await offlineDataService.SearchPolicies(requestData);
-            //    //var customers = ConvertToPaginatedCustomers(result);
-
-            //    return new PaginatedList<Customer>();
-            //}
         }
 
         public async Task<List<Customer>> GetAllCustomer(int userId, bool isParent, int typeCustomer, string token, int companyId)
         {
             try
             {
-                //if(offlineDataService.IsWifiConection)
-                //{
                 var lista = new List<Customer>();
 
                 string url = $"api/Customer?idUser={userId}&companyId={companyId}&isParentCustomer={isParent}&customerTypeId={typeCustomer}";
@@ -208,27 +183,9 @@ namespace Core.Services
                 {
                     lista = JsonConvert.DeserializeObject<List<Customer>>(resultado);
 
-                    //if (offlineDataService.IsDataLoaded)
-                    //{
-                    //    offlineDataService.UnloadAllData("Customer");
-                    //}
-
-                    //offlineDataService.SaveCustomerSearch(lista);
                 }
 
                 return lista;
-                //}
-                //else
-                //{
-                //    if(!offlineDataService.IsDataLoaded)
-                //    {
-                //        await offlineDataService.LoadAllData();
-                //    }
-
-                //    var result = await offlineDataService.SearchCustomers();
-
-                //    return result;
-                //}
             }
             catch (Exception e)
             {
@@ -293,7 +250,6 @@ namespace Core.Services
             using (var request = new HttpRequestMessage(HttpMethod.Post, url))
             using (var content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json"))
             {
-                //string req = await content.ReadAsStringAsync();
                 request.Content = content;
                 HttpResponseMessage result = await client.SendAsync(request);
 
@@ -354,9 +310,6 @@ namespace Core.Services
         {
             try
             {
-                //if (offlineDataService.IsWifiConection)
-                //{
-
                 string url = $"/api/Company/GetCompanyByUserId/{userId}";
 
                 var lista = new List<Company>();
@@ -370,28 +323,9 @@ namespace Core.Services
                 if (resultado != null)
                 {
                     lista = JsonConvert.DeserializeObject<IEnumerable<Company>>(resultado).ToList();
-
-                    //if(offlineDataService.IsDataLoaded)
-                    //{
-                    //    offlineDataService.UnloadAllData("Company");
-                    //}
-
-                    //offlineDataService.SaveCompanySearch(lista);
                 }
 
                 return lista;
-                //}
-                //else
-                //{
-                //    if(!offlineDataService.IsDataLoaded)
-                //    {
-                //        await offlineDataService.LoadCompanies();
-                //    }
-
-                //    var result = await offlineDataService.SearchCompanies();
-
-                //    return result;
-                //}
             }
             catch
             {
@@ -459,9 +393,6 @@ namespace Core.Services
         {
             try
             {
-                //if (offlineDataService.IsWifiConection)
-                //{
-                //string url = $"api/Product/GetCompanyProductPresentationByUserIdAsync";
                 string url = $"api/Product/SearchCompanyProductPresentationCanBeSold";
 
                 var content = JsonConvert.SerializeObject(productList);
@@ -477,28 +408,7 @@ namespace Core.Services
 
                 var lista = JsonConvert.DeserializeObject<PaginatedList<Product>>(resultado);
 
-                //if(offlineDataService.IsDataLoaded)
-                //{
-                //    offlineDataService.UnloadAllData("Presentation");
-                //}
-
-                //offlineDataService.SavePresentations(lista);
-
-                return lista;
-                //}
-                //else
-                //{
-                //    //if(!offlineDataService.IsDataLoaded)
-                //    //{
-                //    //    await offlineDataService.LoadPresentation();
-                //    //}
-
-                //    //await offlineDataService.LoadPresentation();
-
-                //    //var result = await offlineDataService.SearchPresentations();
-
-                //    //return result;
-                //}
+                return lista;                
             }
             catch (Exception e)
             {
@@ -511,8 +421,6 @@ namespace Core.Services
         {
             try
             {
-                //if (offlineDataService.IsWifiConection)
-                //{
                 var url = $"/api/Opportunity/GetListByCustomerIdAsync?language={lang}";
 
                 var lista = new List<Opportunity>();
@@ -529,22 +437,9 @@ namespace Core.Services
                 if (response != null)
                 {
                     lista = JsonConvert.DeserializeObject<IEnumerable<Opportunity>>(response).ToList();
-
-                    //if (offlineDataService.IsDataLoaded)
-                    //{
-                    //    offlineDataService.UnloadAllData("Opportunity");
-                    //}
                 }
 
                 return lista;
-                //}
-                //else
-                //{
-                //    await offlineDataService.LoadOpportunities();
-                //    var result = await offlineDataService.SearchOpportunities();
-
-                //    return result;
-                //}
             }
             catch (Exception)
             {
@@ -554,21 +449,9 @@ namespace Core.Services
 
         public async Task SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity)
         {
-            //if (offlineDataService.IsWifiConection)
-            //{
             var cadena = "api/Opportunity";
 
-            //var dto = new
-            //{
-            //    customerId = opportunity.customer.Id,
-            //    branchOfficeId = 1,
-            //    opportunityStatusId = opportunity.opportunityStatus.Id,
-            //    opportunityProducts = opportunity.Details,
-            //    totalPrice = opportunity.totalPrice,
-            //    closedDate = opportunity.closedDate,
-            //    description = opportunity.description
-            //};
-
+            
             var objeto = JsonConvert.SerializeObject(opportunityPost);
 
             HttpContent httpContent = new StringContent(objeto);
@@ -580,25 +463,7 @@ namespace Core.Services
 
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
-            //if (opportunity.Id == 0)
-            //{
-            //    opportunity.Id = Opportunities.Count == 0 ? 1 : Opportunities.Max(o => o.Id) + 1;
-            //}
-
-            //Opportunities.Add(JsonConvert.DeserializeObject<Opportunity>(resultado));
             await Task.FromResult(0);
-            //}
-            //else
-            //{
-            //    if (offlineDataService.IsDataLoaded)
-            //    {
-            //        await offlineDataService.LoadOpportunities();
-            //    }
-
-            //    opportunity.totalPrice = Convert.ToDecimal(opportunityPost.totalPrice);
-            //    opportunity.opportunityStatus.Id = opportunityPost.opportunityStatusId;
-            //    offlineDataService.SaveOpportunity(opportunity);
-            //}
         }
 
         public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string lang, string token)

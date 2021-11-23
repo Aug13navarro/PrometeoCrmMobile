@@ -137,7 +137,8 @@ namespace Core.Model
         public int? FreightId { get; set; }
         public int? IncotermId { get; set; }
         public int? commercialAssistantId { get; set; }
-        public bool sentToErp { get; set; }
+        public bool? sentToErp { get; set; }
+
         public class ProductOrder
         {
             public Product companyProductPresentation { get; set; }

@@ -113,7 +113,6 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        //private readonly IToastService toastService;
         private readonly IOfflineDataService offlineDataService;
 
         public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)//,IToastService toastService
@@ -122,7 +121,6 @@ namespace Core.ViewModels
 
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
-            //this.toastService = toastService;
             this.offlineDataService = offlineDataService;
 
             NuevaNotaPedidoCommand = new Command(async () => await NuevaNotaPedido());
@@ -256,9 +254,15 @@ namespace Core.ViewModels
             }
         }
 
-        private Task NewOrderSearchAsync()
+        private async Task NewOrderSearchAsync()
         {
-            throw new NotImplementedException();
+            var requestData = new OrdersNotesPaginatedRequest()
+            {
+                CurrentPage = 1,
+                PageSize = PageSize,
+            };
+
+            await GetOrdersNoteAsync(requestData, true);
         }
 
         public async override Task Initialize()

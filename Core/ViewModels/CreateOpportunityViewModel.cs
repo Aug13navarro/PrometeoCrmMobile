@@ -673,6 +673,8 @@ namespace Core.ViewModels
         {
             try
             {
+                IsLoading = true;
+
                 if (EstadoId == 4 || EstadoId == 5)
                 {
                     await Application.Current.MainPage.DisplayAlert("", "Si la Oportunidad se encuentra cerrada no es posible editarla.", "Aceptar");
@@ -756,6 +758,10 @@ namespace Core.ViewModels
             catch (Exception e)
             {
                 await Application.Current.MainPage.DisplayAlert("Error", $"{ e.Message}", ""); return;
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

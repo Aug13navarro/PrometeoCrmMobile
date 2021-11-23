@@ -363,6 +363,8 @@ namespace Core.ViewModels
         {
             try
             {
+                IsLoading = true;
+
                 var lang = data.LoggedUser.Language.ToLower();
 
                 if(SelectedCustomer == null
@@ -480,10 +482,13 @@ namespace Core.ViewModels
                     return;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                await Application.Current.MainPage.DisplayAlert("Error", e.Message, "Aceptar"); return;
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 

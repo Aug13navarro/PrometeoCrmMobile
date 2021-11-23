@@ -287,7 +287,6 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IOfflineDataService offlineDataService;
-        //private readonly IToastService toastService;
 
         public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)
         {
@@ -542,6 +541,8 @@ namespace Core.ViewModels
         {
             try
             {
+                IsLoading = true;
+
                 if (Company == null ||
                     SelectedCustomer == null ||
                     TypeOfRemittance == null ||
@@ -697,11 +698,18 @@ namespace Core.ViewModels
                                 var opp = new Opportunity();
 
                                 await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+
+                                await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                                await navigationService.Navigate<PedidosViewModel>();
+                            }
+                            else
+                            {
+                                await navigationService.Close(this);
+
+                                NewOrderCreated?.Invoke(this, EventArgs.Empty);
                             }
                         }
 
-                        await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                        await navigationService.Navigate<PedidosViewModel>();
                     }
                     else
                     {
@@ -712,8 +720,11 @@ namespace Core.ViewModels
                         await offlineDataService.SynchronizeToDisk();
 
 
-                        await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                        //await navigationService.Navigate<PedidosViewModel>();
+                        //await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                        //await navigationService.Navigate<PedidosViewModel>();await navigationService.Close(this);
+
+                        await navigationService.Close(this);
+                        NewOrderCreated?.Invoke(this, EventArgs.Empty);
                     }
                 }
                 else
@@ -729,7 +740,8 @@ namespace Core.ViewModels
 
                     await prometeoApiService.UpdateOrderNote(Order, data.LoggedUser.Token);
 
-                    await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                    await navigationService.Close(this); 
+                    NewOrderCreated?.Invoke(this, EventArgs.Empty);
                 }
             }
             catch (Exception e)
@@ -744,6 +756,10 @@ namespace Core.ViewModels
                     await Application.Current.MainPage.DisplayAlert("Attention", $"{e.Message}", "Acept");
                     return;
                 }
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 
@@ -878,7 +894,7 @@ namespace Core.ViewModels
 
                 if (theOrder.id > 0)
                 {
-                    if (theOrder.sentToErp)
+                    if (theOrder.sentToErp.HasValue)
                     {
                         EnableForEdit = false;
                     }

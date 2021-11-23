@@ -115,6 +115,9 @@ namespace Core.ViewModels
         private async Task Logout()
         {
             appData.ClearLoggedUser();
+            appData.ClearFilterOrder();
+            appData.ClearFiltroAvansado();
+
             await navigationService.Navigate<LoginViewModel>();
         }
 
