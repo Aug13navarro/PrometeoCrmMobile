@@ -15,6 +15,7 @@ namespace Core.Services
 {
     public class OfflineDataService : IOfflineDataService
     {
+        public bool IsDataLoaded { get; private set; }
         public bool IsDataLoadedCustomer { get; private set; }
         public bool IsDataLoadedCompanies { get; private set; }
         public bool IsDataLoadedPaymentConditions { get; private set; }
@@ -477,6 +478,8 @@ namespace Core.Services
                 await SynchronizeItemsToDisk(incotermsSearchCache, MaxIncoterms, IncotermsSearchCacheFilename);
                 await SynchronizeItemsToDisk(freightsSearchCache, MaxFreights, FreightsSearchCacheFilename);
                 await SynchronizeItemsToDisk(transportsSearchCache, MaxTransports, TransportsSearchCacheFilename);
+
+                IsDataLoaded = true;
             }
             catch (Exception)
             {
@@ -502,6 +505,8 @@ namespace Core.Services
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, IncotermsSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, FreightsSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, TransportsSearchCacheFilename));
+
+                    IsDataLoaded = false;
                 }
                 catch (Exception)
                 {

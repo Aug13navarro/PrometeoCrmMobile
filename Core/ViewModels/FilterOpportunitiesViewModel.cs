@@ -21,6 +21,8 @@ namespace Core.ViewModels
     {
         private ApplicationData data;
 
+        #region PROPIEDADES
+
         private DateTime maximumDate;
         public DateTime MaximumDate
         {
@@ -105,7 +107,7 @@ namespace Core.ViewModels
         }
 
         private bool isEnableSeller;
-        public  bool IsEnableSeller
+        public bool IsEnableSeller
         {
             get => isEnableSeller;
             set => SetProperty(ref isEnableSeller, value);
@@ -125,12 +127,21 @@ namespace Core.ViewModels
             set => SetProperty(ref sellerGuardado, value);
         }
 
+        private bool isSeller;
+        public bool IsSeller
+        {
+            get => isSeller;
+            set => SetProperty(ref isSeller, value);
+        }
+
+        #endregion
+
         public ObservableCollection<OpportunityStatus> OpportunityStatuses { get; set; }
         public ObservableCollection<Company> Companies { get; set; }
         public ObservableCollection<Customer> Customers { get; set; }
         public ObservableCollection<Product> Products { get; set; }
         public ObservableCollection<double> Totals { get; set; }
-        public MvxObservableCollection<User> Vendors { get; set; } = new MvxObservableCollection<User>();
+        public ObservableCollection<User> Vendedores { get; set; }
 
         public OpportunitiesViewModel OpportunitiesViewModel { get; set; }
 
@@ -139,11 +150,11 @@ namespace Core.ViewModels
         public Command SelectProductCommand { get; }
         public Command ApplyFiltersCommand { get; }
         public Command LimpiarFiltroCommand { get; }
+        public Command VerificarUsuarioCommand { get; }
 
         //SERIVICIO
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        //private readonly IToastService toastService;
         private readonly IOfflineDataService offlineDataService;
 
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
@@ -151,7 +162,6 @@ namespace Core.ViewModels
             this.OpportunitiesViewModel = opportunitiesViewModel;
             //this.navigationService = Mvx.Resolve<IMvxNavigationService>();
             //this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-            //this.toastService = Mvx.Resolve<IToastService>();
 
             //SelectClientCommand = new Command(async () => await SelectClientAsync());
 
@@ -160,7 +170,7 @@ namespace Core.ViewModels
 
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
             //Companies = new ObservableCollection<Company>();
-            
+
             CargarEstados();
         }
 
@@ -172,34 +182,58 @@ namespace Core.ViewModels
 
         public FilterOpportunitiesViewModel()
         {
-            data = new ApplicationData();
+            try
+            {
+                data = new ApplicationData();
 
-            MinimumDate = DateTime.Now.Date.AddMonths(-6);
-            MaximumDate = DateTime.Now.Date;
+                MinimumDate = DateTime.Now.Date.AddMonths(-6);
+                MaximumDate = DateTime.Now.Date;
 
-            this.navigationService = Mvx.Resolve<IMvxNavigationService>();
-            this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-            //this.toastService = Mvx.Resolve<IToastService>();
-            this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
+                this.navigationService = Mvx.Resolve<IMvxNavigationService>();
+                this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
+                //this.toastService = Mvx.Resolve<IToastService>();
+                this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
 
-            SelectClientCommand = new Command(async () => await SelectClientAsync());
-            SelectProductCommand = new Command(async () => await SelectProdcutoAsync());
-            ApplyFiltersCommand = new Command(async () => await ApplyFilters());
-            LimpiarFiltroCommand = new Command(async () => await ClearFilter());
+                SelectClientCommand = new Command(async () => await SelectClientAsync());
+                SelectProductCommand = new Command(async () => await SelectProdcutoAsync());
+                ApplyFiltersCommand = new Command(async () => await ApplyFilters());
+                LimpiarFiltroCommand = new Command(async () => await ClearFilter());
+                VerificarUsuarioCommand = new Command(async () => await VerificarUsuario());
 
-            BeginDate = DateTime.Now.AddMonths(-6);
-            EndDate = DateTime.Now.Date;
+                BeginDate = DateTime.Now.AddMonths(-6);
+                EndDate = DateTime.Now.Date;
 
-            OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
-            Companies = new ObservableCollection<Company>();
+                OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
+                Companies = new ObservableCollection<Company>();
+                Vendedores = new ObservableCollection<User>();
 
-            CargarEstados();
-            CargarCompanies();
+                CargarEstados();
+                CargarCompanies();
 
-            IsEnableSeller = true;
+                IsEnableSeller = true;
 
-            VerificarRol(data.LoggedUser.RolesStr);
+                VerificarRol(data.LoggedUser.RolesStr);
 
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("Error", e.Message, "Aceptar"); return;
+            }
+        }
+
+        private async Task VerificarUsuario()
+        {
+            if(IsSeller)
+            {
+                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Atención", "No tiene permiso para obtener los vendedores.", "Aceptar"); return;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Attention", "You do not have permission to get sellers.", "Acept"); return;
+                }
+            }
         }
 
         private void VerificarRol(string rolesJson)
@@ -211,6 +245,7 @@ namespace Core.ViewModels
                 if (item.Name == "Vendedor")
                 {
                     IsEnableSeller = false;
+                    IsSeller = true;
                     break;
                 }
             }
@@ -252,7 +287,7 @@ namespace Core.ViewModels
                     var empresas = await offlineDataService.SearchCompanies();
 
                     var e = mapper.Map<List<Company>>(empresas);
-                    
+
                     foreach (var item in e)
                     {
                         Companies.Add(item);
@@ -262,7 +297,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
             }
         }
 
@@ -294,23 +329,34 @@ namespace Core.ViewModels
 
                     if (users != null)
                     {
-                        Vendors.Clear();
-                        Vendors.AddRange(users);
+                        Vendedores.Clear();
 
-                        if(SellerGuardado != null)
+                        foreach (var item in users)
                         {
-                            Seller = Vendors.FirstOrDefault(x => x.Id == SellerGuardado.Id);
+                            Vendedores.Add(item);
+                        }
+
+                        if (SellerGuardado != null)
+                        {
+                            Seller = Vendedores.FirstOrDefault(x => x.Id == SellerGuardado.Id);
                         }
                     }
                 }
                 else
                 {
-                    //guardar el cache y buscar por empresa
+                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "No se pudo cargar los vendedores, aseguresé de estar conectado a internet y vuelva a intentar.", "Aceptar"); return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Vendors could not be loaded, please make sure you are connected to the internet and try again.", "Acept"); return;
+                    }
                 }
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
             }
         }
 
@@ -359,9 +405,9 @@ namespace Core.ViewModels
                     if (filtro.priceTo != null) TotalHasta = filtro.priceTo.Value;
                 }
             }
-            catch
+            catch (Exception e)
             {
-
+                Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
             }
         }
 
@@ -371,9 +417,9 @@ namespace Core.ViewModels
             {
                 return base.Initialize();
             }
-            catch
+            catch (Exception e)
             {
-                throw;
+                throw new Exception(e.Message);
             }
         }
 
@@ -399,12 +445,31 @@ namespace Core.ViewModels
         {
             try
             {
-                Product product = await navigationService.Navigate<SelectProductViewModel, Product>();
-
-                if (product != null)
+                if (Company != null)
                 {
-                    Product = product;
+                    var dExport = new DataExport()
+                    {
+                        CompanyId = Company.Id
+                    };
 
+                    Product product = await navigationService.Navigate<SelectProductViewModel, DataExport, Product>(dExport);
+
+                    if (product != null)
+                    {
+                        Product = product;
+                    }
+                }
+                else
+                {
+                    if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    {
+
+                        await Application.Current.MainPage.DisplayAlert("Atención","Seleccione una Empresa para poder buscar los productos", "Aceptar"); return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Select a Company to be able to search the products.", "Acept"); return;
+                    }
                 }
             }
             catch (Exception e)
@@ -434,7 +499,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    if(!offlineDataService.IsDataLoadedOpportunityStatus)
+                    if (!offlineDataService.IsDataLoadedOpportunityStatus)
                     {
                         await offlineDataService.LoadOpportunityStatus();
                     }
@@ -459,51 +524,58 @@ namespace Core.ViewModels
 
         private async Task ApplyFilters()
         {
-            var filtro = new FilterOportunityModel
+            try
             {
-                dateFrom = this.BeginDate,
-                dateTo = this.endDate,
-                customers = new List<cust>(),
-                status = new List<oppSta>(),
-                products = new List<prod>(),
-                companies = new List<comp>(),
-                priceFrom = TotalDesde,
-                priceTo = TotalHasta
-            };
+                var filtro = new FilterOportunityModel
+                {
+                    dateFrom = this.BeginDate,
+                    dateTo = this.endDate,
+                    customers = new List<cust>(),
+                    status = new List<oppSta>(),
+                    products = new List<prod>(),
+                    companies = new List<comp>(),
+                    priceFrom = TotalDesde,
+                    priceTo = TotalHasta
+                };
 
-            if (customer != null) filtro.customers.Add(new cust { id = customer.Id});
-            if (Status != null) filtro.status.Add(new oppSta { id = Status.Id });
-            if (Product != null) filtro.products.Add(new prod { id = Product.Id });
-            if (Company != null) filtro.companies.Add(new comp { id = Company.Id });
-            if (seller != null) filtro.userId = Seller.Id;
-            if (filtro.priceFrom == 0) filtro.priceFrom = null;
-            if (filtro.priceTo == 0) filtro.priceTo = null;
+                if (customer != null) filtro.customers.Add(new cust { id = customer.Id });
+                if (Status != null) filtro.status.Add(new oppSta { id = Status.Id });
+                if (Product != null) filtro.products.Add(new prod { id = Product.Id });
+                if (Company != null) filtro.companies.Add(new comp { id = Company.Id });
+                if (seller != null) filtro.userId = Seller.Id;
+                if (filtro.priceFrom == 0) filtro.priceFrom = null;
+                if (filtro.priceTo == 0) filtro.priceTo = null;
 
-            var filtroJson = new FilterOpportunityJson
+                var filtroJson = new FilterOpportunityJson
+                {
+                    dateFrom = this.BeginDate,
+                    dateTo = this.endDate,
+                    customers = new List<Customer>(),
+                    status = new List<OpportunityStatus>(),
+                    products = new List<Product>(),
+                    priceFrom = TotalDesde,
+                    priceTo = TotalHasta,
+                    companies = new List<Company>(),
+                };
+
+                if (customer != null) filtroJson.customers.Add(customer);
+                if (Status != null) filtroJson.status.Add(Status);
+                if (Product != null) filtroJson.products.Add(Product);
+                if (Company != null) filtroJson.companies.Add(Company);
+                if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
+                if (filtroJson.priceTo == 0) filtroJson.priceTo = null;
+                if (Seller != null) filtroJson.seller = seller;
+
+                var filtroString = JsonConvert.SerializeObject(filtroJson);
+
+                data.FilterOpportunity(filtroString);
+
+                await navigationService.Close(this, filtro);
+            }
+            catch (Exception e)
             {
-                dateFrom = this.BeginDate,
-                dateTo = this.endDate,
-                customers = new List<Customer>(),
-                status = new List<OpportunityStatus>(),
-                products = new List<Product>(),
-                priceFrom = TotalDesde,
-                priceTo = TotalHasta,
-                companies = new List<Company>(),
-            };
-
-            if (customer != null) filtroJson.customers.Add(customer);
-            if (Status != null) filtroJson.status.Add(Status);
-            if (Product != null) filtroJson.products.Add(Product);
-            if (Company != null) filtroJson.companies.Add(Company);
-            if (filtroJson.priceFrom == 0) filtroJson.priceFrom = null;
-            if (filtroJson.priceTo == 0) filtroJson.priceTo = null;
-            if (Seller != null) filtroJson.seller = seller;
-
-            var filtroString = JsonConvert.SerializeObject(filtroJson);
-
-            data.FilterOpportunity(filtroString);
-
-            await navigationService.Close(this, filtro);
+                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
+            }
         }
     }
 }

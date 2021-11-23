@@ -23,12 +23,7 @@ namespace Core.ViewModels
     {
         private ApplicationData data;
 
-        //private DateTime minimumDate;
-        //public DateTime MinimumDate
-        //{
-        //    get => minimumDate;
-        //    set => SetProperty(ref minimumDate, value);
-        //}
+        #region PROPIEDADES
 
         private DateTime maximumDate;
         public DateTime MaximumDate
@@ -149,6 +144,9 @@ namespace Core.ViewModels
 
         public PedidosViewModel PedidosViewModel{ get; set; }
 
+        #endregion
+
+
         //COMANDOS
         public Command ApplyFiltersCommand { get; }
         public Command LimpiarFiltroCommand { get; }
@@ -157,25 +155,6 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IOfflineDataService offlineDataService;
-        //private readonly IToastService toastService;
-
-        //public FilterOrdersViewModel(PedidosViewModel pedidosViewModel)
-        //{
-        //    this.PedidosViewModel = pedidosViewModel;
-        //    //this.navigationService = Mvx.Resolve<IMvxNavigationService>();
-        //    //this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-        //    //this.toastService = Mvx.Resolve<IToastService>();
-
-        //    //SelectClientCommand = new Command(async () => await SelectClientAsync());
-
-        //    BeginDate = DateTime.Now.Date;
-        //    EndDate = DateTime.Now.Date;
-
-        //    //OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
-
-        //    //CargarEstados();
-        //}
-
         public override void ViewDestroy(bool viewFinishing = true)
         {
             base.ViewDestroy(false);
@@ -184,31 +163,35 @@ namespace Core.ViewModels
 
         public FilterOrdersViewModel()
         {
-            data = new ApplicationData();
+            try
+            {
+                data = new ApplicationData();
 
-            MaximumDate = DateTime.Now.Date;
+                MaximumDate = DateTime.Now.Date;
 
 
-            this.navigationService = Mvx.Resolve<IMvxNavigationService>();
-            this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-            this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
-            //this.toastService = Mvx.Resolve<IToastService>();
+                this.navigationService = Mvx.Resolve<IMvxNavigationService>();
+                this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
+                this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
 
-            ApplyFiltersCommand = new Command(async () => await ApplyFilters());
-            LimpiarFiltroCommand = new Command(async () => await ClearFilter());
+                ApplyFiltersCommand = new Command(async () => await ApplyFilters());
+                LimpiarFiltroCommand = new Command(async () => await ClearFilter());
 
-            BeginDate = DateTime.Now.Date.AddMonths(-6);
-            EndDate = DateTime.Now.Date;
+                BeginDate = DateTime.Now.Date.AddMonths(-6);
+                EndDate = DateTime.Now.Date;
 
-            //OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
 
-            CargarEstados();
-            CargarCompanies();
+                CargarEstados();
+                CargarCompanies();
 
-            IsEnableSeller = true;
+                IsEnableSeller = true;
 
-            VerificarRol(data.LoggedUser.RolesStr);
-            //CargarFiltroGuardado();
+                VerificarRol(data.LoggedUser.RolesStr);
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("Error", e.Message, "Aceptar"); return;
+            }
         }
 
         private void VerificarRol(string rolesJson)
@@ -261,12 +244,19 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    //guardar el cache y buscar por empresa
+                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "No se pudo cargar los vendedores, aseguresé de estar conectado a internet y vuelva a intentar.", "Aceptar"); return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Vendors could not be loaded, please make sure you are connected to the internet and try again.", "Acept"); return;
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                await Application.Current.MainPage.DisplayAlert("Error", e.Message, "Aceptar"); return;
             }
         }
 
@@ -350,7 +340,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     var user = data.LoggedUser;
 
@@ -384,7 +374,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
             }
         }
 

@@ -257,7 +257,6 @@ namespace Core.ViewModels
 
             try
             {
-                //SelectedCustomer = await prometeoApiService.GetCustomer(customerId);
                 var user = data.LoggedUser;
 
                 if (filtro != null)

@@ -69,7 +69,7 @@
                             IsEnabled="{Binding IsEnableSeller}"
                             Title="{x:Static resources:AppResources.Seller}"
                             ItemsSource="{Binding Vendors, Mode=TwoWay}"
-                            ItemDisplayBinding="{Binding fullName}"
+                            ItemDisplayBinding="{Binding FullName}"
                             SelectedItem="{Binding Seller, Mode=TwoWay}">
 
                         </Picker>

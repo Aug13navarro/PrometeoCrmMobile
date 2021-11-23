@@ -730,6 +730,43 @@ namespace Core.Services
             return JsonConvert.DeserializeObject<OrderNote>(resultado);
         }
 
+        public async Task<OrderNote> UpdateOrderNote(OrderNote order, string token)
+        {
+            try
+            {
+                var url = $"/api/OpportunityOrderNote/UpdateOpportunityOrderNoteAsync?id={order.id}";
+
+                var objeto = JsonConvert.SerializeObject(order);
+
+                HttpContent httpContent = new StringContent(objeto);
+                
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.PutAsync(string.Format(url), httpContent);
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+                
+                if (respuesta.ReasonPhrase == "Bad Request")
+                {
+                    throw new Exception(resultado);
+                }
+
+                if (respuesta.ReasonPhrase == "Internal Server Error")
+                {
+                    throw new Exception("Error al Impactar en un Servicio Externo, posiblemente el Cliente no se encuentra registrado");
+                }
+
+                return JsonConvert.DeserializeObject<OrderNote>(resultado);
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+        }
+
         public async Task<PaginatedList<OrderNote>> GetOrderNote(OrdersNotesPaginatedRequest requestData, string token)
         {
             var cadena = "/api/OpportunityOrderNote/SearchOpportunityOrderNoteAsync";
@@ -900,5 +937,6 @@ namespace Core.Services
 
             return JsonConvert.DeserializeObject<IEnumerable<Transport>>(resultado);
         }
+
     }
 }

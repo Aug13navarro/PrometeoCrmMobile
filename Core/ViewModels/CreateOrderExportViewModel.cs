@@ -244,18 +244,14 @@ namespace Core.ViewModels
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
-                //this.toastService = toastService;
                 this.offlineDataService = offlineDataService;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
-                //CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
-
-                //OrderStatus = new MvxObservableCollection<OpportunityStatus>();
 
                 ETD = DateTime.Now.AddDays(15);
                 MinimunDate = DateTime.Now;

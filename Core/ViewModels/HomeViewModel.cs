@@ -56,120 +56,22 @@ namespace Core.ViewModels
 
             if (red)
             {
-                //REVISAR SI EXISTEN OPORTUNIDADES Y PEDIDODOS EN LA MEMORIA PARA PUBLICAR
+                if(offlineDataService.IsDataLoaded)
+                {
+                    if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "lunes")
+                    {
+                        CargarEnCache(LoggedUser.Language.ToLower());
+                    }
+                }
+                else
+                {
+                    CargarEnCache(LoggedUser.Language.ToLower());
+                }
 
                 if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "viernes")
                 {
 
-                    //INIO AUTOMAPER PARA IGUALAR LOS MODELS
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
-
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    //OBTENGO TODAS LAS EMPRESAS POR USUARIO
-                    var empresas = await prometeoApiService.GetCompaniesByUserId(LoggedUser.Id, LoggedUser.Token);
-
-
-                    //ELIMINO CACHE VIEJO
-                    await offlineDataService.DeleteAllData();
-                    offlineDataService.UnloadAllData();
-
-                    //GUARDO EMPRESAS EM CACHE
-                    var e = mapper.Map<List<CompanyExtern>>(empresas);
-                    offlineDataService.SaveCompanySearch(e);
-
-                    var clientes = new List<Customer>();
-                    //foreach (var item in empresas)
-                    //{
-                    //    var allCustomer = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, item.Id);
-
-                    //    clientes.AddRange(allCustomer);
-                    //}
-
-                    //OBTENGO TODOS LOS CLIENTES
-                    var cliente = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, empresas.FirstOrDefault().Id);
-
-                    clientes.AddRange(cliente);
-
-                    //GUARDO LOS CLIENTES EN CACHE
-                    var r = mapper.Map<List<CustomerExtern>>(clientes);
-                    offlineDataService.SaveCustomerSearch(r);
-
-                    //OBTENGOS LOS ESTADOS DE OPORTUNIDADES
-
-                    var status = await prometeoApiService.GetOpportunityStatus(LoggedUser.Language.ToLower(), LoggedUser.Token);
-
-                    //GUARDO LOS ESTADOS 
-                    var s = mapper.Map<List<OpportunityStatusExtern>>(status);
-                    offlineDataService.SaveOpportunityStatus(s);
-
-                    //OBTENGO TODAS LAS CONDICIONES DE PAGOS POR LAS EMPRESAS
-                    var condiciones = new List<PaymentCondition>();
-
-                    foreach (var item in empresas)
-                    {
-                        var condic = await prometeoApiService.GetPaymentConditions(LoggedUser.Token, item.Id);
-
-                        condiciones.AddRange(condic);
-                    }
-
-                    //GUARDO LAS CONDICIONES DE PAGO
-                    offlineDataService.SavePaymentConditions(condiciones);
-
-                    //OBTENGO LOS USUARIOS ASISTENTES
-                    var asistentes = new List<User>();
-
-                    foreach (var item in empresas)
-                    {
-                        var asistant = await prometeoApiService.GetUsersByRol(item.Id, "Asistente Comercial");
-
-                        asistentes.AddRange(asistant);
-                    }
-
-                    //GUARDO LOS ASISTENTES COMERCIALES
-                    var ass = mapper.Map<List<UserExtern>>(asistentes);
-                    offlineDataService.SaveAssitant(ass);
-
-                    //OBTENGO TODOS LOS MEDIOS DE PAGO
-                    var medios = new List<PaymentMethod>();
-
-                    foreach (var item in empresas)
-                    {
-                        var mediosPago = await prometeoApiService.GetPaymentMethod(item.Id, LoggedUser.Language.ToLower(), LoggedUser.Token);
-
-                        medios.AddRange(mediosPago);
-                    }
-
-                    //GUARDO LOS MEDIOS DE PAGOS 
-                    var mp = mapper.Map<List<PaymentMethodExtern>>(medios);
-                    offlineDataService.SavePaymentMethod(mp);
-
-                    //OBTENER LOS INCOTERMS
-                    var incoterms = await prometeoApiService.GetIncoterms(LoggedUser.Token);
-
-                    //GUARDO LOS INCOTERMS
-                    var inc = mapper.Map<List<IncotermExtern>>(incoterms);
-                    offlineDataService.SaveIncoterms(inc);
-
-                    //OBTENER FLETES PARA PEDIDO EXPORTACIÓN 
-                    var fletes = await prometeoApiService.GetFreight(LoggedUser.Language.ToLower(), LoggedUser.Token);
-
-                    //GUARDO LOS FLETES
-                    var freigths = mapper.Map<List<FreightInChargeExtern>>(fletes);
-                    offlineDataService.SaveFreights(freigths);
-
-                    //ONTENGO TODOS LOS TRANSPORTES
-                    var transportes = await prometeoApiService.GetTransport(LoggedUser.Language.ToLower(), LoggedUser.Token);
-
-                    //GUARDO LOS TRANSPORTES
-                    var tra = mapper.Map<List<TransportExtern>>(transportes);
-                    offlineDataService.SaveTransports(tra);
-
-                    //SINCRONIZO LA DATA CON LOS ARCHIVOS EN LA CACHE
-                    await offlineDataService.SynchronizeToDisk();
+                    
                 }
             }
             else
@@ -178,31 +80,120 @@ namespace Core.ViewModels
             }
 
         }
-        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
+
+        public async void CargarEnCache (string lang)
         {
-            var lista = new List<OpportunityPost.ProductSend>();
-
-            foreach (var item in details)
+            //INIO AUTOMAPER PARA IGUALAR LOS MODELS
+            var mapperConfig = new MapperConfiguration(m =>
             {
-                double tempTotal = item.Price * item.Quantity;
+                m.AddProfile(new MappingProfile());
+            });
 
-                if (item.Discount != 0)
-                {
-                    tempTotal = tempTotal - ((tempTotal * item.Discount) / 100);
-                }
+            IMapper mapper = mapperConfig.CreateMapper();
 
-                lista.Add(new OpportunityPost.ProductSend
-                {
-                    discount = item.Discount,
-                    productId = item.productId,
-                    quantity = item.Quantity,
-                    total = tempTotal,
-                    price = item.Price
-                });
+            //OBTENGO TODAS LAS EMPRESAS POR USUARIO
+            var empresas = await prometeoApiService.GetCompaniesByUserId(LoggedUser.Id, LoggedUser.Token);
+
+
+            //ELIMINO CACHE VIEJO
+            await offlineDataService.DeleteAllData();
+            offlineDataService.UnloadAllData();
+
+            //GUARDO EMPRESAS EM CACHE
+            var e = mapper.Map<List<CompanyExtern>>(empresas);
+            offlineDataService.SaveCompanySearch(e);
+
+            var clientes = new List<Customer>();
+            //foreach (var item in empresas)
+            //{
+            //    var allCustomer = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, item.Id);
+
+            //    clientes.AddRange(allCustomer);
+            //}
+
+            //OBTENGO TODOS LOS CLIENTES
+            var cliente = await prometeoApiService.GetAllCustomer(LoggedUser.Id, true, 3, LoggedUser.Token, empresas.FirstOrDefault().Id);
+
+            clientes.AddRange(cliente);
+
+            //GUARDO LOS CLIENTES EN CACHE
+            var r = mapper.Map<List<CustomerExtern>>(clientes);
+            offlineDataService.SaveCustomerSearch(r);
+
+            //OBTENGOS LOS ESTADOS DE OPORTUNIDADES
+
+            var status = await prometeoApiService.GetOpportunityStatus(LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+            //GUARDO LOS ESTADOS 
+            var s = mapper.Map<List<OpportunityStatusExtern>>(status);
+            offlineDataService.SaveOpportunityStatus(s);
+
+            //OBTENGO TODAS LAS CONDICIONES DE PAGOS POR LAS EMPRESAS
+            var condiciones = new List<PaymentCondition>();
+
+            foreach (var item in empresas)
+            {
+                var condic = await prometeoApiService.GetPaymentConditions(LoggedUser.Token, item.Id);
+
+                condiciones.AddRange(condic);
             }
 
-            return lista;
+            //GUARDO LAS CONDICIONES DE PAGO
+            offlineDataService.SavePaymentConditions(condiciones);
+
+            //OBTENGO LOS USUARIOS ASISTENTES
+            var asistentes = new List<User>();
+
+            foreach (var item in empresas)
+            {
+                var asistant = await prometeoApiService.GetUsersByRol(item.Id, "Asistente Comercial");
+
+                asistentes.AddRange(asistant);
+            }
+
+            //GUARDO LOS ASISTENTES COMERCIALES
+            var ass = mapper.Map<List<UserExtern>>(asistentes);
+            offlineDataService.SaveAssitant(ass);
+
+            //OBTENGO TODOS LOS MEDIOS DE PAGO
+            var medios = new List<PaymentMethod>();
+
+            foreach (var item in empresas)
+            {
+                var mediosPago = await prometeoApiService.GetPaymentMethod(item.Id, LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+                medios.AddRange(mediosPago);
+            }
+
+            //GUARDO LOS MEDIOS DE PAGOS 
+            var mp = mapper.Map<List<PaymentMethodExtern>>(medios);
+            offlineDataService.SavePaymentMethod(mp);
+
+            //OBTENER LOS INCOTERMS
+            var incoterms = await prometeoApiService.GetIncoterms(LoggedUser.Token);
+
+            //GUARDO LOS INCOTERMS
+            var inc = mapper.Map<List<IncotermExtern>>(incoterms);
+            offlineDataService.SaveIncoterms(inc);
+
+            //OBTENER FLETES PARA PEDIDO EXPORTACIÓN 
+            var fletes = await prometeoApiService.GetFreight(LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+            //GUARDO LOS FLETES
+            var freigths = mapper.Map<List<FreightInChargeExtern>>(fletes);
+            offlineDataService.SaveFreights(freigths);
+
+            //ONTENGO TODOS LOS TRANSPORTES
+            var transportes = await prometeoApiService.GetTransport(LoggedUser.Language.ToLower(), LoggedUser.Token);
+
+            //GUARDO LOS TRANSPORTES
+            var tra = mapper.Map<List<TransportExtern>>(transportes);
+            offlineDataService.SaveTransports(tra);
+
+            //SINCRONIZO LA DATA CON LOS ARCHIVOS EN LA CACHE
+            await offlineDataService.SynchronizeToDisk();
         }
+
 
         private async Task GoToOrderAsync()
         {

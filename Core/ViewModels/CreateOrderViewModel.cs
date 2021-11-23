@@ -713,13 +713,23 @@ namespace Core.ViewModels
 
 
                         await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                        await navigationService.Navigate<PedidosViewModel>();
+                        //await navigationService.Navigate<PedidosViewModel>();
                     }
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Atención", "Por Ahora no se puede modificar un Pedido de Venta.", "Aceptar");
-                    return;
+                    Order.customerId = SelectedCustomer.Id;
+                    Order.discount = OrderDiscount;
+                    Order.total = Convert.ToDecimal(Total);
+
+                    Order.PlacePayment = Place.Id;
+                    Order.RemittanceType = typeOfRemittance.Id;
+                    Order.PaymentMethodId = PaymentMethod.id;
+                    Order.commercialAssistantId = Assistant.Id;
+
+                    await prometeoApiService.UpdateOrderNote(Order, data.LoggedUser.Token);
+
+                    await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
                 }
             }
             catch (Exception e)
@@ -852,85 +862,6 @@ namespace Core.ViewModels
             }
         }
 
-        //private async void CargarEmpresas()
-        //{
-        //    try
-        //    {
-        //        var user = data.LoggedUser;
-
-        //        var red = await Connection.SeeConnection();
-
-        //        if (!red)
-        //        {
-
-        //            Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
-
-        //            if (Order != null)
-        //            {
-        //                if (order.companyId != null)
-        //                {
-        //                    if (Order.companyId > 0)
-        //                    {
-        //                        Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    Company = Companies.FirstOrDefault();
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            var mapperConfig = new MapperConfiguration(m =>
-        //            {
-        //                m.AddProfile(new MappingProfile());
-        //            });
-
-        //            IMapper mapper = mapperConfig.CreateMapper();
-
-        //            if (!offlineDataService.IsDataLoadedCompanies)
-        //            {
-        //                await offlineDataService.LoadCompanies();
-        //            }
-        //            var empresas = await offlineDataService.SearchCompanies();
-
-        //            var e = mapper.Map<List<Company>>(empresas);
-
-        //            Companies = new MvxObservableCollection<Company>(e);
-
-        //            if (Order != null)
-        //            {
-        //                if (order.companyId != null)
-        //                {
-        //                    if (Order.companyId > 0)
-        //                    {
-        //                        Company = Companies.FirstOrDefault(x => x.Id == Order.companyId);
-        //                        if (PaymentConditions.Count <= 0)
-        //                        {
-        //                            CargarCondiciones();
-        //                        }
-        //                    }                            
-        //                }
-        //                else
-        //                {
-        //                    Company = Companies.FirstOrDefault();
-        //                    //if (PaymentConditions.Count <= 0)
-        //                    //{
-        //                    //    //CargarCondiciones();
-        //                    //}
-        //                }
-        //            }
-        //        }
-
-        //    }
-        //    catch ( Exception e)
-        //    {
-        //        await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
-        //        return;
-        //    }
-        //}
-
         private void CargarEstados()
         {
             OrderStatus.Add(new OpportunityStatus { Id = 1, name = "Pendiente" });
@@ -947,7 +878,14 @@ namespace Core.ViewModels
 
                 if (theOrder.id > 0)
                 {
-                    EnableForEdit = false;
+                    if (theOrder.sentToErp)
+                    {
+                        EnableForEdit = false;
+                    }
+                    else
+                    {
+                        EnableForEdit = true;
+                    }
 
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
 
@@ -963,22 +901,6 @@ namespace Core.ViewModels
                     
                     CargarFleteCargo();
 
-                    //if (paymentMethods != null)
-                    //{
-                    //    if (PaymentMethods.Count > 0)
-                    //    {
-                    //        PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
-                    //    }
-                    //    else
-                    //    {
-                    //        CargarMedioPago();
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    CargarMedioPago();
-                    //}
-
                     CargarMedioPago();
                     SelectedCustomer.Addresses.Add(new CustomerAddress { Address = Order.DeliveryAddress });
 
@@ -986,7 +908,6 @@ namespace Core.ViewModels
 
                     CargarCondiciones();
 
-                    //Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
                     Total = Convert.ToDouble(Order.total);
                     OrderDiscount = Order.discount;
 
@@ -1154,9 +1075,6 @@ namespace Core.ViewModels
 
             Order.products.Remove(prodEdit);
 
-            //listaProd.Remove(prodEdit);
-            //listaProd.Add(editingOpportunityDetail);
-
             var product = new OrderNote.ProductOrder
             {
                 discount = editingOpportunityDetail.Discount,
@@ -1237,13 +1155,6 @@ namespace Core.ViewModels
 
                     ActualizarTotal(Order.products);
                 }
-                //if (detail != null)
-                //{
-                //    detail.product.Id = Order.products.Any() ? Order.products.Max(d => d.companyProductPresentationId) + 1 : 1;
-                //    detail.Price = detail.product.price;
-                //    detail.Total = CalcularTotal(detail);
-                    
-                //}
             }
             catch (Exception e)
             {
@@ -1251,31 +1162,6 @@ namespace Core.ViewModels
             }
         }
 
-        //private void CalcularDescuento(int orderDiscount)
-        //{
-        //    try
-        //    {
-        //        var totalTemp = Order.products.Sum(x => x.subtotal);
-
-        //        var descuento = totalTemp * orderDiscount / 100;
-
-        //        var desStr = descuento.ToString();
-
-        //        if(desStr.Contains(","))
-        //        {
-        //            ValorDescuento = double.Parse(desStr.Replace(",", "."));
-        //        }
-
-        //        ValorDescuento = descuento;
-
-        //        ActualizarTotal(Order.products);
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
-        //    }
-        //}
 
         private double CalcularTotal(OpportunityProducts detail)
         {

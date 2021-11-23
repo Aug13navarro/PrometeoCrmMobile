@@ -70,10 +70,13 @@
                         </Frame>
                         
                         <Frame Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding VerificarUsuarioCommand}"></TapGestureRecognizer>
+                            </Frame.GestureRecognizers>
                             <StackLayout Orientation="Vertical" Spacing="0">
-                                <Picker Title="{x:Static resources:AppResources.Seller}" ItemsSource="{Binding Vendors, Mode=TwoWay}" SelectedItem="{Binding Seller, Mode=TwoWay}"
-                                        ItemDisplayBinding="{Binding fullName}"
-                                        IsEnabled="{Binding IsEnableSeller}"/>
+                                <Picker Title="{x:Static resources:AppResources.Seller}" ItemsSource="{Binding Vendedores, Mode=TwoWay}" SelectedItem="{Binding Seller, Mode=TwoWay}"
+                                        ItemDisplayBinding="{Binding FullName}"
+                                        IsEnabled="{Binding IsEnableSeller}" />
                             </StackLayout>
                         </Frame>
 

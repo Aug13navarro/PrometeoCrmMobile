@@ -1,18 +1,16 @@
 ﻿using Core.Model;
 using Core.Services.Contracts;
+using Core.ViewModels.Model;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
-    public class SelectProductViewModel : MvxViewModelResult<Product>
+    public class SelectProductViewModel : MvxViewModel<DataExport,Product>
     {
         private ApplicationData data;
 
@@ -37,11 +35,18 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref query, value);
-                if (this.query == "")
+                if (string.IsNullOrWhiteSpace(query))
                 {
                     SearchQueryAsync();
                 }
             }
+        }
+
+        private int companyId;
+        public int CompanyId
+        {
+            get => companyId;
+            set => SetProperty(ref companyId, value);
         }
 
         //private List<Product> products;
@@ -66,7 +71,7 @@ namespace Core.ViewModels
 
 
         //Constant
-        private const int PageSize = 10;
+        private const int PageSize = 30;
 
         // Services
         private readonly IPrometeoApiService prometeoApiService;
@@ -85,53 +90,27 @@ namespace Core.ViewModels
             SearchQueryCommand = new Command(async () => await SearchQueryAsync());
         }
 
+        public override void Prepare(DataExport parameter)
+        {
+            CompanyId = parameter.CompanyId;
+        }
+
         private async Task SearchQueryAsync()
         {
             if (Query != null)
             {
                 var requestData = new ProductList
                 {
-                    companyId = 7,
+                    companyId = CompanyId,
                     currentPage = 1,
-                    pageSize = 50,
+                    pageSize = PageSize,
                     query = Query,
                     sort = null,
                 };
 
-                //if (Query == "")
-                //{
-                //    await SearchProductsAsync(requestData);
-                //}
-                //else
-                //{
                 await SearchProductsAsync(requestData, true);
-                //}
             }
         }
-
-        //private async void SearchQueryAsync()
-        //{
-        //    if (Query != null)
-        //    {
-        //        var requestData = new ProductList
-        //        {
-        //            companyId = 7,
-        //            currentPage = 50,
-        //            pageSize = 1,
-        //            query = Query,
-        //            sort = null,
-        //        };
-
-        //        if (Query == "")
-        //        {
-        //            await SearchProductsAsync(requestData);
-        //        }
-        //        else
-        //        {
-        //            await SearchProductsAsync(requestData, true);
-        //        }
-        //    }
-        //}
 
         public override async Task Initialize()
         {
@@ -139,15 +118,14 @@ namespace Core.ViewModels
 
             var requestData = new ProductList
             {
-                companyId = 7,
+                companyId = CompanyId,
                 currentPage = CurrentPage,
                 pageSize = PageSize,
                 query = Query,
             };
 
             await SearchProductsAsync(requestData);
-            //var listProducts = await prometeoApiService.GetAvailableProducts(requestData);
-            //Products = new MvxObservableCollection<Product>(listProducts.results);
+
         }
 
         public async Task Close(Product opportunityDetail)
@@ -163,7 +141,7 @@ namespace Core.ViewModels
         {
             var requestData = new ProductList
             {
-                companyId = 7,
+                companyId = CompanyId,
                 currentPage = CurrentPage + 1,
                 pageSize = PageSize,
                 query = Query,
@@ -185,10 +163,9 @@ namespace Core.ViewModels
                     Products.Clear();
                 }
 
+                CurrentPage = products.CurrentPage;
                 Products.AddRange(products.Results);
 
-                //CurrentPage = contacts.currentPage;
-                //TotalPages = contacts.totalPages;
             }
             catch (Exception ex)
             {

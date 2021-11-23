@@ -7,6 +7,7 @@ namespace Core.Services.Contracts
 {
     public interface IOfflineDataService
     {
+        bool IsDataLoaded { get; }
         bool IsDataLoadedCustomer { get; }
         bool IsDataLoadedCompanies { get; }
         bool IsDataLoadedPaymentConditions { get; }

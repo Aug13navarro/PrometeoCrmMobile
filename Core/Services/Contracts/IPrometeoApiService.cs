@@ -37,6 +37,7 @@ namespace Core.Services.Contracts
         Task SaveOpportunityEdit(OpportunityPost send, int id, string token, Opportunity opportunity);
         Task<IEnumerable<PaymentCondition>> GetPaymentConditions(string token, int companyId);
         Task<OrderNote> CreateOrderNote(OrderNote nuevaOrder);
+        Task<OrderNote> UpdateOrderNote(OrderNote order,string token);
         Task<PaginatedList<OrderNote>> GetOrderNote(OrdersNotesPaginatedRequest requestData, string token);
         Task<IEnumerable<OrderNote>> GetOrdersByfilter(FilterOrderModel filtro, string token);
         Task<IEnumerable<OpportunityStatus>> GetOpportunityStatus(string lang, string token);

@@ -66,10 +66,9 @@ namespace Core.ViewModels
         public IMvxAsyncCommand NewClientsSearchCommand { get; }
         public IMvxAsyncCommand<Customer> SelectCustomerCommand { get; }
 
-        //private readonly IMapper mapper;
 
         // Constants
-        private const int PageSize = 10;
+        private const int PageSize = 30;
 
         // Fields
         private readonly ApplicationData appData;
@@ -86,8 +85,6 @@ namespace Core.ViewModels
             this.navigationService = navigationService;
             this.offlineDataService = offlineDataService;
 
-            //mapper = Mvx.Resolve<IMapper>();
-            //_mapper = mapper;
 
             LoadMoreCustomersCommand = new MvxAsyncCommand(LoadMoreCustomersAsync);
             ToggleContactsVisibilityCommand = new MvxCommand<Customer>(ToggleContactsVisibility);

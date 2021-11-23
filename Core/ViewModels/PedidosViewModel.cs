@@ -1,4 +1,5 @@
-﻿using Core.Helpers;
+﻿using AutoMapper;
+using Core.Helpers;
 using Core.Model;
 using Core.Services;
 using Core.Services.Contracts;
@@ -207,10 +208,30 @@ namespace Core.ViewModels
 
                     NewOrderPopup?.Invoke(this, empresas);
                 }
-            }
-            catch
-            {
+                else
+                {
+                    var mapperConfig = new AutoMapper.MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
 
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    if(!offlineDataService.IsDataLoadedCompanies)
+                    {
+                        await offlineDataService.LoadCompanies();
+                    }
+
+                    var empresas = await offlineDataService.SearchCompanies();
+
+                    var companies = mapper.Map<List<Company>>(empresas);
+
+                    NewOrderPopup?.Invoke(this, companies);
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("Error",e.Message,"Aceptar"); return;
             }
         }
 
@@ -280,7 +301,6 @@ namespace Core.ViewModels
 
                     CurrentPage = CurrentPage++;
                     IsLoading = false;
-                    //TotalPages = opportunities.TotalPages;
                 }
                 else
                 {
@@ -301,7 +321,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                //toastService.ShowError($"{ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Aceptar"); return;
             }
             finally
             {
