@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using Core.Helpers;
-using Core.Model.Enums;
 using MvvmCross.ViewModels;
 
 namespace Core.Model
@@ -19,21 +18,13 @@ namespace Core.Model
         public DateTime createDt { get; set; }
         public DateTime closedDate { get; set; }
 
-        public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
+        public MvxObservableCollection<OpportunityProducts> oppProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
 
         public string description { get; set; }
 
-        private ClosedLostStatusCause closedLostStatusCause;
-        public ClosedLostStatusCause ClosedLostStatusCause
-        {
-            get => closedLostStatusCause;
-            set => SetProperty(ref closedLostStatusCause, value);
-        }
-
-
         public decimal totalPrice { get; set; }
 
-        public string ProductsDescription => string.Join(", ", opportunityProducts.Select(x => x.product.name));
+        public string ProductsDescription => string.Join(", ", oppProducts.Select(x => x.product.name));
 
         public MvxObservableCollection<OpportunityProducts> Details { get; set; } = new MvxObservableCollection<OpportunityProducts>();
 

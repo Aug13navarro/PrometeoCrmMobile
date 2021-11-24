@@ -24,6 +24,15 @@ namespace Core.Helpers
             CreateMap<FreightInChargeExtern, FreightInCharge>();
 
             CreateMap<TransportExtern, Transport>();
+
+            CreateMap<PaymentConditionsExtern, PaymentCondition>();
+
+            CreateMap<ProductExtern, Product>();
+
+            CreateMap<OpportunityExtern, Opportunity>()
+                .ForMember(x => x.customer, o => o.MapFrom(z => z.customer))
+                .ForMember(x => x.Company, o=> o.MapFrom(z => z.company))
+                .ForMember(x => x.opportunityStatus, o=> o.MapFrom(z => z.opportunityStatus));
         }
     }
 }

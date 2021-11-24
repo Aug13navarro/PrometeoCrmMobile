@@ -56,23 +56,17 @@ namespace Core.ViewModels
 
             if (red)
             {
-                if(offlineDataService.IsDataLoaded)
-                {
+                //if(offlineDataService.IsDataLoaded)
+                //{
                     if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "lunes")
                     {
                         CargarEnCache(LoggedUser.Language.ToLower());
                     }
-                }
-                else
-                {
-                    CargarEnCache(LoggedUser.Language.ToLower());
-                }
-
-                if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "viernes")
-                {
-
-                    
-                }
+                //}
+                //else
+                //{
+                //    CargarEnCache(LoggedUser.Language.ToLower());
+                //}
             }
             else
             {

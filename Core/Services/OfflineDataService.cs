@@ -155,10 +155,7 @@ namespace Core.Services
 
             orderNotesSearchCache.Clear();
             IsDataLoadedOrderNote = false;
-
-            opportunityStatusSearchCache.Clear();
-            IsDataLoadedOpportunityStatus = false;
-
+                        
             assistantSearchCache.Clear();
             IsDataLoadedAssistant = false;
 
@@ -173,6 +170,12 @@ namespace Core.Services
 
             transportsSearchCache.Clear();
             IsDataLoadedTransports = false;
+        }
+
+        public void UnloadOpportunities()
+        {
+            opportunityStatusSearchCache.Clear();
+            IsDataLoadedOpportunityStatus = false;
         }
 
         #region SAVE
@@ -238,61 +241,59 @@ namespace Core.Services
             }
         }
 
-        public void SaveOpportunity(Opportunity opportunity)
+        public void SaveOpportunity(OpportunityExtern opportunity)
         {
             try
             {
+                //var customerEx = new CustomerExtern
+                //{
+                //    Abbreviature = opportunity.customer.Abbreviature,
+                //    AccountOwnerId = opportunity.customer.AccountOwnerId,
+                //    AccountOwnerName = opportunity.customer.AccountOwnerName,
+                //    BusinessName = opportunity.customer.BusinessName,
+                //    CompanyName = opportunity.customer.CompanyName,
+                //    Descriptions = opportunity.customer.Descriptions,
+                //    DollarBalance = opportunity.customer.DollarBalance,
+                //    externalCustomerId = opportunity.customer.externalCustomerId.Value,
+                //    Id = opportunity.customer.Id,
+                //    IdParentCustomer = opportunity.customer.IdParentCustomer,
+                //    TaxCondition = opportunity.customer.TaxCondition,
+                //    IdNumber = opportunity.customer.IdNumber,
+                //    PesosBalance = opportunity.customer.PesosBalance,
+                //    TypeId = opportunity.customer.TypeId,
+                //    UnitBalance = opportunity.customer.UnitBalance,
+                //};
 
+                //var statusEx = new OpportunityStatusExtern
+                //{
+                //    Id = opportunity.opportunityStatus.Id,
+                //    name = opportunity.opportunityStatus.name,
+                //};
 
-                var customerEx = new CustomerExtern
-                {
-                    Abbreviature = opportunity.customer.Abbreviature,
-                    AccountOwnerId = opportunity.customer.AccountOwnerId,
-                    AccountOwnerName = opportunity.customer.AccountOwnerName,
-                    BusinessName = opportunity.customer.BusinessName,
-                    CompanyName = opportunity.customer.CompanyName,
-                    Descriptions = opportunity.customer.Descriptions,
-                    DollarBalance = opportunity.customer.DollarBalance,
-                    externalCustomerId = opportunity.customer.externalCustomerId.Value,
-                    Id = opportunity.customer.Id,
-                    IdParentCustomer = opportunity.customer.IdParentCustomer,
-                    TaxCondition = opportunity.customer.TaxCondition,
-                    IdNumber = opportunity.customer.IdNumber,
-                    PesosBalance = opportunity.customer.PesosBalance,
-                    TypeId = opportunity.customer.TypeId,
-                    UnitBalance = opportunity.customer.UnitBalance,
-                };
+                //var detail = ConvertirDetailExtern(opportunity.Details.ToList());
 
-                var statusEx = new OpportunityStatusExtern
-                {
-                    Id = opportunity.opportunityStatus.Id,
-                    name = opportunity.opportunityStatus.name,
-                };
-
-                var detail = ConvertirDetailExtern(opportunity.Details.ToList());
-
-                var opportunityEx = new OpportunityExtern
-                {
-                    customer = customerEx,
-                    Details = detail,
-                    Id = opportunity.Id,
-                    opportunityStatus = statusEx,
-                    //ProductsDescription  = opportunity.ProductsDescription,
-                    closedDate = opportunity.closedDate,
-                    createDt = opportunity.createDt,
-                    description = opportunity.description,
-                    opportunityProducts = detail,
-                    totalPrice = opportunity.totalPrice,
-                };
+                //var opportunityEx = new OpportunityExtern
+                //{
+                //    customer = customerEx,
+                //    Details = detail,
+                //    Id = opportunity.Id,
+                //    opportunityStatus = statusEx,
+                //    //ProductsDescription  = opportunity.ProductsDescription,
+                //    closedDate = opportunity.closedDate,
+                //    createDt = opportunity.createDt,
+                //    description = opportunity.description,
+                //    opportunityProducts = detail,
+                //    totalPrice = opportunity.totalPrice,
+                //};
 
                 var lista = new List<OpportunityExtern>();
-                lista.Add(opportunityEx);
+                lista.Add(opportunity);
 
                 opportunitiesSearchCache.AddRange(lista);
             }
             catch(Exception e)
             {
-                var s = e.Message;
+                throw new Exception($"Error al guardar la Oportunidad, {e.Message}");
             }
         }
 
@@ -469,8 +470,7 @@ namespace Core.Services
                 await SynchronizeItemsToDisk(customerSearchCache, MaxCustomerToSave, CustomerSearchCacheFilename);
                 await SynchronizeItemsToDisk(companySearchCache, MaxCompanyToSave, CompanySearchCacheFileNAme);
                 await SynchronizeItemsToDisk(paymentConditionsSearchCache, MaxPaymentConditions, PaymentConditionsSearchCacheFilename);
-                await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);
-                await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
+                await SynchronizeItemsToDisk(presentationsSearchCache, MaxPresentations, PresentationsSearchCacheFilename);                
                 await SynchronizeItemsToDisk(orderNotesSearchCache, MaxOrderNotes, OrderNotesSearchCacheFilename);
                 await SynchronizeItemsToDisk(opportunityStatusSearchCache, MaxOppStatus, OpportunitiesSearchCacheFilename);
                 await SynchronizeItemsToDisk(assistantSearchCache, MaxAssistant, AssistantSearchCacheFilename);
@@ -497,7 +497,7 @@ namespace Core.Services
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, CompanySearchCacheFileNAme));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, PaymentConditionsSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, PresentationsSearchCacheFilename));
-                    File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename));
+                    //File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunitiesSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OrderNotesSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, OpportunityStatusSearchCacheFilename));
                     File.Delete(Path.Combine(FileSystem.AppDataDirectory, AssistantSearchCacheFilename));
@@ -513,6 +513,12 @@ namespace Core.Services
                     throw;
                 }
             });
+        }
+
+        public async Task SynchronizeToDiskOpportunity()
+        {
+            await SynchronizeItemsToDisk(opportunitiesSearchCache, MaxOportunities, OpportunitiesSearchCacheFilename);
+            IsDataLoaded = true;
         }
 
         public async Task DeleteOpportunities()
@@ -545,114 +551,78 @@ namespace Core.Services
             return Task.FromResult(fromCache);
         }
 
-        public Task<List<PaymentCondition>> SearchPaymentConditions()
+        public Task<List<PaymentConditionsExtern>> SearchPaymentConditions()
         {
-            var lista = new List<PaymentCondition>();
-
             var fromCache = paymentConditionsSearchCache;
 
-            foreach (var item in fromCache)
-            {
-                lista.Add(new PaymentCondition
-                {
-                    abbreviature = item.abbreviature,
-                    active = item.active,
-                    baseDate = item.baseDate,
-                    code = item.code,
-                    company = item.company,
-                    companyId = item.companyId,
-                    description = item.description,
-                    id = item.id,
-                    surcharge = item.surcharge,
-                });
-            }
-
-            return Task.FromResult(lista);
+            return Task.FromResult(fromCache);
         }
 
-        public Task<List<Product>> SearchPresentations()
+        public Task<List<ProductExtern>> SearchPresentations()
         {
             try
             {
-                var lista = new List<Product>();
-
                 var fromCache = presentationsSearchCache;
 
-                foreach (var item in fromCache)
-                {
-                    lista.Add(new Product
-                    {
-                        Discount = item.Discount,
-                        Id = item.Id,
-                        name = item.name,
-                        price = item.price,
-                        quantity = item.quantity,
-                        stock = item.stock,
-                    });
-                }
-
-                return Task.FromResult(lista);
+                return Task.FromResult(fromCache);
             }
             catch(Exception e)
             {
-                var s = e.Message;
-                throw;
+                throw new Exception(e.Message);
             }
         }
 
-        public Task<List<Opportunity>> SearchOpportunities()
+        public Task<List<OpportunityExtern>> SearchOpportunities()
         {
             try
             {
-                var lista = new List<Opportunity>();
-
                 var fromCache = opportunitiesSearchCache;
 
-                foreach (var opportunity in fromCache)
-                {
-                    var customer = new Customer
-                    {
-                        Abbreviature = opportunity.customer.Abbreviature,
-                        AccountOwnerId = opportunity.customer.AccountOwnerId,
-                        AccountOwnerName = opportunity.customer.AccountOwnerName,
-                        BusinessName = opportunity.customer.BusinessName,
-                        CompanyName = opportunity.customer.CompanyName,
-                        Descriptions = opportunity.customer.Descriptions,
-                        DollarBalance = opportunity.customer.DollarBalance,
-                        externalCustomerId = opportunity.customer.externalCustomerId,
-                        Id = opportunity.customer.Id,
-                        IdParentCustomer = opportunity.customer.IdParentCustomer,
-                        TaxCondition = opportunity.customer.TaxCondition,
-                        IdNumber = opportunity.customer.IdNumber,
-                        PesosBalance = opportunity.customer.PesosBalance,
-                        TypeId = opportunity.customer.TypeId,
-                        UnitBalance = opportunity.customer.UnitBalance,
-                    };
+                //foreach (var opportunity in fromCache)
+                //{
+                //    var customer = new Customer
+                //    {
+                //        Abbreviature = opportunity.customer.Abbreviature,
+                //        AccountOwnerId = opportunity.customer.AccountOwnerId,
+                //        AccountOwnerName = opportunity.customer.AccountOwnerName,
+                //        BusinessName = opportunity.customer.BusinessName,
+                //        CompanyName = opportunity.customer.CompanyName,
+                //        Descriptions = opportunity.customer.Descriptions,
+                //        DollarBalance = opportunity.customer.DollarBalance,
+                //        externalCustomerId = opportunity.customer.externalCustomerId,
+                //        Id = opportunity.customer.Id,
+                //        IdParentCustomer = opportunity.customer.IdParentCustomer,
+                //        TaxCondition = opportunity.customer.TaxCondition,
+                //        IdNumber = opportunity.customer.IdNumber,
+                //        PesosBalance = opportunity.customer.PesosBalance,
+                //        TypeId = opportunity.customer.TypeId,
+                //        UnitBalance = opportunity.customer.UnitBalance,
+                //    };
 
-                    var status = new OpportunityStatus
-                    {
-                        Id = opportunity.opportunityStatus.Id,
-                        name = opportunity.opportunityStatus.name,
-                    };
+                //    var status = new OpportunityStatus
+                //    {
+                //        Id = opportunity.opportunityStatus.Id,
+                //        name = opportunity.opportunityStatus.name,
+                //    };
 
-                    var detail = ConvertirExternDetail(opportunity.Details);
+                //    var detail = ConvertirExternDetail(opportunity.Details);
 
-                    lista.Add(new Opportunity
-                    {
-                        customer = customer,
-                        Details = new MvvmCross.ViewModels.MvxObservableCollection<OpportunityProducts>(detail),
-                        Id = opportunity.Id,
-                        opportunityStatus = status,
-                        //ProductsDescription  = opportunity.ProductsDescription,
-                        closedDate = opportunity.closedDate,
-                        createDt = opportunity.createDt,
-                        description = opportunity.description,
-                        opportunityProducts = new MvvmCross.ViewModels.MvxObservableCollection<OpportunityProducts>(detail),
-                        totalPrice = opportunity.totalPrice,
-                    });
-                }
+                //    lista.Add(new Opportunity
+                //    {
+                //        customer = customer,
+                //        Details = new MvvmCross.ViewModels.MvxObservableCollection<OpportunityProducts>(detail),
+                //        Id = opportunity.Id,
+                //        opportunityStatus = status,
+                //        //ProductsDescription  = opportunity.ProductsDescription,
+                //        closedDate = opportunity.closedDate,
+                //        createDt = opportunity.createDt,
+                //        description = opportunity.description,
+                //        opportunityProducts = new MvvmCross.ViewModels.MvxObservableCollection<OpportunityProducts>(detail),
+                //        totalPrice = opportunity.totalPrice,
+                //    });
+                //}
 
-                return Task.FromResult(lista);
+                return Task.FromResult(fromCache);
             }
             catch (Exception e)
             {
@@ -909,7 +879,7 @@ namespace Core.Services
             }
             catch (Exception e)
             {
-                var s = e.Message;
+                throw new Exception($"Error en Presentations Offline, {e.Message}");
             }
         }
 

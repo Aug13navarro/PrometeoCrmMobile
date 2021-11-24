@@ -14,5 +14,6 @@ namespace Core.Model.Extern
         public int surcharge { get; set; }
         public DateTime? baseDate { get; set; }
         public bool active { get; set; }
+        public int? externaId { get; set; }
     }
 }

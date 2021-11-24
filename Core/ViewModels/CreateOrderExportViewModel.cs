@@ -542,6 +542,13 @@ namespace Core.ViewModels
                 }
                 else
                 {
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
                     if (!offlineDataService.IsDataLoadedPaymentConditions)
                     {
                         await offlineDataService.LoadDataPayment();
@@ -550,9 +557,11 @@ namespace Core.ViewModels
 
                     var d = data.Where(x => x.companyId == Company.Id).ToList();
 
+                    var dCache = mapper.Map<List<PaymentCondition>>(d);
+
                     if (d != null || d.Count() > 0)
                     {
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(d);
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(dCache);
                     }
 
                     if (Order != null)

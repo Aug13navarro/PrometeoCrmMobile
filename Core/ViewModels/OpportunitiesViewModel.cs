@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Core.Helpers;
 using Core.Model;
+using Core.Model.Extern;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
@@ -145,48 +148,122 @@ namespace Core.ViewModels
 
                 if (red)
                 {
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
+                    //await offlineDataService.DeleteOpportunities();
+                    offlineDataService.UnloadOpportunities();
+                    //await offlineDataService.SynchronizeToDiskOpportunity();//ELIMINAR ESTAS TRES LINEAS PARA CORRECTO FUNCIONAMIENTO
+
                     if (!offlineDataService.IsDataLoadedOpportunities)
                     {
                         await offlineDataService.LoadOpportunities();
                     }
 
-                    var opportunities = await offlineDataService.SearchOpportunities();
+                    var opportunitiesCache = await offlineDataService.SearchOpportunities();
 
-                    if (opportunities.Count > 0)
-                    {
-                        await Application.Current.MainPage.DisplayAlert(
-                            "Sincronizando", "Se avisara cuando este listo", "Aceptar");
+                    //if(opportunitiesCache.Count > 0)
+                    //{
+                    //    await Application.Current.MainPage.DisplayAlert(
+                    //        "Sincronizando", "Se avisará cuando esté listo", "Aceptar");
 
-                        foreach (var item in opportunities)
-                        {
-                            var send = new OpportunityPost
-                            {
-                                branchOfficeId = item.customer.Id,
-                                closedDate = item.createDt,
-                                closedReason = "",
-                                customerId = item.customer.Id,
-                                description = item.description,
-                                opportunityProducts = new List<OpportunityPost.ProductSend>(),
-                                opportunityStatusId = item.opportunityStatus.Id,
-                                totalPrice = Convert.ToDouble(item.totalPrice)
-                            };
+                    //    var listRemove = new List<OpportunityExtern>();
 
-                            send.opportunityProducts = listaProductos(item.Details);
+                    //    foreach (var item in opportunitiesCache)
+                    //    {
+                    //        var opportunity = mapper.Map<Opportunity>(item);
+                            
+                    //        var send = new OpportunityPost
+                    //        {
+                    //            //branchOfficeId = item.customer.Id,
+                    //            closedDate = item.createDt,
+                    //            closedReason = "",
+                    //            //customerId = item.customer.Id,
+                    //            description = item.description,
+                    //            opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                    //            //opportunityStatusId = item.opportunityStatus.Id,
+                    //            totalPrice = Convert.ToDouble(item.totalPrice),
+                    //            //companyId = item.company.Id
+                    //        };
 
-                            //await prometeoApiService.SaveOpportunityCommand(send, data.LoggedUser.Token, item);
-                        }
+                    //        send.opportunityProducts = listaProductos(opportunity.Details);
+                    //        var resultado = await prometeoApiService.SaveOpportunityCommand(send, data.LoggedUser.Token, opportunity);
 
-                        await offlineDataService.DeleteOpportunities();
-                        offlineDataService.UnloadAllData();
+                    //        if(resultado)
+                    //        {
+                    //            listRemove.Add(item);
+                    //        }
+                    //    }
 
-                        await Application.Current.MainPage.DisplayAlert(
-                            "Sincronizado", "Sincronizacion terminada", "Aceptar");
-                    }
+                    //    foreach (var item in listRemove)
+                    //    {
+                    //        opportunitiesCache.Remove(item);
+                    //    }
+
+                    //    await offlineDataService.DeleteOpportunities();
+                    //    offlineDataService.UnloadOpportunities();
+
+                    //    if (opportunitiesCache.Count > 0)
+                    //    {
+                    //        foreach (var item in opportunitiesCache)
+                    //        {
+                    //            offlineDataService.SaveOpportunity(item);
+
+                    //        }
+                    //    }
+
+                    //    await offlineDataService.SynchronizeToDiskOpportunity();
+
+                    //    await Application.Current.MainPage.DisplayAlert(
+                    //        "Sincronizado", "Sincronizacion terminada", "Aceptar");
+
+                    //    await RefreshList();
+                    //}
+
+                    //var opportunities = mapper.Map<List<Opportunity>>(opportunitiesCache);
+
+                    //if (opportunities.Count > 0)
+                    //{
+
+                    //    foreach (var item in opportunities)
+                    //    {
+                    //        var send = new OpportunityPost
+                    //        {
+                    //            branchOfficeId = item.customer.Id,
+                    //            closedDate = item.createDt,
+                    //            closedReason = "",
+                    //            customerId = item.customer.Id,
+                    //            description = item.description,
+                    //            opportunityProducts = new List<OpportunityPost.ProductSend>(),
+                    //            opportunityStatusId = item.opportunityStatus.Id,
+                    //            totalPrice = Convert.ToDouble(item.totalPrice),
+                    //            companyId = item.Company.Id
+                    //        };
+
+                    //        send.opportunityProducts = listaProductos(item.Details);
+
+                    //        await prometeoApiService.SaveOpportunityCommand(send, data.LoggedUser.Token, item);
+                    //    }
+
+                    //    await offlineDataService.DeleteOpportunities();
+                    //    offlineDataService.UnloadOpportunities();
+
+                    //    await offlineDataService.SynchronizeToDisk();
+
+                    //    await Application.Current.MainPage.DisplayAlert(
+                    //        "Sincronizado", "Sincronizacion terminada", "Aceptar");
+
+                    //    await RefreshList();
+                    //}
                 }
             }
             catch (Exception e)
             {
-
+                await Application.Current.MainPage.DisplayAlert("Error",e.Message,"Aceptar"); return;
             }
         }
 
@@ -405,17 +482,27 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
                     opportunities = await prometeoApiService.GetOp(requestData, user.Language.ToLower(), user.Token);
                 }
                 else
                 {
+                    var mapperConfig = new MapperConfiguration(m =>
+                    {
+                        m.AddProfile(new MappingProfile());
+                    });
+
+                    IMapper mapper = mapperConfig.CreateMapper();
+
                     if (!offlineDataService.IsDataLoadedOpportunities)
                     {
                         await offlineDataService.LoadOpportunities();
                     }
-                    opportunities = await offlineDataService.SearchOpportunities();
+
+                    var opportunitiesCache = await offlineDataService.SearchOpportunities();
+
+                    opportunities = mapper.Map<List<Opportunity>>(opportunitiesCache);
 
                     foreach (var item in opportunities) 
                     {
@@ -448,7 +535,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert("", ex.Message, "Aceptar");
+                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Aceptar");
             }
             finally
             {
@@ -505,7 +592,7 @@ namespace Core.ViewModels
 
         private async Task EditOpportunityAsync(Opportunity opportunity)
         {
-            opportunity.Details = new MvxObservableCollection<OpportunityProducts>(opportunity.opportunityProducts);
+            opportunity.Details = new MvxObservableCollection<OpportunityProducts>(opportunity.oppProducts);
             var createOpportunityViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOpportunityViewModel>();
 
             createOpportunityViewModel.NewOpportunityCreated += async (sender, args) => await NewOpportunitiesSearchAsync();

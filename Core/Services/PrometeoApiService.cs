@@ -447,7 +447,7 @@ namespace Core.Services
             }
         }
 
-        public async Task SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity)
+        public async Task<bool> SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity)
         {
             var cadena = "api/Opportunity";
 
@@ -461,9 +461,15 @@ namespace Core.Services
 
             var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
 
-            var resultado = await respuesta.Content.ReadAsStringAsync();
+            if (respuesta.ReasonPhrase == "Bad Request" || respuesta.ReasonPhrase == "Internal Server Error")
+            {
+                return false;
+            }
 
-            await Task.FromResult(0);
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+            return true;
+
+            //await Task.FromResult(0);
         }
 
         public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string lang, string token)

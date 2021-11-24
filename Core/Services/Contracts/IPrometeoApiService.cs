@@ -29,7 +29,7 @@ namespace Core.Services.Contracts
         Task<PaginatedList<Product>> GetAvailableProducts(ProductList productList, string token);
         //Task<PaginatedList<Opportunity>> GetOpportunities(OpportunitiesPaginatedRequest requestData);
         Task<IEnumerable<Opportunity>> GetOp(OpportunitiesPaginatedRequest requestData, string lang, string token);
-        Task SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity);
+        Task<bool> SaveOpportunityCommand(OpportunityPost opportunityPost, string token, Opportunity opportunity);
 
         Task<List<Opportunity>> GetOpportunietesTest(int userId);
         Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro,string lang, string token);

@@ -7,6 +7,7 @@ using AutoMapper;
 using Core.Helpers;
 using Core.Model;
 using Core.Model.Enums;
+using Core.Model.Extern;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.Utils;
@@ -329,7 +330,7 @@ namespace Core.ViewModels
                     customer = SelectedCustomer,
                     fecha = Opportunity.closedDate,
                     opportunityId = Opportunity.Id,
-                    Details = Opportunity.opportunityProducts,
+                    Details = Opportunity.oppProducts,
                     total = Opportunity.totalPrice,
                     oppDescription = Opportunity.description,
                     companyId = Company.Id,
@@ -390,7 +391,7 @@ namespace Core.ViewModels
                 {
                     var result = await prometeoApiService.GetOppById(theOpportunity.Id);
                     Opportunity = result;
-                    Opportunity.Details.AddRange(result.opportunityProducts);
+                    Opportunity.Details.AddRange(result.oppProducts);
 
                     //if (Companies != null && Companies.Count > 0)
                     //{
@@ -713,7 +714,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
 
                     if (id == 0)
@@ -735,14 +736,22 @@ namespace Core.ViewModels
                 {
                     if(id == 0)
                     {
+                        var mapperConfig = new MapperConfiguration(m =>
+                        {
+                            m.AddProfile(new MappingProfile());
+                        });
+
+                        IMapper mapper = mapperConfig.CreateMapper();
 
                         opportunity.totalPrice = Convert.ToDecimal(send.totalPrice);
                         opportunity.opportunityStatus.Id = send.opportunityStatusId;
                         opportunity.Company = Company;
 
-                        offlineDataService.SaveOpportunity(opportunity);
+                        var oppCache = mapper.Map<OpportunityExtern>(opportunity);
 
-                        await offlineDataService.SynchronizeToDisk();
+                        offlineDataService.SaveOpportunity(oppCache);
+
+                        await offlineDataService.SynchronizeToDiskOpportunity();
                     }
                     else
                     {

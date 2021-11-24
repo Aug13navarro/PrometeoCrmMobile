@@ -36,7 +36,10 @@ namespace Core.Services.Contracts
 
 
         void UnloadAllData();
+        void UnloadOpportunities();
+
         Task SynchronizeToDisk();
+        Task SynchronizeToDiskOpportunity();
         Task DeleteAllData();
         Task DeleteOpportunities();
 
@@ -44,7 +47,7 @@ namespace Core.Services.Contracts
         void SaveCompanySearch(List<CompanyExtern> companies);
         void SavePaymentConditions(List<PaymentCondition> paymentConditions);
         void SavePresentations(List<Product> products);
-        void SaveOpportunity(Opportunity opportunity);
+        void SaveOpportunity(OpportunityExtern opportunity);
         void SaveOrderNotes(OrderNote orderNote);
         void SaveOpportunityStatus(List<OpportunityStatusExtern> opportunityStatuses);
         void SaveAssitant(List<UserExtern> userExterns);
@@ -55,9 +58,9 @@ namespace Core.Services.Contracts
 
         Task<List<CustomerExtern>> SearchCustomers();
         Task<List<CompanyExtern>> SearchCompanies();
-        Task<List<PaymentCondition>> SearchPaymentConditions();
-        Task<List<Product>> SearchPresentations();
-        Task<List<Opportunity>> SearchOpportunities();
+        Task<List<PaymentConditionsExtern>> SearchPaymentConditions();
+        Task<List<ProductExtern>> SearchPresentations();
+        Task<List<OpportunityExtern>> SearchOpportunities();
         Task<List<OrderNote>> SearchOrderNotes();
         Task<List<OpportunityStatusExtern>> SearchOpportunityStatuses();
         Task<List<UserExtern>> SearchAssistant();
