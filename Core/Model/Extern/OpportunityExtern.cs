@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Core.Model.Extern
 {
@@ -18,7 +17,7 @@ namespace Core.Model.Extern
         public DateTime closedDate { get; set; }
 
         //public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
-        //public List<OpportunityProductsExtern> opportunityProducts { get; set; } = new List<OpportunityProductsExtern>();
+        public List<OpportunityProductsExtern> opportunityProducts { get; set; } = new List<OpportunityProductsExtern>();
 
         public string description { get; set; }
 
