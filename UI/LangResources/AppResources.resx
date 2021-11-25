@@ -117,14 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Abbreviation" xml:space="preserve">
+    <value>Abbreviation</value>
+  </data>
   <data name="Accept" xml:space="preserve">
     <value>Accept</value>
+  </data>
+  <data name="AccountOwner" xml:space="preserve">
+    <value>Account Owner</value>
   </data>
   <data name="Accounts" xml:space="preserve">
     <value>Accounts</value>
   </data>
   <data name="Add" xml:space="preserve">
     <value>Add</value>
+  </data>
+  <data name="AddCustomerType" xml:space="preserve">
+    <value>Add customer type</value>
+  </data>
+  <data name="Addresses" xml:space="preserve">
+    <value>Addresses</value>
   </data>
   <data name="Assistant" xml:space="preserve">
     <value>Commercial Assistant</value>
@@ -140,6 +152,15 @@
   </data>
   <data name="Available_Stock" xml:space="preserve">
     <value>Available Stock</value>
+  </data>
+  <data name="BalanceArg" xml:space="preserve">
+    <value>Balance AR$</value>
+  </data>
+  <data name="BalanceUnits" xml:space="preserve">
+    <value>Balance units</value>
+  </data>
+  <data name="BalanceUS" xml:space="preserve">
+    <value>Balance US$</value>
   </data>
   <data name="BranchOffice" xml:space="preserve">
     <value>Branch Office</value>
@@ -159,11 +180,20 @@
   <data name="Contacts" xml:space="preserve">
     <value>Contacts</value>
   </data>
+  <data name="CorporateCustomer" xml:space="preserve">
+    <value>Corporate Customer</value>
+  </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
+  <data name="CreateCustomer" xml:space="preserve">
+    <value>Create Customer</value>
+  </data>
   <data name="Currency" xml:space="preserve">
     <value>Currency</value>
+  </data>
+  <data name="CurrentAccount" xml:space="preserve">
+    <value>Current account</value>
   </data>
   <data name="Customer" xml:space="preserve">
     <value>Customer</value>
@@ -176,6 +206,9 @@
   </data>
   <data name="Customers" xml:space="preserve">
     <value>Customers</value>
+  </data>
+  <data name="CustomerType" xml:space="preserve">
+    <value>Customer Type</value>
   </data>
   <data name="Date" xml:space="preserve">
     <value>Date</value>
@@ -219,11 +252,26 @@
   <data name="Enter" xml:space="preserve">
     <value>LogIn</value>
   </data>
+  <data name="EnterAbbreviation" xml:space="preserve">
+    <value>Enter abbreviation</value>
+  </data>
+  <data name="EnterCompanyName" xml:space="preserve">
+    <value>Enter company name</value>
+  </data>
   <data name="EnterCustomer" xml:space="preserve">
     <value>Enter Customer</value>
   </data>
+  <data name="EnterDescription" xml:space="preserve">
+    <value>Enter Description</value>
+  </data>
   <data name="EnterEmail" xml:space="preserve">
     <value>Enter Email</value>
+  </data>
+  <data name="EnterIdNumer" xml:space="preserve">
+    <value>Enter id numer</value>
+  </data>
+  <data name="EnterRegName" xml:space="preserve">
+    <value>Enter reg. name</value>
   </data>
   <data name="ErrorLoginMsg" xml:space="preserve">
     <value>Error </value>
@@ -261,6 +309,12 @@
   <data name="Hello" xml:space="preserve">
     <value>Hello</value>
   </data>
+  <data name="IdNumber" xml:space="preserve">
+    <value>ID Number</value>
+  </data>
+  <data name="IdType" xml:space="preserve">
+    <value>ID Type</value>
+  </data>
   <data name="InfoTextCloseOpportunity" xml:space="preserve">
     <value>You must first register the opportunity to be able to close it</value>
   </data>
@@ -294,8 +348,14 @@
   <data name="NOCCustomer" xml:space="preserve">
     <value>N of OC Customer</value>
   </data>
+  <data name="NoContacts" xml:space="preserve">
+    <value>No contacts</value>
+  </data>
   <data name="NoCustomersFound" xml:space="preserve">
     <value>No customers found</value>
+  </data>
+  <data name="NoDirections" xml:space="preserve">
+    <value>No directions</value>
   </data>
   <data name="NoEditOpportunity" xml:space="preserve">
     <value>If the Opportunity is closed is not possible edit it</value>
@@ -396,6 +456,18 @@
   <data name="SelectCompany" xml:space="preserve">
     <value>Select a Company</value>
   </data>
+  <data name="SelectCondition" xml:space="preserve">
+    <value>Select a condition</value>
+  </data>
+  <data name="SelectCorporateCompany" xml:space="preserve">
+    <value>Select a corporate company</value>
+  </data>
+  <data name="SelectTypeId" xml:space="preserve">
+    <value>Select type of Id</value>
+  </data>
+  <data name="SelectUser" xml:space="preserve">
+    <value>Select a user</value>
+  </data>
   <data name="Seller" xml:space="preserve">
     <value>Seller</value>
   </data>
@@ -405,6 +477,9 @@
   <data name="State" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="TaxCondition" xml:space="preserve">
+    <value>TaxCondition</value>
+  </data>
   <data name="TotalAmount" xml:space="preserve">
     <value>Total Amount</value>
   </data>
@@ -413,6 +488,9 @@
   </data>
   <data name="User" xml:space="preserve">
     <value>User</value>
+  </data>
+  <data name="UserCompany" xml:space="preserve">
+    <value>User Company</value>
   </data>
   <data name="WithoutExternId" xml:space="preserve">
     <value>To close the opportunity, the client must be registered in the external service.</value>

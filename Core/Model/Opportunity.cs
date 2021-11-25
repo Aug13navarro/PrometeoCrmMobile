@@ -18,13 +18,13 @@ namespace Core.Model
         public DateTime createDt { get; set; }
         public DateTime closedDate { get; set; }
 
-        public MvxObservableCollection<OpportunityProducts> oppProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
+        public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
 
         public string description { get; set; }
 
         public decimal totalPrice { get; set; }
 
-        public string ProductsDescription => string.Join(", ", oppProducts.Select(x => x.product.name));
+        public string ProductsDescription => string.Join(", ", opportunityProducts.Select(x => x.product.name));
 
         public MvxObservableCollection<OpportunityProducts> Details { get; set; } = new MvxObservableCollection<OpportunityProducts>();
 

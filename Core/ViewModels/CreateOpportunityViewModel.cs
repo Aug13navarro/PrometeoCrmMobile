@@ -330,10 +330,11 @@ namespace Core.ViewModels
                     customer = SelectedCustomer,
                     fecha = Opportunity.closedDate,
                     opportunityId = Opportunity.Id,
-                    Details = Opportunity.oppProducts,
+                    Details = Opportunity.opportunityProducts,
                     total = Opportunity.totalPrice,
                     oppDescription = Opportunity.description,
                     companyId = Company.Id,
+                    company = Company,
                 };
 
                 //int customerId = await navigationService.Navigate<CustomersViewModel, int>();
@@ -391,7 +392,7 @@ namespace Core.ViewModels
                 {
                     var result = await prometeoApiService.GetOppById(theOpportunity.Id);
                     Opportunity = result;
-                    Opportunity.Details.AddRange(result.oppProducts);
+                    Opportunity.Details.AddRange(result.opportunityProducts);
 
                     //if (Companies != null && Companies.Count > 0)
                     //{

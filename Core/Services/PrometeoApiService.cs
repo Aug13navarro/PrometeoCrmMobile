@@ -246,7 +246,6 @@ namespace Core.Services
         public async Task CreateCustomer(Customer requestData)
         {
             const string url = "api/Customer";
-
             using (var request = new HttpRequestMessage(HttpMethod.Post, url))
             using (var content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json"))
             {

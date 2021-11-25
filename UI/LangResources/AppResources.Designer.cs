@@ -61,11 +61,29 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abbreviation.
+        /// </summary>
+        internal static string Abbreviation {
+            get {
+                return ResourceManager.GetString("Abbreviation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Accept.
         /// </summary>
         internal static string Accept {
             get {
                 return ResourceManager.GetString("Accept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Owner.
+        /// </summary>
+        internal static string AccountOwner {
+            get {
+                return ResourceManager.GetString("AccountOwner", resourceCulture);
             }
         }
         
@@ -84,6 +102,24 @@ namespace UI.LangResources {
         internal static string Add {
             get {
                 return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add customer type.
+        /// </summary>
+        internal static string AddCustomerType {
+            get {
+                return ResourceManager.GetString("AddCustomerType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Addresses.
+        /// </summary>
+        internal static string Addresses {
+            get {
+                return ResourceManager.GetString("Addresses", resourceCulture);
             }
         }
         
@@ -129,6 +165,33 @@ namespace UI.LangResources {
         internal static string Available_Stock {
             get {
                 return ResourceManager.GetString("Available_Stock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Balance AR$.
+        /// </summary>
+        internal static string BalanceArg {
+            get {
+                return ResourceManager.GetString("BalanceArg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Balance units.
+        /// </summary>
+        internal static string BalanceUnits {
+            get {
+                return ResourceManager.GetString("BalanceUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Balance US$.
+        /// </summary>
+        internal static string BalanceUS {
+            get {
+                return ResourceManager.GetString("BalanceUS", resourceCulture);
             }
         }
         
@@ -187,6 +250,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Corporate Customer.
+        /// </summary>
+        internal static string CorporateCustomer {
+            get {
+                return ResourceManager.GetString("CorporateCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create.
         /// </summary>
         internal static string Create {
@@ -196,11 +268,29 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create Customer.
+        /// </summary>
+        internal static string CreateCustomer {
+            get {
+                return ResourceManager.GetString("CreateCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Currency.
         /// </summary>
         internal static string Currency {
             get {
                 return ResourceManager.GetString("Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current account.
+        /// </summary>
+        internal static string CurrentAccount {
+            get {
+                return ResourceManager.GetString("CurrentAccount", resourceCulture);
             }
         }
         
@@ -237,6 +327,15 @@ namespace UI.LangResources {
         internal static string Customers {
             get {
                 return ResourceManager.GetString("Customers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Customer Type.
+        /// </summary>
+        internal static string CustomerType {
+            get {
+                return ResourceManager.GetString("CustomerType", resourceCulture);
             }
         }
         
@@ -367,6 +466,24 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter abbreviation.
+        /// </summary>
+        internal static string EnterAbbreviation {
+            get {
+                return ResourceManager.GetString("EnterAbbreviation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter company name.
+        /// </summary>
+        internal static string EnterCompanyName {
+            get {
+                return ResourceManager.GetString("EnterCompanyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter Customer.
         /// </summary>
         internal static string EnterCustomer {
@@ -376,11 +493,38 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter Description.
+        /// </summary>
+        internal static string EnterDescription {
+            get {
+                return ResourceManager.GetString("EnterDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter Email.
         /// </summary>
         internal static string EnterEmail {
             get {
                 return ResourceManager.GetString("EnterEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter id numer.
+        /// </summary>
+        internal static string EnterIdNumer {
+            get {
+                return ResourceManager.GetString("EnterIdNumer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter reg. name.
+        /// </summary>
+        internal static string EnterRegName {
+            get {
+                return ResourceManager.GetString("EnterRegName", resourceCulture);
             }
         }
         
@@ -493,6 +637,24 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ID Number.
+        /// </summary>
+        internal static string IdNumber {
+            get {
+                return ResourceManager.GetString("IdNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID Type.
+        /// </summary>
+        internal static string IdType {
+            get {
+                return ResourceManager.GetString("IdType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must first register the opportunity to be able to close it.
         /// </summary>
         internal static string InfoTextCloseOpportunity {
@@ -601,11 +763,29 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No contacts.
+        /// </summary>
+        internal static string NoContacts {
+            get {
+                return ResourceManager.GetString("NoContacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No customers found.
         /// </summary>
         internal static string NoCustomersFound {
             get {
                 return ResourceManager.GetString("NoCustomersFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No directions.
+        /// </summary>
+        internal static string NoDirections {
+            get {
+                return ResourceManager.GetString("NoDirections", resourceCulture);
             }
         }
         
@@ -898,6 +1078,42 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a condition.
+        /// </summary>
+        internal static string SelectCondition {
+            get {
+                return ResourceManager.GetString("SelectCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a corporate company.
+        /// </summary>
+        internal static string SelectCorporateCompany {
+            get {
+                return ResourceManager.GetString("SelectCorporateCompany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select type of Id.
+        /// </summary>
+        internal static string SelectTypeId {
+            get {
+                return ResourceManager.GetString("SelectTypeId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a user.
+        /// </summary>
+        internal static string SelectUser {
+            get {
+                return ResourceManager.GetString("SelectUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Seller.
         /// </summary>
         internal static string Seller {
@@ -925,6 +1141,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TaxCondition.
+        /// </summary>
+        internal static string TaxCondition {
+            get {
+                return ResourceManager.GetString("TaxCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Amount.
         /// </summary>
         internal static string TotalAmount {
@@ -948,6 +1173,15 @@ namespace UI.LangResources {
         internal static string User {
             get {
                 return ResourceManager.GetString("User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Company.
+        /// </summary>
+        internal static string UserCompany {
+            get {
+                return ResourceManager.GetString("UserCompany", resourceCulture);
             }
         }
         

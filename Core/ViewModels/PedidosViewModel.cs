@@ -200,7 +200,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     var empresas = await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
 

@@ -74,7 +74,7 @@ namespace Core.ViewModels
         public MvxObservableCollection<CustomerType> SelectedCustomerTypes { get; } = new MvxObservableCollection<CustomerType>();
 
         // Commands
-        public IMvxAsyncCommand SaveCustomerCommand { get; }
+        public Command SaveCustomerCommand { get; }
         public IMvxAsyncCommand AddAddressCommand { get; }
         public IMvxCommand<CustomerAddress> RemoveAddressCommand { get; }
         public IMvxAsyncCommand AddContactCommand { get; }
@@ -87,20 +87,17 @@ namespace Core.ViewModels
 
         // Services
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IToastService toastService;
         private readonly IMvxNavigationService navigationService;
 
         public CreateCustomerViewModel(IPrometeoApiService prometeoApiService,
-                                       IToastService toastService,
                                        ApplicationData appData,
                                        IMvxNavigationService navigationService)
         {
             this.prometeoApiService = prometeoApiService;
-            this.toastService = toastService;
             this.appData = appData;
             this.navigationService = navigationService;
 
-            SaveCustomerCommand = new MvxAsyncCommand(SaveCustomerAsync);
+            SaveCustomerCommand = new Command(async () => await SaveCustomerAsync());
             AddAddressCommand = new MvxAsyncCommand(AddAddressAsync);
             RemoveAddressCommand = new MvxCommand<CustomerAddress>(RemoveAddress);
             AddContactCommand = new MvxAsyncCommand(AddContactAsync);
@@ -131,7 +128,6 @@ namespace Core.ViewModels
                 Task<List<Company>> companiesTask = prometeoApiService.GetCompaniesByUserId(appData.LoggedUser.Id, appData.LoggedUser.Token);
 
                 await Task.WhenAll(customerTypesTask, documentTypesTask, corporativeCustomersTask, taxConditionsTask, companiesTask);
-
                 CustomerTypes = await customerTypesTask;
                 DocumentTypes = await documentTypesTask;
                 CorporativeCustomers = await corporativeCustomersTask;
@@ -140,7 +136,7 @@ namespace Core.ViewModels
             }
             catch (Exception ex)
             {
-                toastService.ShowError("Error inicializando datos. Compruebe su conexión a internet.");
+                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Aceptar"); return;
             }
             finally
             {
@@ -155,9 +151,25 @@ namespace Core.ViewModels
                 IsLoading = true;
 
                 NewCustomer.AccountOwnerId = appData.LoggedUser.Id;
-                NewCustomer.TypeId = SelectedDocumentType?.Id;
-                NewCustomer.IdParentCustomer = SelectedCorporativeCustomer?.Id;
-                NewCustomer.TaxCondition = SelectedTaxCondition?.Id;
+
+                if(string.IsNullOrWhiteSpace(NewCustomer.CompanyName)
+                    || SelectedCustomerType == null
+                    || SelectedCompany == null
+                    || string.IsNullOrWhiteSpace(NewCustomer.Abbreviature))
+                {
+                    if (appData.LoggedUser.Language.ToLower() == "es" || appData.LoggedUser.Language.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Falta ingresar datos Obligatorios.", "Aceptar"); return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept"); return;
+                    }
+                }
+
+                if (SelectedDocumentType != null) NewCustomer.TypeId = SelectedDocumentType.Id.ToString();
+                if(SelectedCorporativeCustomer != null) NewCustomer.IdParentCustomer = SelectedCorporativeCustomer?.Id;
+                if(SelectedTaxCondition != null) NewCustomer.TaxCondition = SelectedTaxCondition?.Id;
 
                 if (SelectedCompany != null)
                 {
@@ -165,17 +177,26 @@ namespace Core.ViewModels
                 }
 
                 await prometeoApiService.CreateCustomer(NewCustomer);
-                toastService.ShowOk("Cliente guardado.");
 
+                if (appData.LoggedUser.Language.ToLower() == "es" || appData.LoggedUser.Language.Contains("spanish"))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Exito", "Cliente guardado correctamente.", "Aceptar");
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Success", "Customer successfully saved.", "Acept");
+                }
+                
                 await navigationService.Close(this);
+
             }
             catch (ServiceException ex)
             {
-                toastService.ShowError(ex.Message);
+                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Acept"); return;
             }
             catch (Exception ex)
             {
-                toastService.ShowError("Error guardando cliente. Compruebe su conexión a internet.");
+                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Acept"); return;
             }
             finally
             {

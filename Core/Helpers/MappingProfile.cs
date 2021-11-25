@@ -33,7 +33,7 @@ namespace Core.Helpers
                 .ForMember(x => x.customer, o => o.MapFrom(z => z.customer))
                 .ForMember(x => x.Company, o=> o.MapFrom(z => z.company))
                 .ForMember(x => x.opportunityStatus, o=> o.MapFrom(z => z.opportunityStatus))
-                .ForMember(x => x.oppProducts, o => o.MapFrom(z => z.opportunityProducts));
+                .ForMember(x => x.opportunityProducts, o => o.MapFrom(z => z.opportunityProducts));
 
             CreateMap<OrderNoteExtern, OrderNote>()
                 .ForMember(x => x.company, o => o.MapFrom(z => z.company))

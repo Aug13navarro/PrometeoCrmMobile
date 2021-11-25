@@ -311,7 +311,7 @@ namespace Core.Services
                 var customerEx = new CustomerExtern
                 {
                     Abbreviature = orderNote.customer.Abbreviature,
-                    AccountOwnerId = orderNote.customer.AccountOwnerId,
+                    AccountOwnerId = orderNote.customer.AccountOwnerId.Value,
                     AccountOwnerName = orderNote.customer.AccountOwnerName,
                     BusinessName = orderNote.customer.BusinessName,
                     CompanyName = orderNote.customer.CompanyName,

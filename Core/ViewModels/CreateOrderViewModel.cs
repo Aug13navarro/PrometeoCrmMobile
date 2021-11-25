@@ -381,7 +381,7 @@ namespace Core.ViewModels
 
             var red = await Connection.SeeConnection();
 
-            if (!red)
+            if (red)
             {
                 var fletes = await prometeoApiService.GetTransport(lang, user.Token);
 
@@ -427,7 +427,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     var asistentes = await prometeoApiService.GetUsersByRol(Company.Id, "Asistente Comercial");
 
@@ -820,7 +820,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
 
                     var condiciones = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
@@ -839,7 +839,9 @@ namespace Core.ViewModels
                     }
                     else
                     {
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(condiciones.Where(x => x.externaId != null));
+                        var conExternal = condiciones.Where(x => x.externaId != null).ToList();
+
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(conExternal);
                     }
 
                 }

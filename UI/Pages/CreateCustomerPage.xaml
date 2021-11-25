@@ -6,6 +6,7 @@
                       xmlns:Views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
                       xmlns:ViewModels="clr-namespace:Core.ViewModels;assembly=Core"
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
+                      xmlns:resources="clr-namespace:UI.LangResources"
                       xmlns:Controls="clr-namespace:UI.Controls;assembly=UI"
                       xmlns:Behavior="clr-namespace:UI.Behavior;assembly=UI"
                       x:Class="UI.Pages.CreateCustomerPage">
@@ -20,22 +21,36 @@
     <StackLayout Spacing="0">
         <ScrollView Mvx:Bi.nd="IsVisible !IsLoading">
             <StackLayout Padding="15" Spacing="0">
-                <Label Text="Cliente" FontSize="Large" />
+                <Label Text="{x:Static resources:AppResources.Customer}" FontSize="Large" />
                 <BoxView BackgroundColor="LightGray" HeightRequest="1" />
 
-                <Label Text="Nombre" Style="{StaticResource DefaultLabel}" Margin="0,20,0,0" />
-                <Entry Placeholder="Ingrese nombre de empresa" Text="{Binding NewCustomer.CompanyName}"
+                <Label Style="{StaticResource DefaultLabel}" Margin="0,20,0,0" >
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{x:Static resources:AppResources.Name}"></Span>
+                            <Span Text="*"></Span>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Entry Placeholder="{x:Static resources:AppResources.EnterCompanyName}" Text="{Binding NewCustomer.CompanyName}"
                        Style="{StaticResource DefaultEntry}" MaxLength="50" TextChanged="OnCompanyNameTextChanged" />
 
                 <StackLayout Orientation="Horizontal">
-                    <Label Text="Tipo de Cliente" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
+                    <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" >
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{x:Static resources:AppResources.CustomerType}"></Span>
+                                <Span Text="*"></Span>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
                     <Image Source="ic_add_box.png">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding AddCustomerTypeCommand}" />
                         </Image.GestureRecognizers>
                     </Image>
                 </StackLayout>
-                <Picker Title="Agregar tipo de cliente" ItemsSource="{Binding CustomerTypes}"
+                <Picker Title="{x:Static resources:AppResources.AddCustomerType}" ItemsSource="{Binding CustomerTypes}"
                         ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedCustomerType}" Style="{StaticResource DefaultPicker}" />
                 <Controls:Repeater ItemsSource="{Binding SelectedCustomerTypes}"
                                    Mvx:Bi.nd="IsVisible And(SelectedCustomerTypes != null, SelectedCustomerTypes.Count > 0)"
@@ -58,58 +73,58 @@
                     </Controls:Repeater.ItemTemplate>
                 </Controls:Repeater>
 
-                <Label Text="Razón Social" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Entry Placeholder="Ingrese razón social" Text="{Binding NewCustomer.BusinessName}"
+                <Label Text="{x:Static resources:AppResources.BusinessName}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="{x:Static resources:AppResources.EnterRegName}" Text="{Binding NewCustomer.BusinessName}"
                        Style="{StaticResource DefaultEntry}" MaxLength="50" />
 
-                <Label Text="Abreviatura" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Entry Placeholder="Ingrese abreviatura" Text="{Binding NewCustomer.Abbreviature}"
+                <Label Text="{x:Static resources:AppResources.Abbreviation}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="{x:Static resources:AppResources.EnterAbbreviation}" Text="{Binding NewCustomer.Abbreviature}"
                        Style="{StaticResource DefaultEntry}" x:Name="abbreavitureInput" />
 
-                <Label Text="Tipo de ID" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Picker Title="Seleccione tipo de ID" ItemsSource="{Binding DocumentTypes}" ItemDisplayBinding="{Binding DocumentName}"
+                <Label Text="{x:Static resources:AppResources.IdType}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="{x:Static resources:AppResources.SelectTypeId}" ItemsSource="{Binding DocumentTypes}" ItemDisplayBinding="{Binding DocumentName}"
                         SelectedItem="{Binding SelectedDocumentType}" Style="{StaticResource DefaultPicker}" />
 
-                <Label Text="Número de ID" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Entry Placeholder="Ingrese número de ID" Text="{Binding NewCustomer.IdNumber}"
+                <Label Text="{x:Static resources:AppResources.IdNumber}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Entry Placeholder="{x:Static resources:AppResources.EnterIdNumer}" Text="{Binding NewCustomer.IdNumber}"
                        Style="{StaticResource DefaultEntry}" MaxLength="10" />
 
-                <Label Text="Cliente Corporativo" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Picker Title="Seleccione una empresa corporativa" ItemsSource="{Binding CorporativeCustomers}"
+                <Label Text="{x:Static resources:AppResources.CorporateCustomer}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="{x:Static resources:AppResources.SelectCorporateCompany}" ItemsSource="{Binding CorporativeCustomers}"
                         ItemDisplayBinding="{Binding CompanyName}" SelectedItem="{Binding SelectedCorporativeCustomer}"
                         Style="{StaticResource DefaultPicker}" />
 
-                <Label Text="Condición Tributaria" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Picker Title="Seleccione una condición" ItemsSource="{Binding TaxConditions}"
+                <Label Text="{x:Static resources:AppResources.TaxCondition}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="{x:Static resources:AppResources.SelectCondition}" ItemsSource="{Binding TaxConditions}"
                         ItemDisplayBinding="{Binding Name}" SelectedItem="{Binding SelectedTaxCondition}"
                         Style="{StaticResource DefaultPicker}" />
 
-                <Label Text="Propietario de la cuenta" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Label Text="{x:Static resources:AppResources.AccountOwner}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
                 <Entry Text="{Binding AccountOwner}" Style="{StaticResource DefaultEntry}" IsReadOnly="True" />
 
-                <Label Text="Empresa usuario" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
-                <Picker Title="Seleccione un usuario" ItemsSource="{Binding Companies}"
+                <Label Text="{x:Static resources:AppResources.UserCompany}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Picker Title="{x:Static resources:AppResources.SelectUser}" ItemsSource="{Binding Companies}"
                         ItemDisplayBinding="{Binding BusinessName}" SelectedItem="{Binding SelectedCompany}"
                         Style="{StaticResource DefaultPicker}" />
 
-                <Label Text="Cuenta Corriente" FontSize="Large" Margin="0,20,0,0" />
+                <Label Text="{x:Static resources:AppResources.CurrentAccount}" FontSize="Large" Margin="0,20,0,0" />
                 <BoxView BackgroundColor="LightGray" HeightRequest="1" />
 
-                <Label Text="Saldo US$" Style="{StaticResource DefaultLabel}" Margin="0,20,0,0" />
+                <Label Text="{x:Static resources:AppResources.BalanceUS}" Style="{StaticResource DefaultLabel}" Margin="0,20,0,0" />
                 <Entry Text="{Binding NewCustomer.DollarBalance}" Placeholder="Ingrese saldo US$" Style="{StaticResource DefaultEntry}">
                     <Entry.Behaviors>
                         <Behavior:NumericValidationBehavior />
                     </Entry.Behaviors>
                 </Entry>
 
-                <Label Text="Saldo AR$" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Label Text="{x:Static resources:AppResources.BalanceArg}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
                 <Entry Text="{Binding NewCustomer.PesosBalance}" Placeholder="Ingrese saldo AR$" Style="{StaticResource DefaultEntry}">
                     <Entry.Behaviors>
                         <Behavior:NumericValidationBehavior />
                     </Entry.Behaviors>
                 </Entry>
 
-                <Label Text="Saldo Unidades" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
+                <Label Text="{x:Static resources:AppResources.BalanceUnits}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" />
                 <Entry Text="{Binding NewCustomer.UnitBalance}" Placeholder="Ingrese saldo unidades" Style="{StaticResource DefaultEntry}">
                     <Entry.Behaviors>
                         <Behavior:NumericValidationBehavior />
@@ -117,7 +132,7 @@
                 </Entry>
 
                 <StackLayout Orientation="Horizontal">
-                    <Label Text="Direcciones" FontSize="Large" Margin="0,20,0,0" HorizontalOptions="StartAndExpand" />
+                    <Label Text="{x:Static resources:AppResources.Addresses}" FontSize="Large" Margin="0,20,0,0" HorizontalOptions="StartAndExpand" />
                     <Image Source="ic_add_box.png" WidthRequest="50">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding AddAddressCommand}" />
@@ -157,11 +172,11 @@
                         </DataTemplate>
                     </Controls:Repeater.ItemTemplate>
                 </Controls:Repeater>
-                <Label Text="No hay direcciones" Mvx:Bi.nd="IsVisible Or(!NewCustomer.Addresses, NewCustomer.Addresses.Count == 0)"
+                <Label Text="{x:Static resources:AppResources.NoDirections}" Mvx:Bi.nd="IsVisible Or(!NewCustomer.Addresses, NewCustomer.Addresses.Count == 0)"
                        Margin="0,10,0,0" HorizontalOptions="Center" />
 
                 <StackLayout Orientation="Horizontal">
-                    <Label Text="Contactos" FontSize="Large" Margin="0,20,0,0" HorizontalOptions="StartAndExpand" />
+                    <Label Text="{x:Static resources:AppResources.Contacts}" FontSize="Large" Margin="0,20,0,0" HorizontalOptions="StartAndExpand" />
                     <Image Source="ic_add_box.png" WidthRequest="50">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding AddContactCommand}" />
@@ -197,13 +212,13 @@
                         </DataTemplate>
                     </Controls:Repeater.ItemTemplate>
                 </Controls:Repeater>
-                <Label Text="No hay contactos" Mvx:Bi.nd="IsVisible Or(!NewCustomer.Contacts, NewCustomer.Contacts.Count == 0)"
+                <Label Text="{x:Static resources:AppResources.NoContacts}" Mvx:Bi.nd="IsVisible Or(!NewCustomer.Contacts, NewCustomer.Contacts.Count == 0)"
                        Margin="0,10,0,0" HorizontalOptions="Center" />
 
-                <Label Text="Descripción" FontSize="Large" Margin="0,20,0,0" />
+                <Label Text="{x:Static resources:AppResources.Description}" FontSize="Large" Margin="0,20,0,0" />
                 <BoxView BackgroundColor="LightGray" HeightRequest="1" />
 
-                <Editor Placeholder="Ingrese descripción" Style="{StaticResource DefaultEditor}"
+                <Editor Placeholder="{x:Static resources:AppResources.EnterDescription}" Style="{StaticResource DefaultEditor}"
                         AutoSize="TextChanges" Text="{Binding NewCustomer.Descriptions}" MaxLength="300" Margin="0,10,0,0" />
             </StackLayout>
         </ScrollView>

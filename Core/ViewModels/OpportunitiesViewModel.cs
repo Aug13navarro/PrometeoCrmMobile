@@ -159,12 +159,12 @@ namespace Core.ViewModels
                     offlineDataService.UnloadOpportunities();
                     //await offlineDataService.SynchronizeToDiskOpportunity();//ELIMINAR ESTAS TRES LINEAS PARA CORRECTO FUNCIONAMIENTO
 
-                    if (!offlineDataService.IsDataLoadedOpportunities)
-                    {
-                        await offlineDataService.LoadOpportunities();
-                    }
+                    //if (!offlineDataService.IsDataLoadedOpportunities)
+                    //{
+                    //    await offlineDataService.LoadOpportunities();
+                    //}
 
-                    var opportunitiesCache = await offlineDataService.SearchOpportunities();
+                    //var opportunitiesCache = await offlineDataService.SearchOpportunities();
 
                     //if(opportunitiesCache.Count > 0)
                     //{
@@ -482,7 +482,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     opportunities = await prometeoApiService.GetOp(requestData, user.Language.ToLower(), user.Token);
                 }
@@ -592,7 +592,7 @@ namespace Core.ViewModels
 
         private async Task EditOpportunityAsync(Opportunity opportunity)
         {
-            opportunity.Details = new MvxObservableCollection<OpportunityProducts>(opportunity.oppProducts);
+            opportunity.Details = new MvxObservableCollection<OpportunityProducts>(opportunity.opportunityProducts);
             var createOpportunityViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOpportunityViewModel>();
 
             createOpportunityViewModel.NewOpportunityCreated += async (sender, args) => await NewOpportunitiesSearchAsync();
