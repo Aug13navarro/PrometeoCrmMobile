@@ -839,7 +839,7 @@ namespace Core.ViewModels
                     }
                     else
                     {
-                        var conExternal = condiciones.Where(x => x.externaId != null).ToList();
+                        var conExternal = condiciones.Where(x => x.code > 0).ToList();
 
                         PaymentConditions = new MvxObservableCollection<PaymentCondition>(conExternal);
                     }

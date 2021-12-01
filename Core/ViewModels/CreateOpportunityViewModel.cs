@@ -715,7 +715,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
 
                     if (id == 0)
