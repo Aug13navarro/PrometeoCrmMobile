@@ -842,6 +842,14 @@ namespace Core.ViewModels
                         var conExternal = condiciones.Where(x => x.code > 0).ToList();
 
                         PaymentConditions = new MvxObservableCollection<PaymentCondition>(conExternal);
+
+                        if (Order != null)
+                        {
+                            if (Order.paymentConditionId > 0)
+                            {
+                                Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                            }
+                        }
                     }
 
                 }
@@ -1130,6 +1138,11 @@ namespace Core.ViewModels
             {
                 CompanyId = Company.Id,
             };
+
+            if(Company.externalErpId != null)
+            {
+                dExport.WhitExternal = true;
+            }
 
             var customer = await navigationService.Navigate<CustomersViewModel, DataExport, Customer>(dExport);
 

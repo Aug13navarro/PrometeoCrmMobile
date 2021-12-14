@@ -56,6 +56,13 @@ namespace Core.ViewModels
             set => SetProperty(ref companyId, value);
         }
 
+        private bool whitExternal;
+        public bool WhitExternal
+        {
+            get => this.whitExternal;
+            set => SetProperty(ref whitExternal, value);
+        }
+
         public int CurrentPage { get; private set; } = 1;
         public int TotalPages { get; private set; }
 
@@ -97,6 +104,7 @@ namespace Core.ViewModels
         {
             CompanyId = parameter.CompanyId;
             CustomerTypeId = parameter.CustomerTypeId;
+            WhitExternal = parameter.WhitExternal;
         }
 
         public override async Task Initialize()
@@ -187,7 +195,14 @@ namespace Core.ViewModels
                             Customers.Clear();
                         }
 
-                        Customers.AddRange(customers.Results);
+                        if (WhitExternal)
+                        {
+                            Customers.AddRange(customers.Results.Where(x => x.externalCustomerId != null));
+                        }
+                        else
+                        {
+                            Customers.AddRange(customers.Results);
+                        }
 
                         CurrentPage = customers.CurrentPage;
                         TotalPages = customers.TotalPages;

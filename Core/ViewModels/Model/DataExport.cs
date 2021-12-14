@@ -4,5 +4,6 @@
     {
         public int CompanyId { get; set; }
         public int CustomerTypeId { get; set; }
+        public bool WhitExternal { get; set; }
     }
 }

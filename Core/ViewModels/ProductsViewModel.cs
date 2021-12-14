@@ -182,9 +182,10 @@ namespace Core.ViewModels
                     }
 
                     Products.AddRange(products.Results);
+
+                    CurrentPage = products.CurrentPage;
+                    TotalPages = products.TotalPages;
                 }
-                //CurrentPage = contacts.currentPage;
-                //TotalPages = contacts.totalPages;
             }
             catch (Exception ex)
             {

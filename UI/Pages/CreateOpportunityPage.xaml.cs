@@ -137,31 +137,37 @@ namespace UI.Pages
 
                 popup.GanadaTapped += (s, args) =>
                 {
-                    if (ViewModel.SelectedCustomer.externalCustomerId > 0)
-                    {
-                        ViewModel.WinOpportunityCommand.Execute(parameter);
-                        PopupNavigation.Instance.PopAsync(false);
-                    }
-                    else
-                    {
-                        Application.Current.MainPage.DisplayAlert(
-                            AppResources.InfoTitle, AppResources.WithoutExternId, AppResources.Accept);
-                        return;
-                    }
+                    //if (ViewModel.SelectedCustomer.externalCustomerId > 0)
+                    //{
+                    //    ViewModel.WinOpportunityCommand.Execute(parameter);
+                    //    PopupNavigation.Instance.PopAsync(false);
+                    //}
+                    //else
+                    //{
+                    //    Application.Current.MainPage.DisplayAlert(
+                    //        AppResources.InfoTitle, AppResources.WithoutExternId, AppResources.Accept);
+                    //    return;
+                    //}
+
+                    ViewModel.WinOpportunityCommand.Execute(parameter);
+                    PopupNavigation.Instance.PopAsync(false);
                 };
                 popup.PerdidaTapped += (s, args) =>
                 {
-                    if (ViewModel.SelectedCustomer.externalCustomerId > 0)
-                    {
-                        ViewModel.LostOpportunityCommand.Execute(parameter);
-                        PopupNavigation.Instance.PopAsync(false);
-                    }
-                    else
-                    {
-                        Application.Current.MainPage.DisplayAlert(
-                            AppResources.InfoTitle, AppResources.WithoutExternId, AppResources.Accept);
-                        return;
-                    }
+                    //if (ViewModel.SelectedCustomer.externalCustomerId > 0)
+                    //{
+                    //    ViewModel.LostOpportunityCommand.Execute(parameter);
+                    //    PopupNavigation.Instance.PopAsync(false);
+                    //}
+                    //else
+                    //{
+                    //    Application.Current.MainPage.DisplayAlert(
+                    //        AppResources.InfoTitle, AppResources.WithoutExternId, AppResources.Accept);
+                    //    return;
+                    //}
+
+                    ViewModel.LostOpportunityCommand.Execute(parameter);
+                    PopupNavigation.Instance.PopAsync(false);
                 };
 
                 PopupNavigation.Instance.PushAsync(popup);

@@ -41,9 +41,11 @@
 
         <Grid
             RowDefinitions="*,auto"
-            ColumnDefinitions="*,auto">
+            ColumnDefinitions="*,auto"
+            VerticalOptions="FillAndExpand">
             <StackLayout 
                 Grid.Row="0" Grid.ColumnSpan="2"
+                Grid.RowSpan="2"
                 VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible And(Customers.Count == 0, !Error, !IsSearchInProgress)">
                 <Image Source="ic_no_cuenta.png" HorizontalOptions="Center"/>
                 <Label Text="{x:Static resources:AppResources.NoCustomersFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
@@ -53,8 +55,8 @@
                       Grid.Row="0"
                       Grid.ColumnSpan="2"
                       Grid.RowSpan="2"
-                  ItemsSource="{Binding Customers}"
-                  Mvx:Bi.nd="IsVisible And(Customers.Count > 0, !Error)"                  
+                  ItemsSource="{Binding Customers}"                      
+                  Mvx:Bi.nd="IsVisible And(Customers.Count > 0, !Error)"   
                   CachingStrategy="RecycleElement"
                   SelectionMode="None"
                   HasUnevenRows="True"
