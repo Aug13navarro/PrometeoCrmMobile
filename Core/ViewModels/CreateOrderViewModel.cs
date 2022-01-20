@@ -636,6 +636,8 @@ namespace Core.ViewModels
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
                     commercialAssistantId = Assistant.Id,
+                    //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
+                    
                 };
 
                 if(Condition != null)
@@ -666,7 +668,7 @@ namespace Core.ViewModels
                 else
                 {
                     nuevaOrder.opportunityId = Order.opportunityId;
-                    nuevaOrder.products = DefinirProductos(Order.Details.ToList());
+                    nuevaOrder.products = Order.products;
                 }
 
                 if (Order.id == 0)

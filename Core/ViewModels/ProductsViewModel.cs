@@ -105,7 +105,7 @@ namespace Core.ViewModels
 
         private async Task SearchQueryAsync()
         {
-            if (Query != null)
+            if (!string.IsNullOrEmpty(Query))
             {
                 CurrentPage = 1;
 

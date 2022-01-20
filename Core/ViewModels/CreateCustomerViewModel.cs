@@ -13,7 +13,7 @@ using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
-    public class CreateCustomerViewModel : MvxViewModel
+    public class CreateCustomerViewModel : MvxViewModel<Customer>
     {
         // Properties
         private bool isLoading;
@@ -72,6 +72,9 @@ namespace Core.ViewModels
         public TaxCondition SelectedTaxCondition { get; set; }
         public Company SelectedCompany { get; set; }
         public MvxObservableCollection<CustomerType> SelectedCustomerTypes { get; } = new MvxObservableCollection<CustomerType>();
+
+        // Events
+        public event EventHandler NewCustomerCreated;
 
         // Commands
         public Command SaveCustomerCommand { get; }
@@ -144,6 +147,11 @@ namespace Core.ViewModels
             }
         }
 
+        public override void Prepare(Customer parameter)
+        {
+
+        }
+
         private async Task SaveCustomerAsync()
         {
             try
@@ -176,7 +184,7 @@ namespace Core.ViewModels
                     NewCustomer.CompanyUserId.Add(SelectedCompany.Id);
                 }
 
-                await prometeoApiService.CreateCustomer(NewCustomer);
+                var cust = await prometeoApiService.CreateCustomer(NewCustomer);
 
                 if (appData.LoggedUser.Language.ToLower() == "es" || appData.LoggedUser.Language.Contains("spanish"))
                 {
@@ -188,6 +196,7 @@ namespace Core.ViewModels
                 }
                 
                 await navigationService.Close(this);
+                NewCustomerCreated?.Invoke(this, EventArgs.Empty);
 
             }
             catch (ServiceException ex)

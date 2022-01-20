@@ -18,7 +18,7 @@ namespace Core.Services.Contracts
         Task<PaginatedList<Customer>> GetCustomers(CustomersPaginatedRequest requestData);
         Task<List<Customer>> GetAllCustomer(int userId, bool isParent, int typeCustomer, string token, int companyId);
         Task<List<Customer>> GetCustomersOld(CustomersOldRequest requestData);
-        Task CreateCustomer(Customer requestData);
+        Task<Customer> CreateCustomer(Customer requestData);
         Task<List<CustomerType>> GetCustomerTypes();
         Task<List<DocumentType>> GetDocumentTypes();
         Task<List<TaxCondition>> GetTaxConditions();

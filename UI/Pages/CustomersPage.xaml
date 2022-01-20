@@ -61,7 +61,9 @@
                   SelectionMode="None"
                   HasUnevenRows="True"
                   SeparatorColor="Transparent"
-                  ItemAppearing="OnCustomersListItemAppearing">
+                  ItemAppearing="OnCustomersListItemAppearing"
+                      IsRefreshing="{Binding Refreshing}"
+                      RefreshCommand="{Binding RefreshingCommand}">
                 <!---->
                 <ListView.ItemTemplate>
                     <DataTemplate>

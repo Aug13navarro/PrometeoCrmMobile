@@ -243,33 +243,57 @@ namespace Core.Services
             }
         }
 
-        public async Task CreateCustomer(Customer requestData)
+        public async Task<Customer> CreateCustomer(Customer requestData)
         {
             const string url = "api/Customer";
-            using (var request = new HttpRequestMessage(HttpMethod.Post, url))
-            using (var content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json"))
+            //using (var request = new HttpRequestMessage(HttpMethod.Post, url))
+            //using (var content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json"))
+            //{
+            //    request.Content = content;
+            //    HttpResponseMessage result = await client.SendAsync(request);
+
+            //    if (!result.IsSuccessStatusCode)
+            //    {
+            //        if (result.StatusCode == HttpStatusCode.BadRequest)
+            //        {
+            //            using (Stream stream = await result.Content.ReadAsStreamAsync())
+            //            {
+            //                var errors = HttpClientExtensionMethods.DeserializeJsonFromStream<Dictionary<string, string[]>>(stream);
+            //                string firstError = errors.First().Value[0];
+
+            //                throw new ServiceException(firstError);
+            //            }
+            //        }
+            //        else
+            //        {
+            //            throw new InvalidOperationException();
+            //        }
+            //    }
+            //}
+
+
+            var objeto = JsonConvert.SerializeObject(requestData);
+
+            HttpContent httpContent = new StringContent(objeto);
+
+            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.PostAsync(string.Format(url), httpContent);
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            if (respuesta.ReasonPhrase == "Bad Request")
             {
-                request.Content = content;
-                HttpResponseMessage result = await client.SendAsync(request);
-
-                if (!result.IsSuccessStatusCode)
-                {
-                    if (result.StatusCode == HttpStatusCode.BadRequest)
-                    {
-                        using (Stream stream = await result.Content.ReadAsStreamAsync())
-                        {
-                            var errors = HttpClientExtensionMethods.DeserializeJsonFromStream<Dictionary<string, string[]>>(stream);
-                            string firstError = errors.First().Value[0];
-
-                            throw new ServiceException(firstError);
-                        }
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
+                throw new Exception(resultado);
             }
+
+            if (respuesta.ReasonPhrase == "Internal Server Error")
+            {
+                throw new Exception("Error al Impactar en un Servicio Externo, posiblemente el Cliente no se encuentra registrado");
+            }
+
+            return JsonConvert.DeserializeObject<Customer>(resultado);
         }
 
         public async Task<List<CustomerType>> GetCustomerTypes()
@@ -624,7 +648,7 @@ namespace Core.Services
 
                 if (respuesta.ReasonPhrase == "Internal Server Error")
                 {
-                    throw new Exception("Error al Impactar en un Servicio Externo, posiblemente el Cliente no se encuentra registrado");
+                    throw new Exception("Error al Impactar en un Servicio Externo");
                 }
 
                 return JsonConvert.DeserializeObject<OrderNote>(resultado);

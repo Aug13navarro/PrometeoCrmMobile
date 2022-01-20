@@ -10,6 +10,7 @@ using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.Commands;
+using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Xamarin.Forms;
@@ -251,7 +252,10 @@ namespace Core.ViewModels
 
         private async Task GoToCreateCustomerAsync()
         {
-            await navigationService.Navigate<CreateCustomerViewModel>();
+            var createCustomerViewMode = MvxIoCProvider.Instance.IoCConstruct<CreateCustomerViewModel>();
+
+            createCustomerViewMode.NewCustomerCreated += async (sender, arge) => await NewClientsSearchAsync();
+            await navigationService.Navigate(createCustomerViewMode,new Customer());
         }
 
         private async Task NewClientsSearchAsync()
