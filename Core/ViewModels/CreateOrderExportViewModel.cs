@@ -150,7 +150,7 @@ namespace Core.ViewModels
 
         private void ConvertirTotalStr(decimal total)
         {
-            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 TotalOfOrderStr = Total.ToString("N2", new CultureInfo("es-ES"));
             }
@@ -317,7 +317,7 @@ namespace Core.ViewModels
             {
                 var user = data.LoggedUser;
 
-                string lang = user.Language.ToLower();
+                string lang = user.Language.abbreviation.ToLower();
 
                 var red = await Connection.SeeConnection();
 
@@ -365,7 +365,7 @@ namespace Core.ViewModels
             {
                 IsLoading = true;
 
-                var lang = data.LoggedUser.Language.ToLower();
+                var lang = data.LoggedUser.Language.abbreviation.ToLower();
 
                 if(SelectedCustomer == null
                     || Condition == null
@@ -388,7 +388,7 @@ namespace Core.ViewModels
 
                 if (Order.products == null || Order.products.Count() == 0)
                 {
-                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
                         await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar productos", "Aceptar");
                         return;

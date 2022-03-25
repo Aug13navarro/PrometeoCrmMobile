@@ -50,7 +50,7 @@ namespace Core.ViewModels
 
         private async void CargarObtenerDatos()
         {
-            Identity.LanguageUser = LoggedUser.Language;
+            Identity.LanguageUser = LoggedUser.Language.abbreviation;
 
             var red = await Connection.SeeConnection();
 
@@ -60,7 +60,7 @@ namespace Core.ViewModels
                 //{
                     if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "lunes")
                     {
-                        CargarEnCache(LoggedUser.Language.ToLower());
+                        CargarEnCache(LoggedUser.Language.abbreviation.ToLower());
                     }
                 //}
                 //else
@@ -116,7 +116,7 @@ namespace Core.ViewModels
 
             //OBTENGOS LOS ESTADOS DE OPORTUNIDADES
 
-            var status = await prometeoApiService.GetOpportunityStatus(LoggedUser.Language.ToLower(), LoggedUser.Token);
+            var status = await prometeoApiService.GetOpportunityStatus(LoggedUser.Language.abbreviation.ToLower(), LoggedUser.Token);
 
             //GUARDO LOS ESTADOS 
             var s = mapper.Map<List<OpportunityStatusExtern>>(status);
@@ -154,7 +154,7 @@ namespace Core.ViewModels
 
             foreach (var item in empresas)
             {
-                var mediosPago = await prometeoApiService.GetPaymentMethod(item.Id, LoggedUser.Language.ToLower(), LoggedUser.Token);
+                var mediosPago = await prometeoApiService.GetPaymentMethod(item.Id, LoggedUser.Language.abbreviation.ToLower(), LoggedUser.Token);
 
                 medios.AddRange(mediosPago);
             }
@@ -171,14 +171,14 @@ namespace Core.ViewModels
             offlineDataService.SaveIncoterms(inc);
 
             //OBTENER FLETES PARA PEDIDO EXPORTACIÓN 
-            var fletes = await prometeoApiService.GetFreight(LoggedUser.Language.ToLower(), LoggedUser.Token);
+            var fletes = await prometeoApiService.GetFreight(LoggedUser.Language.abbreviation.ToLower(), LoggedUser.Token);
 
             //GUARDO LOS FLETES
             var freigths = mapper.Map<List<FreightInChargeExtern>>(fletes);
             offlineDataService.SaveFreights(freigths);
 
             //ONTENGO TODOS LOS TRANSPORTES
-            var transportes = await prometeoApiService.GetTransport(LoggedUser.Language.ToLower(), LoggedUser.Token);
+            var transportes = await prometeoApiService.GetTransport(LoggedUser.Language.abbreviation.ToLower(), LoggedUser.Token);
 
             //GUARDO LOS TRANSPORTES
             var tra = mapper.Map<List<TransportExtern>>(transportes);

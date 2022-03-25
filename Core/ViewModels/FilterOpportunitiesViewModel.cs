@@ -225,7 +225,7 @@ namespace Core.ViewModels
         {
             if(IsSeller)
             {
-                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
                     await Application.Current.MainPage.DisplayAlert("Atención", "No tiene permiso para obtener los vendedores.", "Aceptar"); return;
                 }
@@ -344,7 +344,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
                         await Application.Current.MainPage.DisplayAlert("Atención", "No se pudo cargar los vendedores, aseguresé de estar conectado a internet y vuelva a intentar.", "Aceptar"); return;
                     }
@@ -461,7 +461,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    if(data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
 
                         await Application.Current.MainPage.DisplayAlert("Atención","Seleccione una Empresa para poder buscar los productos", "Aceptar"); return;
@@ -486,7 +486,7 @@ namespace Core.ViewModels
 
                 if (red)
                 {
-                    var status = await prometeoApiService.GetOpportunityStatus(data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
+                    var status = await prometeoApiService.GetOpportunityStatus(data.LoggedUser.Language.abbreviation.ToLower(), data.LoggedUser.Token);
 
                     foreach (var item in status)
                     {

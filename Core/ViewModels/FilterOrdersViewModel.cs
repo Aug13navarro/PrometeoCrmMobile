@@ -60,7 +60,7 @@ namespace Core.ViewModels
 
             if (EndDate > fechaLimite)
             {
-                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
                     Application.Current.MainPage.DisplayAlert("Atención", "Puede filtrar por hasta 1 año como máximo.", "Aceptar");
                     return false;
@@ -244,7 +244,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
                         await Application.Current.MainPage.DisplayAlert("Atención", "No se pudo cargar los vendedores, aseguresé de estar conectado a internet y vuelva a intentar.", "Aceptar"); return;
                     }
@@ -264,7 +264,7 @@ namespace Core.ViewModels
         {
             var user = data.LoggedUser;
 
-            string lang = user.Language.ToLower();
+            string lang = user.Language.abbreviation.ToLower();
 
             if (lang == "es" || lang.Contains("spanish"))
             {

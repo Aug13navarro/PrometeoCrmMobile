@@ -129,7 +129,7 @@ namespace Core.ViewModels
         }
         private void ConvertirTotalStr(decimal totalOfAll)
         {
-            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 TotalStr = totalOfAll.ToString("N2", new CultureInfo("es-ES"));
             }
@@ -287,7 +287,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    if (user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
+                    if (user.Language.abbreviation.ToLower() == "es" || user.Language.abbreviation.Contains("spanish"))
                     {
                         await Application.Current.MainPage.DisplayAlert("Atención", "Debe sincronizar la oportunidad antes de cerrarla.", "aceptar");
                         return;
@@ -342,7 +342,7 @@ namespace Core.ViewModels
             }
             else
             {
-                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
                     await Application.Current.MainPage.DisplayAlert("Atención", "Debe sincronizar la oportunidad antes de cerrarla.", "aceptar");
                     return;
@@ -359,7 +359,7 @@ namespace Core.ViewModels
         {
             var user = data.LoggedUser;
 
-            string lang = user.Language.ToLower();
+            string lang = user.Language.abbreviation.ToLower();
 
             if (lang == "es" || lang.Contains("spanish"))
             {
@@ -434,7 +434,7 @@ namespace Core.ViewModels
         {
             var user = data.LoggedUser;
 
-            if (user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
+            if (user.Language.abbreviation.ToLower() == "es" || user.Language.abbreviation.Contains("spanish"))
             {
                 switch (id)
                 {

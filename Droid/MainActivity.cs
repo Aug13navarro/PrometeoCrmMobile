@@ -81,7 +81,7 @@ namespace PrometeoCrmMobile.Droid
 
             if (data.LoggedUser != null)
             {
-                string lang = data.LoggedUser.Language.ToLower();
+                string lang = data.LoggedUser.Language.abbreviation.ToLower();
 
                 if (lang == "es" || lang.Contains("spanish"))
                     language = CultureInfo.GetCultures(CultureTypes.NeutralCultures).ToList().First(element => element.EnglishName.Contains("Spanish"));

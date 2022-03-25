@@ -165,7 +165,7 @@ namespace Core.ViewModels
                     || SelectedCompany == null
                     || string.IsNullOrWhiteSpace(NewCustomer.Abbreviature))
                 {
-                    if (appData.LoggedUser.Language.ToLower() == "es" || appData.LoggedUser.Language.Contains("spanish"))
+                    if (appData.LoggedUser.Language.abbreviation.ToLower() == "es" || appData.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
                         await Application.Current.MainPage.DisplayAlert("Atención", "Falta ingresar datos Obligatorios.", "Aceptar"); return;
                     }
@@ -186,7 +186,7 @@ namespace Core.ViewModels
 
                 var cust = await prometeoApiService.CreateCustomer(NewCustomer);
 
-                if (appData.LoggedUser.Language.ToLower() == "es" || appData.LoggedUser.Language.Contains("spanish"))
+                if (appData.LoggedUser.Language.abbreviation.ToLower() == "es" || appData.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
                     await Application.Current.MainPage.DisplayAlert("Exito", "Cliente guardado correctamente.", "Aceptar");
                 }

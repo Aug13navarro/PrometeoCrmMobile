@@ -240,7 +240,7 @@ namespace Core.ViewModels
 
         private void ConvertirTotalStr(decimal total)
         {
-            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 TotalOfOrderStr = Total.ToString("N2", new CultureInfo("es-ES"));
             }
@@ -332,7 +332,7 @@ namespace Core.ViewModels
 
                 if(red)
                 {
-                    var mediosPago = await prometeoApiService.GetPaymentMethod(Company.Id, data.LoggedUser.Language.ToLower(), data.LoggedUser.Token);
+                    var mediosPago = await prometeoApiService.GetPaymentMethod(Company.Id, data.LoggedUser.Language.abbreviation.ToLower(), data.LoggedUser.Token);
 
                     if(mediosPago != null)
                     {
@@ -377,7 +377,7 @@ namespace Core.ViewModels
         {
             var user = data.LoggedUser;
 
-            string lang = user.Language.ToLower();
+            string lang = user.Language.abbreviation.ToLower();
 
             var red = await Connection.SeeConnection();
 
@@ -486,7 +486,7 @@ namespace Core.ViewModels
             }
             else
             {
-                if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                if(data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
                     await Application.Current.MainPage.DisplayAlert("Atención","Seleccione un Cliente","Aceptar");
                     return;
@@ -503,7 +503,7 @@ namespace Core.ViewModels
         {
             var user = data.LoggedUser;
 
-            string lang = user.Language.ToLower();
+            string lang = user.Language.abbreviation.ToLower();
 
             if (lang == "es" || lang.Contains("spanish"))
             {
@@ -521,7 +521,7 @@ namespace Core.ViewModels
         {
             var user = data.LoggedUser;
 
-            string lang = user.Language.ToLower();
+            string lang = user.Language.abbreviation.ToLower();
 
             if (lang == "es" || lang.Contains("spanish"))
             {
@@ -550,7 +550,7 @@ namespace Core.ViewModels
                     PaymentMethod == null ||
                     Assistant == null)
                 {
-                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
                         await Application.Current.MainPage.DisplayAlert("Atención", "Faltan ingresar datos obligatorios.", "Aceptar");
                         return;
@@ -566,7 +566,7 @@ namespace Core.ViewModels
                 {
                     if (Condition == null)
                     {
-                        if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                        if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                         {
                             await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
                             return;
@@ -584,7 +584,7 @@ namespace Core.ViewModels
                     {
                         if (Condition == null)
                         {
-                            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                             {
                                 await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
                                 return;
@@ -600,7 +600,7 @@ namespace Core.ViewModels
 
                 if(Order.products == null || Order.products.Count() == 0)
                 {
-                    if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
                         await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar productos", "Aceptar");
                         return;
@@ -748,7 +748,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+                if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
                     await Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "Aceptar");
                     return;
@@ -926,7 +926,7 @@ namespace Core.ViewModels
 
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
 
-                    AjustarEstado(user.Language, Order.orderStatus);
+                    AjustarEstado(user.Language.abbreviation, Order.orderStatus);
 
                     SelectedCustomer = Order.customer;
                     Company = Order.company;
@@ -958,7 +958,7 @@ namespace Core.ViewModels
                     Order = theOrder;
                     Order.orderStatus = 1;
 
-                    AjustarEstado(user.Language, Order.orderStatus);
+                    AjustarEstado(user.Language.abbreviation, Order.orderStatus);
 
                     if (Order.customer != null)
                     {

@@ -73,7 +73,7 @@ namespace Core.ViewModels
 
         private void ConvertirTotalStr(decimal totalOfAllOportunities)
         {
-            if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if(data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 TotalOfAllOportunitiesStr = TotalOfAllOportunities.ToString("N2", new CultureInfo("es-ES"));
             }
@@ -343,7 +343,7 @@ namespace Core.ViewModels
                     {
                         IsLoading = true;
 
-                        var opportunities = await prometeoApiService.GetOppByfilter(filtro, user.Language.ToLower(), user.Token);
+                        var opportunities = await prometeoApiService.GetOppByfilter(filtro, user.Language.abbreviation.ToLower(), user.Token);
 
                         Opportunities.Clear();
 
@@ -354,7 +354,7 @@ namespace Core.ViewModels
                     {
                         #region MODO OFFLINE
 
-                        if (user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
+                        if (user.Language.abbreviation.ToLower() == "es" || user.Language.abbreviation.Contains("spanish"))
                         {
                             await Application.Current.MainPage.DisplayAlert("Atención", "Revise su conexión a internet.", "Aceptar");
                             return;
@@ -484,7 +484,7 @@ namespace Core.ViewModels
 
                 if (red)
                 {
-                    opportunities = await prometeoApiService.GetOp(requestData, user.Language.ToLower(), user.Token);
+                    opportunities = await prometeoApiService.GetOp(requestData, user.Language.abbreviation.ToLower(), user.Token);
                 }
                 else
                 {
@@ -508,7 +508,7 @@ namespace Core.ViewModels
                     {
                         if(item.opportunityStatus.name == "" || item.opportunityStatus.name == null)
                         {
-                            if(user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
+                            if(user.Language.abbreviation.ToLower() == "es" || user.Language.abbreviation.Contains("spanish"))
                             {
                                 item.opportunityStatus.name = item.opportunityStatus.nameCacheEsp;
                             }

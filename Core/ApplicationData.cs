@@ -4,6 +4,7 @@ using System.Linq;
 using Core.Model;
 using Core.ViewModels.Model;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using Xamarin.Essentials;
 
 namespace Core
@@ -42,7 +43,7 @@ namespace Core
                         user.Email = email;
                         user.FullName = fullName;
                         user.Token = token;
-                        user.Language = language;
+                        user.Language = JsonConvert.DeserializeObject<Language>(language);
                         user.RolesStr = roles;
                         //user.Expiration = !string.IsNullOrWhiteSpace(tokenExpirationDate)
                         //                      ? DateTime.Parse(tokenExpirationDate)
@@ -116,9 +117,10 @@ namespace Core
             Preferences.Set("fullName", user.FullName, "loginData");
             Preferences.Set("email", user.Email, "loginData");
             Preferences.Set("token", user.Token, "loginData");
-            Preferences.Set("language", user.Language, "loginData");
             Preferences.Set("tokenExpirationDate", user.Expiration.ToString(), "loginData");
             Preferences.Set("roles", user.RolesStr, "loginData");
+
+            Preferences.Set("language", JsonConvert.SerializeObject(user.Language), "loginData");
 
             LoggedUser = user;
         }

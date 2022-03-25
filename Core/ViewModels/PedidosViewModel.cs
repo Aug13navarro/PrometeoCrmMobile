@@ -70,7 +70,7 @@ namespace Core.ViewModels
 
         private void ConvertirTotalStr(decimal total)
         {
-            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 TotalOfOrderStr = Total.ToString("N2", new CultureInfo("es-ES"));
             }
@@ -134,7 +134,7 @@ namespace Core.ViewModels
                 Total = OrdersNote.Sum(x => x.total);
             };
 
-            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("dd/MM/yyyy");
                 FechaFinFiltro = DateTime.Now.ToString("dd/MM/yyyy");
@@ -363,7 +363,7 @@ namespace Core.ViewModels
                     {
                         #region MODO OFFLINE
 
-                        if (user.Language.ToLower() == "es" || user.Language.Contains("spanish"))
+                        if (user.Language.abbreviation.ToLower() == "es" || user.Language.abbreviation.Contains("spanish"))
                         {
                             await Application.Current.MainPage.DisplayAlert("Atención", "Revise su conexión a internet.", "Aceptar");
                             return;

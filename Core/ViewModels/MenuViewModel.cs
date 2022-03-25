@@ -49,7 +49,7 @@ namespace Core.ViewModels
             LoggedUser = appData.LoggedUser;
 
 
-            if (LoggedUser.Language.ToLower() == "es" || LoggedUser.Language.Contains("spanish"))
+            if (LoggedUser.Language.abbreviation.ToLower() == "es" || LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"));
                 MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"));

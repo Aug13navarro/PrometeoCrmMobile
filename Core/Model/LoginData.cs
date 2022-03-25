@@ -6,6 +6,7 @@ namespace Core.Model
     {
         public int Id { get; set; }
         public string Token { get; set; }
+        public Language Language { get; set; }
         public DateTime Expiration { get; set; }
     }
 }

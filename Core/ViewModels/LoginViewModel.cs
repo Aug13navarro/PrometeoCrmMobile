@@ -110,20 +110,20 @@ namespace Core.ViewModels
                     Expiration = loginData.Expiration,
                     FullName = userData.FullName,
                     Email = userData.Email,
-                    Language = string.IsNullOrEmpty(userData.Language) ? "en" : userData.Language,
+                    Language = loginData.Language == null ? new Language { name = "English", abbreviation = "EN", id = 0 } : loginData.Language,
                 };
 
                 user.RolesStr = JsonConvert.SerializeObject(userData.Roles);
 
                 appData.SetLoggedUser(user);
-                Identity.LanguageUser = user.Language;
+                Identity.LanguageUser = user.Language.abbreviation;
 
 
 
                 //notificationService.StartListeningNotifications();
 
                 CultureInfo language;
-                string lang = user.Language.ToLower();
+                string lang = user.Language.abbreviation.ToLower();
 
                 if (lang == "es" || lang.Contains("spanish"))
                     language = CultureInfo.GetCultures(CultureTypes.NeutralCultures).ToList().First(element => element.EnglishName.Contains("Spanish"));

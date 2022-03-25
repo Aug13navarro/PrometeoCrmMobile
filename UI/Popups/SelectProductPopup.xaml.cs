@@ -58,22 +58,46 @@ namespace UI.Popups
 
         private void OkButtonClicked(object sender, EventArgs e)
         {
-            (double Price, int Quantity, int Discount) result =
+            var languages = CultureInfo.CurrentCulture.Name;
+            if (languages == "es-US")
+            {
+                (double Price, int Quantity, int Discount) result =
+                   (Price: double.Parse(priceInput.Text.Replace(",", ".")), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
+
+                if (result.Discount > 100)
+                {
+                    toastService.ShowError("El descuento no puede ser mayor a 100%.");
+                    return;
+                }
+
+                if (result.Quantity <= 0)
+                {
+                    toastService.ShowError("La cantidad deber ser 1 o mayor.");
+                    return;
+                }
+
+                OkTapped?.Invoke(this, result);
+            }
+            else
+            {
+
+                (double Price, int Quantity, int Discount) result =
                 (Price: double.Parse(priceInput.Text), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
 
-            if (result.Discount > 100)
-            {
-                toastService.ShowError("El descuento no puede ser mayor a 100%.");
-                return;
-            }
+                if (result.Discount > 100)
+                {
+                    toastService.ShowError("El descuento no puede ser mayor a 100%.");
+                    return;
+                }
 
-            if (result.Quantity <= 0)
-            {
-                toastService.ShowError("La cantidad deber ser 1 o mayor.");
-                return;
-            }
+                if (result.Quantity <= 0)
+                {
+                    toastService.ShowError("La cantidad deber ser 1 o mayor.");
+                    return;
+                }
 
-            OkTapped?.Invoke(this, result);
+                OkTapped?.Invoke(this, result);
+            }
         }
 
         private async void CancelButtonClicked(object sender, EventArgs e)
@@ -84,7 +108,7 @@ namespace UI.Popups
 
         private void PriceInputTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("es-ES"));
             }
@@ -96,7 +120,7 @@ namespace UI.Popups
 
         private void QuantityInputTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("es-ES"));
             }
@@ -108,7 +132,7 @@ namespace UI.Popups
 
         private void DiscountInputTextChanged(object sender, TextChangedEventArgs e)
         {
-            if(data.LoggedUser.Language.ToLower() == "es" || data.LoggedUser.Language.Contains("spanish"))
+            if(data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 subtotalInput.Text = ComputeTotal().ToString("N2", new CultureInfo("es-ES"));
             }
@@ -188,7 +212,11 @@ namespace UI.Popups
         {
             var index = cmbListPrice.SelectedIndex;
 
-            priceInput.Text = product.priceList[index].price.ToString();
+            var languages = CultureInfo.CurrentCulture.Name;
+            if (languages == "es-US")
+            {
+                priceInput.Text = product.priceList[index].price.ToString().Replace(".",",");
+            }
         }
     }
 }
