@@ -134,6 +134,7 @@ namespace Core.ViewModels
                 MessagingCenter.Send(this, "LangChanged", language);
 
                 await navigationService.Navigate<HomeViewModel>();
+                await navigationService.Navigate<MenuViewModel>();
             }
             catch (ServiceException ex)
             {

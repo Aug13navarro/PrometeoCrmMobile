@@ -45,14 +45,31 @@ namespace Core.Services
 
             try
             {
-                using (var request = new HttpRequestMessage(HttpMethod.Post, url))
-                using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
-                {
-                    request.Content = content;
-                    LoginData result = await client.SendAsyncAs<LoginData>(request);
+                //using (var request = new HttpRequestMessage(HttpMethod.Post, url))
+                //using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
+                //{
+                //    request.Content = content;
+                //    LoginData result = await client.SendAsyncAs<LoginData>(request);
 
-                    return result;
+                //    return result;
+                //}
+                var objeto = JsonConvert.SerializeObject(body);
+
+                HttpContent httpContent = new StringContent(objeto);
+
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.PostAsync(string.Format(url), httpContent);
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                if(respuesta.IsSuccessStatusCode)
+                {
+                    return JsonConvert.DeserializeObject<LoginData>(resultado);
                 }
+
+                return null;
             }
             catch (Exception ex)
             {

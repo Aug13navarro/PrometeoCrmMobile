@@ -150,6 +150,8 @@ namespace Core.ViewModels
         //COMANDOS
         public Command ApplyFiltersCommand { get; }
         public Command LimpiarFiltroCommand { get; }
+        public Command RestablecerFechaDesdeCommand { get; }
+        public Command RestablecerFechaHastaCommand { get; }
 
         //SERIVICIO
         private readonly IMvxNavigationService navigationService;
@@ -176,6 +178,8 @@ namespace Core.ViewModels
 
                 ApplyFiltersCommand = new Command(async () => await ApplyFilters());
                 LimpiarFiltroCommand = new Command(async () => await ClearFilter());
+                RestablecerFechaDesdeCommand = new Command(async () => await ClearFechaDesde());
+                RestablecerFechaHastaCommand = new Command(async () => await ClearFechaHasta());
 
                 BeginDate = DateTime.Now.Date.AddMonths(-6);
                 EndDate = DateTime.Now.Date;
@@ -220,6 +224,16 @@ namespace Core.ViewModels
 
             return Task.FromResult(0);
         }
+        private Task ClearFechaDesde()
+        {
+            BeginDate = DateTime.Now.Date.AddMonths(-6);
+            return Task.FromResult(0);
+        }
+        private Task ClearFechaHasta()
+        {
+            EndDate = DateTime.Now.Date;
+            return Task.FromResult(0);
+        }
 
         private async void CargarVendedores()
         {
@@ -229,16 +243,19 @@ namespace Core.ViewModels
 
                 if(red)
                 {
-                    var users = await prometeoApiService.GetUsersByRol(Company.Id, "vendedor");
-
-                    if(users != null)
+                    if (Company != null)
                     {
-                        Vendors.Clear();
-                        Vendors.AddRange(users);
+                        var users = await prometeoApiService.GetUsersByRol(Company.Id, "vendedor");
 
-                        if(SellerGuardado != null)
+                        if (users != null)
                         {
-                            Seller = Vendors.FirstOrDefault(x => x.Id == SellerGuardado.Id);
+                            Vendors.Clear();
+                            Vendors.AddRange(users);
+
+                            if (SellerGuardado != null)
+                            {
+                                Seller = Vendors.FirstOrDefault(x => x.Id == SellerGuardado.Id);
+                            }
                         }
                     }
                 }

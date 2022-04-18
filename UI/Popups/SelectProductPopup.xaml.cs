@@ -59,7 +59,7 @@ namespace UI.Popups
         private void OkButtonClicked(object sender, EventArgs e)
         {
             var languages = CultureInfo.CurrentCulture.Name;
-            if (languages == "es-US")
+            if (languages.Contains("US"))
             {
                 (double Price, int Quantity, int Discount) result =
                    (Price: double.Parse(priceInput.Text.Replace(",", ".")), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
@@ -213,10 +213,12 @@ namespace UI.Popups
             var index = cmbListPrice.SelectedIndex;
 
             var languages = CultureInfo.CurrentCulture.Name;
-            if (languages == "es-US")
-            {
-                priceInput.Text = product.priceList[index].price.ToString().Replace(".",",");
-            }
+            priceInput.Text = product.priceList[index].price.ToString().Replace(".", ",");
+
+            //if (languages == "es-US")
+            //{
+            //    priceInput.Text = product.priceList[index].price.ToString().Replace(".",",");
+            //}
         }
     }
 }

@@ -101,15 +101,26 @@
 
                     </Label>
                     <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
-                        <DatePicker
+                                <StackLayout
+                                    Orientation="Horizontal">
+
+                                    <DatePicker
                             Date="{Binding BeginDate}"
                             Format="dd/MM/yyyy"
-                            MaximumDate="{Binding MaximumDate}">
+                            MaximumDate="{Binding MaximumDate}"
+                                        HorizontalOptions="FillAndExpand">
 
-                        </DatePicker>
+                                    </DatePicker>
+                                    <ImageButton
+                                        Source="ic_close.png"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding RestablecerFechaDesdeCommand}">
+                                        
+                                    </ImageButton>
+                                </StackLayout>
                     </Frame>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal"
+                        </StackLayout><!--Fecha Desde-->
+                        <StackLayout Orientation="Horizontal"
                              Grid.Row="4"
                              Grid.ColumnSpan="2">
                     <Label Style="{StaticResource DefaultLabel}"
@@ -118,14 +129,25 @@
 
                     </Label>
                     <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
-                        <DatePicker
+                                <StackLayout
+                                    Orientation="Horizontal">
+
+                                    <DatePicker
                             Format="dd/MM/yyyy"
                             Date="{Binding EndDate}"
-                            MaximumDate="{Binding MaximumDate}">
+                            MaximumDate="{Binding MaximumDate}"
+                                        HorizontalOptions="FillAndExpand">
 
-                        </DatePicker>
+                                    </DatePicker>
+                                    <ImageButton
+                                        Source="ic_close.png"
+                                        BackgroundColor="Transparent"
+                                        Command="{Binding RestablecerFechaHastaCommand}">
+
+                                    </ImageButton>
+                                </StackLayout>
                     </Frame>
-                </StackLayout>
+                </StackLayout><!--Fecha Hasta-->
                 <StackLayout Orientation="Horizontal"
                              Grid.Row="5"
                              Grid.ColumnSpan="2">
@@ -137,8 +159,11 @@
                     <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
                         <Entry
                                 Keyboard="Numeric"
-                                Text="{Binding TotalDesde, Mode=TwoWay}"
+                                x:Name="txtFromPrice"
+                            TextChanged="txtFromPrice_TextChanged"
+                            Text="{Binding TotalDesde, Mode=TwoWay}"
                                 HorizontalTextAlignment="End">
+                                    <!---->
 
                         </Entry>
                     </Frame>
@@ -154,8 +179,11 @@
                     <Frame Margin="0" Padding="0" HorizontalOptions="FillAndExpand">
                         <Entry
                                     Keyboard="Numeric"
-                                Text="{Binding TotalHasta, Mode=TwoWay}"
+                            x:Name="txtEndPrice"
+                                TextChanged="txtEndPrice_TextChanged"
+                            Text="{Binding TotalHasta, Mode=TwoWay}"
                                 HorizontalTextAlignment="End">
+                                    <!--Text="{Binding TotalHasta, Mode=TwoWay}"-->
 
                         </Entry>
                     </Frame>

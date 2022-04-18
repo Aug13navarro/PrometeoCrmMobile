@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Core.Services.Contracts;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
@@ -38,7 +39,13 @@ namespace Core.ViewModels
 
                 //await navigationService.Navigate<MenuViewModel>();
                 await navigationService.Navigate<LoginViewModel>();
-                await navigationService.Navigate<MenuViewModel>();//se necesita para que ande en iOs, probar si va antes o despues de Login
+
+                var disp = Device.RuntimePlatform;
+
+                if (Device.RuntimePlatform == "iOs")
+                {
+                    await navigationService.Navigate<MenuViewModel>();//se necesita para que ande en iOs, probar si va antes o despues de Login
+                }
             }
             else
             {
