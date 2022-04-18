@@ -535,7 +535,8 @@ namespace Core.ViewModels
                     products = new List<prod>(),
                     companies = new List<comp>(),
                     priceFrom = TotalDesde,
-                    priceTo = TotalHasta
+                    priceTo = TotalHasta,
+                    userId = data.LoggedUser.Id,
                 };
 
                 if (customer != null) filtro.customers.Add(new cust { id = customer.Id });
