@@ -62,12 +62,12 @@ namespace Core.ViewModels
             {
                 if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
-                    Application.Current.MainPage.DisplayAlert("Atención", "Puede filtrar por hasta 1 año como máximo.", "Aceptar");
+                    Application.Current.MainPage.DisplayAlert("Atención", "Se puede aplicar el filtro hasta un año como maximo.", "Aceptar");
                     return false;
                 }
                 else
                 {
-                    Application.Current.MainPage.DisplayAlert("Atention", "You can filter for up to 1 year maximum.", "Acept");
+                    Application.Current.MainPage.DisplayAlert("Atention", "The filter can be applied up to a maximum of one year.", "Acept");
                     return false;
                 }
             }
@@ -221,6 +221,7 @@ namespace Core.ViewModels
             IndexStatus = -1;
             TotalDesde = 0;
             TotalHasta = 0;
+            Seller = null;
 
             return Task.FromResult(0);
         }

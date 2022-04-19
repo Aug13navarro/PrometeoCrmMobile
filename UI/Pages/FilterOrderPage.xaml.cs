@@ -22,54 +22,61 @@ namespace UI.Pages
             var language = CultureInfo.CurrentCulture.Name;
             var entri = (Entry)sender;
 
-            if(language.Contains("US"))
+            if (!string.IsNullOrWhiteSpace(entri.Text))
             {
-                var sinCaracter = entri.Text.Replace(",", "");
-
-                if(sinCaracter.Length > 6)
+                if (language.Contains("US"))
                 {
-                    var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
-                    var miles = sinCaracter.Substring(sinCaracter.Length - 6,3);
-                    var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+                    var sinCaracter = entri.Text.Replace(",", "");
 
-                    txtEndPrice.Text = $"{millones},{miles},{unidades}";
+                    if (sinCaracter.Length > 6)
+                    {
+                        var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
+                        var miles = sinCaracter.Substring(sinCaracter.Length - 6, 3);
+                        var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+
+                        txtEndPrice.Text = $"{millones},{miles},{unidades}";
+                    }
+                    else
+                    {
+                        if (sinCaracter.Length > 3)
+                        {
+                            var miles = sinCaracter.Substring(0, sinCaracter.Length - 3);
+                            var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+
+                            txtEndPrice.Text = $"{miles},{unidades}";
+                        }
+                    }
+
+
+                    ViewModel.TotalHasta = Convert.ToDouble(sinCaracter);
                 }
                 else
                 {
-                    if(sinCaracter.Length > 3)
+                    var sinCaracter = entri.Text.Replace(".", "");
+
+                    if (sinCaracter.Length > 6)
+                    {
+                        var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
+                        var miles = sinCaracter.Substring(sinCaracter.Length - 6, 3);
+                        var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+
+                        txtEndPrice.Text = $"{millones}.{miles}.{unidades}";
+                    }
+                    else if (sinCaracter.Length > 3)
                     {
                         var miles = sinCaracter.Substring(0, sinCaracter.Length - 3);
                         var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
 
-                        txtEndPrice.Text = $"{miles},{unidades}";
+                        txtEndPrice.Text = $"{miles}.{unidades}";
                     }
+
+
+                    ViewModel.TotalHasta = Convert.ToDouble(sinCaracter);
                 }
-
-
-                ViewModel.TotalHasta = Convert.ToDouble(sinCaracter);
             }
             else
             {
-                var sinCaracter = entri.Text.Replace(".", "");
-
-                if (sinCaracter.Length > 6)
-                {
-                    var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
-                    var miles = sinCaracter.Substring(sinCaracter.Length - 6, 3);
-                    var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
-
-                    txtEndPrice.Text = $"{millones}.{miles}.{unidades}";
-                }
-                else if (sinCaracter.Length > 3)
-                {
-                    var miles = sinCaracter.Substring(0, sinCaracter.Length - 3);
-                    var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
-
-                    txtEndPrice.Text = $"{miles}.{unidades}";
-                }
-
-
-                ViewModel.TotalHasta = Convert.ToDouble(sinCaracter);
+                ViewModel.TotalHasta = 0;
             }
         }
 
@@ -78,54 +85,61 @@ namespace UI.Pages
             var language = CultureInfo.CurrentCulture.Name;
             var entri = (Entry)sender;
 
-            if (language.Contains("US"))
+            if (!string.IsNullOrWhiteSpace(entri.Text))
             {
-                var sinCaracter = entri.Text.Replace(",", "");
-
-                if (sinCaracter.Length > 6)
+                if (language.Contains("US"))
                 {
-                    var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
-                    var miles = sinCaracter.Substring(sinCaracter.Length - 6, 3);
-                    var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+                    var sinCaracter = entri.Text.Replace(",", "");
 
-                    txtFromPrice.Text = $"{millones},{miles},{unidades}";
+                    if (sinCaracter.Length > 6)
+                    {
+                        var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
+                        var miles = sinCaracter.Substring(sinCaracter.Length - 6, 3);
+                        var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+
+                        txtFromPrice.Text = $"{millones},{miles},{unidades}";
+                    }
+                    else
+                    {
+                        if (sinCaracter.Length > 3)
+                        {
+                            var miles = sinCaracter.Substring(0, sinCaracter.Length - 3);
+                            var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+
+                            txtFromPrice.Text = $"{miles},{unidades}";
+                        }
+                    }
+
+
+                    ViewModel.TotalDesde = Convert.ToDouble(sinCaracter);
                 }
                 else
                 {
-                    if (sinCaracter.Length > 3)
+                    var sinCaracter = entri.Text.Replace(".", "");
+
+                    if (sinCaracter.Length > 6)
+                    {
+                        var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
+                        var miles = sinCaracter.Substring(sinCaracter.Length - 6, 3);
+                        var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
+
+                        txtFromPrice.Text = $"{millones}.{miles}.{unidades}";
+                    }
+                    else if (sinCaracter.Length > 3)
                     {
                         var miles = sinCaracter.Substring(0, sinCaracter.Length - 3);
                         var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
 
-                        txtFromPrice.Text = $"{miles},{unidades}";
+                        txtFromPrice.Text = $"{miles}.{unidades}";
                     }
+
+
+                    ViewModel.TotalDesde = Convert.ToDouble(sinCaracter);
                 }
-
-
-                ViewModel.TotalDesde = Convert.ToDouble(sinCaracter);
             }
             else
             {
-                var sinCaracter = entri.Text.Replace(".", "");
-
-                if (sinCaracter.Length > 6)
-                {
-                    var millones = sinCaracter.Substring(0, sinCaracter.Length - 6);
-                    var miles = sinCaracter.Substring(sinCaracter.Length - 6, 3);
-                    var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
-
-                    txtFromPrice.Text = $"{millones}.{miles}.{unidades}";
-                }
-                else if (sinCaracter.Length > 3)
-                {
-                    var miles = sinCaracter.Substring(0, sinCaracter.Length - 3);
-                    var unidades = sinCaracter.Substring(sinCaracter.Length - 3, 3);
-
-                    txtFromPrice.Text = $"{miles}.{unidades}";
-                }
-
-
-                ViewModel.TotalDesde = Convert.ToDouble(sinCaracter);
+                ViewModel.TotalDesde = 0;
             }
         }
     }
