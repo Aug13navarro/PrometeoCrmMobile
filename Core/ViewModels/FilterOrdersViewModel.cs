@@ -122,6 +122,12 @@ namespace Core.ViewModels
             get => isEnableSeller;
             set => SetProperty(ref isEnableSeller, value);
         }
+        private Color enableColor;
+        public Color EnableColor
+        {
+            get => enableColor;
+            set => SetProperty(ref enableColor, value);
+        }
 
         //private MvxObservableCollection<Company> companies;
         public MvxObservableCollection<Company> Companies { get; set; } = new MvxObservableCollection<Company>();
@@ -189,6 +195,7 @@ namespace Core.ViewModels
                 CargarCompanies();
 
                 IsEnableSeller = true;
+                EnableColor = Color.White;
 
                 VerificarRol(data.LoggedUser.RolesStr);
             }
@@ -207,6 +214,7 @@ namespace Core.ViewModels
                 if (item.Name == "Vendedor")
                 {
                     IsEnableSeller = false;
+                    EnableColor = Color.LightGray;
                     break;
                 }
             }

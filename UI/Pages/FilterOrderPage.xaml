@@ -64,7 +64,8 @@
 
                     </Label>
                     <Frame Margin="0" Padding="0"
-                           HorizontalOptions="FillAndExpand">
+                           HorizontalOptions="FillAndExpand"
+                           BackgroundColor="{Binding EnableColor}">
                         <Picker
                             IsEnabled="{Binding IsEnableSeller}"
                             Title="{x:Static resources:AppResources.Seller}"
