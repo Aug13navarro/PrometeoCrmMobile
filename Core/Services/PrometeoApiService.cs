@@ -64,12 +64,12 @@ namespace Core.Services
 
                 var resultado = await respuesta.Content.ReadAsStringAsync();
 
-                if(respuesta.IsSuccessStatusCode)
-                {
+                //if(respuesta.IsSuccessStatusCode)
+                //{
                     return JsonConvert.DeserializeObject<LoginData>(resultado);
-                }
+                //}
 
-                return null;
+                //return null;
             }
             catch (Exception ex)
             {
@@ -615,30 +615,43 @@ namespace Core.Services
 
         public async Task<OrderNote> CreateOrderNote(OrderNote nuevaOrder)
         {
-            var cadena = "/api/OpportunityOrderNote/CreateOpportunityOrderNoteAsync";
-
-            var objeto = JsonConvert.SerializeObject(nuevaOrder);
-
-            HttpContent httpContent = new StringContent(objeto);
-
-            httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-
-            var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
-
-            var resultado = await respuesta.Content.ReadAsStringAsync();
-
-            if (respuesta.ReasonPhrase == "Bad Request")
+            try
             {
-                throw new Exception(resultado);
-            }
+                var cadena = "/api/OpportunityOrderNote/CreateOpportunityOrderNoteAsync";
 
-            if (respuesta.ReasonPhrase == "Internal Server Error")
+                var objeto = JsonConvert.SerializeObject(nuevaOrder);
+
+                HttpContent httpContent = new StringContent(objeto);
+
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                    return JsonConvert.DeserializeObject<OrderNote>(resultado);
+                }
+                else
+                {
+                    throw new Exception("Tenemos problemas para procesar su solicitud. Contacte al administrador del sistema");
+                }
+                //if (respuesta.ReasonPhrase == "Bad Request")
+                //{
+                //    throw new Exception(resultado);
+                //}
+
+                //if (respuesta.ReasonPhrase == "Internal Server Error")
+                //{
+                //    throw new Exception("Error al Impactar en un Servicio Externo, posiblemente el Cliente no se encuentra registrado");
+                //}
+            }
+            catch (Exception e)
             {
-                throw new Exception("Error al Impactar en un Servicio Externo, posiblemente el Cliente no se encuentra registrado");
+                throw new Exception($"Tenemos problemas para procesar su solicitud - {e.Message}");
             }
-
-            return JsonConvert.DeserializeObject<OrderNote>(resultado);
         }
 
         public async Task<OrderNote> UpdateOrderNote(OrderNote order, string token)
@@ -656,24 +669,35 @@ namespace Core.Services
 
                 var respuesta = await client.PutAsync(string.Format(url), httpContent);
 
-                var resultado = await respuesta.Content.ReadAsStringAsync();
+                //var resultado = await respuesta.Content.ReadAsStringAsync();
                 
-                if (respuesta.ReasonPhrase == "Bad Request")
-                {
-                    throw new Exception(resultado);
-                }
+                //if (respuesta.ReasonPhrase == "Bad Request")
+                //{
+                //    throw new Exception(resultado);
+                //}
 
-                if (respuesta.ReasonPhrase == "Internal Server Error")
-                {
-                    throw new Exception("Error al Impactar en un Servicio Externo");
-                }
+                //if (respuesta.ReasonPhrase == "Internal Server Error")
+                //{
+                //    throw new Exception("Error al Impactar en un Servicio Externo");
+                //}
 
-                return JsonConvert.DeserializeObject<OrderNote>(resultado);
+                //return JsonConvert.DeserializeObject<OrderNote>(resultado);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                    return JsonConvert.DeserializeObject<OrderNote>(resultado);
+                }
+                else
+                {
+                    throw new Exception("Tenemos problemas para procesar su solicitud. Contacte al administrador del sistema");
+                }
 
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception($"Tenemos problemas para procesar su solicitud - {e.Message}");
             }
 
         }

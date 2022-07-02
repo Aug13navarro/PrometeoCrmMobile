@@ -20,7 +20,6 @@ namespace Core.ViewModels
     public class LoginViewModel : MvxViewModel
     {
         // Properties
-        //private string userName = "fladino@docworld.com.ar";
         private string userName;
         public string UserName
         {
@@ -101,6 +100,14 @@ namespace Core.ViewModels
                 }
 
                 LoginData loginData = await prometeoApiService.Login(UserName, Password);
+
+                if (loginData.Id == 0)
+                {
+                    //Application.Current.MainPage.DisplayAlert()
+                    MessagingCenter.Send(this, "invalidCredentials");
+                    return;
+                }
+
                 UserData userData = await prometeoApiService.GetUserData(loginData.Id);
 
                 var user = new User()
