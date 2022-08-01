@@ -72,8 +72,8 @@ namespace UI.Pages
 
                     if (ViewModel.OrderDiscount > 0)
                     {
-                        ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
-                        lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N2");
+                        ViewModel.ValorDescuento = (ViewModel.Total * ViewModel.OrderDiscount / 100).ToString("N2");
+                        lblDiscountResult.Text = ViewModel.ValorDescuento;
 
                         ViewModel.ActualizarTotal(ViewModel.Order.products);
                     }
@@ -84,7 +84,7 @@ namespace UI.Pages
                     {
                         ViewModel.ResetTotal(ViewModel.Order.products);
 
-                        if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
+                        if (ViewModel.OrderDiscount == 0)
                         {
                             ViewModel.OrderDiscount = 0;
                             lblDiscountResult.Text = 0.ToString();
@@ -94,13 +94,18 @@ namespace UI.Pages
                         {
                             var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
 
-                            var descuento = Convert.ToDouble($"0.{o}");
+                            //var descuento = Convert.ToDouble($"0.{o}");
 
-                            ViewModel.ValorDescuento = ViewModel.Total * descuento;
-                            lblDiscountResult.Text = ViewModel.ValorDescuento.ToString("N2");
+                            ViewModel.ValorDescuento = (ViewModel.Total * Convert.ToDouble(lblOrderDiscount.Text) / 100).ToString().Replace(".",",");
+                            lblDiscountResult.Text = ViewModel.ValorDescuento;
 
                             ViewModel.ActualizarTotal(ViewModel.Order.products);
                         }
+                    }
+                    else
+                    {
+                        ViewModel.OrderDiscount = 0;
+                        lblDiscountResult.Text = 0.ToString();
                     }
                 }
             }
