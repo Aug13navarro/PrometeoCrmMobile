@@ -1201,7 +1201,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "aceptar"); return;
             }
         }
 
@@ -1210,7 +1210,7 @@ namespace Core.ViewModels
             try
             {
                 var totalPro = Order.products.Sum(x => x.subtotal);
-                var str = (totalPro * OrderDiscount / 100).ToString();
+                var str = (totalPro * OrderDiscount / 100).ToString("N2");
                 if (data.LoggedUser.Language.name.ToLower().Contains("es"))
                 {
                     ValorDescuento = str.Replace(".",",");
@@ -1237,7 +1237,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "aceptar"); return;
             }
         }
 
@@ -1262,7 +1262,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "aceptar"); return;
             }
         }
 
@@ -1283,10 +1283,14 @@ namespace Core.ViewModels
         {
             try
             {
-                //if (data.LoggedUser.Language.name.ToLower().Contains("es"))
-                //{
-                    Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento.Replace(",","."));
-                //}
+                if (valorDescuento != null)
+                {
+                    Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento.Replace(",", "."));
+                }
+                else
+                {
+                    Total = details.Sum(x => x.subtotal);
+                }
             }
             catch (Exception e)
             {
