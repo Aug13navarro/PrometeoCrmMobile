@@ -1285,7 +1285,14 @@ namespace Core.ViewModels
             {
                 if (valorDescuento != null)
                 {
-                    Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento.Replace(",", "."));
+                    if (data.LoggedUser.Language.name.ToLower().Contains("en"))
+                    {
+                        Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento.Replace(",", "."));
+                    }
+                    else
+                    {
+                        Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento);
+                    }
                 }
                 else
                 {
