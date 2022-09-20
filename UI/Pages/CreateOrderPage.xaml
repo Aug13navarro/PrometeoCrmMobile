@@ -221,7 +221,7 @@
                                 Margin="0"
                                 Padding="0"
                                 HorizontalOptions="FillAndExpand">
-                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Opportunity.createDt}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
+                                <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Order.fecha}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
                             </Frame>
                             <Label
                                 Style="{StaticResource DefaultLabel}"
@@ -528,8 +528,8 @@
                             <Label.FormattedText>
                                 <FormattedString>
                                     <Span Text="-US$ " FontAttributes="Bold"></Span>
-                                    <Span FontAttributes="Bold" x:Name="lblDiscountResult"></Span>
-                                    <!--Text="{Binding ValorDescuento, Mode=TwoWay}"-->
+                                    <Span FontAttributes="Bold" x:Name="lblDiscountResult"
+                                    Text="{Binding ValorDescuento, Mode=TwoWay}"></Span>
                                 </FormattedString>
                             </Label.FormattedText>
 

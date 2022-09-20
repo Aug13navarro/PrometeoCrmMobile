@@ -199,8 +199,8 @@ namespace Core.ViewModels
         }
 
 
-        private double valorDescuento;
-        public double ValorDescuento
+        private string valorDescuento;
+        public string ValorDescuento
         {
             get => valorDescuento;
             set => SetProperty(ref valorDescuento, value);
@@ -336,7 +336,7 @@ namespace Core.ViewModels
 
                     if(mediosPago != null)
                     {
-                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(mediosPago);
+                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(mediosPago.OrderBy(x => x.name));
 
                         if(Order.PaymentMethodId != null)
                         {
@@ -363,7 +363,7 @@ namespace Core.ViewModels
                     if (data != null || data.Count() > 0)
                     {
                         var d = mapper.Map<List<PaymentMethod>>(data);
-                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(d);
+                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(d.OrderBy(x => x.name));
                     }
                 }
             }
@@ -829,7 +829,7 @@ namespace Core.ViewModels
 
                     if (Company.externalErpId == null)
                     {
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(condiciones);
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(condiciones.OrderBy(x => x.description));
 
                         if (Order != null)
                         {
@@ -843,7 +843,7 @@ namespace Core.ViewModels
                     {
                         var conExternal = condiciones.Where(x => x.code > 0).ToList();
 
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(conExternal);
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(conExternal.OrderBy(x => x.description));
 
                         if (Order != null)
                         {
@@ -876,7 +876,7 @@ namespace Core.ViewModels
 
                     if (d != null || d.Count() > 0)
                     {
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(dCache);
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(dCache.OrderBy(x => x.description));
                     }
 
                     if (Order != null)
@@ -1195,50 +1195,34 @@ namespace Core.ViewModels
 
                     Order.products.Add(product);
 
+                    ActualizarDescuento();
                     ActualizarTotal(Order.products);
                 }
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "aceptar"); return;
             }
         }
 
-
-        private double CalcularTotal(OpportunityProducts detail)
+        private void ActualizarDescuento()
         {
             try
-            { 
-            if (detail.Discount == 0)
             {
-                if (ValorDescuento > 0)
+                var totalPro = Order.products.Sum(x => x.subtotal);
+                var str = (totalPro * OrderDiscount / 100).ToString("N2");
+                if (data.LoggedUser.Language.name.ToLower().Contains("es"))
                 {
-                    return (detail.Quantity * detail.Price) - ValorDescuento;
-                }
-                else
+                    ValorDescuento = str.Replace(".",",");
+                }else
                 {
-                    return detail.Quantity * detail.Price;
+                    ValorDescuento = str;
                 }
             }
-            else
+            catch (Exception)
             {
-                var temptotal = detail.Quantity * detail.Price;
 
-                if (ValorDescuento > 0)
-                {
-                    var result = temptotal - (temptotal * detail.Discount / 100);
-                    return result - ValorDescuento;
-                }
-                else
-                {
-                    return temptotal - (temptotal * detail.Discount / 100);
-                }
-            }
-
-            }
-            catch (Exception e)
-            {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return 0;
+                throw;
             }
         }
 
@@ -1247,12 +1231,13 @@ namespace Core.ViewModels
             try
             { 
             Order.products.Remove(detail);
+                ActualizarDescuento();
             ActualizarTotal(Order.products);
 
             }
             catch (Exception e)
             {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "aceptar"); return;
             }
         }
 
@@ -1277,7 +1262,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
+                Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "aceptar"); return;
             }
         }
 
@@ -1298,7 +1283,21 @@ namespace Core.ViewModels
         {
             try
             {
-                Total = details.Sum(x => x.subtotal) - ValorDescuento;
+                if (valorDescuento != null)
+                {
+                    if (data.LoggedUser.Language.name.ToLower().Contains("en"))
+                    {
+                        Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento.Replace(",", "."));
+                    }
+                    else
+                    {
+                        Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento);
+                    }
+                }
+                else
+                {
+                    Total = details.Sum(x => x.subtotal);
+                }
             }
             catch (Exception e)
             {
