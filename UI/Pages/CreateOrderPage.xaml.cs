@@ -5,6 +5,7 @@ using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UI.Popups;
 
 namespace UI.Pages
@@ -60,7 +61,9 @@ namespace UI.Pages
         {
             try
             {
-                if (lblDiscount.Text == "Discount")
+                var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+                if (idioma.Contains("en"))
                 {
                     ViewModel.ResetTotal(ViewModel.Order.products);
 
@@ -93,10 +96,10 @@ namespace UI.Pages
                         if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
                         {
                             var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
-
+                            var t = Convert.ToDouble(o);
                             //var descuento = Convert.ToDouble($"0.{o}");
 
-                            ViewModel.ValorDescuento = (ViewModel.Total * Convert.ToDouble(lblOrderDiscount.Text) / 100).ToString().Replace(".",",");
+                            ViewModel.ValorDescuento = (ViewModel.Total * Convert.ToDouble(o)).ToString().Replace(".",",");
                             lblDiscountResult.Text = ViewModel.ValorDescuento;
 
                             ViewModel.ActualizarTotal(ViewModel.Order.products);

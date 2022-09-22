@@ -13,6 +13,7 @@ using Core.Services;
 using Core.ViewModels.Model;
 using AutoMapper;
 using Core.Helpers;
+using Xamarin.Essentials;
 
 namespace Core.ViewModels
 {
@@ -1283,15 +1284,19 @@ namespace Core.ViewModels
         {
             try
             {
+                var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
                 if (valorDescuento != null)
                 {
-                    if (data.LoggedUser.Language.name.ToLower().Contains("en"))
+                    if (idioma.Contains("es"))
                     {
                         Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento.Replace(",", "."));
                     }
                     else
                     {
-                        Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento);
+                        var d = Convert.ToDouble(ValorDescuento);
+                        var t = details.Sum(x => x.subtotal);
+                        Total = t - d;
                     }
                 }
                 else
