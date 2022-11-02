@@ -67,7 +67,7 @@ namespace PrometeoCrmMobile.Droid
             catch (System.Exception e)
             {
                 var s = e.Message;
-                throw;
+                //throw;
             }
         }
 

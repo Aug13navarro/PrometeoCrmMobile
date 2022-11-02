@@ -1,11 +1,13 @@
 ﻿using Core.Model;
 using Core.ViewModels;
+using MvvmCross.Base;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Transactions;
 using UI.Popups;
 
 namespace UI.Pages
@@ -63,53 +65,17 @@ namespace UI.Pages
             {
                 var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-                if (idioma.Contains("en"))
+                ViewModel.ResetTotal(ViewModel.Order.products);
+
+                if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
                 {
-                    ViewModel.ResetTotal(ViewModel.Order.products);
-
-                    if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
-                    {
-                        ViewModel.OrderDiscount = 0;
-                        lblDiscountResult.Text = 0.ToString();
-                    }
-
-                    if (ViewModel.OrderDiscount > 0)
-                    {
-                        ViewModel.ValorDescuento = (ViewModel.Total * ViewModel.OrderDiscount / 100).ToString("N2");
-                        lblDiscountResult.Text = ViewModel.ValorDescuento;
-
-                        ViewModel.ActualizarTotal(ViewModel.Order.products);
-                    }
                 }
-                else
+
+                if (ViewModel.OrderDiscount > 0)
                 {
-                    if (!string.IsNullOrWhiteSpace(lblOrderDiscount.Text))
-                    {
-                        ViewModel.ResetTotal(ViewModel.Order.products);
+                    ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
 
-                        if (ViewModel.OrderDiscount == 0)
-                        {
-                            ViewModel.OrderDiscount = 0;
-                            lblDiscountResult.Text = 0.ToString();
-                        }
-
-                        if (Convert.ToDecimal(lblOrderDiscount.Text) > 0)
-                        {
-                            var o = Convert.ToDecimal(lblOrderDiscount.Text) / 100;
-                            var t = Convert.ToDouble(o);
-                            //var descuento = Convert.ToDouble($"0.{o}");
-
-                            ViewModel.ValorDescuento = (ViewModel.Total * Convert.ToDouble(o)).ToString().Replace(".",",");
-                            lblDiscountResult.Text = ViewModel.ValorDescuento;
-
-                            ViewModel.ActualizarTotal(ViewModel.Order.products);
-                        }
-                    }
-                    else
-                    {
-                        ViewModel.OrderDiscount = 0;
-                        lblDiscountResult.Text = 0.ToString();
-                    }
+                    ViewModel.ActualizarTotal(ViewModel.Order.products);
                 }
             }
             catch (Exception ex)

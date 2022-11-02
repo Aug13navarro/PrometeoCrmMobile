@@ -527,9 +527,8 @@
                     HorizontalOptions="EndAndExpand" VerticalOptions="Center">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="-US$ " FontAttributes="Bold"></Span>
-                                    <Span FontAttributes="Bold" x:Name="lblDiscountResult"
-                                    Text="{Binding ValorDescuento, Mode=TwoWay}"></Span>
+                                    <Span Text="- " FontAttributes="Bold"></Span>
+                                    <Span FontAttributes="Bold" x:Name="lblDiscountResult" Mvx:Bi.nd="Text Format('US$ {0:N2}', LblDiscountResult);"></Span>
                                 </FormattedString>
                             </Label.FormattedText>
 

@@ -200,11 +200,34 @@ namespace Core.ViewModels
         }
 
 
-        private string valorDescuento;
-        public string ValorDescuento
+        private double valorDescuento;
+        public double ValorDescuento
         {
             get => valorDescuento;
-            set => SetProperty(ref valorDescuento, value);
+            set
+            {
+                SetProperty(ref valorDescuento, value);
+                ConvertirDescuentoStr(this.valorDescuento);
+            }
+        }
+
+        private void ConvertirDescuentoStr(double valorDescuento)
+        {
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+            {
+                LblDiscountResult = valorDescuento.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                LblDiscountResult = valorDescuento.ToString("N2", new CultureInfo("en-US"));
+            }
+        }
+
+        private string lblDiscountResult;
+        public string LblDiscountResult
+        {
+            get => lblDiscountResult;
+            set => SetProperty(ref lblDiscountResult, value);
         }
 
         private int orderDiscount;
@@ -1210,12 +1233,16 @@ namespace Core.ViewModels
         {
             try
             {
+                var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
                 var totalPro = Order.products.Sum(x => x.subtotal);
-                var str = (totalPro * OrderDiscount / 100).ToString("N2");
-                if (data.LoggedUser.Language.name.ToLower().Contains("es"))
+                var str = (totalPro * OrderDiscount / 100);
+                if (idioma.ToLower().Contains("es"))
                 {
-                    ValorDescuento = str.Replace(".",",");
-                }else
+                    var r = Convert.ToDouble(str.ToString().Replace(",", "."));
+                    ValorDescuento = r;
+                }
+                else
                 {
                     ValorDescuento = str;
                 }
@@ -1231,9 +1258,9 @@ namespace Core.ViewModels
         {
             try
             { 
-            Order.products.Remove(detail);
+                Order.products.Remove(detail);
                 ActualizarDescuento();
-            ActualizarTotal(Order.products);
+                ActualizarTotal(Order.products);
 
             }
             catch (Exception e)
@@ -1286,22 +1313,23 @@ namespace Core.ViewModels
             {
                 var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-                if (valorDescuento != null)
+                if (ValorDescuento != null)
                 {
                     if (idioma.Contains("es"))
                     {
-                        Total = details.Sum(x => x.subtotal) - Convert.ToDouble(ValorDescuento.Replace(",", "."));
+                        Total = details.Sum(x => x.subtotal) - ValorDescuento;
                     }
                     else
                     {
-                        var d = Convert.ToDouble(ValorDescuento);
-                        var t = details.Sum(x => x.subtotal);
-                        Total = t - d;
+                        var d1 = Convert.ToDouble(ValorDescuento);
+                        var t1 = details.Sum(x => x.subtotal);
+                        var r1 = t1 - d1;
+
+                        Total = r1;
                     }
                 }
                 else
                 {
-                    Total = details.Sum(x => x.subtotal);
                 }
             }
             catch (Exception e)

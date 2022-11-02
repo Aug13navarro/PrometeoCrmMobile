@@ -49,7 +49,7 @@ namespace Core.ViewModels
             }
             else
             {
-                DateTime? tokenExpirationDate = appData.LoggedUser.Expiration;
+               DateTime? tokenExpirationDate = appData.LoggedUser.Expiration;
                 if (tokenExpirationDate.HasValue && DateTime.Now >= tokenExpirationDate.Value)
                 {
                     appData.ClearLoggedUser();
