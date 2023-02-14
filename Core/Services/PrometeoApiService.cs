@@ -40,36 +40,20 @@ namespace Core.Services
             {
                 Login = userName,
                 Password = password,
-                //Password = password,
             };
 
             try
             {
-                //using (var request = new HttpRequestMessage(HttpMethod.Post, url))
-                //using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
-                //{
-                //    request.Content = content;
-                //    LoginData result = await client.SendAsyncAs<LoginData>(request);
-
-                //    return result;
-                //}
                 var objeto = JsonConvert.SerializeObject(body);
 
                 HttpContent httpContent = new StringContent(objeto);
 
                 httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 var respuesta = await client.PostAsync(string.Format(url), httpContent);
 
                 var resultado = await respuesta.Content.ReadAsStringAsync();
-
-                //if(respuesta.IsSuccessStatusCode)
-                //{
-                    return JsonConvert.DeserializeObject<LoginData>(resultado);
-                //}
-
-                //return null;
+                return JsonConvert.DeserializeObject<LoginData>(resultado);
             }
             catch (Exception ex)
             {
@@ -263,30 +247,6 @@ namespace Core.Services
         public async Task<Customer> CreateCustomer(Customer requestData)
         {
             const string url = "api/Customer";
-            //using (var request = new HttpRequestMessage(HttpMethod.Post, url))
-            //using (var content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json"))
-            //{
-            //    request.Content = content;
-            //    HttpResponseMessage result = await client.SendAsync(request);
-
-            //    if (!result.IsSuccessStatusCode)
-            //    {
-            //        if (result.StatusCode == HttpStatusCode.BadRequest)
-            //        {
-            //            using (Stream stream = await result.Content.ReadAsStreamAsync())
-            //            {
-            //                var errors = HttpClientExtensionMethods.DeserializeJsonFromStream<Dictionary<string, string[]>>(stream);
-            //                string firstError = errors.First().Value[0];
-
-            //                throw new ServiceException(firstError);
-            //            }
-            //        }
-            //        else
-            //        {
-            //            throw new InvalidOperationException();
-            //        }
-            //    }
-            //}
 
 
             var objeto = JsonConvert.SerializeObject(requestData);
@@ -294,7 +254,6 @@ namespace Core.Services
             HttpContent httpContent = new StringContent(objeto);
 
             httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             var respuesta = await client.PostAsync(string.Format(url), httpContent);
 
@@ -508,8 +467,6 @@ namespace Core.Services
 
             var resultado = await respuesta.Content.ReadAsStringAsync();
             return true;
-
-            //await Task.FromResult(0);
         }
 
         public async Task<IEnumerable<Opportunity>> GetOppByfilter(FilterOportunityModel filtro, string lang, string token)
@@ -624,7 +581,6 @@ namespace Core.Services
                 HttpContent httpContent = new StringContent(objeto);
 
                 httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 var respuesta = await client.PostAsync(string.Format(cadena), httpContent);
 
@@ -638,15 +594,6 @@ namespace Core.Services
                 {
                     throw new Exception("Tenemos problemas para procesar su solicitud. Contacte al administrador del sistema");
                 }
-                //if (respuesta.ReasonPhrase == "Bad Request")
-                //{
-                //    throw new Exception(resultado);
-                //}
-
-                //if (respuesta.ReasonPhrase == "Internal Server Error")
-                //{
-                //    throw new Exception("Error al Impactar en un Servicio Externo, posiblemente el Cliente no se encuentra registrado");
-                //}
             }
             catch (Exception e)
             {
@@ -668,20 +615,6 @@ namespace Core.Services
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
                 var respuesta = await client.PutAsync(string.Format(url), httpContent);
-
-                //var resultado = await respuesta.Content.ReadAsStringAsync();
-                
-                //if (respuesta.ReasonPhrase == "Bad Request")
-                //{
-                //    throw new Exception(resultado);
-                //}
-
-                //if (respuesta.ReasonPhrase == "Internal Server Error")
-                //{
-                //    throw new Exception("Error al Impactar en un Servicio Externo");
-                //}
-
-                //return JsonConvert.DeserializeObject<OrderNote>(resultado);
 
                 if (respuesta.IsSuccessStatusCode)
                 {
