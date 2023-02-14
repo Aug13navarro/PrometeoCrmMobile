@@ -7,6 +7,7 @@ namespace Core.Model
         public string FullName { get; set; }
         public string Email { get; set; }
         public Language Language { get; set; }
-        public IList<Role> Roles { get; set; }
+        //public IList<Role> Roles { get; set; }
+        public List<UserCompany> UserCompanies { get; set; }
     }
 }

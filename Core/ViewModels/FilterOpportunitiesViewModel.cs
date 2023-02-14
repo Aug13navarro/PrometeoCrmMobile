@@ -238,11 +238,11 @@ namespace Core.ViewModels
 
         private void VerificarRol(string rolesJson)
         {
-            var roles = JsonConvert.DeserializeObject<List<Role>>(rolesJson);
+            var roles = JsonConvert.DeserializeObject<List<UserCompany>>(rolesJson);
 
             foreach (var item in roles)
             {
-                if (item.Name == "Vendedor")
+                if (item.Roles.Name.ToLower().Contains("vendedor"))
                 {
                     IsEnableSeller = false;
                     IsSeller = true;

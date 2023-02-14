@@ -120,7 +120,7 @@ namespace Core.ViewModels
                     Language = loginData.Language == null ? new Language { name = "English", abbreviation = "EN", id = 0 } : loginData.Language,
                 };
 
-                user.RolesStr = JsonConvert.SerializeObject(userData.Roles);
+                user.RolesStr = JsonConvert.SerializeObject(userData.UserCompanies);
 
                 appData.SetLoggedUser(user);
                 Identity.LanguageUser = user.Language.abbreviation;

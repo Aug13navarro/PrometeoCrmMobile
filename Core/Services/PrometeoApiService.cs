@@ -68,12 +68,9 @@ namespace Core.Services
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
             {
-                List<UserData> result = await client.SendAsyncAs<List<UserData>>(request);
+                UserData result = await client.SendAsyncAs<UserData>(request);
 
-                if (result.Count > 0)
-                    return result[0];
-                else
-                    return null;
+                return result;
             }
         }
 

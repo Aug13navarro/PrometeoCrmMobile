@@ -27,11 +27,11 @@
                         SelectedIndexChanged="cmbCompanies_SelectedIndexChanged"></Picker>
             </StackLayout>
             
-            <StackLayout Orientation="Horizontal">
+            <!--<StackLayout Orientation="Horizontal">
                 <Label Text="Exportación" Style="{x:StaticResource DefaultLabel}" VerticalOptions="Center"></Label>
-                <CheckBox x:Name="CheckExportación" VerticalOptions="Center" CheckedChanged="CheckBox_CheckedChanged"></CheckBox>
+                <CheckBox x:Name="CheckExportación" VerticalOptions="Center" CheckedChanged="CheckBox_CheckedChanged" IsEnabled="False"></CheckBox>
 
-            </StackLayout>
+            </StackLayout>-->
 
             <Button Text="{x:Static resources:AppResources.Accept}" BackgroundColor="{x:StaticResource PrimaryColor}" TextColor="White"
                     Clicked="AceptButtonClicked"></Button>

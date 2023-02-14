@@ -25,8 +25,8 @@ namespace UI.Popups
             
             Companies = companies;
 
-            CheckExportación.IsEnabled = false;
-            CheckExportación.Color = Color.Gray;
+            //CheckExportación.IsEnabled = false;
+            //CheckExportación.Color = Color.Gray;
 
             if (Companies.Count() > 0 )
             {
@@ -49,20 +49,20 @@ namespace UI.Popups
 
             Company = comp;
 
-            CheckExportación.IsEnabled = false;
-            CheckExportación.Color = Color.Gray;
+            //CheckExportación.IsEnabled = false;
+            //CheckExportación.Color = Color.Gray;
 
-            if (Company.CompanyOrderTypes.Count > 0)
-            {
-                foreach (var item in Company.CompanyOrderTypes)
-                {
-                    if(item.OrderType.Name == "Exportación")
-                    {
-                        CheckExportación.IsEnabled = true;
-                        CheckExportación.Color = Color.FromHex("#FF4081");
-                    }
-                }
-            }
+            //if (Company.CompanyOrderTypes.Count > 0)
+            //{
+            //    foreach (var item in Company.CompanyOrderTypes)
+            //    {
+            //        if(item.OrderType.Name == "Exportación")
+            //        {
+            //            CheckExportación.IsEnabled = true;
+            //            CheckExportación.Color = Color.FromHex("#FF4081");
+            //        }
+            //    }
+            //}
         }
 
         private void AceptButtonClicked(object sender , EventArgs e)
