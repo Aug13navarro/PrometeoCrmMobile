@@ -9,6 +9,7 @@ namespace Core.Model
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public int IdUser { get; set; }
         public DateTime? Expiration { get; set; }
         public Language Language { get; set; }
 

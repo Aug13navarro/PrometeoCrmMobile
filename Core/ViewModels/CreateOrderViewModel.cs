@@ -461,7 +461,7 @@ namespace Core.ViewModels
                     {
                         if (Order.commercialAssistantId != null)
                         {
-                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
+                            Assistant = Assistants.FirstOrDefault(x => x.IdUser == Order.commercialAssistantId);
                         }
                     }
                 }
@@ -490,7 +490,7 @@ namespace Core.ViewModels
                         {
                             if (Order.commercialAssistantId != null)
                             {
-                                Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
+                                Assistant = Assistants.FirstOrDefault(x => x.IdUser == Order.commercialAssistantId);
                             }
                         }
                     }
@@ -659,7 +659,7 @@ namespace Core.ViewModels
                     PlacePayment = Place.Id,
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
-                    commercialAssistantId = Assistant.Id,
+                    commercialAssistantId = Assistant.IdUser,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
                     
                 };
@@ -762,7 +762,7 @@ namespace Core.ViewModels
                     Order.PlacePayment = Place.Id;
                     Order.RemittanceType = typeOfRemittance.Id;
                     Order.PaymentMethodId = PaymentMethod.id;
-                    Order.commercialAssistantId = Assistant.Id;
+                    Order.commercialAssistantId = Assistant.IdUser;
 
                     await prometeoApiService.UpdateOrderNote(Order, data.LoggedUser.Token);
 
