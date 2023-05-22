@@ -249,12 +249,12 @@ namespace Core.ViewModels
                 var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
                 var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now , company = company};
 
-                createViewModel.NewOrderCreated += async (sender, args) => await NewOrderSearchAsync();
+                createViewModel.NewOrderCreated += CreateViewModel_NewOrderCreated;
                 await navigationService.Navigate(createViewModel, order);
             }
         }
 
-        private async Task NewOrderSearchAsync()
+        private async void CreateViewModel_NewOrderCreated(bool created)
         {
             var requestData = new OrdersNotesPaginatedRequest()
             {
@@ -475,7 +475,9 @@ namespace Core.ViewModels
             }
             else
             {
-                await navigationService.Navigate<CreateOrderViewModel, OrderNote>(orderNote);
+                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
+                createViewModel.NewOrderCreated += CreateViewModel_NewOrderCreated;
+                await navigationService.Navigate(createViewModel, orderNote);
             }
         }
     }

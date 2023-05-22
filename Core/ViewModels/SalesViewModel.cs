@@ -109,11 +109,11 @@ namespace Core.ViewModels
             var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
             var order = new OrderNote() { orderStatus = 1, fecha= DateTime.Now };
 
-            createViewModel.NewOrderCreated += async (sender, args) => await NewSalesSearchAsync();
+            createViewModel.NewOrderCreated += NewSalesSearchAsync;
             await navigationService.Navigate(createViewModel, order);
             //await navigationService.Navigate<CreateOrderViewModel, Opportunity>(order);
         }
-        private async Task NewSalesSearchAsync()
+        private async void NewSalesSearchAsync(bool created)
         {
             var requestData = new OrdersNotesPaginatedRequest()
             {

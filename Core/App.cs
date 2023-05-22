@@ -1,4 +1,3 @@
-using AutoMapper;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels;
@@ -6,17 +5,15 @@ using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 using System;
-using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Xamarin.Forms;
 
 namespace Core
 {
     public class App : MvxApplication 
     {
         private OfflineDataService offlineDataService;
-
+        //public static Uri PrometeoApiEndPoint { get; } = new Uri("https://prometeo-erp-develop-api.azurewebsites.net/");
         public static Uri PrometeoApiEndPoint { get; } = new Uri("https://neophos-testing-api.azurewebsites.net/");
         //public static Uri PrometeoApiEndPoint { get; } = new Uri("https://prometeo-produccion-api.azurewebsites.net/");
 

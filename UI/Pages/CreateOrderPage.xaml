@@ -157,7 +157,7 @@
                                     </Picker>
                                 </Frame>
                             </Grid>
-                        </StackLayout>
+                        </StackLayout><!--Asistente-->
 
                         <StackLayout Margin="0,5">
                             <Grid
@@ -183,17 +183,25 @@
                                              BackgroundColor="Transparent"
                                              Grid.Column="2"/>
                             </Grid>
-                        </StackLayout>
+                        </StackLayout><!--Cliente-->
                         
                         <StackLayout Margin="0,5">
                             <Grid
                                 ColumnDefinitions="auto,*">
                                 <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
-                                   Grid.Column="0">
+                                   Grid.Column="0"  Mvx:Bi.nd="IsVisible Company.Id != 7">
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="{x:Static resources:AppResources.OCCustomer}"></Span>
-                                            <Span Text="*"></Span>
+                                            <Span Text="*" Mvx:Bi.nd="IsVisible Company.Id != 7"></Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
+                                   Grid.Column="0"  Mvx:Bi.nd="IsVisible Company.Id == 7">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{x:Static resources:AppResources.OCCustomer}"></Span>
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
@@ -202,7 +210,8 @@
                                 Margin="0"
                                 Padding="0"
                                 HorizontalOptions="FillAndExpand">
-                                    <Entry
+                                    <Entry                                         
+                                    x:Name="editorAddress"
                                     IsEnabled="{Binding EnableForEdit}"
                                     HorizontalOptions="FillAndExpand"
                                     Keyboard="Text"
@@ -213,7 +222,7 @@
                                     </Entry>
                                 </Frame>
                             </Grid>
-                        </StackLayout>
+                        </StackLayout><!--OCCustomer-->
 
                         <StackLayout Orientation="Horizontal" Margin="0,5">
                             <Label Text="{x:Static resources:AppResources.Date}" Style="{StaticResource DefaultLabel}" VerticalOptions="Center"/>
@@ -240,7 +249,7 @@
                                     
                                 </Picker>
                             </Frame>
-                        </StackLayout>
+                        </StackLayout> <!--Fecha y Moneda-->
 
                         <StackLayout Orientation="Horizontal"
                                  Margin="0,5">
@@ -316,11 +325,20 @@
 
                         <StackLayout Orientation="Horizontal"
                                  Margin="0,5">
-                            <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center">
+                            <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
+                                    Mvx:Bi.nd="IsVisible Company.Id != 7">
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{x:Static resources:AppResources.PlacePayment}"></Span>
                                         <Span Text="*"></Span>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"
+                                    Mvx:Bi.nd="IsVisible Company.Id == 7">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{x:Static resources:AppResources.PlacePayment}"></Span>
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
@@ -346,7 +364,7 @@
                                 HorizontalOptions="FillAndExpand">
                                 <DatePicker IsEnabled="{Binding EnableForEdit}" Date="{Binding Order.DeliveryDate}" HorizontalOptions="FillAndExpand" Format="dd/MM/yyyy"/>
                             </Frame>
-                        </StackLayout>
+                        </StackLayout><!--Fecha entrega-->
 
                         <StackLayout Orientation="Horizontal"
                                  Margin="0,5">
@@ -364,7 +382,7 @@
 
                                 </Picker>
                             </Frame>
-                        </StackLayout>
+                        </StackLayout><!--Flete a cargo-->
 
                         <StackLayout Orientation="Horizontal"
                                  Margin="0,5">
@@ -398,7 +416,7 @@
                                 IsEnabled="{Binding EnableForEdit}">
 
                             </ImageButton>
-                        </StackLayout>
+                        </StackLayout><!--Direccion entrega-->
                         
                         <Frame
                             Margin="0"
@@ -406,7 +424,7 @@
                             <Editor Placeholder="{x:Static resources:AppResources.Description_PL}" 
                                     IsEnabled="{Binding EnableForEdit}"
                                     Style="{StaticResource DefaultEditor}"
-                                    AutoSize="TextChanges" x:Name="editorAddress"
+                                    AutoSize="TextChanges"
                                     Text="{Binding Order.DeliveryAddress, Mode=TwoWay}" 
                                     MaxLength="300" HeightRequest="100"/>
                         </Frame>

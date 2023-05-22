@@ -49,14 +49,14 @@ namespace UI.Popups
 
             Company = comp;
 
-            //CheckExportación.IsEnabled = false;
+            CheckExportación.IsEnabled = true;
             //CheckExportación.Color = Color.Gray;
 
             //if (Company.CompanyOrderTypes.Count > 0)
             //{
             //    foreach (var item in Company.CompanyOrderTypes)
             //    {
-            //        if(item.OrderType.Name == "Exportación")
+            //        if (item.OrderType.Name == "Exportación")
             //        {
             //            CheckExportación.IsEnabled = true;
             //            CheckExportación.Color = Color.FromHex("#FF4081");

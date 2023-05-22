@@ -459,6 +459,7 @@ namespace Core.Services
 
             if (respuesta.ReasonPhrase == "Bad Request" || respuesta.ReasonPhrase == "Internal Server Error")
             {
+                var result = await respuesta.Content.ReadAsStringAsync();
                 return false;
             }
 

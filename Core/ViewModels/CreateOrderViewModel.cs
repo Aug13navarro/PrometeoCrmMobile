@@ -293,7 +293,8 @@ namespace Core.ViewModels
 
         // Events
         public event EventHandler<Product> ShowEditProductPopup;
-        public event EventHandler NewOrderCreated;
+        public delegate void EventHandlerOrder(bool created);
+        public event EventHandlerOrder NewOrderCreated;
         public event EventHandler<List<CustomerAddress>> ShowAddressPopup;
 
         // Commands
@@ -732,7 +733,7 @@ namespace Core.ViewModels
                             {
                                 await navigationService.Close(this);
 
-                                NewOrderCreated?.Invoke(this, EventArgs.Empty);
+                                NewOrderCreated(true);
                             }
                         }
 
@@ -745,29 +746,16 @@ namespace Core.ViewModels
                         offlineDataService.SaveOrderNotes(nuevaOrder);
                         await offlineDataService.SynchronizeToDisk();
 
-
-                        //await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                        //await navigationService.Navigate<PedidosViewModel>();await navigationService.Close(this);
-
                         await navigationService.Close(this);
-                        NewOrderCreated?.Invoke(this, EventArgs.Empty);
+                        NewOrderCreated(true);
                     }
                 }
                 else
                 {
-                    Order.customerId = SelectedCustomer.Id;
-                    Order.discount = OrderDiscount;
-                    Order.total = Convert.ToDecimal(Total);
+                    await prometeoApiService.UpdateOrderNote(nuevaOrder, data.LoggedUser.Token);
 
-                    Order.PlacePayment = Place.Id;
-                    Order.RemittanceType = typeOfRemittance.Id;
-                    Order.PaymentMethodId = PaymentMethod.id;
-                    Order.commercialAssistantId = Assistant.IdUser;
-
-                    await prometeoApiService.UpdateOrderNote(Order, data.LoggedUser.Token);
-
-                    await navigationService.Close(this); 
-                    NewOrderCreated?.Invoke(this, EventArgs.Empty);
+                    NewOrderCreated(true);
+                    await navigationService.Close(this);
                 }
             }
             catch (Exception e)
