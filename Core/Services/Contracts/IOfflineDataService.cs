@@ -67,6 +67,6 @@ namespace Core.Services.Contracts
         Task<List<PaymentMethodExtern>> SearchPaymentMethod();
         Task<List<IncotermExtern>> SearchIncoterms();
         Task<List<FreightInChargeExtern>> SearchFreights();
-        Task<List<TransportExtern>> SearchTransports();
+        //Task<List<TransportExtern>> SearchTransports();
     }
 }

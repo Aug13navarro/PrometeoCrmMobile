@@ -123,8 +123,8 @@ namespace Core.Model
         public DateTime? DeliveryDate { get; set; }
         public string DeliveryResponsible { get; set; }
         public string DeliveryAddress { get; set; }
-        public Transport Transport { get; set; }
-        public int? TransportId { get; set; }
+        public TransportCompany TransportCompany { get; set; }
+        public int? TransportCompanyId { get; set; }
         public PaymentMethod paymentMethod { get; set; }
         public int? PaymentMethodId { get; set; }
         public FreightInCharge FreightInCharge { get; set; }
@@ -138,6 +138,7 @@ namespace Core.Model
         public int? IncotermId { get; set; }
         public int? commercialAssistantId { get; set; }
         public bool? sentToErp { get; set; }
+        public int? ProviderId { get; set; }
 
         public class ProductOrder
         {

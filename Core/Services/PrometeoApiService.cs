@@ -791,9 +791,9 @@ namespace Core.Services
             return JsonConvert.DeserializeObject<IEnumerable<FreightInCharge>>(resultado);
         }
 
-        public async Task<IEnumerable<Transport>> GetTransport(string language, string token)
+        public async Task<IEnumerable<TransportCompany>> GetTransport(string language,int companyId, string token)
         {
-            var url = $"/api/Transport?language={language}";
+            var url = $"/api/Transport?language={language}&companyId={companyId}";
 
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -801,8 +801,19 @@ namespace Core.Services
 
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<IEnumerable<Transport>>(resultado);
+            return JsonConvert.DeserializeObject<IEnumerable<TransportCompany>>(resultado);
         }
+        public async Task<IEnumerable<Provider>> GetProvidersByType(int providerTypeId, string token)
+        {
+            var url = $"/api/ExpenseProvider/GetListByProviderTypeId?id={providerTypeId}";
 
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<IEnumerable<Provider>>(resultado);
+        }
     }
 }

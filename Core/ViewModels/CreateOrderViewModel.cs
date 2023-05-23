@@ -83,15 +83,15 @@ namespace Core.ViewModels
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
         public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
 
-        private MvxObservableCollection<Transport> freightInCharges;
-        public MvxObservableCollection<Transport> FreightInCharges
+        private MvxObservableCollection<TransportCompany> freightInCharges;
+        public MvxObservableCollection<TransportCompany> FreightInCharges
         {
             get => freightInCharges;
             set => SetProperty(ref freightInCharges, value);
         }
 
-        private Transport freightInCharge;
-        public Transport FreightInCharge
+        private TransportCompany freightInCharge;
+        public TransportCompany FreightInCharge
         {
             get => freightInCharge;
             set => SetProperty(ref freightInCharge, value);
@@ -191,6 +191,18 @@ namespace Core.ViewModels
             get => paymentConditions;
             set => SetProperty(ref paymentConditions, value);
         }
+        private MvxObservableCollection<Provider> providers;
+        public MvxObservableCollection<Provider> Providers
+        {
+            get => providers;
+            set => SetProperty(ref providers, value);
+        }
+        private Provider provider;
+        public Provider Provider
+        {
+            get => provider;
+            set => SetProperty(ref provider, value);
+        }
 
         private PaymentCondition condition;
         public PaymentCondition Condition
@@ -259,6 +271,19 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref totalOfOrderStr, value);
+            }
+        }
+        private bool fleteChecked;
+        public bool FleteChecked
+        {
+            get => fleteChecked;
+            set
+            {
+                SetProperty(ref fleteChecked, value);
+                if(!fleteChecked)
+                {
+                    FreightInCharge = null;
+                }
             }
         }
 
@@ -342,6 +367,7 @@ namespace Core.ViewModels
                 CargarTipoRemito();
                 CargarLugarPago();
                 CargarFleteCargo();
+                CargarProviders();
 
             }
             catch(Exception e)
@@ -349,6 +375,56 @@ namespace Core.ViewModels
                 Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
             }
         }
+
+        public async void CargarProviders()
+        {
+            try
+            {
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var providers = await prometeoApiService.GetProvidersByType(8, data.LoggedUser.Token);
+
+                    if (providers != null)
+                    {
+                        Providers = new MvxObservableCollection<Provider>(providers.OrderBy(x => x.Name));
+
+                        //if (Order.PaymentMethodId != null)
+                        //{
+                        //    PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
+                        //}
+                    }
+                }
+                else
+                {
+                    //var mapperConfig = new MapperConfiguration(m =>
+                    //{
+                    //    m.AddProfile(new MappingProfile());
+                    //});
+
+                    //IMapper mapper = mapperConfig.CreateMapper();
+
+                    //if (!offlineDataService.IsDataLoadedPaymentMethod)
+                    //{
+                    //    await offlineDataService.LoadPaymentMethod();
+                    //}
+
+                    //var data = await offlineDataService.SearchPaymentMethod();
+
+                    //if (data != null || data.Count() > 0)
+                    //{
+                    //    var d = mapper.Map<List<PaymentMethod>>(data);
+                    //    PaymentMethods = new MvxObservableCollection<PaymentMethod>(d.OrderBy(x => x.name));
+                    //}
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("", $"{e.Message} - Transporte", "Aceptar"); return;
+            }
+        }
+
         private async void CargarMedioPago()
         {
             try
@@ -408,39 +484,39 @@ namespace Core.ViewModels
 
             if (red)
             {
-                var fletes = await prometeoApiService.GetTransport(lang, user.Token);
+                var fletes = await prometeoApiService.GetTransport(lang, Company.Id, user.Token);
 
                 if(fletes != null)
                 {
-                    FreightInCharges = new MvxObservableCollection<Transport>(fletes);
+                    FreightInCharges = new MvxObservableCollection<TransportCompany>(fletes);
 
-                    if(Order.TransportId != null)
+                    if(Order.TransportCompanyId != null)
                     {
-                        FreightInCharge = FreightInCharges.FirstOrDefault(x => x.Id == Order.TransportId);
+                        FreightInCharge = FreightInCharges.FirstOrDefault(x => x.Id == Order.TransportCompanyId);
                     }
                 }
             }
             else
             {
-                var mapperConfig = new MapperConfiguration(m =>
-                {
-                    m.AddProfile(new MappingProfile());
-                });
+                //var mapperConfig = new MapperConfiguration(m =>
+                //{
+                //    m.AddProfile(new MappingProfile());
+                //});
 
-                IMapper mapper = mapperConfig.CreateMapper();
+                //IMapper mapper = mapperConfig.CreateMapper();
 
-                if(!offlineDataService.IsDataLoadedTransports)
-                {
-                    await offlineDataService.LoadTransports();
-                }
+                //if(!offlineDataService.IsDataLoadedTransports)
+                //{
+                //    await offlineDataService.LoadTransports();
+                //}
 
-                var data = await offlineDataService.SearchTransports();
+                //var data = await offlineDataService.SearchTransports();
 
-                if(data != null)
-                {
-                    var tra = mapper.Map<List<Transport>>(data);
-                    FreightInCharges = new MvxObservableCollection<Transport>(tra);
-                }
+                //if(data != null)
+                //{
+                //    var tra = mapper.Map<List<TransportCompany>>(data);
+                //    FreightInCharges = new MvxObservableCollection<TransportCompany>(tra);
+                //}
             }
         }
 
@@ -661,6 +737,7 @@ namespace Core.ViewModels
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
                     commercialAssistantId = Assistant.IdUser,
+                    ProviderId = Provider.Id
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
                     
                 };
@@ -672,7 +749,7 @@ namespace Core.ViewModels
 
                 if(FreightInCharge != null)
                 {
-                    nuevaOrder.TransportId = FreightInCharge.Id;
+                    nuevaOrder.TransportCompanyId = FreightInCharge.Id;
                 }
 
                 if (nuevaOrder.DeliveryDate == null)

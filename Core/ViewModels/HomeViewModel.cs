@@ -178,11 +178,11 @@ namespace Core.ViewModels
             offlineDataService.SaveFreights(freigths);
 
             //ONTENGO TODOS LOS TRANSPORTES
-            var transportes = await prometeoApiService.GetTransport(LoggedUser.Language.abbreviation.ToLower(), LoggedUser.Token);
+            //var transportes = await prometeoApiService.GetTransport(LoggedUser.Language.abbreviation.ToLower(), LoggedUser.Token);
 
             //GUARDO LOS TRANSPORTES
-            var tra = mapper.Map<List<TransportExtern>>(transportes);
-            offlineDataService.SaveTransports(tra);
+            //var tra = mapper.Map<List<TransportExtern>>(transportes);
+            //offlineDataService.SaveTransports(tra);
 
             //SINCRONIZO LA DATA CON LOS ARCHIVOS EN LA CACHE
             await offlineDataService.SynchronizeToDisk();
