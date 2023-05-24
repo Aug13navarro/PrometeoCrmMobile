@@ -36,6 +36,7 @@
             RowDefinitions="*,auto,auto">
             <ListView
                 ItemsSource="{Binding OrdersNote}"
+                IsRefreshing="{Binding IsLoading}"
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
                 Grid.RowSpan="2"

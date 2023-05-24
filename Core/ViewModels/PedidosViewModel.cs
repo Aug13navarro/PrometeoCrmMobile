@@ -292,7 +292,6 @@ namespace Core.ViewModels
 
                 if (red)
                 {
-                    //PaginatedList<Opportunity> opportunities = await prometeoApiService.GetOpportunities(requestData);//"https://neophos-testing-api.azurewebsites.net/api/Opportunity/GetListByCustomerIdAsync", ,user.Token
                     var ordersnote = await prometeoApiService.GetOrderNote(requestData, user.Token);
 
                     if (newSearch)
