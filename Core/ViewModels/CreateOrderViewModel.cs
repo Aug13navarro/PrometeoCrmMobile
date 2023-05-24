@@ -476,47 +476,58 @@ namespace Core.ViewModels
 
         private async void CargarFleteCargo()
         {
-            var user = data.LoggedUser;
-
-            string lang = user.Language.abbreviation.ToLower();
-
-            var red = await Connection.SeeConnection();
-
-            if (red)
+            try
             {
-                var fletes = await prometeoApiService.GetTransport(lang, Company.Id, user.Token);
+                var user = data.LoggedUser;
 
-                if(fletes != null)
+                string lang = user.Language.abbreviation.ToLower();
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
-                    FreightInCharges = new MvxObservableCollection<TransportCompany>(fletes);
-
-                    if(Order.TransportCompanyId != null)
+                    if (Company != null)
                     {
-                        FreightInCharge = FreightInCharges.FirstOrDefault(x => x.Id == Order.TransportCompanyId);
+                        var fletes = await prometeoApiService.GetTransport(lang, Company.Id, user.Token);
+
+                        if (fletes != null)
+                        {
+                            FreightInCharges = new MvxObservableCollection<TransportCompany>(fletes);
+
+                            if (Order.TransportCompanyId != null)
+                            {
+                                FreightInCharge = FreightInCharges.FirstOrDefault(x => x.Id == Order.TransportCompanyId);
+                            }
+                        }
                     }
                 }
+                else
+                {
+                    //var mapperConfig = new MapperConfiguration(m =>
+                    //{
+                    //    m.AddProfile(new MappingProfile());
+                    //});
+
+                    //IMapper mapper = mapperConfig.CreateMapper();
+
+                    //if(!offlineDataService.IsDataLoadedTransports)
+                    //{
+                    //    await offlineDataService.LoadTransports();
+                    //}
+
+                    //var data = await offlineDataService.SearchTransports();
+
+                    //if(data != null)
+                    //{
+                    //    var tra = mapper.Map<List<TransportCompany>>(data);
+                    //    FreightInCharges = new MvxObservableCollection<TransportCompany>(tra);
+                    //}
+                }
             }
-            else
+            catch(Exception e)
             {
-                //var mapperConfig = new MapperConfiguration(m =>
-                //{
-                //    m.AddProfile(new MappingProfile());
-                //});
-
-                //IMapper mapper = mapperConfig.CreateMapper();
-
-                //if(!offlineDataService.IsDataLoadedTransports)
-                //{
-                //    await offlineDataService.LoadTransports();
-                //}
-
-                //var data = await offlineDataService.SearchTransports();
-
-                //if(data != null)
-                //{
-                //    var tra = mapper.Map<List<TransportCompany>>(data);
-                //    FreightInCharges = new MvxObservableCollection<TransportCompany>(tra);
-                //}
+                var m = e.Message;
+                return;
             }
         }
 

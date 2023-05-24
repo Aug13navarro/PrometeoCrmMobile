@@ -1,5 +1,6 @@
 ﻿using Core;
 using Foundation;
+using IOs.Notification;
 using MvvmCross.Forms.Platforms.Ios.Core;
 using Plugin.DownloadManager;
 using Plugin.DownloadManager.Abstractions;
@@ -7,6 +8,7 @@ using System;
 using System.IO;
 using UI;
 using UIKit;
+using UserNotifications;
 
 namespace IOs
 {
@@ -26,6 +28,7 @@ namespace IOs
             //global::Xamarin.Forms.Forms.Init();
             //LoadApplication(new FormsApp());
             //DownLoaded();
+            UNUserNotificationCenter.Current.Delegate = new iOSNotificationReceiver();
             return base.FinishedLaunching(application, launchOptions);
         }
         public void DownLoaded()

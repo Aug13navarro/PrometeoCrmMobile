@@ -132,6 +132,7 @@
   <ItemGroup>
     <Compile Include="CustomMasterDetailPageRenderer.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Notification\AndroidNotificationManager.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ToastDroidService.cs" />
@@ -533,10 +534,13 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-hdpi\ic_planta_rodadora.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-hdpi\icono_gris_1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadUnhandledDeviceExceptionDroidHideInfoBar="True" XamarinHotReloadXFormsNugetUpgradeInfoBarDroidHideInfoBar="True" TriggeredFromHotReload="False" />
+      <UserProperties TriggeredFromHotReload="False" XamarinHotReloadXFormsNugetUpgradeInfoBarDroidHideInfoBar="True" XamarinHotReloadUnhandledDeviceExceptionDroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

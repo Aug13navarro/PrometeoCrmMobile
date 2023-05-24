@@ -171,6 +171,8 @@
     <Compile Include="Implementations\CustomMasterDetailPageRenderer.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="Notification\iOSNotificationManager.cs" />
+    <Compile Include="Notification\iOSNotificationReceiver.cs" />
     <Compile Include="SceneDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +330,9 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\ic_planta_rodadora.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\icono_gris_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

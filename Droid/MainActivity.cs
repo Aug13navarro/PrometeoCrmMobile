@@ -2,16 +2,19 @@
 using System.Linq;
 using System.Threading;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Core;
+using Core.Notification;
 using Core.Services.Contracts;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Forms.Platforms.Android.Views;
+using PrometeoCrmMobile.Droid.Notification;
 using PrometeoCrmMobile.Droid.Services;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
@@ -63,6 +66,8 @@ namespace PrometeoCrmMobile.Droid
 
                 Xamarin.Essentials.Platform.Init(this, savedInstanceState);
                 //global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+                CreateNotificationFromIntent(Intent);
             }
             catch (System.Exception e)
             {
@@ -71,6 +76,15 @@ namespace PrometeoCrmMobile.Droid
             }
         }
 
+        private void CreateNotificationFromIntent(Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                string title = intent.GetStringExtra(AndroidNotificationManager.TitleKey);
+                string message = intent.GetStringExtra(AndroidNotificationManager.MessageKey);
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+            }
+        }
         protected override void OnStart() //cuando se inicia
         {
             base.OnStart();

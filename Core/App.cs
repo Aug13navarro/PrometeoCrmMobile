@@ -1,3 +1,6 @@
+using Android.App;
+using Android.Content;
+using Core.Notification;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels;
@@ -7,6 +10,7 @@ using MvvmCross.ViewModels;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Xamarin.Forms;
 
 namespace Core
 {
@@ -23,9 +27,9 @@ namespace Core
 
             RegisterServices();
             RegisterAppStart<RootViewModel>();
+
             //DataOffline();
         }
-
         //private void DataOffline()
         //{
         //    if(offlineDataService.IsWifiConection)
@@ -63,5 +67,6 @@ namespace Core
             Mvx.IoCProvider.ConstructAndRegisterSingleton<INotificationService, NotificationService>();
 
         }
+
     }
 }
