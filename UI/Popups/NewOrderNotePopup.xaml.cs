@@ -49,7 +49,7 @@ namespace UI.Popups
 
             Company = comp;
 
-            CheckExportación.IsEnabled = true;
+            //sCheckExportación.IsEnabled = true;
             //CheckExportación.Color = Color.Gray;
 
             //if (Company.CompanyOrderTypes.Count > 0)
