@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -49,9 +51,43 @@ namespace Core.ViewModels
             set => SetProperty(ref errorMessage, value);
         }
 
+        private ObservableCollection<Company> listOfCompanies;
+        public ObservableCollection<Company> ListOfCompanies
+        {
+            get => this.listOfCompanies;
+            set => SetProperty(ref listOfCompanies, value);
+        }
+
+        private bool isVisibleLogin;
+        public bool IsVisibleLogin
+        {
+            get => this.isVisibleLogin;
+            set => SetProperty(ref isVisibleLogin, value);
+        }
+
+        private bool isVisibleSelectCompany;
+        public bool IsVisibleSelectCompany
+        {
+            get => this.isVisibleSelectCompany;
+            set => SetProperty(ref this.isVisibleSelectCompany, value);
+        }
+        private bool isRunningActivityCompany;
+        public bool IsRunningActivityCompany
+        {
+            get => this.isRunningActivityCompany;
+            set => SetProperty(ref this.isRunningActivityCompany, value);
+        }
+        private Company company;
+        public Company Company
+        {
+            get => this.company;
+            set => SetProperty(ref this.company, value);
+        }
         // Commands
         public IMvxCommand LoginCommand { get; }
         public Command RecoverPasswordCommand { get; }
+        public Command SelectCompanyCommand { get; }
+
         // Fields
         private readonly ApplicationData appData;
 
@@ -71,6 +107,9 @@ namespace Core.ViewModels
             this.notificationService = notificationService;
 
             RecoverPasswordCommand = new Command(async () => await RecoverPassword());
+            SelectCompanyCommand = new Command(() => SelectCompany());
+
+            IsVisibleLogin = true;
 
             LoginCommand = new MvxAsyncCommand(LoginAsync);
         }
@@ -78,6 +117,51 @@ namespace Core.ViewModels
         private async Task RecoverPassword()
         {
             await navigationService.Navigate<RecoverPasswordViewModel>();
+        }
+        private async Task CargarcCompanies()
+        {
+            try
+            {
+                IsLogging = true;
+
+                if (appData.LoggedUser != null)
+                {
+                    var companies = await prometeoApiService.GetCompaniesByUserId(appData.LoggedUser.Id, appData.LoggedUser.Token);
+                    ListOfCompanies = new ObservableCollection<Company>(companies);
+
+                    if (ListOfCompanies.Count == 1)
+                    {
+                        var user = appData.LoggedUser;
+                        user.UniqueCompany = "true";
+                        user.CompanyId = ListOfCompanies.FirstOrDefault().Id;
+                        appData.SetLoggedUser(user);
+
+                        Identity.UniqueCompany = true;
+
+                        SetearEmpresa(ListOfCompanies.FirstOrDefault().Id, appData.LoggedUser.Token);
+                    }
+                    else
+                    {
+                        IsVisibleLogin = false;
+                        IsVisibleSelectCompany = true;
+                        //var user = appData.UserLogger;
+                        //user.UniqueCompany = "false";
+                        //appData.LoggearUsuario(user);
+
+                        Identity.UniqueCompany = false;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                IsLogging = false;
+            }
         }
 
         private async Task LoginAsync()
@@ -140,8 +224,10 @@ namespace Core.ViewModels
                 Thread.CurrentThread.CurrentUICulture = language;
                 MessagingCenter.Send(this, "LangChanged", language);
 
-                await navigationService.Navigate<HomeViewModel>();
-                await navigationService.Navigate<MenuViewModel>();
+                await CargarcCompanies();
+
+                //await navigationService.Navigate<HomeViewModel>();
+                //await navigationService.Navigate<MenuViewModel>();
             }
             catch (ServiceException ex)
             {
@@ -156,6 +242,57 @@ namespace Core.ViewModels
             finally
             {
                 IsLogging = false;
+            }
+        }
+        public async void SetearEmpresa(int companyId, string token)
+        {
+            try
+            {
+                var setCompany = await prometeoApiService.SetCompany(companyId, token);
+
+                if (setCompany != null)
+                {
+                    if (appData.LoggedUser != null)
+                    {
+                        var user = appData.LoggedUser;
+                        user.Token = setCompany.Token;
+                        user.CompanyId = companyId;
+                        appData.SetLoggedUser(user);
+
+                    }
+
+                    await navigationService.Navigate<HomeViewModel>();
+                    await navigationService.Navigate<MenuViewModel>();
+                }
+
+            }
+            catch (Exception e)
+            {
+                var m = e.Message;
+            }
+        }
+        private void SelectCompany()
+        {
+            try
+            {
+                IsRunningActivityCompany = true;
+
+                if (Company != null)
+                {
+                    if (appData.LoggedUser != null)
+                    {
+                        SetearEmpresa(Company.Id, appData.LoggedUser.Token);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                var m = e.Message;
+            }
+            finally
+            {
+                //IsRunningActivityCompany = false;
             }
         }
     }

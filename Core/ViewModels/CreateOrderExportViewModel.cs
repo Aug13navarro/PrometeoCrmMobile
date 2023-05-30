@@ -405,7 +405,7 @@ namespace Core.ViewModels
                     discount = OrderDiscount,
                     total = Convert.ToDecimal(Total),
                     cuenta = SelectedCustomer.externalCustomerId.Value,
-                    divisionCuentaId = Company.externalId.Value,
+                    divisionCuentaId = Company.ExternalId.Value,
                     talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
                     tipoCuentaId = 1,                    //puede ser null

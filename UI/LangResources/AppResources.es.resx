@@ -180,6 +180,9 @@
   <data name="Contacts" xml:space="preserve">
     <value>Contactos</value>
   </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continuar</value>
+  </data>
   <data name="CorporateCustomer" xml:space="preserve">
     <value>Cliente Corporativo</value>
   </data>

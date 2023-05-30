@@ -52,17 +52,12 @@ namespace UI.Popups
             //sCheckExportación.IsEnabled = true;
             //CheckExportación.Color = Color.Gray;
 
-            //if (Company.CompanyOrderTypes.Count > 0)
-            //{
-            //    foreach (var item in Company.CompanyOrderTypes)
-            //    {
-            //        if (item.OrderType.Name == "Exportación")
-            //        {
-            //            CheckExportación.IsEnabled = true;
-            //            CheckExportación.Color = Color.FromHex("#FF4081");
-            //        }
-            //    }
-            //}
+            if (Company.ExportPv)
+            {
+                CheckExportación.IsEnabled = true;
+                CheckExportación.Color = Color.FromHex("#FF4081");
+
+            }
         }
 
         private void AceptButtonClicked(object sender , EventArgs e)

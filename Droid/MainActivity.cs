@@ -16,7 +16,6 @@ using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Forms.Platforms.Android.Views;
 using PrometeoCrmMobile.Droid.Notification;
 using PrometeoCrmMobile.Droid.Services;
-using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using UI;
 using UI.Popups;

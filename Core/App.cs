@@ -1,6 +1,3 @@
-using Android.App;
-using Android.Content;
-using Core.Notification;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels;
@@ -10,16 +7,13 @@ using MvvmCross.ViewModels;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Xamarin.Forms;
 
 namespace Core
 {
     public class App : MvxApplication 
     {
         private OfflineDataService offlineDataService;
-        //public static Uri PrometeoApiEndPoint { get; } = new Uri("https://prometeo-erp-develop-api.azurewebsites.net/");
-        //public static Uri PrometeoApiEndPoint { get; } = new Uri("https://neophos-testing-api.azurewebsites.net/");
-        public static Uri PrometeoApiEndPoint { get; } = new Uri("https://prometeo-produccion-api.azurewebsites.net/");
+
 
         public override void Initialize()
         {
@@ -27,6 +21,14 @@ namespace Core
 
             RegisterServices();
             RegisterAppStart<RootViewModel>();
+
+            //CreatableTypes()
+            //    .EndingWith("Service")
+            //    .AsInterfaces()
+            //    .RegisterAsLazySingleton();
+
+            // Sobrescribir el método OnStart con la instancia de AppStart
+            //RegisterAppStart<AppStart>();
 
             //DataOffline();
         }
@@ -50,7 +52,7 @@ namespace Core
             {
                 var client = new HttpClient()
                 {
-                    BaseAddress = PrometeoApiEndPoint
+                    BaseAddress = EndpointURL.PrometeoApiEndPoint
                 };
 
                 if (!string.IsNullOrWhiteSpace(appData.LoggedUser?.Token))
@@ -67,6 +69,5 @@ namespace Core
             Mvx.IoCProvider.ConstructAndRegisterSingleton<INotificationService, NotificationService>();
 
         }
-
     }
 }

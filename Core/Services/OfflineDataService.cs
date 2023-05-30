@@ -304,7 +304,7 @@ namespace Core.Services
                 var comp = new CompanyExtern
                 {
                     BusinessName = orderNote.company.BusinessName,
-                    externalId = orderNote.company.externalId,
+                    externalId = orderNote.company.ExternalId,
                     Id = orderNote.company.Id
                 }; 
                 
@@ -644,7 +644,7 @@ namespace Core.Services
                     var comp = new Company
                     {
                         BusinessName = item.company.BusinessName,
-                        externalId = item.company.externalId,
+                        ExternalId = item.company.externalId,
                         Id = item.company.Id
                     };
 
