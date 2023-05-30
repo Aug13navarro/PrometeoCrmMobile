@@ -59,21 +59,21 @@ namespace Core.ViewModels
 
             if (LoggedUser.Language.abbreviation.ToLower() == "es" || LoggedUser.Language.abbreviation.Contains("spanish"))
             {
-                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"));
-                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"));
-                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"));
-                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"));
-                MenuItems.Add(new MenuItems(MenuItemType.ChangeCompany, "Cambiar Empresa", "company"));
-                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"));
+                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.ChangeCompany, "Cambiar Empresa", "company", appData.LoggedUser.UniqueCompany == "true" ? false : true));
+                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace", true));
             }
             else
             {
-                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Opportunities", "ic_menu_cuentasic_menu_oportunidades"));
-                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Orders", "ic_menu_pedidos"));
-                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Customers", "ic_menu_cuentas"));
-                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contacts", "ic_menu_contactos"));
-                MenuItems.Add(new MenuItems(MenuItemType.ChangeCompany, "Change Company", "company_30p"));
-                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Log out", "ic_keyboard_backspace"));
+                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Opportunities", "ic_menu_cuentasic_menu_oportunidades", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Orders", "ic_menu_pedidos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Customers", "ic_menu_cuentas", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contacts", "ic_menu_contactos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.ChangeCompany, "Change Company", "company_30p", appData.LoggedUser.UniqueCompany == "true" ? false : true));
+                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Log out", "ic_keyboard_backspace", true));
             }
             
             GetCompanies(appData.LoggedUser.Id);
