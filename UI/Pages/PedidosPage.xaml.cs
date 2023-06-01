@@ -26,11 +26,11 @@ namespace UI.Pages
             ViewModel.NewOrderPopup += OnNewOrderNote;
         }
 
-        private async void OnNewOrderNote(object sender, List<Company> empresas)
+        private async void OnNewOrderNote(object sender, Company empresa)
         {
             try
             {
-                var pop = new NewOrderNotePopup(empresas);
+                var pop = new NewOrderNotePopup(empresa);
 
                 pop.OkTapped += async (s, args) =>
                 {

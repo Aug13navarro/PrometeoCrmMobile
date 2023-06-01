@@ -404,7 +404,7 @@ namespace Core.ViewModels
                 {
                     discount = OrderDiscount,
                     total = Convert.ToDecimal(Total),
-                    cuenta = SelectedCustomer.externalCustomerId,
+                    //cuenta = SelectedCustomer.externalCustomerId,
                     divisionCuentaId = Company.ExternalId.Value,
                     talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
@@ -419,6 +419,9 @@ namespace Core.ViewModels
                     IsFinalClient = IsChecked,
                     IncotermId = Incoterm.Id,
                     FreightId = FreightInCharge.id,
+                    fecha = ETD,
+                    ETD = ETD,
+                    customerId = SelectedCustomer.Id
                 };
 
                 if (FreightInCharge != null)

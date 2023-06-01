@@ -748,7 +748,7 @@ namespace Core.ViewModels
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
                     commercialAssistantId = Assistant.IdUser,
-                    ProviderId = Provider.Id
+                    ProviderId = Provider?.Id
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
                     
                 };

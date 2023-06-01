@@ -38,7 +38,7 @@
                     <Grid
                 ColumnDefinitions="*,*"
                 RowDefinitions="auto,auto,auto,auto,auto,auto,auto,auto">
-                <StackLayout Orientation="Horizontal"
+                <!--<StackLayout Orientation="Horizontal"
                              Grid.Row="0"
                              Grid.ColumnSpan="2">
                     <Label Text="{x:Static resources:AppResources.Company}" Style="{StaticResource DefaultLabel}"
@@ -55,7 +55,7 @@
 
                         </Picker>
                     </Frame>
-                </StackLayout>
+                </StackLayout>-->
                 <StackLayout Orientation="Horizontal"
                              Grid.Row="1"
                              Grid.ColumnSpan="2">

@@ -22,9 +22,15 @@
             <StackLayout Orientation="Horizontal">
                 <Label Text="{x:Static resources:AppResources.Company}" Style="{x:StaticResource DefaultLabel}"
                        VerticalOptions="Center"></Label>
-                <Picker x:Name="cmbCompanies" Title="{x:Static resources:AppResources.Company}"
+                <!--<Picker x:Name="cmbCompanies" Title="{x:Static resources:AppResources.Company}"
                         ItemDisplayBinding="{Binding BusinessName}" HorizontalOptions="FillAndExpand"
-                        SelectedIndexChanged="cmbCompanies_SelectedIndexChanged"></Picker>
+                        SelectedIndexChanged="cmbCompanies_SelectedIndexChanged"></Picker>-->
+                <Frame
+                    Padding="10">
+                    <Label
+                       x:Name="CompanyName" Style="{x:StaticResource DefaultLabel}"
+                       VerticalOptions="Center"></Label>
+                </Frame>
             </StackLayout>
             
             <StackLayout Orientation="Horizontal">

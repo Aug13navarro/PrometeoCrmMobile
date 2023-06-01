@@ -108,7 +108,7 @@ namespace Core.ViewModels
         public Command RefreshListCommand { get; }
 
         //EVENTS
-        public event EventHandler<List<Company>> NewOrderPopup;
+        public event EventHandler<Company> NewOrderPopup;
 
 
         private readonly IMvxNavigationService navigationService;
@@ -204,7 +204,7 @@ namespace Core.ViewModels
                 {
                     var empresas = await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
 
-                    NewOrderPopup?.Invoke(this, empresas);
+                    NewOrderPopup?.Invoke(this, empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
                 }
                 else
                 {
@@ -224,7 +224,7 @@ namespace Core.ViewModels
 
                     var companies = mapper.Map<List<Company>>(empresas);
 
-                    NewOrderPopup?.Invoke(this, companies);
+                    NewOrderPopup?.Invoke(this, companies.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
                 }
             }
             catch (Exception e)

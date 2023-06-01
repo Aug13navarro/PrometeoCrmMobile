@@ -192,7 +192,7 @@ namespace Core.ViewModels
 
 
                 CargarEstados();
-                CargarCompanies();
+                //CargarCompanies();
 
                 IsEnableSeller = true;
                 EnableColor = Color.White;
@@ -360,49 +360,49 @@ namespace Core.ViewModels
             }                
         }
 
-        private async void CargarCompanies()
-        {
-            try
-            {
-                var red = await Connection.SeeConnection();
+        //private async void CargarCompanies()
+        //{
+        //    try
+        //    {
+        //        var red = await Connection.SeeConnection();
 
-                if (red)
-                {
-                    var user = data.LoggedUser;
+        //        if (red)
+        //        {
+        //            var user = data.LoggedUser;
 
-                    var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
+        //            var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
 
-                    Companies.AddRange(d);
+        //            Companies.AddRange(d);
 
-                    CargarFiltroGuardado();
-                }
-                {
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
+        //            CargarFiltroGuardado();
+        //        }
+        //        {
+        //            var mapperConfig = new MapperConfiguration(m =>
+        //            {
+        //                m.AddProfile(new MappingProfile());
+        //            });
 
-                    IMapper mapper = mapperConfig.CreateMapper();
+        //            IMapper mapper = mapperConfig.CreateMapper();
 
-                    if (!offlineDataService.IsDataLoadedCompanies)
-                    {
-                        await offlineDataService.LoadCompanies();
-                    }
+        //            if (!offlineDataService.IsDataLoadedCompanies)
+        //            {
+        //                await offlineDataService.LoadCompanies();
+        //            }
 
-                    var empresas = await offlineDataService.SearchCompanies();
+        //            var empresas = await offlineDataService.SearchCompanies();
 
-                    var e = mapper.Map<List<Company>>(empresas);
+        //            var e = mapper.Map<List<Company>>(empresas);
 
-                    Companies.AddRange(e);
+        //            Companies.AddRange(e);
 
-                    CargarFiltroGuardado();
-                }
-            }
-            catch (Exception e)
-            {
-                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
-            }
-        }
+        //            CargarFiltroGuardado();
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
+        //    }
+        //}
 
         private void CargarFiltroGuardado()
         {
