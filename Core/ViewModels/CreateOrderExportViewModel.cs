@@ -404,15 +404,15 @@ namespace Core.ViewModels
                 {
                     discount = OrderDiscount,
                     total = Convert.ToDecimal(Total),
-                    cuenta = SelectedCustomer.externalCustomerId.Value,
+                    cuenta = SelectedCustomer.externalCustomerId,
                     divisionCuentaId = Company.ExternalId.Value,
                     talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
                     tipoCuentaId = 1,                    //puede ser null
                     tipoServicioId = 50,                  //puede ser null
-
+                    currencyId = 1,
                     companyId = Company.Id,
-                    Description = Order.Description,
+                    Description = string.IsNullOrEmpty(Order.Description) ? string.Empty : Order.Description,
                     paymentConditionId = Condition.id,
                     ImporterCustomerId = SelectedCustomer.Id,
                     IsExport = true,
@@ -426,7 +426,7 @@ namespace Core.ViewModels
                     nuevaOrder.FreightId = FreightInCharge.id;
                 }
 
-                nuevaOrder.products = DefinirProductos(Order.Details.ToList());
+                nuevaOrder.products = Order.products;
 
                 if (Order.id == 0)
                 {

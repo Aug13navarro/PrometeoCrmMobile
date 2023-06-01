@@ -25,8 +25,8 @@ namespace UI.Popups
             
             Companies = companies;
 
-            //CheckExportación.IsEnabled = false;
-            //CheckExportación.Color = Color.Gray;
+            CheckExportación.IsEnabled = false;
+            CheckExportación.Color = Color.Gray;
 
             if (Companies.Count() > 0 )
             {
@@ -52,7 +52,7 @@ namespace UI.Popups
             //sCheckExportación.IsEnabled = true;
             //CheckExportación.Color = Color.Gray;
 
-            if (Company.ExportPv)
+            if (Company.ExportPv.HasValue && Company.ExportPv.Value)
             {
                 CheckExportación.IsEnabled = true;
                 CheckExportación.Color = Color.FromHex("#FF4081");

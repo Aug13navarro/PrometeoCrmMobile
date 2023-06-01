@@ -84,7 +84,7 @@ namespace Core.Model
         public DateTime fecha { get; set; }
         public string fechaStr => fecha.ToString("d");
         public int divisionCuentaId { get; set; }
-        public int cuenta { get; set; }
+        public int? cuenta { get; set; }
         public int tipoCuentaId { get; set; }
         public int tipoServicioId { get; set; }
         public int customerId { get; set; }

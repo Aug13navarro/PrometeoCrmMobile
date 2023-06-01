@@ -333,7 +333,7 @@ namespace Core.Services
                 {
                     company = comp,
                     companyId = comp.Id,
-                    cuenta = orderNote.cuenta,
+                    cuenta = orderNote.cuenta.Value,
                     currencyId = orderNote.currencyId,
                     customer = customerEx,
                     customerId = customerEx.Id,

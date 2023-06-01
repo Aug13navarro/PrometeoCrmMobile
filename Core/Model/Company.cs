@@ -6,6 +6,6 @@ namespace Core.Model
         public string BusinessName { get; set; }
         public int? ExternalId { get; set; }
         public int? externalErpId { get; set; }
-        public bool ExportPv { get; set; }
+        public bool? ExportPv { get; set; }
     }
 }

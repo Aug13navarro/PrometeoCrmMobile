@@ -153,9 +153,9 @@ namespace Core.ViewModels
 
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                var m = e.Message;
                 throw;
             }
             finally
