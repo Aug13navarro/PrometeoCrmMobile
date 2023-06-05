@@ -58,10 +58,10 @@ namespace Core.ViewModels
             {
                 //if(offlineDataService.IsDataLoaded)
                 //{
-                    if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "lunes")
-                    {
-                        CargarEnCache(LoggedUser.Language.abbreviation.ToLower());
-                    }
+                if (DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es")) == "lunes")
+                {
+                    CargarEnCache(LoggedUser.Language.abbreviation.ToLower());
+                }
                 //}
                 //else
                 //{
