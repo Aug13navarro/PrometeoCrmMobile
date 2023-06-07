@@ -658,7 +658,6 @@ namespace Core.ViewModels
                 if (Company == null ||
                     SelectedCustomer == null ||
                     TypeOfRemittance == null ||
-                    Place == null ||
                     PaymentMethod == null ||
                     Assistant == null)
                 {
@@ -671,6 +670,23 @@ namespace Core.ViewModels
                     {
                         await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
                         return;
+                    }
+                }
+
+                if(Company.Id != 7)
+                {
+                    if (Place == null)
+                    {
+                        if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Atención", "Faltan ingresar datos obligatorios.", "Aceptar");
+                            return;
+                        }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
+                            return;
+                        }
                     }
                 }
                 
@@ -744,7 +760,7 @@ namespace Core.ViewModels
                     DeliveryDate = Order.DeliveryDate,
                     DeliveryResponsible = Order.DeliveryResponsible,
                     OCCustomer = Order.OCCustomer,
-                    PlacePayment = Place.Id,
+                    PlacePayment = Place?.Id,
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
                     commercialAssistantId = Assistant.IdUser,
