@@ -237,12 +237,12 @@ namespace Core.ViewModels
         {
             if(export)
             {
-                var order = new OrderNote
-                {
-                    company = company,
-                };
+                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
+                var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now, company = company };
 
-                var s = await navigationService.Navigate<CreateOrderExportViewModel, OrderNote>(order);
+                createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
+                await navigationService.Navigate(createViewModel, order);
+                //var s = await navigationService.Navigate<, OrderNote>(order);
             }
             else
             {
@@ -470,7 +470,9 @@ namespace Core.ViewModels
         {
             if (orderNote.IsExport)
             {
-                await navigationService.Navigate<CreateOrderExportViewModel, OrderNote>(orderNote);
+                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
+                createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
+                await navigationService.Navigate(createViewModel, orderNote);
             }
             else
             {
