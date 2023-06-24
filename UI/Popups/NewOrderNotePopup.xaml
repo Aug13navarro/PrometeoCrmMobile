@@ -22,9 +22,6 @@
             <StackLayout Orientation="Horizontal">
                 <Label Text="{x:Static resources:AppResources.Company}" Style="{x:StaticResource DefaultLabel}"
                        VerticalOptions="Center"></Label>
-                <!--<Picker x:Name="cmbCompanies" Title="{x:Static resources:AppResources.Company}"
-                        ItemDisplayBinding="{Binding BusinessName}" HorizontalOptions="FillAndExpand"
-                        SelectedIndexChanged="cmbCompanies_SelectedIndexChanged"></Picker>-->
                 <Frame
                     Padding="10">
                     <Label
@@ -32,15 +29,35 @@
                        VerticalOptions="Center"></Label>
                 </Frame>
             </StackLayout>
-            
-            <StackLayout Orientation="Horizontal">
+
+            <StackLayout
+                Orientation="Horizontal"
+                HorizontalOptions="CenterAndExpand">
+                <Button
+                    Text="Venta Normal"
+                    TextColor="White"
+                    CornerRadius="5"
+                    BackgroundColor="{StaticResource PrimaryColor}"
+                    Clicked="AceptButtonClicked">
+                    
+                </Button>
+                <Button
+                    Text="Venta Exportación"
+                    TextColor="White"
+                    CornerRadius="5"
+                    BackgroundColor="{StaticResource SecondaryColor}"
+                    Clicked="AceptButtonExportClicked">
+                    
+                </Button>
+            </StackLayout>
+            <!--<StackLayout Orientation="Horizontal">
                 <Label Text="Exportación" Style="{x:StaticResource DefaultLabel}" VerticalOptions="Center"></Label>
                 <CheckBox x:Name="CheckExportación" VerticalOptions="Center" CheckedChanged="CheckBox_CheckedChanged" IsEnabled="False"></CheckBox>
 
             </StackLayout>
 
             <Button Text="{x:Static resources:AppResources.Accept}" BackgroundColor="{x:StaticResource PrimaryColor}" TextColor="White"
-                    Clicked="AceptButtonClicked"></Button>
+                    Clicked="AceptButtonClicked"></Button>-->
         </StackLayout>
     </Frame>
 </Popups:BasePopupPage>

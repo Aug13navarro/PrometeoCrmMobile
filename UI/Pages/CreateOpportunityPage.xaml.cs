@@ -4,6 +4,7 @@ using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
 using System;
+using System.Globalization;
 using UI.LangResources;
 using UI.Popups;
 using Xamarin.Forms;
@@ -177,6 +178,31 @@ namespace UI.Pages
                 Application.Current.MainPage.DisplayAlert
                     (AppResources.InfoTitle, AppResources.InfoTextCloseOpportunity, AppResources.Accept);
                 return;
+            }
+        }
+
+        private void Entry_TextChanged(object sender, Xamarin.Forms.TextChangedEventArgs e)
+        {
+            try
+            {
+                var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+                ViewModel.ResetTotal(ViewModel.Opportunity.Details);
+
+                if (string.IsNullOrWhiteSpace(lblOrderDiscount.Text) || ViewModel.OrderDiscount == 0)
+                {
+                }
+
+                if (ViewModel.OrderDiscount > 0)
+                {
+                    ViewModel.ValorDescuento = ViewModel.Total * ViewModel.OrderDiscount / 100;
+
+                    ViewModel.ActualizarTotal(ViewModel.Opportunity.Details);
+                }
+            }
+            catch (Exception ex)
+            {
+                var s = ex.Message;
             }
         }
     }

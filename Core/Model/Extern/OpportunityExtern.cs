@@ -16,16 +16,10 @@ namespace Core.Model.Extern
         public DateTime createDt { get; set; }
         public DateTime closedDate { get; set; }
 
-        //public MvxObservableCollection<OpportunityProducts> opportunityProducts { get; set; } = new MvxObservableCollection<OpportunityProducts>();
         public List<OpportunityProductsExtern> opportunityProducts { get; set; } = new List<OpportunityProductsExtern>();
 
         public string description { get; set; }
 
-
         public decimal totalPrice { get; set; }
-
-        //public string ProductsDescription => string.Join(", ", opportunityProducts.Select(x => x.product.name));
-
-        //public List<OpportunityProductsExtern> Details { get; set; } = new List<OpportunityProductsExtern>();
     }
 }

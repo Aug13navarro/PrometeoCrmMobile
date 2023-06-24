@@ -389,11 +389,6 @@ namespace Core.ViewModels
                     if (providers != null)
                     {
                         Providers = new MvxObservableCollection<Provider>(providers.OrderBy(x => x.Name));
-
-                        //if (Order.PaymentMethodId != null)
-                        //{
-                        //    PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
-                        //}
                     }
                 }
                 else

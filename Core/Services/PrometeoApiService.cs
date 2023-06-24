@@ -30,11 +30,6 @@ namespace Core.Services
 
         public async Task<LoginData> Login(string userName, string password)
         {
-            //const string url = "api/User/Login";
-            //const string url = "http://testing-prometeo.docworld.com.ar:8089/api/User/Login";
-            // const string url = "https://prometeoerp.com/login";
-
-
             const string url = "api/User/Login";
             var body = new
             {
@@ -63,7 +58,6 @@ namespace Core.Services
 
         public async Task<UserData> GetUserData(int userId)
         {
-            // string url = $"api/User/{userId}";
             string url = $"api/User/{userId}";
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
@@ -76,7 +70,6 @@ namespace Core.Services
 
         public async Task<List<Opportunity>> GetOpportunietesTest(int userId)
         {
-            // string url = $"api/User/{userId}";
             try
             {
                 string url = $"api/Opportunity/{userId}";

@@ -32,12 +32,14 @@
     </NavigationPage.TitleView>
     <StackLayout>
         <ScrollView>
-        <Frame HorizontalOptions="Center"
-               BorderColor="{StaticResource PrimaryColor}">
+            <Frame HorizontalOptions="Center"
+                   VerticalOptions="StartAndExpand"
+                   Margin="5" 
+                   BorderColor="{StaticResource PrimaryColor}">
                 <StackLayout>
                     <Grid
-                ColumnDefinitions="*,*"
-                RowDefinitions="auto,auto,auto,auto,auto,auto,auto,auto">
+                        ColumnDefinitions="*,*"
+                        RowDefinitions="auto,auto,auto,auto,*">
                 <!--<StackLayout Orientation="Horizontal"
                              Grid.Row="0"
                              Grid.ColumnSpan="2">
@@ -56,14 +58,96 @@
                         </Picker>
                     </Frame>
                 </StackLayout>-->
-                <StackLayout Orientation="Horizontal"
+
+                        <Frame Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Horizontal" >
+                                <Grid ColumnDefinitions=".5*,.5*" HorizontalOptions="FillAndExpand">
+                                    <StackLayout Grid.Column="0" Orientation="Vertical" Spacing="0">
+                                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="0">
+                                            <Label Text="{x:Static resources:AppResources.FromDate}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <ImageButton
+                                                Source="ic_close.png"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding RestablecerFechaDesdeCommand}">
+
+                                            </ImageButton>
+                                        </StackLayout>
+                                        <DatePicker Date="{Binding BeginDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" MinimumDate="{Binding MinimumDate}" Format="dd/MM/yyyy"/>
+                                    </StackLayout>
+                                    <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="0">
+                                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="0">
+                                            <Label Text="{x:Static resources:AppResources.EndDate}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                                            <ImageButton
+                                                Source="ic_close.png"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding RestablecerFechaHastaCommand}">
+
+                                            </ImageButton>
+                                        </StackLayout>
+                                        <DatePicker Date="{Binding EndDate}" HorizontalOptions="Center" MaximumDate="{Binding MaximumDate}" MinimumDate="{Binding MinimumDate}" Format="dd/MM/yyyy"/>
+                                    </StackLayout>
+                                </Grid>
+                            </StackLayout>
+                        </Frame>
+                        
+                        <Frame 
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            BackgroundColor="{Binding EnableColor}"
+                            Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                            <Picker
+                            IsEnabled="{Binding IsEnableSeller}"
+                            Title="{x:Static resources:AppResources.Seller}"
+                            ItemsSource="{Binding Vendors, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding FullName}"
+                            SelectedItem="{Binding Seller, Mode=TwoWay}">
+
+                                </Picker>
+                            </StackLayout>
+                        </Frame>
+                        <Frame 
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Picker
+                            Title="{x:Static resources:AppResources.State}"
+                            ItemsSource="{Binding OrderStatuses, Mode=TwoWay}"
+                            ItemDisplayBinding="{Binding name}"
+                            SelectedItem="{Binding Status, Mode=TwoWay}">
+
+                                </Picker>
+                            </StackLayout>
+                        </Frame>
+                        <Frame Grid.Row="3" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="{x:Static resources:AppResources.FromPrice}" FontSize="Small"/>
+                                <Entry Keyboard="Numeric" Text="{Binding TotalDesde}"
+                                       x:Name="txtFromPrice"></Entry>
+                                <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
+                            />-->
+                            </StackLayout>
+                        </Frame>
+
+                        <Frame Grid.Row="3" Grid.Column="1" Style="{StaticResource filterFrame}">
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="{x:Static resources:AppResources.EndPrice}" FontSize="Small"/>
+                                <Entry Keyboard="Numeric" Text="{Binding TotalHasta}"
+                                       x:Name="txtEndPrice"></Entry>
+                                <!--<Picker ItemsSource="{Binding Totals}" ItemDisplayBinding="{Binding}" SelectedItem="{Binding Total}"
+                            />-->
+                            </StackLayout>
+                        </Frame>
+
+                        <!--<StackLayout Orientation="Horizontal"
                              Grid.Row="1"
                              Grid.ColumnSpan="2">
                     <Label Text="{x:Static resources:AppResources.Seller}" Style="{StaticResource DefaultLabel}"
                            VerticalOptions="Center">
 
-                    </Label>
-                    <Frame Margin="0" Padding="0"
+                    </Label>-->
+                    <!--<Frame Margin="0" Padding="0"
                            HorizontalOptions="FillAndExpand"
                            BackgroundColor="{Binding EnableColor}">
                         <Picker
@@ -74,9 +158,9 @@
                             SelectedItem="{Binding Seller, Mode=TwoWay}">
 
                         </Picker>
-                    </Frame>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal"
+                    </Frame>-->
+                <!--</StackLayout>-->
+                <!--<StackLayout Orientation="Horizontal"
                              Grid.Row="2"
                              Grid.ColumnSpan="2">
                     <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}"
@@ -92,8 +176,8 @@
 
                         </Picker>
                     </Frame>
-                </StackLayout>
-                <StackLayout Orientation="Horizontal"
+                </StackLayout>-->
+                <!--<StackLayout Orientation="Horizontal"
                              Grid.Row="3"
                              Grid.ColumnSpan="2">
                     <Label Style="{StaticResource DefaultLabel}"
@@ -120,7 +204,7 @@
                                     </ImageButton>
                                 </StackLayout>
                     </Frame>
-                        </StackLayout><!--Fecha Desde-->
+                        </StackLayout>--><!--Fecha Desde--><!--
                         <StackLayout Orientation="Horizontal"
                              Grid.Row="4"
                              Grid.ColumnSpan="2">
@@ -148,8 +232,8 @@
                                     </ImageButton>
                                 </StackLayout>
                     </Frame>
-                </StackLayout><!--Fecha Hasta-->
-                <StackLayout Orientation="Horizontal"
+                </StackLayout>--><!--Fecha Hasta-->
+                <!--<StackLayout Orientation="Horizontal"
                              Grid.Row="5"
                              Grid.ColumnSpan="2">
                     <Label Text="{x:Static resources:AppResources.FromPrice}"
@@ -164,7 +248,7 @@
                             TextChanged="txtFromPrice_TextChanged"
                             Text="{Binding TotalDesde, Mode=TwoWay}"
                                 HorizontalTextAlignment="End">
-                                    <!---->
+                                    --><!----><!--
 
                         </Entry>
                     </Frame>
@@ -184,26 +268,34 @@
                                 TextChanged="txtEndPrice_TextChanged"
                             Text="{Binding TotalHasta, Mode=TwoWay}"
                                 HorizontalTextAlignment="End">
-                                    <!--Text="{Binding TotalHasta, Mode=TwoWay}"-->
+                                    --><!--Text="{Binding TotalHasta, Mode=TwoWay}"--><!--
 
                         </Entry>
                     </Frame>
-                </StackLayout>
+                </StackLayout>-->
                 
-                <Button
-                    Grid.Row="7"
+                <!--<Button
+                    Grid.Row="4"
                     Grid.ColumnSpan="2"
                     Text="{x:Static resources:AppResources.Accept}"
-                    BackgroundColor="{StaticResource PrimaryColor}"
-                    TextColor="White"
-                    HorizontalOptions="Center"
+                    Style="{StaticResource DefaultBtn}"
                     Command="{Binding ApplyFiltersCommand}"
                     Padding="{OnPlatform iOS='15,0'}">
                     
-                </Button>
+                </Button>-->
             </Grid>
+
+                    
                 </StackLayout>
             </Frame>
         </ScrollView>
+
+        <Button
+                    Text="{x:Static resources:AppResources.Accept}"
+                    Style="{StaticResource DefaultBtn}"
+                    Command="{Binding ApplyFiltersCommand}"
+                    Padding="{OnPlatform iOS='15,0'}">
+
+        </Button>
     </StackLayout>
 </Views:MvxContentPage>

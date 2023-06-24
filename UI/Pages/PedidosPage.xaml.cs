@@ -30,18 +30,25 @@ namespace UI.Pages
         {
             try
             {
-                var pop = new NewOrderNotePopup(empresa);
-
-                pop.OkTapped += async (s, args) =>
+                if(empresa.ExportPv.HasValue)
                 {
-                    await PopupNavigation.Instance.PopAsync(false);
+                    var pop = new NewOrderNotePopup(empresa);
 
-                    //(Company comp, bool isExport) = args;
+                    pop.OkTapped += async (s, args) =>
+                    {
+                        await PopupNavigation.Instance.PopAsync(false);
 
-                    await ViewModel.IrNuevaNotaPedido(args.Company, args.isExport);
-                };
+                        //(Company comp, bool isExport) = args;
 
-                await PopupNavigation.Instance.PushAsync(pop);
+                        await ViewModel.IrNuevaNotaPedido(args.Company, args.isExport);
+                    };
+
+                    await PopupNavigation.Instance.PushAsync(pop);
+                }
+                else
+                {
+                    await ViewModel.IrNuevaNotaPedido(empresa, false);
+                }
             }
             catch (Exception)
             {

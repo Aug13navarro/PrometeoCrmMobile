@@ -160,16 +160,11 @@ namespace Core.ViewModels
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
         {
             this.OpportunitiesViewModel = opportunitiesViewModel;
-            //this.navigationService = Mvx.Resolve<IMvxNavigationService>();
-            //this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-
-            //SelectClientCommand = new Command(async () => await SelectClientAsync());
 
             BeginDate = DateTime.Now.Date;
             EndDate = DateTime.Now.Date;
 
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
-            //Companies = new ObservableCollection<Company>();
 
             CargarEstados();
         }

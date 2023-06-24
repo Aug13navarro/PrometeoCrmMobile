@@ -49,17 +49,10 @@ namespace Core.ViewModels
             set => SetProperty(ref companyId, value);
         }
 
-        //private List<Product> products;
-        //public List<Product> Products
-        //{
-        //    get => products;
-        //    set => SetProperty(ref products, value);
-        //}
 
         public MvxObservableCollection<Product> Products { get; } = new MvxObservableCollection<Product>();
 
         // Events
-        //public event EventHandler<Product> ShowSelectProductPopup;
 
         public int CurrentPage { get; private set; } = 1;
         public int TotalPages { get; private set; }
