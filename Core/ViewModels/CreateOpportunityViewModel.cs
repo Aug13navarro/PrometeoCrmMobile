@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Android.Content;
 using AutoMapper;
 using Core.Helpers;
 using Core.Model;
@@ -458,7 +459,8 @@ namespace Core.ViewModels
 
                 SelectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
                 SelectedCustomer = Opportunity.customer;
-                
+
+                OrderDiscount = theOpportunity.Discount.HasValue ? theOpportunity.Discount.Value : 0;
                 ActualizarTotal(Opportunity.Details);
             }
             catch( Exception e)
@@ -653,9 +655,10 @@ namespace Core.ViewModels
                 {
                     detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
                     detail.Price = detail.product.price;
-                    detail.Total = CalcularTotal(detail);
+                    detail.Total = detail.Total;
                     Opportunity.Details.Add(detail);
 
+                    ActualizarDescuento();
                     ActualizarTotal(Opportunity.Details);
                 }
             }
@@ -702,9 +705,35 @@ namespace Core.ViewModels
             }
         }
 
+        private void ActualizarDescuento()
+        {
+            try
+            {
+                var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+                var totalPro = Opportunity.Details.Sum(x => x.Total);
+                var str = (totalPro * OrderDiscount / 100);
+                if (idioma.ToLower().Contains("es"))
+                {
+                    var r = Convert.ToDouble(str.ToString().Replace(",", "."));
+                    ValorDescuento = r;
+                }
+                else
+                {
+                    ValorDescuento = str;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private void RemoveProduct(OpportunityProducts detail)
         {
             Opportunity.Details.Remove(detail);
+            ActualizarDescuento();
             ActualizarTotal(Opportunity.Details);
         }
 
