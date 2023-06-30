@@ -389,6 +389,11 @@ namespace Core.ViewModels
                     if (providers != null)
                     {
                         Providers = new MvxObservableCollection<Provider>(providers.OrderBy(x => x.Name));
+
+                        if(Order.ProviderId.HasValue)
+                        {
+                            Provider = Providers.FirstOrDefault(x => x.Id == Order.ProviderId.Value);
+                        }
                     }
                 }
                 else
@@ -1046,7 +1051,12 @@ namespace Core.ViewModels
 
                     TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
-                    
+
+                    if (Order.TransportCompanyId.HasValue)
+                    {
+                        FleteChecked = true;
+
+                    }
                     CargarFleteCargo();
 
                     CargarMedioPago();
@@ -1060,7 +1070,6 @@ namespace Core.ViewModels
                     OrderDiscount = Order.discount;
 
                     ActualizarTotal(Order.products);
-
                 }
                 else
                 {

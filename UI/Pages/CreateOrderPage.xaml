@@ -486,7 +486,7 @@
                                     AutoSize="TextChanges" Text="{Binding Order.Description}" MaxLength="300" HeightRequest="100"
                                     IsEnabled="{Binding EnableForEdit}"/>
                         </Frame>
-
+                        
                     </StackLayout>
                 </ScrollView>
             </Grid>

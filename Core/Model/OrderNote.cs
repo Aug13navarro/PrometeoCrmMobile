@@ -52,22 +52,22 @@ namespace Core.Model
             switch (orderStatus)
             {
                 case 1:
-                    color = "#797979";
+                    color = "#D3D3D3";
                     break;
                 case 2:
-                    color = "#70B603";
+                    color = "#ADD8E6";
                     break;
                 case 3:
-                    color = "#D9001B";
+                    color = "#FF0000";
                     break;
                 case 4:
-                    color = "#FFCC00";
+                    color = "#13CD32";
                     break;
                 case 5:
-                    color = "#00BFBF";
+                    color = "#131ECD";
                     break;
                 case 6:
-                    color = "#006600";
+                    color = "#000000";
                     break;
             }
 
