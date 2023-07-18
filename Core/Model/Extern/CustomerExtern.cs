@@ -20,12 +20,5 @@ namespace Core.Model.Extern
         public int? UnitBalance { get; set; }
         public string Descriptions { get; set; }
         public int? externalCustomerId { get; set; }
-
-        //public ObservableCollection<int> CompanyUserId { get; } = new ObservableCollection<int>();
-        //public ObservableCollection<int> CompanyUserIds { get; } = new ObservableCollection<int>();
-        //public ObservableCollection<TypeOfCustomer> CustomersTypes { get; } = new ObservableCollection<TypeOfCustomer>();
-
-        //public ObservableCollection<CustomerContact> Contacts { get; } = new ObservableCollection<CustomerContact>();
-        //public ObservableCollection<CustomerAddress> Addresses { get; } = new ObservableCollection<CustomerAddress>();
     }
 }

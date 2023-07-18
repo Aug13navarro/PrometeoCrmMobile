@@ -6,9 +6,5 @@
         public int RoleId { get; set; }
         public int CompanyId { get; set; }
         public string Name { get; set; }
-        //public IList<Permission> Permissions { get; set; }
-
-        //public IList<PermissionDto> RolePermissions { get; set; }
-
     }
 }

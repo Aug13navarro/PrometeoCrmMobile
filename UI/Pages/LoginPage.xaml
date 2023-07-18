@@ -13,6 +13,8 @@
         <StackLayout Margin="20" VerticalOptions="Center">
             <Image Source="ic_logo_navbar.png" HeightRequest="100" />
 
+            <StackLayout
+                IsVisible="{Binding IsVisibleLogin}">
             <StackLayout Orientation="Horizontal"
                          Spacing="0">
                 <Image Source="ic_person.png" />
@@ -32,33 +34,77 @@
                 </Entry>
             </StackLayout>
 
-            <StackLayout Orientation="Horizontal"
+                <StackLayout Orientation="Horizontal"
                          Spacing="0">
-                <Image Source="ic_lock.png" />
+                    <Image Source="ic_lock.png" />
 
-                <Entry x:Name="passwordEntry" 
+                    <Entry x:Name="passwordEntry" 
                        Placeholder="{x:Static resources:AppResources.Password}"
                        Text="{Binding Password}"
                        IsPassword="True"
                        TextColor="{StaticResource PrimaryColor}"
                        HorizontalOptions="FillAndExpand" />
 
-                <Image x:Name="eyeImage" Source="pw_eye_not.png" HeightRequest="30" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,8,0">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="RevealPasswordTapped" />
-                    </Image.GestureRecognizers>
-                </Image>
-            </StackLayout>
-
-            <Button Text="{x:Static resources:AppResources.Enter}"
+                    <Image x:Name="eyeImage" Source="pw_eye_not.png" HeightRequest="30" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,8,0">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="RevealPasswordTapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+                <Button Text="{x:Static resources:AppResources.Enter}"
                     Command="{Binding LoginCommand}"
                     Mvx:Bi.nd="IsEnabled !IsLogging"
                     Style="{StaticResource PrimaryButton}" />
-            <Label Text="{x:Static resources:AppResources.RecoverPass}" TextColor="Blue">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding RecoverPasswordCommand}"></TapGestureRecognizer>
-                </Label.GestureRecognizers>
-            </Label>
+
+                <Label Text="{x:Static resources:AppResources.RecoverPass}" TextColor="Blue">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RecoverPasswordCommand}"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <StackLayout>
+                <Grid
+                RowDefinitions="auto,auto,auto"
+                ColumnDefinitions="auto,*"
+                IsVisible="{Binding IsVisibleSelectCompany}">
+                    <Image
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Source="company_30p.png"
+                    WidthRequest="30">
+
+                    </Image>
+                    <Picker
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    ItemDisplayBinding="{Binding BusinessName, Mode=TwoWay}"
+                    ItemsSource="{Binding ListOfCompanies, Mode=TwoWay}"
+                    SelectedItem="{Binding Company, Mode=TwoWay}"
+                    Title="{Static resources:AppResources.Company}">
+
+                    </Picker>
+                    <Button
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    Style="{StaticResource PrimaryButton}"
+                    Text="{Static resources:AppResources.Continue}"
+                    Command="{Binding SelectCompanyCommand}">
+                    </Button>
+                    <StackLayout                    
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    HeightRequest="40">
+                        <ActivityIndicator
+                    IsVisible="{Binding IsRunningActivityCompany}"
+                    IsRunning="{Binding IsRunningActivityCompany}">
+
+                        </ActivityIndicator>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+
 
             <Label Text="{Binding ErrorMessage}"
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNullOrEmptyBoolConverter}}"

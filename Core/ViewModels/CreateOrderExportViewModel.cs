@@ -218,7 +218,8 @@ namespace Core.ViewModels
 
         //EVENTS
         public event EventHandler<Product> ShowEditProductPopup;
-        public event EventHandler NewOrderCreated;
+        public delegate void EventHandlerOrder(bool created);
+        public event EventHandlerOrder NewOrderCreatedd;
 
         //COMMAND
         public Command SavePedidoCommand { get; }
@@ -280,6 +281,11 @@ namespace Core.ViewModels
                     if (incoterms != null)
                     {
                         Incoterms = new MvxObservableCollection<Incoterm>(incoterms);
+
+                        if(Order.IncotermId.HasValue)
+                        {
+                            Incoterm = incoterms.FirstOrDefault(x => x.Id == Order.IncotermId.Value);
+                        }
                     }
                 }
                 else
@@ -328,6 +334,8 @@ namespace Core.ViewModels
                     if (fletes != null)
                     {
                         FreightInCharges = new MvxObservableCollection<FreightInCharge>(fletes);
+
+                        FreightInCharge = FreightInCharges.FirstOrDefault(x => x.id == Order.FreightId);
                     }
                 }
                 else
@@ -404,21 +412,25 @@ namespace Core.ViewModels
                 {
                     discount = OrderDiscount,
                     total = Convert.ToDecimal(Total),
-                    cuenta = SelectedCustomer.externalCustomerId.Value,
-                    divisionCuentaId = Company.externalId.Value,
+                    //cuenta = SelectedCustomer.externalCustomerId,
+                    divisionCuentaId = Company.ExternalId.Value,
                     talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
                     tipoCuentaId = 1,                    //puede ser null
                     tipoServicioId = 50,                  //puede ser null
-
+                    currencyId = 1,
                     companyId = Company.Id,
-                    Description = Order.Description,
+                    Description = string.IsNullOrEmpty(Order.Description) ? string.Empty : Order.Description,
                     paymentConditionId = Condition.id,
                     ImporterCustomerId = SelectedCustomer.Id,
                     IsExport = true,
                     IsFinalClient = IsChecked,
                     IncotermId = Incoterm.Id,
                     FreightId = FreightInCharge.id,
+                    fecha = ETD,
+                    ETD = ETD,
+                    customerId = SelectedCustomer.Id,
+                    commercialAssistantId = assistant.IdUser
                 };
 
                 if (FreightInCharge != null)
@@ -426,7 +438,7 @@ namespace Core.ViewModels
                     nuevaOrder.FreightId = FreightInCharge.id;
                 }
 
-                nuevaOrder.products = DefinirProductos(Order.Details.ToList());
+                nuevaOrder.products = Order.products;
 
                 if (Order.id == 0)
                 {
@@ -458,6 +470,9 @@ namespace Core.ViewModels
 
                             //    await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
                             //}
+
+                            await navigationService.Close(this);
+                            NewOrderCreatedd(true);
                         }
 
                         //await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
@@ -471,6 +486,9 @@ namespace Core.ViewModels
                         offlineDataService.SaveOrderNotes(nuevaOrder);
                         await offlineDataService.SynchronizeToDisk();
 
+
+                        await navigationService.Close(this);
+                        NewOrderCreatedd(true);
 
                         //await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
                         //await navigationService.Navigate<PedidosViewModel>();
@@ -601,7 +619,7 @@ namespace Core.ViewModels
                     //AjustarEstado(user.Language, Order.orderStatus);
 
                     SelectedCustomer = Order.customer;
-                    //Company = Companies.FirstOrDefault(x => x.Id == Order.company.Id);
+                    Company = Order.company;
                     //TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     //Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
                     //PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
@@ -687,7 +705,7 @@ namespace Core.ViewModels
                     {
                         if (Order.commercialAssistantId != null)
                         {
-                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
+                            Assistant = Assistants.FirstOrDefault(x => x.IdUser == Order.commercialAssistantId);
                         }
                     }
                 }

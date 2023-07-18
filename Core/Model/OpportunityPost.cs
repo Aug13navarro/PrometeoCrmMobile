@@ -15,6 +15,7 @@ namespace Core.Model
         public DateTime createDt { get; set; }
         public string description { get; set; }
         public int companyId { get; set; }
+        public int discount { get; set; }
 
         public class ProductSend
         {

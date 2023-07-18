@@ -3,10 +3,13 @@ using Core.ViewModels;
 using Core.ViewModels.Model;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using UI.Popups;
 
 namespace UI.Pages
 {
@@ -50,7 +53,24 @@ namespace UI.Pages
         {
             string cont = LangResources.AppResources.Contacts;
             var menuItem = (MenuItems)e.Item;
-            await ViewModel.GoToMenu(menuItem.Type);
+
+            if (menuItem.Type == MenuItemType.ChangeCompany)
+            {
+                var popup = new ChangeCompanyPopupPage(ViewModel.ListCompanies.ToList());
+
+                popup.ItChanged += async (s) =>
+                {
+                    await PopupNavigation.Instance.PopAsync(false);
+
+                    ViewModel.SetCurrentCompany(s);
+                };
+
+                await PopupNavigation.Instance.PushAsync(popup);
+            }
+            else
+            {
+                await ViewModel.GoToMenu(menuItem.Type);
+            }
 
             FormsApp.RootPage.HideMainMenu();
         }

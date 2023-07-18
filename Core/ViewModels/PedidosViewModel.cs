@@ -13,7 +13,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
+using static Android.App.Assist.AssistStructure;
 
 namespace Core.ViewModels
 {
@@ -108,7 +110,7 @@ namespace Core.ViewModels
         public Command RefreshListCommand { get; }
 
         //EVENTS
-        public event EventHandler<List<Company>> NewOrderPopup;
+        public event EventHandler<Company> NewOrderPopup;
 
 
         private readonly IMvxNavigationService navigationService;
@@ -204,7 +206,16 @@ namespace Core.ViewModels
                 {
                     var empresas = await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
 
-                    NewOrderPopup?.Invoke(this, empresas);
+                    var company = empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value);
+
+                    if (company.ExportPv.HasValue)
+                    {
+                        NewOrderPopup?.Invoke(this, company);
+                    }
+                    else
+                    {
+                        await IrNuevaNotaPedido(company, false);
+                    }
                 }
                 else
                 {
@@ -222,9 +233,16 @@ namespace Core.ViewModels
 
                     var empresas = await offlineDataService.SearchCompanies();
 
-                    var companies = mapper.Map<List<Company>>(empresas);
+                    var company = mapper.Map<Company>(empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
 
-                    NewOrderPopup?.Invoke(this, companies);
+                    if (company.ExportPv.HasValue)
+                    {
+                        NewOrderPopup?.Invoke(this, company);
+                    }
+                    else
+                    {
+                        await IrNuevaNotaPedido(company, false);
+                    }
                 }
             }
             catch (Exception e)
@@ -237,12 +255,12 @@ namespace Core.ViewModels
         {
             if(export)
             {
-                var order = new OrderNote
-                {
-                    company = company,
-                };
+                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
+                var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now, company = company };
 
-                var s = await navigationService.Navigate<CreateOrderExportViewModel, OrderNote>(order);
+                createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
+                await navigationService.Navigate(createViewModel, order);
+                //var s = await navigationService.Navigate<, OrderNote>(order);
             }
             else
             {
@@ -470,7 +488,9 @@ namespace Core.ViewModels
         {
             if (orderNote.IsExport)
             {
-                await navigationService.Navigate<CreateOrderExportViewModel, OrderNote>(orderNote);
+                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
+                createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
+                await navigationService.Navigate(createViewModel, orderNote);
             }
             else
             {

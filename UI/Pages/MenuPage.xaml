@@ -24,7 +24,7 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" Margin="5,0,0,0">
+                            <StackLayout Orientation="Horizontal" Margin="5,0,0,0" IsVisible="{Binding Visible}">
                                 <Image Source="{Binding Icon}" />
                                 <Label Text="{Binding Description}" Margin="5,0,0,0" LineBreakMode="TailTruncation" VerticalOptions="Center" />
                             </StackLayout>

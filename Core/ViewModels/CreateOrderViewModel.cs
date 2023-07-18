@@ -390,10 +390,10 @@ namespace Core.ViewModels
                     {
                         Providers = new MvxObservableCollection<Provider>(providers.OrderBy(x => x.Name));
 
-                        //if (Order.PaymentMethodId != null)
-                        //{
-                        //    PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
-                        //}
+                        if(Order.ProviderId.HasValue)
+                        {
+                            Provider = Providers.FirstOrDefault(x => x.Id == Order.ProviderId.Value);
+                        }
                     }
                 }
                 else
@@ -658,7 +658,6 @@ namespace Core.ViewModels
                 if (Company == null ||
                     SelectedCustomer == null ||
                     TypeOfRemittance == null ||
-                    Place == null ||
                     PaymentMethod == null ||
                     Assistant == null)
                 {
@@ -671,6 +670,23 @@ namespace Core.ViewModels
                     {
                         await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
                         return;
+                    }
+                }
+
+                if(Company.Id != 7)
+                {
+                    if (Place == null)
+                    {
+                        if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Atención", "Faltan ingresar datos obligatorios.", "Aceptar");
+                            return;
+                        }
+                        else
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
+                            return;
+                        }
                     }
                 }
                 
@@ -735,7 +751,7 @@ namespace Core.ViewModels
                     orderStatus = 1,
                     total = Convert.ToDecimal(Total),
                     //cuenta = SelectedCustomer.externalCustomerId.Value,
-                    divisionCuentaId = Company.externalId.Value,
+                    divisionCuentaId = Company.ExternalId.Value,
                     talon = 88,                          //puede ser null
                     tipoComprobante = 8,                 //puede ser null
                     tipoCuentaId = 1,                    //puede ser null
@@ -744,7 +760,7 @@ namespace Core.ViewModels
                     DeliveryDate = Order.DeliveryDate,
                     DeliveryResponsible = Order.DeliveryResponsible,
                     OCCustomer = Order.OCCustomer,
-                    PlacePayment = Place.Id,
+                    PlacePayment = Place?.Id,
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
                     commercialAssistantId = Assistant.IdUser,
@@ -1035,7 +1051,12 @@ namespace Core.ViewModels
 
                     TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
-                    
+
+                    if (Order.TransportCompanyId.HasValue)
+                    {
+                        FleteChecked = true;
+
+                    }
                     CargarFleteCargo();
 
                     CargarMedioPago();
@@ -1049,7 +1070,6 @@ namespace Core.ViewModels
                     OrderDiscount = Order.discount;
 
                     ActualizarTotal(Order.products);
-
                 }
                 else
                 {

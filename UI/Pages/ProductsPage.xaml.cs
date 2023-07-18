@@ -86,7 +86,7 @@ namespace UI.Pages
             if(ViewModel.IsSearchInProgress ||
                 ViewModel.Products == null ||
                 ViewModel.Products.Count == 0 ||
-                ViewModel.CurrentPage == ViewModel.TotalPages)
+                ViewModel.CurrentPage >= ViewModel.TotalPages)
             {
                 return;
             }

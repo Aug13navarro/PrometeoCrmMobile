@@ -160,16 +160,11 @@ namespace Core.ViewModels
         public FilterOpportunitiesViewModel(OpportunitiesViewModel opportunitiesViewModel)
         {
             this.OpportunitiesViewModel = opportunitiesViewModel;
-            //this.navigationService = Mvx.Resolve<IMvxNavigationService>();
-            //this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-
-            //SelectClientCommand = new Command(async () => await SelectClientAsync());
 
             BeginDate = DateTime.Now.Date;
             EndDate = DateTime.Now.Date;
 
             OpportunityStatuses = new ObservableCollection<OpportunityStatus>();
-            //Companies = new ObservableCollection<Company>();
 
             CargarEstados();
         }
@@ -208,7 +203,7 @@ namespace Core.ViewModels
                 Vendedores = new ObservableCollection<User>();
 
                 CargarEstados();
-                CargarCompanies();
+                //CargarCompanies();
 
                 IsEnableSeller = true;
 
@@ -251,55 +246,55 @@ namespace Core.ViewModels
             }
         }
 
-        private async void CargarCompanies()
-        {
-            try
-            {
-                var user = data.LoggedUser;
+        //private async void CargarCompanies()
+        //{
+        //    try
+        //    {
+        //        var user = data.LoggedUser;
 
-                var red = await Connection.SeeConnection();
+        //        var red = await Connection.SeeConnection();
 
-                if (red)
-                {
-                    var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
+        //        if (red)
+        //        {
+        //            var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
 
-                    foreach (var item in d)
-                    {
-                        Companies.Add(item);
-                    }
+        //            foreach (var item in d)
+        //            {
+        //                Companies.Add(item);
+        //            }
 
-                    CargarFiltroGuardado();
-                }
-                else
-                {
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
+        //            CargarFiltroGuardado();
+        //        }
+        //        else
+        //        {
+        //            var mapperConfig = new MapperConfiguration(m =>
+        //            {
+        //                m.AddProfile(new MappingProfile());
+        //            });
 
-                    IMapper mapper = mapperConfig.CreateMapper();
+        //            IMapper mapper = mapperConfig.CreateMapper();
 
-                    if (!offlineDataService.IsDataLoadedCompanies)
-                    {
-                        await offlineDataService.LoadCompanies();
-                    }
+        //            if (!offlineDataService.IsDataLoadedCompanies)
+        //            {
+        //                await offlineDataService.LoadCompanies();
+        //            }
 
-                    var empresas = await offlineDataService.SearchCompanies();
+        //            var empresas = await offlineDataService.SearchCompanies();
 
-                    var e = mapper.Map<List<Company>>(empresas);
+        //            var e = mapper.Map<List<Company>>(empresas);
 
-                    foreach (var item in e)
-                    {
-                        Companies.Add(item);
-                    }
-                }
+        //            foreach (var item in e)
+        //            {
+        //                Companies.Add(item);
+        //            }
+        //        }
 
-            }
-            catch (Exception e)
-            {
-                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
-            }
-        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
+        //    }
+        //}
 
         private Task ClearFilter()
         {

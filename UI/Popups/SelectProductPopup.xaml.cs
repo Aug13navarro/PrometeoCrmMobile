@@ -39,9 +39,9 @@ namespace UI.Popups
             }
 
             descriptionLabel.Text = product.name;
-            priceInput.Text = product.price.ToString();
-            quantityInput.Text = isEditing ? product.quantity.ToString() : "1";
-            discountInput.Text = isEditing ? product.Discount.ToString() : "0";
+            priceInput.Text = isEditing ? product.price.ToString() : "";
+            quantityInput.Text = isEditing ? product.quantity.ToString() : "";
+            discountInput.Text = isEditing ? product.Discount.ToString() : "";
         }
 
         private IList CrearSource(List<PriceList> priceList)
@@ -82,7 +82,9 @@ namespace UI.Popups
             {
 
                 (double Price, int Quantity, int Discount) result =
-                (Price: double.Parse(priceInput.Text), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
+                (Price: string.IsNullOrEmpty(priceInput.Text) ? 0 : double.Parse(priceInput.Text), 
+                Quantity: string.IsNullOrEmpty(quantityInput.Text) ? 0 : int.Parse(quantityInput.Text), 
+                Discount: string.IsNullOrEmpty(discountInput.Text) ? 0 : int.Parse(discountInput.Text));
 
                 if (result.Discount > 100)
                 {
@@ -168,11 +170,11 @@ namespace UI.Popups
                     var languages = CultureInfo.CurrentCulture.Name;
                     if (languages == "es-US")
                     {
-                        var labelPrice = priceInput.Text.Replace(",", ".");
+                        var labelPrice = string.IsNullOrEmpty(priceInput.Text) ? "0" : priceInput.Text.Replace(",", ".");
 
                         var Price = double.Parse(labelPrice);
-                        var Quantity = int.Parse(quantityInput.Text);
-                        var Discount = int.Parse(discountInput.Text);
+                        var Quantity = string.IsNullOrEmpty(quantityInput.Text) ? 0 : int.Parse(quantityInput.Text);
+                        var Discount = string.IsNullOrEmpty(discountInput.Text) ? 0 : int.Parse(discountInput.Text);
 
                         double tempTotal = Price * Quantity;
                         if (Discount == 0)
@@ -186,9 +188,9 @@ namespace UI.Popups
                     }
                     else
                     {
-                        var Price = double.Parse(priceInput.Text);
-                        var Quantity = int.Parse(quantityInput.Text);
-                        var Discount = int.Parse(discountInput.Text);
+                        var Price = string.IsNullOrEmpty(priceInput.Text) ? 0 : double.Parse(priceInput.Text);
+                        var Quantity = string.IsNullOrEmpty(quantityInput.Text) ? 0 : int.Parse(quantityInput.Text);
+                        var Discount = string.IsNullOrEmpty(discountInput.Text) ? 0 : int.Parse(discountInput.Text);
 
                         double tempTotal = Price * Quantity;
                         if (Discount == 0)

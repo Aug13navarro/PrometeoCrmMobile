@@ -38,6 +38,8 @@ namespace Core
                         string language = Preferences.Get("language", null, "loginData");
                         string tokenExpirationDate = Preferences.Get("tokenExpirationDate", null, "loginData");
                         string roles = Preferences.Get("roles", null, "loginData");
+                        var companyId = Preferences.Get("company", null, "loginData");
+                        var unique = Preferences.Get("unique", null, "loginData");
 
                         user.Id = id;
                         user.Email = email;
@@ -45,6 +47,8 @@ namespace Core
                         user.Token = token;
                         user.Language = JsonConvert.DeserializeObject<Language>(language);
                         user.RolesStr = roles;
+                        user.CompanyId = Convert.ToInt32(companyId);
+                        user.UniqueCompany = unique;
                         //user.Expiration = !string.IsNullOrWhiteSpace(tokenExpirationDate)
                         //                      ? DateTime.Parse(tokenExpirationDate)
                         //                      : (DateTime?)null;
@@ -119,6 +123,8 @@ namespace Core
             Preferences.Set("token", user.Token, "loginData");
             Preferences.Set("tokenExpirationDate", user.Expiration.ToString(), "loginData");
             Preferences.Set("roles", user.RolesStr, "loginData");
+            Preferences.Set("unique", user.UniqueCompany, "loginData");
+            Preferences.Set("company", user.CompanyId.ToString(), "loginData");
 
             Preferences.Set("language", JsonConvert.SerializeObject(user.Language), "loginData");
 

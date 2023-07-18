@@ -3,5 +3,6 @@
     public static class Identity
     {
         public static string LanguageUser { get; set; }
+        public static bool UniqueCompany { get; set; }
     }
 }

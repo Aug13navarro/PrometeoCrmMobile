@@ -52,22 +52,22 @@ namespace Core.Model
             switch (orderStatus)
             {
                 case 1:
-                    color = "#797979";
+                    color = "#D3D3D3";
                     break;
                 case 2:
-                    color = "#70B603";
+                    color = "#ADD8E6";
                     break;
                 case 3:
-                    color = "#D9001B";
+                    color = "#FF0000";
                     break;
                 case 4:
-                    color = "#FFCC00";
+                    color = "#13CD32";
                     break;
                 case 5:
-                    color = "#00BFBF";
+                    color = "#131ECD";
                     break;
                 case 6:
-                    color = "#006600";
+                    color = "#000000";
                     break;
             }
 
@@ -84,7 +84,7 @@ namespace Core.Model
         public DateTime fecha { get; set; }
         public string fechaStr => fecha.ToString("d");
         public int divisionCuentaId { get; set; }
-        public int cuenta { get; set; }
+        public int? cuenta { get; set; }
         public int tipoCuentaId { get; set; }
         public int tipoServicioId { get; set; }
         public int customerId { get; set; }
@@ -119,7 +119,7 @@ namespace Core.Model
         public MvxObservableCollection<OpportunityProducts> Details { get; set; }
         public string OCCustomer { get; set; }
         public int RemittanceType { get; set; }
-        public int PlacePayment { get; set; }
+        public int? PlacePayment { get; set; }
         public DateTime? DeliveryDate { get; set; }
         public string DeliveryResponsible { get; set; }
         public string DeliveryAddress { get; set; }

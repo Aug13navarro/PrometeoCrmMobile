@@ -48,5 +48,6 @@ namespace Core.Services.Contracts
         Task<IEnumerable<FreightInCharge>> GetFreight(string language, string token);
         Task<IEnumerable<TransportCompany>> GetTransport(string language, int companyId, string token);
         Task<IEnumerable<Provider>> GetProvidersByType(int providerTypeId, string token);
+        Task<User> SetCompany(int companyId, string token);
     }
 }

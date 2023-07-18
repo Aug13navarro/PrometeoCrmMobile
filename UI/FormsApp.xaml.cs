@@ -1,12 +1,17 @@
 ﻿using Core;
 using Core.Notification;
+using Core.Services;
 using Core.ViewModels;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Plugin.Connectivity.Abstractions;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using UI.LangResources;
 using UI.Pages;
 using Xamarin.Forms;
@@ -72,17 +77,20 @@ namespace UI
         {
             base.OnStart();
             CrossConnectivity.Current.ConnectivityChanged += HendleConnectivityChanged;
+            Conectarse();
         }
         protected override void OnResume()
         {
             base.OnResume();
             CrossConnectivity.Current.ConnectivityChanged += HendleConnectivityChanged;
+            //Conectarse();
         }
 
         protected override void OnSleep()
         {
             base.OnSleep();
             CrossConnectivity.Current.ConnectivityChanged += HendleConnectivityChanged;
+            //Conectarse();
         }
 
         private async void HendleConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
@@ -117,6 +125,79 @@ namespace UI
                 notificationManager.SendNotification(title, message, 10, true);
 
                 await Application.Current.MainPage.DisplayAlert("Sincronizando", $"Ocurrio un error al sincronizar los dotos locales con el Servicio - {ex.Message}", "Aceptar"); return;
+            }
+        }
+
+
+        private async void Conectarse()
+        {
+            try
+            {
+                // create a HubConnection instance
+                var cadena = EndpointURL.PrometeoApiEndPoint.ToString().Replace("/api", "") + "echo/";
+
+                var hubConnection = new HubConnectionBuilder()
+                    .WithUrl(cadena, options =>
+                    {
+                        options.Headers.Add("user-device", "mobile");
+                    })
+                    .Build();
+
+                // register event handlers
+                hubConnection.Closed += async (error) =>
+                {
+                    await Task.Delay(1000);
+                    await hubConnection.StartAsync();
+                };
+
+                // start the connection
+                await hubConnection.StartAsync();
+
+                // register message handlers
+                hubConnection.On<object>("GetCurrentCompany", data =>
+                {
+                    //deserealizar el objeto para guardar nuevos permisos 
+                    var dataChange = JsonConvert.DeserializeObject<DataChangeCompany>(data.ToString());
+
+                    if (dataChange.CompanyId != appData.LoggedUser.CompanyId.Value && dataChange.UserId == appData.LoggedUser.Id)
+                    {
+                        if (!string.IsNullOrEmpty(dataChange.Device))
+                        {
+                            if (dataChange.Device.Contains("web"))
+                            {
+                                string title = $"Notificación de Alerta";
+                                string message = $"Se cambió la Empresa actual para el usuario logeuado.";
+                                //notificationManager.SendNotification(title, message, 0, false);
+                                Device.BeginInvokeOnMainThread(async () =>
+                                {
+                                    var response = await Application.Current.MainPage.DisplayAlert("Alerta", "Se cambió la empresa logueda para el Usuario actual", "", "OK");
+
+                                    if (!response)
+                                    {
+                                        var user = appData.LoggedUser;
+
+                                        if (user != null)
+                                        {
+                                            //user.RolesAssignmetn = null;
+                                            //user.UserCompanies = user.UserCompaniesTotal.Where(x => x.CompanyId == dataChange.CompanyId).ToList();
+                                            //user.Permissions = user.PermissionsTotal.Where(x => x.CompanyId == dataChange.CompanyId).ToList();
+                                            user.Token = dataChange.Token.Token;
+                                            user.CompanyId = dataChange.CompanyId;
+                                            appData.SetLoggedUser(user);
+
+                                            //MainViewModel.GetInstance().Menu = new MenuViewModel(true, dataChange);
+                                            //MainPage = new NavigationPage(new HomePage());
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                var m = e.Message;
             }
         }
     }

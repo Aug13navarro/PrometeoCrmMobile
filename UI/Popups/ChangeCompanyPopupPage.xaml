@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<page:PopupPage 
+                xmlns="http://xamarin.com/schemas/2014/forms"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                x:Class="UI.Popups.ChangeCompanyPopupPage"
+                xmlns:page="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                xmlns:animation="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
+                xmlns:resources="clr-namespace:UI.LangResources"
+                xmlns:controls="clr-namespace:UI.Controls">
+    <page:PopupPage.Animation>
+        <animation:ScaleAnimation
+            DurationIn="400"
+            DurationOut="300"
+            EasingIn="SinOut"
+            EasingOut="SinIn"
+            PositionIn="Center"
+            PositionOut="Center"
+            ScaleIn="1.2"
+            ScaleOut="0.8"
+            HasBackgroundAnimation="True">
+        </animation:ScaleAnimation>
+    </page:PopupPage.Animation>
+    <page:PopupPage.Content>
+        <Frame
+            Padding="0"
+            Margin="20"
+            BorderColor="{StaticResource PrimaryColor}"
+            CornerRadius="10"
+            HasShadow="True"
+            VerticalOptions="CenterAndExpand"
+            HorizontalOptions="CenterAndExpand">
+            <StackLayout
+                Padding="20"
+                x:Name="StackPrincipal">
+                <Label
+                    Text="Cambiar de Empresa"
+                    TextColor="{StaticResource PrimaryColor}">
+
+                </Label>
+            </StackLayout>
+        </Frame>
+    </page:PopupPage.Content>
+</page:PopupPage>

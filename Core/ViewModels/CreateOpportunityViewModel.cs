@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Android.Content;
 using AutoMapper;
 using Core.Helpers;
 using Core.Model;
@@ -107,8 +109,8 @@ namespace Core.ViewModels
             set => SetProperty(ref selectedCustomer, value);
         }
 
-        private decimal total;
-        public decimal Total
+        private double total;
+        public double Total
         {
             get => total;
             set
@@ -127,7 +129,7 @@ namespace Core.ViewModels
                 SetProperty(ref totalStr, value);
             }
         }
-        private void ConvertirTotalStr(decimal totalOfAll)
+        private void ConvertirTotalStr(double totalOfAll)
         {
             if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
@@ -137,6 +139,42 @@ namespace Core.ViewModels
             {
                 TotalStr = totalOfAll.ToString("N2", new CultureInfo("en-US"));
             }
+        }
+        private int orderDiscount;
+        public int OrderDiscount
+        {
+            get => orderDiscount;
+            set
+            {
+                SetProperty(ref orderDiscount, value);
+            }
+        }
+        private double valorDescuento;
+        public double ValorDescuento
+        {
+            get => valorDescuento;
+            set
+            {
+                SetProperty(ref valorDescuento, value);
+                ConvertirDescuentoStr(this.valorDescuento);
+            }
+        }
+        private void ConvertirDescuentoStr(double valorDescuento)
+        {
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+            {
+                LblDiscountResult = valorDescuento.ToString("N2", new CultureInfo("es-ES"));
+            }
+            else
+            {
+                LblDiscountResult = valorDescuento.ToString("N2", new CultureInfo("en-US"));
+            }
+        }
+        private string lblDiscountResult;
+        public string LblDiscountResult
+        {
+            get => lblDiscountResult;
+            set => SetProperty(ref lblDiscountResult, value);
         }
         #endregion
 
@@ -216,7 +254,7 @@ namespace Core.ViewModels
                     }
                     else
                     {
-                        Company = Companies.FirstOrDefault();
+                        Company = Companies.FirstOrDefault(x => x.Id == user.CompanyId);
                     }
                 }
                 else
@@ -421,7 +459,8 @@ namespace Core.ViewModels
 
                 SelectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
                 SelectedCustomer = Opportunity.customer;
-                
+
+                OrderDiscount = theOpportunity.Discount.HasValue ? theOpportunity.Discount.Value : 0;
                 ActualizarTotal(Opportunity.Details);
             }
             catch( Exception e)
@@ -561,10 +600,6 @@ namespace Core.ViewModels
 
             Opportunity.Details.Remove(prodEdit);
 
-            //listaProd.Remove(prodEdit);
-            //listaProd.Add(editingOpportunityDetail);
-
-
             Opportunity.Details.Add(editingOpportunityDetail);
 
 
@@ -620,9 +655,10 @@ namespace Core.ViewModels
                 {
                     detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
                     detail.Price = detail.product.price;
-                    detail.Total = CalcularTotal(detail);
+                    detail.Total = detail.Total;
                     Opportunity.Details.Add(detail);
 
+                    ActualizarDescuento();
                     ActualizarTotal(Opportunity.Details);
                 }
             }
@@ -645,14 +681,59 @@ namespace Core.ViewModels
             }
         }
 
-        private void ActualizarTotal(MvxObservableCollection<OpportunityProducts> details)
+        public void ActualizarTotal(MvxObservableCollection<OpportunityProducts> details)
         {
-            Total = Convert.ToDecimal(details.Sum(x => x.Total)); 
+            var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+            if (ValorDescuento != null)
+            {
+                if (idioma.Contains("es"))
+                {
+                    Total = details.Sum(x => x.Total) - ValorDescuento;
+                }
+                else
+                {
+                    var d1 = Convert.ToDouble(ValorDescuento);
+                    var t1 = details.Sum(x => x.Total);
+                    var r1 = t1 - d1;
+
+                    Total = r1;
+                }
+            }
+            else
+            {
+            }
+        }
+
+        private void ActualizarDescuento()
+        {
+            try
+            {
+                var idioma = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+                var totalPro = Opportunity.Details.Sum(x => x.Total);
+                var str = (totalPro * OrderDiscount / 100);
+                if (idioma.ToLower().Contains("es"))
+                {
+                    var r = Convert.ToDouble(str.ToString().Replace(",", "."));
+                    ValorDescuento = r;
+                }
+                else
+                {
+                    ValorDescuento = str;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private void RemoveProduct(OpportunityProducts detail)
         {
             Opportunity.Details.Remove(detail);
+            ActualizarDescuento();
             ActualizarTotal(Opportunity.Details);
         }
 
@@ -705,8 +786,10 @@ namespace Core.ViewModels
                     description = Opportunity.description,
                     opportunityProducts = new List<OpportunityPost.ProductSend>(),
                     opportunityStatusId = Opportunity.opportunityStatus.Id,
-                    totalPrice = Convert.ToDouble(Total),
-                    companyId = Company.Id
+                    totalPrice = Total,
+                    companyId = Company.Id,
+                    discount = OrderDiscount,
+
                 };
 
                 send.opportunityProducts = listaProductos(Opportunity.Details);
@@ -819,6 +902,11 @@ namespace Core.ViewModels
             }
 
             return null;
+        }
+
+        public void ResetTotal(MvxObservableCollection<OpportunityProducts> details)
+        {
+            Total = details.Sum(x => x.Total);
         }
     }
 }

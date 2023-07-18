@@ -14,12 +14,14 @@ namespace Core.ViewModels.Model
             set => SetProperty(ref icon, value);
         }
         private string icon;
+        public bool Visible { get; set; }
 
-        public MenuItems(MenuItemType type, string description, string icon)
+        public MenuItems(MenuItemType type, string description, string icon, bool visible)
         {
             Type = type;
             Description = description;
             Icon = icon;
+            Visible = visible;
         }
     }
 }

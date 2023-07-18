@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Helpers;
 using Core.Model;
 using Core.Model.Enums;
+using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.Navigation;
@@ -23,6 +25,12 @@ namespace Core.ViewModels
         {
             get => loggedUser;
             private set => SetProperty(ref loggedUser, value);
+        }
+        private MvxObservableCollection<Company> companies;
+        public MvxObservableCollection<Company> ListCompanies
+        {
+            get => companies;
+            set => SetProperty(ref companies, value);
         }
 
         public List<MenuItems> MenuItems { get; set; }
@@ -51,20 +59,24 @@ namespace Core.ViewModels
 
             if (LoggedUser.Language.abbreviation.ToLower() == "es" || LoggedUser.Language.abbreviation.Contains("spanish"))
             {
-                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades"));
-                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos"));
-                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas"));
-                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos"));
-                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace"));
+                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Oportunidades", "ic_menu_cuentasic_menu_oportunidades", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Pedidos", "ic_menu_pedidos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Clientes", "ic_menu_cuentas", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contactos", "ic_menu_contactos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.ChangeCompany, "Cambiar Empresa", "company", appData.LoggedUser.UniqueCompany == "true" ? false : true));
+                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Cerrar Sesión", "ic_keyboard_backspace", true));
             }
             else
             {
-                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Opportunities", "ic_menu_cuentasic_menu_oportunidades"));
-                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Orders", "ic_menu_pedidos"));
-                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Customers", "ic_menu_cuentas"));
-                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contacts", "ic_menu_contactos"));
-                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Log out", "ic_keyboard_backspace"));
+                MenuItems.Add(new MenuItems(MenuItemType.Opportunities, "Opportunities", "ic_menu_cuentasic_menu_oportunidades", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Pedidos, "Orders", "ic_menu_pedidos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Customers, "Customers", "ic_menu_cuentas", true));
+                MenuItems.Add(new MenuItems(MenuItemType.Contacts, "Contacts", "ic_menu_contactos", true));
+                MenuItems.Add(new MenuItems(MenuItemType.ChangeCompany, "Change Company", "company_30p", appData.LoggedUser.UniqueCompany == "true" ? false : true));
+                MenuItems.Add(new MenuItems(MenuItemType.Logout, "Log out", "ic_keyboard_backspace", true));
             }
+            
+            GetCompanies(appData.LoggedUser.Id);
 
             this.appData.PropertyChanged += OnAppDataPropertyChanged;
         }
@@ -164,6 +176,38 @@ namespace Core.ViewModels
         {
             MenuItems menu = MenuItems.Single(m => m.Type == MenuItemType.Notifications);
             menu.Icon = hasUnreadNotifications ? "ic_bell_on" : "ic_bell";
+        }
+
+        public async Task GetCompanies(int userId)
+        {
+            var companies = await prometeoApiService.GetCompaniesByUserId(userId, appData.LoggedUser.Token);
+            ListCompanies = new MvxObservableCollection<Company>(companies);
+        }
+
+        public async void SetCurrentCompany(int companyId)
+        {
+            try
+            {
+                if (companyId != appData.LoggedUser.CompanyId)
+                {
+                    var user = await prometeoApiService.SetCompany(companyId, appData.LoggedUser.Token);
+                    var userSaved = appData.LoggedUser;
+                    userSaved.Token = user.Token;
+                    userSaved.CompanyId = companyId;
+                    appData.SetLoggedUser(userSaved);
+
+                    await navigationService.Navigate<HomeViewModel>();
+                    await navigationService.Navigate<MenuViewModel>();
+                }
+            }
+            catch(Exception e)
+            {
+                var m = e.Message;
+            }
+            finally
+            {
+
+            }
         }
     }
 }

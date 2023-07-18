@@ -133,6 +133,7 @@ namespace Core.ViewModels
                 currentPage = CurrentPage,
                 pageSize = PageSize,
                 query = Query,
+                totalPages = TotalPages,
             };
 
             await SearchProductsAsync(requestData);
@@ -155,6 +156,7 @@ namespace Core.ViewModels
                 currentPage = CurrentPage,
                 pageSize = PageSize,
                 query = Query,
+                totalPages= TotalPages,
             };
 
             await SearchProductsAsync(requestData);
@@ -183,7 +185,7 @@ namespace Core.ViewModels
 
                     Products.AddRange(products.Results);
 
-                    CurrentPage = products.CurrentPage+1;
+                    //CurrentPage = products.CurrentPage+1;
                     TotalPages = products.TotalPages;
                 }
             }

@@ -30,11 +30,6 @@ namespace Core.Services
 
         public async Task<LoginData> Login(string userName, string password)
         {
-            //const string url = "api/User/Login";
-            //const string url = "http://testing-prometeo.docworld.com.ar:8089/api/User/Login";
-            // const string url = "https://prometeoerp.com/login";
-
-
             const string url = "api/User/Login";
             var body = new
             {
@@ -63,7 +58,6 @@ namespace Core.Services
 
         public async Task<UserData> GetUserData(int userId)
         {
-            // string url = $"api/User/{userId}";
             string url = $"api/User/{userId}";
 
             using (var request = new HttpRequestMessage(HttpMethod.Get, url))
@@ -76,7 +70,6 @@ namespace Core.Services
 
         public async Task<List<Opportunity>> GetOpportunietesTest(int userId)
         {
-            // string url = $"api/User/{userId}";
             try
             {
                 string url = $"api/Opportunity/{userId}";
@@ -404,7 +397,7 @@ namespace Core.Services
 
                 var lista = JsonConvert.DeserializeObject<PaginatedList<Product>>(resultado);
 
-                return lista;                
+                return lista;
             }
             catch (Exception e)
             {
@@ -447,7 +440,7 @@ namespace Core.Services
         {
             var cadena = "api/Opportunity";
 
-            
+
             var objeto = JsonConvert.SerializeObject(opportunityPost);
 
             HttpContent httpContent = new StringContent(objeto);
@@ -608,7 +601,7 @@ namespace Core.Services
                 var objeto = JsonConvert.SerializeObject(order);
 
                 HttpContent httpContent = new StringContent(objeto);
-                
+
                 httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -791,7 +784,7 @@ namespace Core.Services
             return JsonConvert.DeserializeObject<IEnumerable<FreightInCharge>>(resultado);
         }
 
-        public async Task<IEnumerable<TransportCompany>> GetTransport(string language,int companyId, string token)
+        public async Task<IEnumerable<TransportCompany>> GetTransport(string language, int companyId, string token)
         {
             var url = $"/api/Transport?language={language}&companyId={companyId}";
 
@@ -814,6 +807,30 @@ namespace Core.Services
             var resultado = await respuesta.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<IEnumerable<Provider>>(resultado);
+        }
+
+        public async Task<User> SetCompany(int companyId, string token)
+        {
+            try
+            {
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Add("user-device", "mobile");
+
+                var getData = await client.GetStringAsync($"/api/User/SetCurrentCompany?companyId={companyId}");
+
+                if (getData != null)
+                {
+                    return JsonConvert.DeserializeObject<User>(getData);
+                }
+
+                return null;
+
+            }
+            catch (Exception e)
+            {
+                var m = e.Message;
+                throw;
+            }
         }
     }
 }

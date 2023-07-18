@@ -45,5 +45,6 @@ namespace Core.Model
 
             return str;
         }
+        public int? Discount { get; set; }
     }
 }

@@ -9,7 +9,6 @@
         public string abbreviation { get; set; }
         public string email { get; set; }
         public string fullName { get; set; }
-        //public List<Role> roles { get; set; }
         public string language { get; set; }
         public object coordinatorId { get; set; }
         public object coordinator { get; set; }

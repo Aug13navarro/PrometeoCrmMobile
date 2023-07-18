@@ -236,7 +236,7 @@
                                     <Picker IsEnabled="{Binding EnableForEdit}"
                                             Title="{x:Static resources:AppResources.Select}" 
                                             ItemsSource="{Binding Incoterms, Mode=TwoWay}" 
-                                            ItemDisplayBinding="{Binding Name}"
+                                            ItemDisplayBinding="{Binding Description}"
                                             SelectedItem="{Binding Incoterm, Mode=TwoWay}">
 
                                     </Picker>
