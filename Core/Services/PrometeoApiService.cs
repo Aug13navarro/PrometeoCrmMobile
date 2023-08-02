@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Helpers;
 using Core.Model;
 using Core.Model.Common;
 using Core.Model.Extern;
@@ -14,6 +15,7 @@ using Core.Services.Exceptions;
 using Core.Services.Utils;
 using Core.ViewModels.Model;
 using Newtonsoft.Json;
+using static Android.Media.Session.MediaSession;
 
 namespace Core.Services
 {
@@ -831,6 +833,19 @@ namespace Core.Services
                 var m = e.Message;
                 throw;
             }
+        }
+
+        public async Task<DataMobileModel> GetAllDataMobile(string language, string token)
+        {
+            var url = $"/api/DataMobile/GetAllDataToMobile?language={language}";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<DataMobileModel>(resultado);
         }
     }
 }

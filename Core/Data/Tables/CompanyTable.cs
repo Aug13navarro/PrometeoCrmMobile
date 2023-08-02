@@ -1,8 +1,9 @@
-using SQLite;
+﻿using SQLite;
 
-namespace Core.Model
+namespace Core.Data.Tables
 {
-    public class Company
+    [Table("Company")]
+    public class CompanyTable
     {
         public int Id { get; set; }
         public string BusinessName { get; set; }

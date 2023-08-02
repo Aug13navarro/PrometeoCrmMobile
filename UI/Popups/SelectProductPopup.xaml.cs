@@ -62,7 +62,9 @@ namespace UI.Popups
             if (languages.Contains("US"))
             {
                 (double Price, int Quantity, int Discount) result =
-                   (Price: double.Parse(priceInput.Text.Replace(",", ".")), Quantity: int.Parse(quantityInput.Text), Discount: int.Parse(discountInput.Text));
+                   (Price: !string.IsNullOrWhiteSpace(priceInput.Text) ? double.Parse(priceInput.Text.Replace(",", ".")) : 0, 
+                   Quantity: !string.IsNullOrWhiteSpace(quantityInput.Text) ? int.Parse(quantityInput.Text) : 0, 
+                   Discount: !string.IsNullOrWhiteSpace(discountInput.Text) ? int.Parse(discountInput.Text) : 0);
 
                 if (result.Discount > 100)
                 {

@@ -14,6 +14,9 @@ using Core.ViewModels.Model;
 using AutoMapper;
 using Core.Helpers;
 using Xamarin.Essentials;
+using Core.Model.Extern;
+using Core.Data;
+using Core.Data.Tables;
 
 namespace Core.ViewModels
 {
@@ -337,11 +340,18 @@ namespace Core.ViewModels
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IOfflineDataService offlineDataService;
-
+        IMapper mapper;
         public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)
         {
             try
             {
+                var mapperConfig = new MapperConfiguration(m =>
+                {
+                    m.AddProfile(new MappingProfile());
+                });
+
+                mapper = mapperConfig.CreateMapper();
+
                 StackInfo = true;
                 StackProductos = false;
                 StackAdjunto = false;
@@ -382,7 +392,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
                     var providers = await prometeoApiService.GetProvidersByType(8, data.LoggedUser.Token);
 
@@ -398,25 +408,15 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    //var mapperConfig = new MapperConfiguration(m =>
-                    //{
-                    //    m.AddProfile(new MappingProfile());
-                    //});
 
-                    //IMapper mapper = mapperConfig.CreateMapper();
+                    var providersTable = OfflineDatabase.GetProviders();
 
-                    //if (!offlineDataService.IsDataLoadedPaymentMethod)
-                    //{
-                    //    await offlineDataService.LoadPaymentMethod();
-                    //}
+                    if (providersTable != null)
+                    {
+                        Providers = new MvxObservableCollection<Provider>(mapper.Map<List<Provider>>(providersTable
+                            .Where(x => x.IdCompany == data.LoggedUser.CompanyId)).OrderBy(x => x.Name));
+                    }
 
-                    //var data = await offlineDataService.SearchPaymentMethod();
-
-                    //if (data != null || data.Count() > 0)
-                    //{
-                    //    var d = mapper.Map<List<PaymentMethod>>(data);
-                    //    PaymentMethods = new MvxObservableCollection<PaymentMethod>(d.OrderBy(x => x.name));
-                    //}
                 }
             }
             catch (Exception e)
@@ -431,7 +431,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if(red)
+                if(!red)
                 {
                     var mediosPago = await prometeoApiService.GetPaymentMethod(Company.Id, data.LoggedUser.Language.abbreviation.ToLower(), data.LoggedUser.Token);
 
@@ -447,24 +447,12 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
+                    var paymentMethod = OfflineDatabase.GetPaymentMethod();
+
+                    if(paymentMethod != null)
                     {
-                        m.AddProfile(new MappingProfile());
-                    });
-
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if(!offlineDataService.IsDataLoadedPaymentMethod)
-                    {
-                        await offlineDataService.LoadPaymentMethod();
-                    }
-
-                    var data = await offlineDataService.SearchPaymentMethod();
-
-                    if (data != null || data.Count() > 0)
-                    {
-                        var d = mapper.Map<List<PaymentMethod>>(data);
-                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(d.OrderBy(x => x.name));
+                        PaymentMethods = new MvxObservableCollection<PaymentMethod>(mapper.Map<List<PaymentMethod>>(paymentMethod
+                            .Where(x => x.CompanyId == data.LoggedUser.CompanyId)).OrderBy(x => x.name));
                     }
                 }
             }
@@ -484,7 +472,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
                     if (Company != null)
                     {
@@ -503,25 +491,13 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    //var mapperConfig = new MapperConfiguration(m =>
-                    //{
-                    //    m.AddProfile(new MappingProfile());
-                    //});
+                    var trasnport = OfflineDatabase.GetTransportCompany();
 
-                    //IMapper mapper = mapperConfig.CreateMapper();
-
-                    //if(!offlineDataService.IsDataLoadedTransports)
-                    //{
-                    //    await offlineDataService.LoadTransports();
-                    //}
-
-                    //var data = await offlineDataService.SearchTransports();
-
-                    //if(data != null)
-                    //{
-                    //    var tra = mapper.Map<List<TransportCompany>>(data);
-                    //    FreightInCharges = new MvxObservableCollection<TransportCompany>(tra);
-                    //}
+                    if(trasnport!= null)
+                    {
+                        FreightInCharges = new MvxObservableCollection<TransportCompany>(mapper.Map<List<TransportCompany>>(trasnport
+                            .Where(x => x.CompanyId == data.LoggedUser.CompanyId)));
+                    }
                 }
             }
             catch(Exception e)
@@ -539,7 +515,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
                     var asistentes = await prometeoApiService.GetUsersByRol(Company.Id, "Asistente Comercial");
 
@@ -555,24 +531,12 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
+                    var assistantsDb = OfflineDatabase.GetAssistantComercial();
 
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if (!offlineDataService.IsDataLoadedAssistant)
+                    if(assistantsDb != null)
                     {
-                        await offlineDataService.LoadAssistant();
-                    }
-
-                    var data = await offlineDataService.SearchAssistant();
-                    
-                    if (data != null || data.Count() > 0)
-                    {
-                        var d = mapper.Map<List<User>>(data);
-                        Assistants = new MvxObservableCollection<User>(d);
+                        Assistants = new MvxObservableCollection<User>(mapper.Map<List<User>>(assistantsDb
+                            .Where(x => x.CompanyId == data.LoggedUser.CompanyId)));
 
                         if (Order != null)
                         {
@@ -771,7 +735,7 @@ namespace Core.ViewModels
 
                 if(Condition != null)
                 {
-                    nuevaOrder.paymentConditionId = Condition.id;
+                    nuevaOrder.paymentConditionId = Condition.Id;
                 }
 
                 if(FreightInCharge != null)
@@ -804,7 +768,7 @@ namespace Core.ViewModels
                 {
                     var red = await Connection.SeeConnection();
 
-                    if (red)
+                    if (!red)
                     {
                         var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
@@ -846,9 +810,7 @@ namespace Core.ViewModels
                     {
                         nuevaOrder.company = Company;
                         nuevaOrder.customer = SelectedCustomer;
-
-                        offlineDataService.SaveOrderNotes(nuevaOrder);
-                        await offlineDataService.SynchronizeToDisk();
+                        var saved = await OfflineDatabase.SaveOrderNote(mapper.Map<OrderNoteTable>(nuevaOrder));
 
                         await navigationService.Close(this);
                         NewOrderCreated(true);
@@ -938,34 +900,34 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
 
                     var condiciones = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
 
                     if (Company.externalErpId == null)
                     {
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(condiciones.OrderBy(x => x.description));
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(condiciones.OrderBy(x => x.Description));
 
                         if (Order != null)
                         {
                             if (Order.paymentConditionId > 0)
                             {
-                                Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                                Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
                             }
                         }
                     }
                     else
                     {
-                        var conExternal = condiciones.Where(x => x.code > 0).ToList();
+                        var conExternal = condiciones.Where(x => x.Code > 0).ToList();
 
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(conExternal.OrderBy(x => x.description));
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(conExternal.OrderBy(x => x.Description));
 
                         if (Order != null)
                         {
                             if (Order.paymentConditionId > 0)
                             {
-                                Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                                Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
                             }
                         }
                     }
@@ -973,37 +935,19 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
+                    var conditionsDb = OfflineDatabase.GetPaymentCondition();
+
+                    if (conditionsDb != null)
                     {
-                        m.AddProfile(new MappingProfile());
-                    });
+                        conditionsDb = conditionsDb.OrderBy(x => x.Description).ToList();
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(mapper.Map<List<PaymentCondition>>(conditionsDb));
 
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if (!offlineDataService.IsDataLoadedPaymentConditions)
-                    {
-                        await offlineDataService.LoadDataPayment();
-                    }
-                    var data = await offlineDataService.SearchPaymentConditions();
-
-                    var d = data.Where(x => x.companyId == Company.Id).ToList();
-
-                    var dCache = mapper.Map<List<PaymentCondition>>(d);
-
-                    if (d != null || d.Count() > 0)
-                    {
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(dCache.OrderBy(x => x.description));
-                    }
-
-                    if (Order != null)
-                    {
-                        if (Order.paymentConditionId > 0)
+                        if (Order != null)
                         {
-                            Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
-                        }
-                        else
-                        {
-                            //Condition = PaymentConditions.FirstOrDefault();
+                            if (Order.paymentConditionId > 0)
+                            {
+                                Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
+                            }
                         }
                     }
                 }
@@ -1101,7 +1045,7 @@ namespace Core.ViewModels
                     }
                     if (Order.paymentConditionId > 0)
                     {
-                        Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                        Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
                     }
 
                     if (theOrder.Details == null)

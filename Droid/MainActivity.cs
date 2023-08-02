@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Core;
+using Core.Data;
 using Core.Notification;
 using Core.Services.Contracts;
 using MvvmCross;

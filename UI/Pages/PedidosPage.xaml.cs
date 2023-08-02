@@ -1,4 +1,5 @@
-﻿using Core.Model;
+﻿using Core;
+using Core.Model;
 using Core.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
@@ -24,13 +25,14 @@ namespace UI.Pages
         {
             base.OnViewModelSet();
             ViewModel.NewOrderPopup += OnNewOrderNote;
+
         }
 
         private async void OnNewOrderNote(object sender, Company empresa)
         {
             try
             {
-                if(empresa.ExportPv.HasValue)
+                if (empresa.ExportPv.HasValue)
                 {
                     var pop = new NewOrderNotePopup(empresa);
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Data;
 using Core.Helpers;
 using Core.Model;
 using Core.Services;
@@ -117,9 +118,17 @@ namespace Core.ViewModels
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IOfflineDataService offlineDataService;
 
+        IMapper mapper;
+
         public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)//,IToastService toastService
         {
             data = new ApplicationData();
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new MappingProfile());
+            });
+
+            mapper = mapperConfig.CreateMapper();
 
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
@@ -146,7 +155,6 @@ namespace Core.ViewModels
                 FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("MM/dd/yyyy");
                 FechaFinFiltro = DateTime.Now.ToString("MM/dd/yyyy");
             }
-
         }
 
         private async Task RefreshList()
@@ -308,7 +316,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (red)
+                if (!red)
                 {
                     var ordersnote = await prometeoApiService.GetOrderNote(requestData, user.Token);
 
@@ -327,15 +335,13 @@ namespace Core.ViewModels
                 {
                     OrdersNote.Clear();
 
-                    if(!offlineDataService.IsDataLoadedOrderNote)
+                    var d = OfflineDatabase.GetOrderNotes();
+
+                    if (d != null)
                     {
-                        await offlineDataService.LoadOrderNotes();
+                        var orderNotes = new MvxObservableCollection<OrderNote>(mapper.Map<List<OrderNote>>(d));
+                        OrdersNote.AddRange(orderNotes);
                     }
-
-                    var d = await offlineDataService.SearchOrderNotes();
-
-                    var orderNotes = new MvxObservableCollection<OrderNote>(d);
-                    OrdersNote.AddRange(orderNotes);
                     IsLoading = false;
                 }
 

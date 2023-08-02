@@ -1,10 +1,10 @@
+using Core.Data;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels;
 using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
-using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -14,7 +14,6 @@ namespace Core
     {
         private OfflineDataService offlineDataService;
 
-
         public override void Initialize()
         {
             offlineDataService = new OfflineDataService();
@@ -22,6 +21,8 @@ namespace Core
             RegisterServices();
             RegisterAppStart<RootViewModel>();
 
+
+          DataBaseHelper.CreateTables();
             //CreatableTypes()
             //    .EndingWith("Service")
             //    .AsInterfaces()

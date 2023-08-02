@@ -1,8 +1,9 @@
 ﻿using SQLite;
 
-namespace Core.Model
+namespace Core.Data.Tables
 {
-    public class Provider
+    [Table("Provider")]
+    public class ProviderTable
     {
         public int Id { get; set; }
         public bool? Active { get; set; }
