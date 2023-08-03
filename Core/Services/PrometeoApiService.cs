@@ -15,19 +15,18 @@ using Core.Services.Exceptions;
 using Core.Services.Utils;
 using Core.ViewModels.Model;
 using Newtonsoft.Json;
-using static Android.Media.Session.MediaSession;
 
 namespace Core.Services
 {
     public class PrometeoApiService : IPrometeoApiService
     {
         private readonly HttpClient client;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
-        public PrometeoApiService(HttpClient client, IOfflineDataService offlineDataService)
+        public PrometeoApiService(HttpClient client)//, IOfflineDataService offlineDataService
         {
             this.client = client;
-            this.offlineDataService = offlineDataService;
+            //this.offlineDataService = offlineDataService;
         }
 
         public async Task<LoginData> Login(string userName, string password)

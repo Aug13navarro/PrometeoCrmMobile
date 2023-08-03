@@ -86,11 +86,11 @@ namespace Core.ViewModels
         // Services
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
         IMapper mapper;
 
-        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)//, IMapper mapper
+        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService)//, IMapper mapper, IOfflineDataService offlineDataService
         {
             var mapperConfig = new MapperConfiguration(m =>
             {
@@ -102,7 +102,7 @@ namespace Core.ViewModels
             this.prometeoApiService = prometeoApiService;
             this.appData = appData;
             this.navigationService = navigationService;
-            this.offlineDataService = offlineDataService;
+            //this.offlineDataService = offlineDataService;
 
             LoadMoreCustomersCommand = new MvxAsyncCommand(LoadMoreCustomersAsync);
             ToggleContactsVisibilityCommand = new MvxCommand<Customer>(ToggleContactsVisibility);

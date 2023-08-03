@@ -30,13 +30,13 @@ namespace Core.ViewModels
         // Fields
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
-        public HomeViewModel(IMvxNavigationService navigationService, ApplicationData appData, IPrometeoApiService _prometeoApiService, IOfflineDataService offlineData)
+        public HomeViewModel(IMvxNavigationService navigationService, ApplicationData appData, IPrometeoApiService _prometeoApiService)//, IOfflineDataService offlineData
         {
             this.navigationService = navigationService;
             this.prometeoApiService = _prometeoApiService;
-            offlineDataService = offlineData;
+            //offlineDataService = offlineData;
 
             LoggedUser = appData.LoggedUser;
 

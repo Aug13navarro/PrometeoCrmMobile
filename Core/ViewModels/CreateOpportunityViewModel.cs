@@ -2,19 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Android.Content;
 using AutoMapper;
+using Core.Data;
 using Core.Helpers;
 using Core.Model;
 using Core.Model.Enums;
-using Core.Model.Extern;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.Utils;
 using Core.ViewModels.Model;
-using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Xamarin.Forms;
@@ -202,19 +199,26 @@ namespace Core.ViewModels
         // Services
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
-        public CreateOpportunityViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService,
-                                           IOfflineDataService offlineData)
+        IMapper mapper;
+
+        public CreateOpportunityViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//,IOfflineDataService offlineData
         {
             try
             {
+                var mapperConfig = new MapperConfiguration(m =>
+                {
+                    m.AddProfile(new MappingProfile());
+                });
+                mapper = mapperConfig.CreateMapper();
+
                 data = new ApplicationData();
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
                 //this.toastService = toastService;
-                this.offlineDataService = offlineData;
+                //this.offlineDataService = offlineData;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
@@ -245,7 +249,6 @@ namespace Core.ViewModels
 
                 if (red)
                 {
-
                     Companies = new MvxObservableCollection<Company>(await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token));
 
                     if (Opportunity.Company != null)
@@ -259,20 +262,9 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
+                    var empresas = OfflineDatabase.GetCompanies();
 
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if (!offlineDataService.IsDataLoadedCompanies)
-                    {
-                        await offlineDataService.LoadCompanies();
-                    }
-                    var empresas = await offlineDataService.SearchCompanies();
-
-                    var e = mapper.Map<List<Company>>(empresas);
+                    var e = mapper.Map<List<Company>>(mapper.Map<Company>(empresas));
 
                     Companies = new MvxObservableCollection<Company>(e);
                     Company = Companies.FirstOrDefault();
@@ -820,22 +812,16 @@ namespace Core.ViewModels
                 {
                     if(id == 0)
                     {
-                        var mapperConfig = new MapperConfiguration(m =>
-                        {
-                            m.AddProfile(new MappingProfile());
-                        });
-
-                        IMapper mapper = mapperConfig.CreateMapper();
 
                         opportunity.totalPrice = Convert.ToDecimal(send.totalPrice);
                         opportunity.opportunityStatus.Id = send.opportunityStatusId;
                         opportunity.Company = Company;
 
-                        var oppCache = mapper.Map<OpportunityExtern>(opportunity);
+                        //var oppCache = mapper.Map<OpportunityExtern>(opportunity);
 
-                        offlineDataService.SaveOpportunity(oppCache);
+                        //offlineDataService.SaveOpportunity(oppCache);
 
-                        await offlineDataService.SynchronizeToDiskOpportunity();
+                        //await offlineDataService.SynchronizeToDiskOpportunity();
                     }
                     else
                     {

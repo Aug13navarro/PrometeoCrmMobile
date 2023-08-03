@@ -12,11 +12,11 @@ namespace Core
 {
     public class App : MvxApplication 
     {
-        private OfflineDataService offlineDataService;
+        //private OfflineDataService offlineDataService;
 
         public override void Initialize()
         {
-            offlineDataService = new OfflineDataService();
+            //offlineDataService = new OfflineDataService();
 
             RegisterServices();
             RegisterAppStart<RootViewModel>();
@@ -31,19 +31,8 @@ namespace Core
             // Sobrescribir el método OnStart con la instancia de AppStart
             //RegisterAppStart<AppStart>();
 
-            //DataOffline();
+            // llamar a un método encargado de actualizar la data almacenada en offline una vez a la semana
         }
-        //private void DataOffline()
-        //{
-        //    if(offlineDataService.IsWifiConection)
-        //    {
-        //        var dia = DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("es"));
-
-        //        if(dia == "martes")
-        //        {
-        //        }
-        //    }
-        //}
 
         private void RegisterServices()
         {
@@ -66,7 +55,7 @@ namespace Core
 
             Mvx.IoCProvider.RegisterSingleton(() => appData);
             Mvx.IoCProvider.RegisterType<IPrometeoApiService, PrometeoApiService>();
-            Mvx.IoCProvider.ConstructAndRegisterSingleton<IOfflineDataService, OfflineDataService>();
+            //Mvx.IoCProvider.ConstructAndRegisterSingleton<IOfflineDataService, OfflineDataService>();
             Mvx.IoCProvider.ConstructAndRegisterSingleton<INotificationService, NotificationService>();
 
         }

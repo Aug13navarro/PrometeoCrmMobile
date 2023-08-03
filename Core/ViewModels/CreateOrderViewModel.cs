@@ -339,9 +339,9 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
         IMapper mapper;
-        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)
+        public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//, IOfflineDataService offlineDataService
         {
             try
             {
@@ -360,7 +360,7 @@ namespace Core.ViewModels
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
-                this.offlineDataService = offlineDataService;
+                //this.offlineDataService = offlineDataService;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());

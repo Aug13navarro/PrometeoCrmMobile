@@ -48,7 +48,7 @@ namespace Core.ViewModels
         private readonly INotificationService notificationService;
         IMapper _mapper;
 
-        public MenuViewModel(ApplicationData appData, IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, INotificationService notificationService, IOfflineDataService offlineDataService)
+        public MenuViewModel(ApplicationData appData, IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, INotificationService notificationService)//, IOfflineDataService offlineDataService
         {
 
             var mapperConfig = new MapperConfiguration(m =>

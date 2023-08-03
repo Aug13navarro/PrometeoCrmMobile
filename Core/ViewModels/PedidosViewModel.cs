@@ -116,11 +116,11 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
         IMapper mapper;
 
-        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)//,IToastService toastService
+        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//,IToastService toastService, IOfflineDataService offlineDataService
         {
             data = new ApplicationData();
             var mapperConfig = new MapperConfiguration(m =>
@@ -132,7 +132,7 @@ namespace Core.ViewModels
 
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
-            this.offlineDataService = offlineDataService;
+            //this.offlineDataService = offlineDataService;
 
             NuevaNotaPedidoCommand = new Command(async () => await NuevaNotaPedido());
             FilterOrdersCommand = new Command(async () => await FilterOrders());

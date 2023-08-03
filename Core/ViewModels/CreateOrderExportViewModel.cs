@@ -2,7 +2,6 @@
 using Core.Data;
 using Core.Helpers;
 using Core.Model;
-using Core.Model.Extern;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
@@ -232,13 +231,12 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
 
         public OpportunityProducts editingOpportunityDetail { get; set; }
 
         IMapper mapper;
 
-        public CreateOrderExportViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)
+        public CreateOrderExportViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)
         {
             try
             {
@@ -256,7 +254,6 @@ namespace Core.ViewModels
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
-                this.offlineDataService = offlineDataService;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
@@ -473,9 +470,6 @@ namespace Core.ViewModels
                     {
                         nuevaOrder.company = Company;
                         nuevaOrder.customer = SelectedCustomer;
-
-                        offlineDataService.SaveOrderNotes(nuevaOrder);
-                        await offlineDataService.SynchronizeToDisk();
 
                         await navigationService.Close(this);
                         NewOrderCreatedd(true);
