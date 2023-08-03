@@ -214,7 +214,7 @@ namespace Core.ViewModels
             try
             {
                 var red = await Connection.SeeConnection();
-                if (!red)
+                if (red)
                 {
                     var companies = await prometeoApiService.GetCompaniesByUserId(userId, appData.LoggedUser.Token);
                     ListCompanies = new MvxObservableCollection<Company>(companies);
@@ -238,7 +238,7 @@ namespace Core.ViewModels
                 if (companyId != appData.LoggedUser.CompanyId)
                 {
                     var red = await Connection.SeeConnection();
-                    if (!red)
+                    if (red)
                     {
                         var user = await prometeoApiService.SetCompany(companyId, appData.LoggedUser.Token);
                         var userSaved = appData.LoggedUser;

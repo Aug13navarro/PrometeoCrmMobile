@@ -126,7 +126,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     if (CustomerTypeId > 0)
                     {
@@ -240,7 +240,7 @@ namespace Core.ViewModels
         {
             var red = await Connection.SeeConnection();
 
-            if (!red)
+            if (red)
             {
                 var requestData = new CustomersPaginatedRequest()
                 {

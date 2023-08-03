@@ -265,5 +265,58 @@ namespace Core.Data
                 return conn.Table<OrderNoteTable>().ToList();
             }
         }
+
+        public static async Task<bool> UpdateOrderNote( OrderNoteTable orderNoteTable)
+        {
+            using (var conn = DataBaseHelper.GetConnection())
+            {
+                var order = conn.Table<OrderNoteTable>().FirstOrDefault(x => x.idOffline == orderNoteTable.idOffline);
+
+                if(order != null)
+                {
+                    order.Description = orderNoteTable.Description;
+                    order.orderStatus = orderNoteTable.orderStatus;
+                    order.currencyId = orderNoteTable.customerId;
+                    order.companyId = orderNoteTable.companyId;
+                    order.companyJson = orderNoteTable.companyJson;
+                    order.tipoComprobante = orderNoteTable.tipoComprobante;
+                    order.talon = orderNoteTable.talon;
+                    order.numero = orderNoteTable.numero;
+                    order.fecha = orderNoteTable.fecha;
+                    order.divisionCuentaId = orderNoteTable.divisionCuentaId;
+                    order.cuenta = orderNoteTable.cuenta;
+                    order.tipoCuentaId = orderNoteTable.tipoCuentaId;
+                    order.tipoServicioId = orderNoteTable.tipoServicioId;
+                    order.customerId = orderNoteTable.customerId;
+                    order.customerJson = orderNoteTable.customerJson;
+                    order.paymentConditionId = orderNoteTable.paymentConditionId;
+                    order.discount = orderNoteTable.discount;
+                    order.total = orderNoteTable.total;
+                    order.productsJson = orderNoteTable.productsJson;
+                    order.OCCustomer = orderNoteTable.OCCustomer;
+                    order.RemittanceType = orderNoteTable.RemittanceType;
+                    order.PlacePayment = orderNoteTable.PlacePayment;
+                    order.DeliveryDate = orderNoteTable.DeliveryDate;
+                    order.DeliveryResponsible = orderNoteTable.DeliveryResponsible;
+                    order.DeliveryAddress = orderNoteTable.DeliveryAddress;
+                    order.TransportCompanyId = orderNoteTable.TransportCompanyId;
+                    order.PaymentMethodId = orderNoteTable.PaymentMethodId;
+                    order.FreightInChargeId = orderNoteTable.FreightInChargeId;
+                    order.IsExport = orderNoteTable.IsExport;
+                    order.ImporterCustomerId = orderNoteTable.ImporterCustomerId;
+                    order.ETD = orderNoteTable.ETD;
+                    order.IsFinalClient = orderNoteTable.IsFinalClient;
+                    order.FinalClient = orderNoteTable.FinalClient;
+                    order.FreightId = orderNoteTable.FreightId;
+                    order.IncotermId = orderNoteTable.IncotermId;
+                    order.commercialAssistantId = orderNoteTable.commercialAssistantId;
+                    order.sentToErp = orderNoteTable.sentToErp;
+                    order.ProviderId = orderNoteTable.ProviderId;
+                }
+                // Update 
+                conn.Update(orderNoteTable);
+            }
+            return await Task.FromResult(true);
+        }
     }
 }

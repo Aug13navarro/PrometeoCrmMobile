@@ -1,7 +1,4 @@
-﻿using Core.Model;
-using MvvmCross.ViewModels;
-using SQLite;
-using System.Globalization;
+﻿using SQLite;
 using System;
 
 namespace Core.Data.Tables
@@ -71,5 +68,7 @@ namespace Core.Data.Tables
         //}
 
         public string error { get; set; }
+        [PrimaryKey,AutoIncrement]
+        public int idOffline { get; set; }
     }
 }

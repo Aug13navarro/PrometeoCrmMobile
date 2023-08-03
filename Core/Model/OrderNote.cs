@@ -173,6 +173,7 @@ namespace Core.Model
         }
 
         public string error { get; set; }
+        public int idOffline { get; set; }
 
     }    
 }

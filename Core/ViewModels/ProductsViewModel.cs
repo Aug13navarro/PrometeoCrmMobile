@@ -177,7 +177,7 @@ namespace Core.ViewModels
             try
             {
                 var red = await Connection.SeeConnection();
-                if (!red)
+                if (red)
                 {
                     IsSearchInProgress = true;
                     Error = false;

@@ -3,6 +3,7 @@ using Core.Data.Tables;
 using Core.Model;
 using Core.Model.Extern;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using static Core.Model.OrderNote;
 
 namespace Core.Helpers
@@ -67,8 +68,9 @@ namespace Core.Helpers
                 .ForMember(x => x.customerJson, o => o.MapFrom(z => JsonConvert.SerializeObject(z.customer)));
 
             CreateMap<OrderNoteTable, OrderNote>()
-                .ForMember(x => x.products, o => o.Ignore())
-                //.ForMember(x => x.products, o => o.MapFrom(z => JsonConvert.DeserializeObject<ProductOrder>(z.productsJson)))
+                .ForMember(x => x.idOffline, o => o.MapFrom(z => z.idOffline))
+                //.ForMember(x => x.products, o => o.Ignore())
+                .ForMember(x => x.products, o => o.MapFrom(z => JsonConvert.DeserializeObject<List<ProductOrder>>(z.productsJson)))
                 .ForMember(x => x.company, o => o.MapFrom(z => JsonConvert.DeserializeObject<Company>(z.companyJson)))
                 .ForMember(x => x.customer, o => o.MapFrom(z => JsonConvert.DeserializeObject<Customer>(z.customerJson)))
                 .ForMember(x => x.currency, o => o.Ignore())

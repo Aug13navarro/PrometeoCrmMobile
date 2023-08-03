@@ -392,7 +392,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     var providers = await prometeoApiService.GetProvidersByType(8, data.LoggedUser.Token);
 
@@ -431,7 +431,7 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
-                if(!red)
+                if(red)
                 {
                     var mediosPago = await prometeoApiService.GetPaymentMethod(Company.Id, data.LoggedUser.Language.abbreviation.ToLower(), data.LoggedUser.Token);
 
@@ -453,6 +453,11 @@ namespace Core.ViewModels
                     {
                         PaymentMethods = new MvxObservableCollection<PaymentMethod>(mapper.Map<List<PaymentMethod>>(paymentMethod
                             .Where(x => x.CompanyId == data.LoggedUser.CompanyId)).OrderBy(x => x.name));
+
+                        if(Order?.PaymentMethodId != null)
+                        {
+                            PaymentMethod= PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
+                        }
                     }
                 }
             }
@@ -472,7 +477,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     if (Company != null)
                     {
@@ -515,7 +520,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
                     var asistentes = await prometeoApiService.GetUsersByRol(Company.Id, "Asistente Comercial");
 
@@ -764,11 +769,11 @@ namespace Core.ViewModels
                     nuevaOrder.products = Order.products;
                 }
 
-                if (Order.id == 0)
-                {
-                    var red = await Connection.SeeConnection();
+                var red = await Connection.SeeConnection();
 
-                    if (!red)
+                if (Order.id == 0 && Order.idOffline == 0)
+                {
+                    if (red)
                     {
                         var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
 
@@ -818,10 +823,27 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    await prometeoApiService.UpdateOrderNote(nuevaOrder, data.LoggedUser.Token);
+                    if (red)
+                    {
+                        await prometeoApiService.UpdateOrderNote(nuevaOrder, data.LoggedUser.Token);
 
-                    NewOrderCreated(true);
-                    await navigationService.Close(this);
+                        NewOrderCreated(true);
+                        await navigationService.Close(this);
+                    }
+                    else
+                    {
+                        nuevaOrder.company = Company;
+                        nuevaOrder.customer = SelectedCustomer;
+                        nuevaOrder.idOffline = Order.idOffline;
+
+                        var ok = await OfflineDatabase.UpdateOrderNote(mapper.Map<OrderNoteTable>(nuevaOrder));
+
+                        if (ok)
+                        {
+                            NewOrderCreated(true);
+                            await navigationService.Close(this);
+                        }
+                    }
                 }
             }
             catch (Exception e)
@@ -900,7 +922,7 @@ namespace Core.ViewModels
 
                 var red = await Connection.SeeConnection();
 
-                if (!red)
+                if (red)
                 {
 
                     var condiciones = new MvxObservableCollection<PaymentCondition>(await prometeoApiService.GetPaymentConditions(user.Token, Company.Id));
@@ -1043,10 +1065,14 @@ namespace Core.ViewModels
                     {
                         TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     }
-                    if (Order.paymentConditionId > 0)
-                    {
-                        Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
-                    }
+                    //if (Order.paymentConditionId > 0)
+                    //{
+                    //    Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
+                    //}
+                    //if (Order.PaymentMethodId > 0)
+                    //{
+                    //    PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
+                    //}
 
                     if (theOrder.Details == null)
                     {
