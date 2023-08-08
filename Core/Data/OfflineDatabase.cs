@@ -318,5 +318,28 @@ namespace Core.Data
             }
             return await Task.FromResult(true);
         }
+
+        public static async Task<bool> DeleteOrderNote(List<int> orderNoteIds)
+        {
+            using (var conn = DataBaseHelper.GetConnection())
+            {
+                var orders = conn.Table<OrderNoteTable>().Where(x => !orderNoteIds.Contains(x.idOffline)).ToList();
+
+                foreach (var item in orders)
+                {
+                    // Delete 
+                    conn.Delete(item);
+                }
+            }
+            return await Task.FromResult(true);
+        }
+        public static async Task<bool> DeleteAllOrderNote()
+        {
+            using (var conn = DataBaseHelper.GetConnection())
+            {
+                conn.DeleteAll<OrderNoteTable>();
+            }
+            return await Task.FromResult(true);
+        }
     }
 }

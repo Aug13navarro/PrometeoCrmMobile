@@ -14,6 +14,7 @@ using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Xamarin.Forms;
 
 namespace Core.ViewModels
 {
@@ -96,20 +97,31 @@ namespace Core.ViewModels
             ChargeDbLocal();
         }
 
-        private async void ChargeDbLocal()
+        private async Task<bool> ChargeDbLocal()
         {
-            var response = await prometeoApiService.GetAllDataMobile("es", appData.LoggedUser.Token);
+            try
+            {
+                var response = await prometeoApiService.GetAllDataMobile("es", appData.LoggedUser.Token);
 
-            OfflineDatabase.SaveProviderListAsync(_mapper.Map<List<ProviderTable>>(response.Providers));
-            OfflineDatabase.SavePaymentMethodListAsync(_mapper.Map<List<PaymentMethodTable>>(response.PaymentMethod));
-            OfflineDatabase.SaveTransportCompaniesListAsync(_mapper.Map<List<TransportCompanyTable>>(response.Transports));
-            OfflineDatabase.SaveAssistantComercialsListAsync(_mapper.Map<List<AssistantComercialTable>>(response.AssistantComercial));
-            OfflineDatabase.SaveConditionListAsync(_mapper.Map<List<PaymentConditionTable>>(response.PaymentConditions));
-            OfflineDatabase.SaveFreightInChargesListAsync(_mapper.Map<List<FreightInChargeTable>>(response.Freights));
-            OfflineDatabase.SaveIncotermListAsync(_mapper.Map<List<IncotermTable>>(response.Incoterms));
-            OfflineDatabase.SaveCompaniesListAsync(_mapper.Map<List<CompanyTable>>(response.Companies));
-            OfflineDatabase.SaveCustomerListAsync(_mapper.Map<List<CustomerTable>>(response.Customers));
-            OfflineDatabase.SaveProductsListAsync(_mapper.Map<List<ProductTable>>(response.ProductsPresentations));
+                OfflineDatabase.SaveProviderListAsync(_mapper.Map<List<ProviderTable>>(response.Providers));
+                OfflineDatabase.SavePaymentMethodListAsync(_mapper.Map<List<PaymentMethodTable>>(response.PaymentMethod));
+                OfflineDatabase.SaveTransportCompaniesListAsync(_mapper.Map<List<TransportCompanyTable>>(response.Transports));
+                OfflineDatabase.SaveAssistantComercialsListAsync(_mapper.Map<List<AssistantComercialTable>>(response.AssistantComercial));
+                OfflineDatabase.SaveConditionListAsync(_mapper.Map<List<PaymentConditionTable>>(response.PaymentConditions));
+                OfflineDatabase.SaveFreightInChargesListAsync(_mapper.Map<List<FreightInChargeTable>>(response.Freights));
+                OfflineDatabase.SaveIncotermListAsync(_mapper.Map<List<IncotermTable>>(response.Incoterms));
+                OfflineDatabase.SaveCompaniesListAsync(_mapper.Map<List<CompanyTable>>(response.Companies));
+                OfflineDatabase.SaveCustomerListAsync(_mapper.Map<List<CustomerTable>>(response.Customers));
+                OfflineDatabase.SaveProductsListAsync(_mapper.Map<List<ProductTable>>(response.ProductsPresentations));
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                //await Application.Current.MainPage.DisplayAlert("menuviewmodel", $"{e.Message}", "aceptar");
+                return false;
+            }
 
         }
 

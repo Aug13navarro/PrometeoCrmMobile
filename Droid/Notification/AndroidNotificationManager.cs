@@ -85,7 +85,7 @@ namespace PrometeoCrmMobile.Droid.Notification
                 intent.PutExtra(TitleKey, title);
                 intent.PutExtra(MessageKey, message);
 
-                PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, PendingIntentFlags.UpdateCurrent);
+                PendingIntent pendingIntent = PendingIntent.GetActivity(AndroidApp.Context, pendingIntentId++, intent, PendingIntentFlags.Immutable);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(AndroidApp.Context, channelId)
                     .SetContentIntent(pendingIntent)

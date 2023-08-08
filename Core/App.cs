@@ -55,7 +55,6 @@ namespace Core
 
             Mvx.IoCProvider.RegisterSingleton(() => appData);
             Mvx.IoCProvider.RegisterType<IPrometeoApiService, PrometeoApiService>();
-            //Mvx.IoCProvider.ConstructAndRegisterSingleton<IOfflineDataService, OfflineDataService>();
             Mvx.IoCProvider.ConstructAndRegisterSingleton<INotificationService, NotificationService>();
 
         }
