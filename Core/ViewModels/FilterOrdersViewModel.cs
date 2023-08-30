@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Core.Helpers;
-using Core.Model;
+﻿using Core.Model;
 using Core.Services;
 using Core.Services.Contracts;
 using Core.ViewModels.Model;
@@ -11,9 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -162,7 +158,7 @@ namespace Core.ViewModels
         //SERIVICIO
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
         public override void ViewDestroy(bool viewFinishing = true)
         {
             base.ViewDestroy(false);
@@ -180,7 +176,7 @@ namespace Core.ViewModels
 
                 this.navigationService = Mvx.Resolve<IMvxNavigationService>();
                 this.prometeoApiService = Mvx.Resolve<IPrometeoApiService>();
-                this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
+                //this.offlineDataService = Mvx.Resolve<IOfflineDataService>();
 
                 ApplyFiltersCommand = new Command(async () => await ApplyFilters());
                 LimpiarFiltroCommand = new Command(async () => await ClearFilter());

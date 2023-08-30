@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Core.Data;
+using Core.Helpers;
 using Core.Model;
 using Core.Model.Common;
 using Core.Services;
@@ -49,15 +54,27 @@ namespace Core.ViewModels
         private const int PageSize = 10;
 
         // Services
+        private ApplicationData applicationData { get; set; }
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
-        public ContactsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)
+        IMapper mapper;
+
+        public ContactsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)//IOfflineDataService offlineDataService
         {
+            applicationData = new ApplicationData();
+            
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new MappingProfile());
+            });
+
+            mapper = mapperConfig.CreateMapper();
+
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
-            this.offlineDataService = offlineDataService;
+            //this.offlineDataService = offlineDataService;
 
             LoadMoreContactsCommand = new Command(async () => await LoadMoreContactsAsync());
             GoToCreateContactCommand = new Command(async () => await GoToCreateContactAsync());
@@ -103,7 +120,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    //
+                    
                 }
             }
             catch (Exception ex)

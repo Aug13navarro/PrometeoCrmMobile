@@ -38,6 +38,9 @@ namespace Core.Model
                 case 6:
                     estado = "Entregado";
                     break;
+                case 7:
+                    estado = "Facturado";
+                    break;
             }
 
             return estado;
@@ -68,6 +71,9 @@ namespace Core.Model
                     break;
                 case 6:
                     color = "#000000";
+                    break;
+                case 7:
+                    color = "#ADD8E6";
                     break;
             }
 
@@ -173,6 +179,7 @@ namespace Core.Model
         }
 
         public string error { get; set; }
+        public int idOffline { get; set; }
 
     }    
 }

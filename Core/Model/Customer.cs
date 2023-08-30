@@ -1,4 +1,5 @@
 using MvvmCross.ViewModels;
+using SQLite;
 using System;
 
 namespace Core.Model
@@ -21,18 +22,23 @@ namespace Core.Model
         public string Descriptions { get; set; }
         public int? externalCustomerId { get; set; }
 
+        [Ignore]
         public MvxObservableCollection<int> CompanyUserId { get; } = new MvxObservableCollection<int>();
+        [Ignore]
         public MvxObservableCollection<int> CompanyUserIds { get; } = new MvxObservableCollection<int>();
+        [Ignore]
         public MvxObservableCollection<TypeOfCustomer> CustomersTypes { get; } = new MvxObservableCollection<TypeOfCustomer>();
-
+        [Ignore]
         public MvxObservableCollection<CustomerContact> Contacts { get; } = new MvxObservableCollection<CustomerContact>();
+        [Ignore]
         public MvxObservableCollection<CustomerAddress> Addresses { get; } = new MvxObservableCollection<CustomerAddress>();
-
+        
         private bool isContactsVisible;
         public bool IsContactsVisible
         {
             get => isContactsVisible;
             set => SetProperty(ref isContactsVisible, value);
         }
+        public int? CompanyId { get; set; }
     }
 }

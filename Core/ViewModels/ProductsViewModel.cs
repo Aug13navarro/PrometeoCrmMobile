@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Core.Data;
+using Core.Helpers;
 using Core.Model;
 using Core.Services;
 using Core.Services.Contracts;
@@ -76,13 +81,19 @@ namespace Core.ViewModels
 
         private int companyId;
 
+        IMapper mapper;
+
         public ProductsViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)
         {
             try
             {
                 data = new ApplicationData();
+                var mapperConfig = new MapperConfiguration(m =>
+                {
+                    m.AddProfile(new MappingProfile());
+                });
 
-                //companyId = 7;
+                mapper = mapperConfig.CreateMapper();
 
                 Query = "";
                 this.prometeoApiService = prometeoApiService;
@@ -187,6 +198,20 @@ namespace Core.ViewModels
 
                     //CurrentPage = products.CurrentPage+1;
                     TotalPages = products.TotalPages;
+                }
+                else
+                {
+                    IsSearchInProgress = true;
+
+                    var productos = OfflineDatabase.GetProducts();
+                    if(productos != null)
+                    {
+                        Products.Clear();
+                        var productCompany = productos.Where(x => x.CompanyId == data.LoggedUser.CompanyId).ToList();
+                        productCompany = productCompany.Skip((CurrentPage - 1) * PageSize)
+                            .Take(PageSize).ToList();
+                        Products.AddRange(mapper.Map<List<Product>>(productCompany));
+                    }
                 }
             }
             catch (Exception ex)

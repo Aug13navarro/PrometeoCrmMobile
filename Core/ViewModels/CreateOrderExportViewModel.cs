@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Data;
 using Core.Helpers;
 using Core.Model;
 using Core.Services;
@@ -230,14 +231,22 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
 
         public OpportunityProducts editingOpportunityDetail { get; set; }
 
-        public CreateOrderExportViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)
+        IMapper mapper;
+
+        public CreateOrderExportViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)
         {
             try
             {
+                var mapperConfig = new MapperConfiguration(m =>
+                {
+                    m.AddProfile(new MappingProfile());
+                });
+
+                mapper = mapperConfig.CreateMapper();
+
                 stackDetail = true;
                 StackProductos = false;
 
@@ -245,7 +254,6 @@ namespace Core.ViewModels
 
                 this.navigationService = navigationService;
                 this.prometeoApiService = prometeoApiService;
-                this.offlineDataService = offlineDataService;
 
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
@@ -290,24 +298,16 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
-
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if (!offlineDataService.IsDataLoadedIncoterms)
-                    {
-                        await offlineDataService.LoadIncoterms();
-                    }
-
-                    var data = await offlineDataService.SearchIncoterms();
+                    var data = OfflineDatabase.GetIncoterms();
 
                     if(data != null)
                     {
-                        var inc = mapper.Map<List<Incoterm>>(data);
-                        Incoterms = new MvxObservableCollection<Incoterm>(inc);
+                        Incoterms = new MvxObservableCollection<Incoterm>(mapper.Map<List<Incoterm>>(data));
+
+                        if (Order.IncotermId.HasValue)
+                        {
+                            Incoterm = Incoterms.FirstOrDefault(x => x.Id == Order.IncotermId.Value);
+                        }
                     }
                 }
             }
@@ -340,24 +340,12 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
 
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if(!offlineDataService.IsDataLoadedFreigths)
-                    {
-                        await offlineDataService.LoadFreights();
-                    }
-
-                    var data = await offlineDataService.SearchFreights();
+                    var data = OfflineDatabase.GetFreightInCharges();
 
                     if( data != null)
                     {
-                        var f = mapper.Map<List<FreightInCharge>>(data);
-                        FreightInCharges = new MvxObservableCollection<FreightInCharge>(f);
+                        FreightInCharges = new MvxObservableCollection<FreightInCharge>(mapper.Map<List<FreightInCharge>>(data));
                     }
                 }
             }
@@ -421,7 +409,7 @@ namespace Core.ViewModels
                     currencyId = 1,
                     companyId = Company.Id,
                     Description = string.IsNullOrEmpty(Order.Description) ? string.Empty : Order.Description,
-                    paymentConditionId = Condition.id,
+                    paymentConditionId = Condition.Id,
                     ImporterCustomerId = SelectedCustomer.Id,
                     IsExport = true,
                     IsFinalClient = IsChecked,
@@ -483,15 +471,8 @@ namespace Core.ViewModels
                         nuevaOrder.company = Company;
                         nuevaOrder.customer = SelectedCustomer;
 
-                        offlineDataService.SaveOrderNotes(nuevaOrder);
-                        await offlineDataService.SynchronizeToDisk();
-
-
                         await navigationService.Close(this);
                         NewOrderCreatedd(true);
-
-                        //await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                        //await navigationService.Navigate<PedidosViewModel>();
                     }
                 }
                 else
@@ -550,54 +531,30 @@ namespace Core.ViewModels
                     {
                         if (Order.paymentConditionId > 0)
                         {
-                            Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
-                        }
-                        else
-                        {
-                            //Condition = PaymentConditions.FirstOrDefault();
+                            Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
                         }
                     }
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
+                    var data = OfflineDatabase.GetPaymentCondition();
+
+                    if (data != null)
                     {
-                        m.AddProfile(new MappingProfile());
-                    });
-
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if (!offlineDataService.IsDataLoadedPaymentConditions)
-                    {
-                        await offlineDataService.LoadDataPayment();
-                    }
-                    var data = await offlineDataService.SearchPaymentConditions();
-
-                    var d = data.Where(x => x.companyId == Company.Id).ToList();
-
-                    var dCache = mapper.Map<List<PaymentCondition>>(d);
-
-                    if (d != null || d.Count() > 0)
-                    {
-                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(dCache);
-                    }
-
-                    if (Order != null)
-                    {
-                        if (Order.paymentConditionId > 0)
+                        PaymentConditions = new MvxObservableCollection<PaymentCondition>(mapper.Map<List<PaymentCondition>>(data)); 
+                        
+                        if (Order != null)
                         {
-                            Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
-                        }
-                        else
-                        {
-                            //Condition = PaymentConditions.FirstOrDefault();
+                            if (Order.paymentConditionId > 0)
+                            {
+                                Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
+                            }
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                //await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
                 var s = e.Message;
                 return;
             }
@@ -659,7 +616,7 @@ namespace Core.ViewModels
 
                     if (Order.paymentConditionId > 0)
                     {
-                        Condition = PaymentConditions.FirstOrDefault(x => x.id == Order.paymentConditionId);
+                        Condition = PaymentConditions.FirstOrDefault(x => x.Id == Order.paymentConditionId);
                     }
 
                     if (orderNote.Details == null)
@@ -711,24 +668,11 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new MapperConfiguration(m =>
+                    var data = OfflineDatabase.GetAssistantComercial();
+
+                    if (data != null )
                     {
-                        m.AddProfile(new MappingProfile());
-                    });
-
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if (!offlineDataService.IsDataLoadedAssistant)
-                    {
-                        await offlineDataService.LoadAssistant();
-                    }
-
-                    var data = await offlineDataService.SearchAssistant();
-
-                    if (data != null || data.Count() > 0)
-                    {
-                        var d = mapper.Map<List<User>>(data);
-                        Assistants = new MvxObservableCollection<User>(d);
+                        Assistants = new MvxObservableCollection<User>(mapper.Map<List<User>>(data));
 
                         if (Order != null)
                         {

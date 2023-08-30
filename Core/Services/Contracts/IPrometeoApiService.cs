@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Helpers;
 using Core.Model;
 using Core.Model.Common;
 using Core.ViewModels.Model;
@@ -49,5 +50,6 @@ namespace Core.Services.Contracts
         Task<IEnumerable<TransportCompany>> GetTransport(string language, int companyId, string token);
         Task<IEnumerable<Provider>> GetProvidersByType(int providerTypeId, string token);
         Task<User> SetCompany(int companyId, string token);
+        Task<DataMobileModel> GetAllDataMobile(string language, string token);
     }
 }

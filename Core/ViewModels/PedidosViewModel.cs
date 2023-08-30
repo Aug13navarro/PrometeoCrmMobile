@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Data;
 using Core.Helpers;
 using Core.Model;
 using Core.Services;
@@ -115,15 +116,23 @@ namespace Core.ViewModels
 
         private readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
-        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService, IOfflineDataService offlineDataService)//,IToastService toastService
+        IMapper mapper;
+
+        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//,IToastService toastService, IOfflineDataService offlineDataService
         {
             data = new ApplicationData();
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new MappingProfile());
+            });
+
+            mapper = mapperConfig.CreateMapper();
 
             this.navigationService = navigationService;
             this.prometeoApiService = prometeoApiService;
-            this.offlineDataService = offlineDataService;
+            //this.offlineDataService = offlineDataService;
 
             NuevaNotaPedidoCommand = new Command(async () => await NuevaNotaPedido());
             FilterOrdersCommand = new Command(async () => await FilterOrders());
@@ -146,7 +155,6 @@ namespace Core.ViewModels
                 FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("MM/dd/yyyy");
                 FechaFinFiltro = DateTime.Now.ToString("MM/dd/yyyy");
             }
-
         }
 
         private async Task RefreshList()
@@ -180,18 +188,13 @@ namespace Core.ViewModels
             }
             else
             {
-                if (!offlineDataService.IsDataLoadedOrderNote)
-                {
-                    await offlineDataService.LoadOrderNotes();
-                }
+                var d = OfflineDatabase.GetOrderNotes();
 
-                var d = await offlineDataService.SearchOrderNotes();
-
-                var orderNotes = new MvxObservableCollection<OrderNote>(d);
+                var orderNotes = new MvxObservableCollection<OrderNote>(mapper.Map<List<OrderNote>>(d));
 
                 OrdersNote.Clear();
 
-                OrdersNote.AddRange(orderNotes.Where(x => x.customer.CompanyName.Contains(Query)).ToList());
+                OrdersNote.AddRange(orderNotes.Where(x => x.customer.CompanyName.ToLower().Contains(Query.ToLower())).ToList());
 
             }
         }
@@ -219,19 +222,7 @@ namespace Core.ViewModels
                 }
                 else
                 {
-                    var mapperConfig = new AutoMapper.MapperConfiguration(m =>
-                    {
-                        m.AddProfile(new MappingProfile());
-                    });
-
-                    IMapper mapper = mapperConfig.CreateMapper();
-
-                    if(!offlineDataService.IsDataLoadedCompanies)
-                    {
-                        await offlineDataService.LoadCompanies();
-                    }
-
-                    var empresas = await offlineDataService.SearchCompanies();
+                    var empresas = OfflineDatabase.GetCompanies();
 
                     var company = mapper.Map<Company>(empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
 
@@ -327,15 +318,13 @@ namespace Core.ViewModels
                 {
                     OrdersNote.Clear();
 
-                    if(!offlineDataService.IsDataLoadedOrderNote)
+                    var d = OfflineDatabase.GetOrderNotes();
+
+                    if (d != null)
                     {
-                        await offlineDataService.LoadOrderNotes();
+                        var orderNotes = new MvxObservableCollection<OrderNote>(mapper.Map<List<OrderNote>>(d));
+                        OrdersNote.AddRange(orderNotes);
                     }
-
-                    var d = await offlineDataService.SearchOrderNotes();
-
-                    var orderNotes = new MvxObservableCollection<OrderNote>(d);
-                    OrdersNote.AddRange(orderNotes);
                     IsLoading = false;
                 }
 
@@ -390,84 +379,6 @@ namespace Core.ViewModels
                             await Application.Current.MainPage.DisplayAlert("Attention", "Check your internet connection.", "Acept");
                             return;
                         }
-                        //else
-                        //{
-                        //    IsLoading = true;
-
-                        //    if(!offlineDataService.IsDataLoadedOpportunities)
-                        //    {
-                        //        await offlineDataService.LoadOpportunities();
-                        //    }
-
-                        //    var opsCache = await offlineDataService.SearchOpportunities();
-
-                        //    var Opfiltro = new MvxObservableCollection<Opportunity>();
-
-                        //    if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo == null) //Company
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id 
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom == null && filtro.priceTo == null) //Status
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo == null) //Price From
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.totalPrice >= filtro.priceFrom
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo != null) //Price TO
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.totalPrice >= filtro.priceTo
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count > 0 && filtro.status.Count >= 0 && filtro.priceFrom == null && filtro.priceTo == null) //Company and Status
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.opportunityStatus.Id == filtro.status.FirstOrDefault().id
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo == null) //Company and Price From
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.totalPrice >= filtro.priceFrom
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count > 0 && filtro.status.Count == 0 && filtro.priceFrom == null && filtro.priceTo != null) //Company and Price To
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.Company.Id == filtro.companies.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom != null && filtro.priceTo == null) //Status and Price From
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceFrom
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count == 0 && filtro.status.Count > 0 && filtro.priceFrom == null && filtro.priceTo != null) //Status and Price To
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-                        //    if (filtro.companies.Count == 0 && filtro.status.Count == 0 && filtro.priceFrom != null && filtro.priceTo != null) //Price From and Price To
-                        //    {
-                        //        Opfiltro.AddRange(opsCache.Where(x => x.opportunityStatus.Id == filtro.status.FirstOrDefault().id && x.totalPrice <= filtro.priceTo
-                        //                                        && x.closedDate >= filtro.dateFrom && x.closedDate <= filtro.dateTo));
-                        //    }
-
-
-                        //    Opportunities.Clear();
-
-                        //    Opportunities.AddRange(Opfiltro);
-                        //}
 
                         #endregion
                     }

@@ -198,15 +198,15 @@ namespace Core.Services
             {
                 lista.Add(new PaymentConditionsExtern
                 {
-                    abbreviature = item.abbreviature,
-                    active = item.active,
-                    baseDate = item.baseDate,
-                    code = item.code,
-                    company = item.company,
-                    companyId = item.companyId,
-                    description = item.description,
-                    id = item.id,
-                    surcharge = item.surcharge,
+                    //abbreviature = item.abbreviature,
+                    //active = item.active,
+                    ////baseDate = item.baseDate,
+                    //code = item.code,
+                    //company = item.company,
+                    //companyId = item.companyId,
+                    //description = item.description,
+                    //id = item.id,
+                    //surcharge = item.surcharge,
                 });
             }
 

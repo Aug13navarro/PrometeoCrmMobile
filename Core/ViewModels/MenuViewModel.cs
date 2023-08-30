@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Core.Data;
+using Core.Data.Tables;
 using Core.Helpers;
 using Core.Model;
 using Core.Model.Enums;
@@ -17,7 +20,9 @@ namespace Core.ViewModels
 {
     public class MenuViewModel : MvxViewModel
     {
-        private readonly IOfflineDataService _offlineDataService;
+        /// <summary>
+        /// private readonly IOfflineDataService _offlineDataService;
+        /// </summary>
 
         // Properties
         private User loggedUser;
@@ -42,14 +47,23 @@ namespace Core.ViewModels
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
         private readonly INotificationService notificationService;
+        IMapper _mapper;
 
-        public MenuViewModel(ApplicationData appData, IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, INotificationService notificationService, IOfflineDataService offlineDataService)
+        public MenuViewModel(ApplicationData appData, IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, INotificationService notificationService)//, IOfflineDataService offlineDataService
         {
+
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new MappingProfile());
+            });
+
+            _mapper = mapperConfig.CreateMapper();
+
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
             this.notificationService = notificationService;
 
-            _offlineDataService = offlineDataService;
+            //_offlineDataService = offlineDataService;
 
             MenuItems = new List<MenuItems>();
 
@@ -79,8 +93,37 @@ namespace Core.ViewModels
             GetCompanies(appData.LoggedUser.Id);
 
             this.appData.PropertyChanged += OnAppDataPropertyChanged;
+
+            ChargeDbLocal();
         }
 
+        private async Task<bool> ChargeDbLocal()
+        {
+            try
+            {
+                var response = await prometeoApiService.GetAllDataMobile("es", appData.LoggedUser.Token);
+
+                OfflineDatabase.SaveProviderListAsync(_mapper.Map<List<ProviderTable>>(response.Providers));
+                OfflineDatabase.SavePaymentMethodListAsync(_mapper.Map<List<PaymentMethodTable>>(response.PaymentMethod));
+                OfflineDatabase.SaveTransportCompaniesListAsync(_mapper.Map<List<TransportCompanyTable>>(response.Transports));
+                OfflineDatabase.SaveAssistantComercialsListAsync(_mapper.Map<List<AssistantComercialTable>>(response.AssistantComercial));
+                OfflineDatabase.SaveConditionListAsync(_mapper.Map<List<PaymentConditionTable>>(response.PaymentConditions));
+                OfflineDatabase.SaveFreightInChargesListAsync(_mapper.Map<List<FreightInChargeTable>>(response.Freights));
+                OfflineDatabase.SaveIncotermListAsync(_mapper.Map<List<IncotermTable>>(response.Incoterms));
+                OfflineDatabase.SaveCompaniesListAsync(_mapper.Map<List<CompanyTable>>(response.Companies));
+                OfflineDatabase.SaveCustomerListAsync(_mapper.Map<List<CustomerTable>>(response.Customers));
+                OfflineDatabase.SaveProductsListAsync(_mapper.Map<List<ProductTable>>(response.ProductsPresentations));
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                //await Application.Current.MainPage.DisplayAlert("menuviewmodel", $"{e.Message}", "aceptar");
+                return false;
+            }
+
+        }
 
         public override async Task Initialize()
         {
@@ -180,8 +223,24 @@ namespace Core.ViewModels
 
         public async Task GetCompanies(int userId)
         {
-            var companies = await prometeoApiService.GetCompaniesByUserId(userId, appData.LoggedUser.Token);
-            ListCompanies = new MvxObservableCollection<Company>(companies);
+            try
+            {
+                var red = await Connection.SeeConnection();
+                if (red)
+                {
+                    var companies = await prometeoApiService.GetCompaniesByUserId(userId, appData.LoggedUser.Token);
+                    ListCompanies = new MvxObservableCollection<Company>(companies);
+                }
+                else
+                {
+                    var companies = OfflineDatabase.GetCompanies();
+                    ListCompanies = new MvxObservableCollection<Company>(_mapper.Map<List<Company>>(companies));
+                }
+            }
+            catch(Exception e)
+            {
+                var m = e.Message;
+            }
         }
 
         public async void SetCurrentCompany(int companyId)
@@ -190,14 +249,27 @@ namespace Core.ViewModels
             {
                 if (companyId != appData.LoggedUser.CompanyId)
                 {
-                    var user = await prometeoApiService.SetCompany(companyId, appData.LoggedUser.Token);
-                    var userSaved = appData.LoggedUser;
-                    userSaved.Token = user.Token;
-                    userSaved.CompanyId = companyId;
-                    appData.SetLoggedUser(userSaved);
+                    var red = await Connection.SeeConnection();
+                    if (red)
+                    {
+                        var user = await prometeoApiService.SetCompany(companyId, appData.LoggedUser.Token);
+                        var userSaved = appData.LoggedUser;
+                        userSaved.Token = user.Token;
+                        userSaved.CompanyId = companyId;
+                        appData.SetLoggedUser(userSaved);
 
-                    await navigationService.Navigate<HomeViewModel>();
-                    await navigationService.Navigate<MenuViewModel>();
+                        await navigationService.Navigate<HomeViewModel>();
+                        await navigationService.Navigate<MenuViewModel>();
+                    }
+                    else
+                    {
+                        var userSaved = appData.LoggedUser;
+                        userSaved.CompanyId = companyId;
+                        appData.SetLoggedUser(userSaved);
+
+                        await navigationService.Navigate<HomeViewModel>();
+                        await navigationService.Navigate<MenuViewModel>();
+                    }
                 }
             }
             catch(Exception e)

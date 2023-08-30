@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Helpers;
 using Core.Model;
 using Core.Model.Common;
 using Core.Model.Extern;
@@ -20,12 +21,12 @@ namespace Core.Services
     public class PrometeoApiService : IPrometeoApiService
     {
         private readonly HttpClient client;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
-        public PrometeoApiService(HttpClient client, IOfflineDataService offlineDataService)
+        public PrometeoApiService(HttpClient client)//, IOfflineDataService offlineDataService
         {
             this.client = client;
-            this.offlineDataService = offlineDataService;
+            //this.offlineDataService = offlineDataService;
         }
 
         public async Task<LoginData> Login(string userName, string password)
@@ -831,6 +832,19 @@ namespace Core.Services
                 var m = e.Message;
                 throw;
             }
+        }
+
+        public async Task<DataMobileModel> GetAllDataMobile(string language, string token)
+        {
+            var url = $"/api/DataMobile/GetAllDataToMobile?language={language}";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<DataMobileModel>(resultado);
         }
     }
 }

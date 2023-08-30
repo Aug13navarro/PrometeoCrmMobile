@@ -19,7 +19,7 @@ namespace Core.ViewModels
 {
     public class OpportunitiesViewModel : MvxViewModel
     {
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
         private ApplicationData data;
         // Properties
         private bool isLoading;
@@ -108,10 +108,10 @@ namespace Core.ViewModels
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
 
-        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)
+        public OpportunitiesViewModel(IPrometeoApiService prometeoApiService, IMvxNavigationService navigationService)//, IOfflineDataService offlineDataService
         {
             data = new ApplicationData();
-            this.offlineDataService = offlineDataService;
+            //this.offlineDataService = offlineDataService;
 
             this.prometeoApiService = prometeoApiService;
             this.navigationService = navigationService;
@@ -156,7 +156,7 @@ namespace Core.ViewModels
                     IMapper mapper = mapperConfig.CreateMapper();
 
                     //await offlineDataService.DeleteOpportunities();
-                    offlineDataService.UnloadOpportunities();
+                    //offlineDataService.UnloadOpportunities();
                     //await offlineDataService.SynchronizeToDiskOpportunity();//ELIMINAR ESTAS TRES LINEAS PARA CORRECTO FUNCIONAMIENTO
 
                     //if (!offlineDataService.IsDataLoadedOpportunities)
@@ -495,13 +495,7 @@ namespace Core.ViewModels
 
                     IMapper mapper = mapperConfig.CreateMapper();
 
-                    if (!offlineDataService.IsDataLoadedOpportunities)
-                    {
-                        await offlineDataService.LoadOpportunities();
-                    }
-
-                    var opportunitiesCache = await offlineDataService.SearchOpportunities();
-
+                    var opportunitiesCache = new List<Opportunity>();
                     opportunities = mapper.Map<List<Opportunity>>(opportunitiesCache);
 
                     foreach (var item in opportunities) 

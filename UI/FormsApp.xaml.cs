@@ -1,6 +1,11 @@
-﻿using Core;
+﻿using AutoMapper;
+using Core;
+using Core.Data;
+using Core.Helpers;
+using Core.Model;
 using Core.Notification;
 using Core.Services;
+using Core.Services.Contracts;
 using Core.ViewModels;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Options;
@@ -8,6 +13,7 @@ using Newtonsoft.Json;
 using Plugin.Connectivity;
 using Plugin.Connectivity.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -35,10 +41,17 @@ namespace UI
         }
 
         public INotificationManager notificationManager;
+        IMapper mapper;
 
         public FormsApp()
         {
             this.appData = new ApplicationData();
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new MappingProfile());
+            });
+
+            mapper = mapperConfig.CreateMapper();
 
             MessagingCenter.Subscribe<LoginViewModel, CultureInfo>(this, "LangChanged", (sender, currentCulture) =>
             {
@@ -105,7 +118,7 @@ namespace UI
                     string message = $"'Prometeo Suite' se conectó a internet.";
                     notificationManager.SendNotification(title, message, 0, false);
 
-                    //var s = new SincronizacionService();
+                    var s = SincronizacionService();
 
                     //await s.Sincronizar();
                 }
@@ -128,6 +141,56 @@ namespace UI
             }
         }
 
+        private async Task<bool> SincronizacionService()
+        {
+            try
+            {
+                var pedidos = OfflineDatabase.GetOrderNotes();
+
+                if (pedidos != null && pedidos.Count > 0)
+                {
+                    string title = $"Aviso de Sincronización";
+                    string message = $"'Sincronizando datos almacenados de manera Offline.";
+                    notificationManager.SendNotification(title, message, 0, false);
+
+                    var service = new SincronizacionService();
+
+                    var result = await service.SincronizarPedidosOffline(mapper.Map<List<OrderNote>>(pedidos), appData.LoggedUser.Token);
+
+                    if (result)
+                    {
+                        // notificacion de exito
+                        string titleE = $"Aviso de Sincronización";
+                        string messageE = $"'Sincronización completada con Exito";
+                        notificationManager.SendNotification(titleE, messageE, 0, false);
+
+                        // borrar todos lo PV creados de manera Offline
+                        await OfflineDatabase.DeleteAllOrderNote();
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                return true;
+            }
+            catch(Exception e)
+            {
+                var mensaje = e.Message;
+                //mostrar mensaje de error 
+                string title = $"Aviso de Sincronización fallida";
+                string message = $"'Ocurrió un error al sincronizar uno o mas registros.";
+                notificationManager.SendNotification(title, message, 0, false);
+
+                //borrar aquellos pedidos que fueron sincronizados y dejar solamente aquellos que tiraron error 
+                if (message.Contains("["))
+                {
+                    var list = JsonConvert.DeserializeObject<List<int>>(mensaje);
+                    await OfflineDatabase.DeleteOrderNote(list);
+                }
+                return false;
+            }
+        }
 
         private async void Conectarse()
         {
@@ -168,7 +231,7 @@ namespace UI
                                 string title = $"Notificación de Alerta";
                                 string message = $"Se cambió la Empresa actual para el usuario logeuado.";
                                 //notificationManager.SendNotification(title, message, 0, false);
-                                Device.BeginInvokeOnMainThread(async () =>
+                                Xamarin.Forms.Device.BeginInvokeOnMainThread(async () =>
                                 {
                                     var response = await Application.Current.MainPage.DisplayAlert("Alerta", "Se cambió la empresa logueda para el Usuario actual", "", "OK");
 

@@ -290,7 +290,7 @@
                                     <Picker IsEnabled="{Binding EnableForEdit}"
                                             Title="{x:Static resources:AppResources.Select}" 
                                             ItemsSource="{Binding PaymentConditions, Mode=TwoWay}" 
-                                            ItemDisplayBinding="{Binding description}"
+                                            ItemDisplayBinding="{Binding Description}"
                                             SelectedItem="{Binding Condition, Mode=TwoWay}">
                                         
                                     </Picker>
@@ -401,11 +401,12 @@
                                     Padding="0"
                                     HorizontalOptions="FillAndExpand">
                                     <Picker
-                                    IsEnabled="{Binding EnableForEdit}"
-                                    HorizontalOptions="FillAndExpand"
-                                    Title="{x:Static resources:AppResources.Select}" 
-                                    ItemsSource="{Binding FreightInCharges, Mode=TwoWay}" ItemDisplayBinding="{Binding Transport.Name}" SelectedItem="{Binding FreightInCharge, Mode=TwoWay}">
-
+                                        IsEnabled="{Binding EnableForEdit}"
+                                        HorizontalOptions="FillAndExpand"
+                                        Title="{x:Static resources:AppResources.Select}" 
+                                        ItemsSource="{Binding FreightInCharges, Mode=TwoWay}" 
+                                        ItemDisplayBinding="{Binding TransportName}" 
+                                        SelectedItem="{Binding FreightInCharge, Mode=TwoWay}">
                                     </Picker>
                                 </Frame>
                             </StackLayout>

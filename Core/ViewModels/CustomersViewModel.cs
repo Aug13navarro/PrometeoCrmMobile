@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Core.Data;
 using Core.Helpers;
 using Core.Model;
 using Core.Model.Common;
@@ -14,6 +15,7 @@ using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Xamarin.Forms;
+using static Android.Icu.Util.LocaleData;
 
 namespace Core.ViewModels
 {
@@ -84,15 +86,23 @@ namespace Core.ViewModels
         // Services
         private readonly IPrometeoApiService prometeoApiService;
         private readonly IMvxNavigationService navigationService;
-        private readonly IOfflineDataService offlineDataService;
+        //private readonly IOfflineDataService offlineDataService;
 
-        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService, IOfflineDataService offlineDataService)//, IMapper mapper
+        IMapper mapper;
+
+        public CustomersViewModel(IPrometeoApiService prometeoApiService, ApplicationData appData, IMvxNavigationService navigationService)//, IMapper mapper, IOfflineDataService offlineDataService
         {
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new MappingProfile());
+            });
+
+            mapper = mapperConfig.CreateMapper();
+
             this.prometeoApiService = prometeoApiService;
             this.appData = appData;
             this.navigationService = navigationService;
-            this.offlineDataService = offlineDataService;
-
+            //this.offlineDataService = offlineDataService;
 
             LoadMoreCustomersCommand = new MvxAsyncCommand(LoadMoreCustomersAsync);
             ToggleContactsVisibilityCommand = new MvxCommand<Customer>(ToggleContactsVisibility);
@@ -110,50 +120,49 @@ namespace Core.ViewModels
 
         public override async Task Initialize()
         {
-            await base.Initialize();
-             
-            var red = await Connection.SeeConnection();
-
-            if (red)
+            try
             {
-                if (CustomerTypeId > 0)
+                await base.Initialize();
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
-                    SearByType(CustomerTypeId);
+                    if (CustomerTypeId > 0)
+                    {
+                        SearByType(CustomerTypeId);
+                    }
+                    else
+                    {
+
+                        var requestData = new CustomersPaginatedRequest()
+                        {
+                            CurrentPage = CurrentPage,
+                            PageSize = PageSize,
+                            UserId = appData.LoggedUser.Id,
+                        };
+
+                        await SearchCustomersAsync(requestData);
+                    }
                 }
                 else
                 {
-
-                    var requestData = new CustomersPaginatedRequest()
+                    var customers = OfflineDatabase.GetCustomers();
+                    if (customers != null)
                     {
-                        CurrentPage = CurrentPage,
-                        PageSize = PageSize,
-                        UserId = appData.LoggedUser.Id,
-                    };
+                        var d = customers.Where(x => x.CompanyId == appData.LoggedUser.CompanyId).ToList();
+                        d = d.Skip((CurrentPage - 1) * PageSize)
+                            .Take(PageSize).ToList();
+                        var r = mapper.Map<List<Customer>>(d);
 
-                    await SearchCustomersAsync(requestData);
+                        Customers.Clear();
+                        Customers.AddRange(r);
+                    }
                 }
             }
-            else
+            catch(Exception e)
             {
-
-                var mapperConfig = new MapperConfiguration(m =>
-                {
-                    m.AddProfile(new MappingProfile());
-                });
-
-                IMapper mapper = mapperConfig.CreateMapper();
-
-                if (!offlineDataService.IsDataLoadedCustomer)
-                {
-                    await offlineDataService.LoadAllData();
-                }
-
-                var d = await offlineDataService.SearchCustomers();
-
-                var r = mapper.Map<List<Customer>>(d);
-
-                Customers.Clear();
-                Customers.AddRange(r);
+                var m = e.Message;
             }
         }
 

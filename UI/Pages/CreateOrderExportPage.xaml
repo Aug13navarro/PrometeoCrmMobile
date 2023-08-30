@@ -208,7 +208,7 @@
                                     <Picker IsEnabled="{Binding EnableForEdit}"
                                             Title="{x:Static resources:AppResources.Select}" 
                                             ItemsSource="{Binding PaymentConditions, Mode=TwoWay}" 
-                                            ItemDisplayBinding="{Binding description}"
+                                            ItemDisplayBinding="{Binding Description}"
                                             SelectedItem="{Binding Condition, Mode=TwoWay}">
 
                                     </Picker>
