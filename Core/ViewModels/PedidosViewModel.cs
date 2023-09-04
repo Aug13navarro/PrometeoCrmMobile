@@ -8,15 +8,13 @@ using Core.ViewModels.Model;
 using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 using Xamarin.Forms;
-using static Android.App.Assist.AssistStructure;
 
 namespace Core.ViewModels
 {
@@ -205,8 +203,16 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
+                var permisions = JsonConvert.DeserializeObject<List<Permission>>(data.LoggedUser.PermissionsStr);
+
+                if(permisions.Any(x => x.Roles.VendingRoleUserTypes.Any(c => c.VendingUserType.Alias != "Vendedor")))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Información", "No posee los permisos necesarios para realizar una Venta.", "Aceptar"); return;
+                }
+
                 if (red)
                 {
+
                     var empresas = await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
 
                     var company = empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value);

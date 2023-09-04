@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Core.Model
 {
@@ -15,5 +16,7 @@ namespace Core.Model
 
         public string RolesStr { get; set; }
         public string UniqueCompany { get; set; }
+        public List<Permission> Permissions { get; set; }
+        public string PermissionsStr { get; set; }
     }
 }
