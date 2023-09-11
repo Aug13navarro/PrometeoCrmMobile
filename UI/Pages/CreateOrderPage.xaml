@@ -210,8 +210,7 @@
                                 Margin="0"
                                 Padding="0"
                                 HorizontalOptions="FillAndExpand">
-                                    <Entry                                         
-                                    x:Name="editorAddress"
+                                    <Entry                
                                     IsEnabled="{Binding EnableForEdit}"
                                     HorizontalOptions="FillAndExpand"
                                     Keyboard="Text"
@@ -454,7 +453,7 @@
 
                         <StackLayout Orientation="Horizontal"
                                      Margin="0">
-                            <Label
+                            <Label                        
                                 Text="{x:Static resources:AppResources.DeliveryAddress}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
 
                             <ImageButton
@@ -475,7 +474,8 @@
                                     Style="{StaticResource DefaultEditor}"
                                     AutoSize="TextChanges"
                                     Text="{Binding Order.DeliveryAddress, Mode=TwoWay}" 
-                                    MaxLength="300" HeightRequest="100"/>
+                                    MaxLength="300" HeightRequest="100"                                 
+                                    x:Name="editorAddress"/>
                         </Frame>
                         
                         <Label Text="{x:Static resources:AppResources.Description}" Style="{StaticResource DefaultLabel}"/>

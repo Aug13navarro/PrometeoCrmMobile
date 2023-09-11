@@ -746,6 +746,24 @@ namespace Core.Services
             }
         }
 
+        public async Task<IEnumerable<User>> GetUsersByRolUserVending(string token, string rol)
+        {
+            try
+            {
+                var url = $"/api/User/GetUsersByVendingType?alias={rol}";
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                var respuesta = await client.GetAsync($"{url}");
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<IEnumerable<User>>(resultado);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"{e.Message}");
+            }
+        }
+
         public async Task<IEnumerable<PaymentMethod>> GetPaymentMethod(int companyId, string language, string token)
         {
             var url = $"/api/PaymentMethod?companyId={companyId}&language={language}";

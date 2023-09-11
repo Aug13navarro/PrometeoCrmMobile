@@ -15,7 +15,6 @@ using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using Xamarin.Forms;
-using static Android.Icu.Util.LocaleData;
 
 namespace Core.ViewModels
 {

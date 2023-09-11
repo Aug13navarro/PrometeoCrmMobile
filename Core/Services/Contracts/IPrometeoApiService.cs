@@ -51,5 +51,6 @@ namespace Core.Services.Contracts
         Task<IEnumerable<Provider>> GetProvidersByType(int providerTypeId, string token);
         Task<User> SetCompany(int companyId, string token);
         Task<DataMobileModel> GetAllDataMobile(string language, string token);
+        Task<IEnumerable<User>> GetUsersByRolUserVending(string token, string rol);
     }
 }

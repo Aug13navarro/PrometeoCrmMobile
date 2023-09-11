@@ -522,7 +522,7 @@ namespace Core.ViewModels
 
                 if (red)
                 {
-                    var asistentes = await prometeoApiService.GetUsersByRol(Company.Id, "Asistente Comercial");
+                    var asistentes = await prometeoApiService.GetUsersByRolUserVending(data.LoggedUser.Token, "Asistente Comercial");
 
                     Assistants = new MvxObservableCollection<User>(asistentes);
 
