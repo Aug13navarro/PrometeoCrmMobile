@@ -77,7 +77,39 @@
                             Grid.ColumnSpan="2"
                     Mvx:Bi.nd="IsVisible !IsLoading">
                     <StackLayout Padding="15,5,15,0" Spacing="0">
+                        <StackLayout Orientation="Horizontal"
+                                     Margin="0,5">
+                            <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
+                            <Frame
+                                IsEnabled="{Binding ChangeStatusEnable}"
+                                HorizontalOptions="FillAndExpand"
+                                BackgroundColor="{Binding Order.StatusOrderNote.ColorHexa}"
+                                CornerRadius="10"
+                                HeightRequest="30"
+                                Padding="0">
+                                <Label
+                                    HorizontalOptions="Center"                                    
+                                    VerticalOptions="Center"
+                                    Text="{Binding Order.StatusOrderNote.Name, Mode=TwoWay}"
+                                    Style="{StaticResource DefaultLabel}"
+                                    TextColor="White">
 
+                                </Label>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"></TapGestureRecognizer>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                            <Picker
+                                IsVisible="false"
+                                x:Name="cmbStatusOrderNote"
+                                Title="{x:Static resources:AppResources.State}"
+                                ItemsSource="{Binding OrderStatus, Mode=TwoWay}"
+                                ItemDisplayBinding="{Binding Name}"
+                                SelectedItem="{Binding Status, Mode=TwoWay}"
+                                SelectedIndexChanged="cmbStatusOrderNote_SelectedIndexChanged">
+                                
+                            </Picker>
+                        </StackLayout>
                         <StackLayout Margin="0,5">
                             <Grid
                                 ColumnDefinitions="auto,*">

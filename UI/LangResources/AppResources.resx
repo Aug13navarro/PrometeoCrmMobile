@@ -168,6 +168,12 @@
   <data name="BusinessName" xml:space="preserve">
     <value>Reg. Name</value>
   </data>
+  <data name="ChangeCompany" xml:space="preserve">
+    <value>Change Company</value>
+  </data>
+  <data name="ChangeStatusOrderNote" xml:space="preserve">
+    <value>Change Status</value>
+  </data>
   <data name="CloseOpportunity" xml:space="preserve">
     <value>Close Opportunity</value>
   </data>

@@ -6,6 +6,7 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Globalization;
 using UI.Popups;
+using Xamarin.Forms;
 
 namespace UI.Pages
 {
@@ -114,6 +115,19 @@ namespace UI.Pages
 
             ViewModel.StackDetail = false;
             ViewModel.StackProductos = true;
+        }
+
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            cmbStatusOrderNote.Focus();
+        }
+
+        private void cmbStatusOrderNote_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cmb = (Picker)sender;
+
+            ViewModel.Order.StatusOrderNote = cmb.SelectedItem as StatusOrderNote;
+            ViewModel.Order.OrderStatus = (cmb.SelectedItem as StatusOrderNote).Id;
         }
     }
 }

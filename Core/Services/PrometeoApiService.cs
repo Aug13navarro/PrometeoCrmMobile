@@ -864,5 +864,31 @@ namespace Core.Services
 
             return JsonConvert.DeserializeObject<DataMobileModel>(resultado);
         }
+
+        public async Task<IEnumerable<StatusOrderNote>> GetStatusOrderNote(string token)
+        {
+            var url = $"/api/OpportunityOrderNote/GetStatusOrderNote";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<IEnumerable<StatusOrderNote>>(resultado);
+        }
+
+        public async Task<OrderNote> UpdateStatusOrderNote(int orderNoteId, int statusId, string token)
+        {
+            var url = $"/api/OpportunityOrderNote/ChangeStatusOfOpportunityOrderNote?orderNoteId={orderNoteId}&statusId={statusId}";
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"{url}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<OrderNote>(resultado);
+        }
     }
 }

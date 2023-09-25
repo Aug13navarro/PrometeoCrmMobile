@@ -52,5 +52,7 @@ namespace Core.Services.Contracts
         Task<User> SetCompany(int companyId, string token);
         Task<DataMobileModel> GetAllDataMobile(string language, string token);
         Task<IEnumerable<User>> GetUsersByRolUserVending(string token, string rol);
+        Task<IEnumerable<StatusOrderNote>> GetStatusOrderNote(string token);
+        Task<OrderNote> UpdateStatusOrderNote(int orderNoteId, int statusId, string token);
     }
 }

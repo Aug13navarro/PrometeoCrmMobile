@@ -97,18 +97,33 @@
                             <Label Text="{x:Static resources:AppResources.State}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,5" VerticalOptions="Center"/>
                             <Frame
                                 HorizontalOptions="FillAndExpand"
-                                BackgroundColor="{Binding Order.orderColor}"
+                                BackgroundColor="{Binding Order.StatusOrderNote.ColorHexa}"
                                 CornerRadius="10"
                                 HeightRequest="30"
-                                Padding="0">
+                                Padding="0"
+                                IsEnabled="{Binding ChangeStatusEnable}">
                                 <Label
                                     HorizontalOptions="Center"                                    
                                     VerticalOptions="Center"
-                                    Text="{Binding OrderStatusOrderStr, Mode=TwoWay}"
-                                    Style="{StaticResource DefaultLabel}">
+                                    Text="{Binding Order.StatusOrderNote.Name, Mode=TwoWay}"
+                                    Style="{StaticResource DefaultLabel}"
+                                    TextColor="White">
 
                                 </Label>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"></TapGestureRecognizer>
+                                </Frame.GestureRecognizers>
                             </Frame>
+                            <Picker
+                                IsVisible="false"
+                                x:Name="cmbStatusOrderNote"
+                                Title="{x:Static resources:AppResources.State}"
+                                ItemsSource="{Binding OrderStatus, Mode=TwoWay}"
+                                ItemDisplayBinding="{Binding Name}"
+                                SelectedItem="{Binding Status, Mode=TwoWay}"
+                                SelectedIndexChanged="cmbStatusOrderNote_SelectedIndexChanged">
+
+                            </Picker>
 
                         </StackLayout>
 

@@ -15,5 +15,6 @@ namespace Core.Model
 
         public string RolesStr { get; set; }
         public string UniqueCompany { get; set; }
+        public string StatusOrderNotes { get; set; }
     }
 }

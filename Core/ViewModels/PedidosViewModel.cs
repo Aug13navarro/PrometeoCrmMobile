@@ -8,8 +8,10 @@ using Core.ViewModels.Model;
 using MvvmCross.IoC;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,13 +101,15 @@ namespace Core.ViewModels
         public MvxObservableCollection<OrderNote> OrdersNote { get; set; } = new MvxObservableCollection<OrderNote>();
 
         public int CurrentPage { get; private set; } = 1; 
-        private const int PageSize = 40;
+        private const int PageSize = 20;
 
         public Command NuevaNotaPedidoCommand { get; }
         public Command FilterOrdersCommand { get; }
         public Command OpenOrderNoteCommand { get; }
         public Command SearchQueryCommand { get; }
         public Command RefreshListCommand { get; }
+
+        public int CompanyId { get; set; }
 
         //EVENTS
         public event EventHandler<Company> NewOrderPopup;
@@ -120,6 +124,7 @@ namespace Core.ViewModels
         public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//,IToastService toastService, IOfflineDataService offlineDataService
         {
             data = new ApplicationData();
+            this.CompanyId = data.LoggedUser.CompanyId.Value;
             var mapperConfig = new MapperConfiguration(m =>
             {
                 m.AddProfile(new MappingProfile());
@@ -152,6 +157,24 @@ namespace Core.ViewModels
                 FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("MM/dd/yyyy");
                 FechaFinFiltro = DateTime.Now.ToString("MM/dd/yyyy");
             }
+            
+            GetStatusToOrderNote();
+        }
+
+        private async void GetStatusToOrderNote()
+        {
+            var red = await Connection.SeeConnection();
+
+            if (red)
+            {
+                var status = await prometeoApiService.GetStatusOrderNote(data.LoggedUser.Token);
+
+                data.LoggedUser.StatusOrderNotes = JsonConvert.SerializeObject(status);
+                data.SetLoggedUser(data.LoggedUser);
+            }
+            else
+            {
+            }
         }
 
         private async Task RefreshList()
@@ -176,7 +199,7 @@ namespace Core.ViewModels
                 var requestData = new OrdersNotesPaginatedRequest()
                 {
                     CurrentPage = 1,
-                    PageSize = 30,
+                    PageSize = 20,
                     query = Query
                 };
 
@@ -244,7 +267,7 @@ namespace Core.ViewModels
             if(export)
             {
                 var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
-                var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now, company = company };
+                var order = new OrderNote() { OrderStatus = 1, fecha = DateTime.Now, company = company };
 
                 createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
                 await navigationService.Navigate(createViewModel, order);
@@ -253,7 +276,7 @@ namespace Core.ViewModels
             else
             {
                 var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
-                var order = new OrderNote() { orderStatus = 1, fecha = DateTime.Now , company = company};
+                var order = new OrderNote() { OrderStatus = 1, fecha = DateTime.Now , company = company};
 
                 createViewModel.NewOrderCreated += CreateViewModel_NewOrderCreated;
                 await navigationService.Navigate(createViewModel, order);
@@ -405,6 +428,25 @@ namespace Core.ViewModels
                 var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
                 createViewModel.NewOrderCreated += CreateViewModel_NewOrderCreated;
                 await navigationService.Navigate(createViewModel, orderNote);
+            }
+        }
+
+        public async void UpdateOrderNote(int statusId, string orderNoteId)
+        {
+            try
+            {
+                var result = await prometeoApiService.UpdateStatusOrderNote(Convert.ToInt32(orderNoteId), statusId, data.LoggedUser.Token);
+
+                if (result != null)
+                {
+                    OrdersNote.FirstOrDefault(x => x.id == result.id).OrderStatus = 4;
+                    OrdersNote.FirstOrDefault(x => x.id == result.id).StatusOrderNote = new StatusOrderNote { ColorHexa = "#13CD32", Name = "", Id = 4 };
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }

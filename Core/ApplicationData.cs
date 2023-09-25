@@ -40,6 +40,7 @@ namespace Core
                         string roles = Preferences.Get("roles", null, "loginData");
                         var companyId = Preferences.Get("company", null, "loginData");
                         var unique = Preferences.Get("unique", null, "loginData");
+                        string status = Preferences.Get("statusordernote", null, "loginData");
 
                         user.Id = id;
                         user.Email = email;
@@ -49,6 +50,7 @@ namespace Core
                         user.RolesStr = roles;
                         user.CompanyId = Convert.ToInt32(companyId);
                         user.UniqueCompany = unique;
+                        user.StatusOrderNotes = status;
                         //user.Expiration = !string.IsNullOrWhiteSpace(tokenExpirationDate)
                         //                      ? DateTime.Parse(tokenExpirationDate)
                         //                      : (DateTime?)null;
@@ -123,6 +125,7 @@ namespace Core
             Preferences.Set("token", user.Token, "loginData");
             Preferences.Set("tokenExpirationDate", user.Expiration.ToString(), "loginData");
             Preferences.Set("roles", user.RolesStr, "loginData");
+            Preferences.Set("statusordernote", user.StatusOrderNotes, "loginData");
             Preferences.Set("unique", user.UniqueCompany, "loginData");
             Preferences.Set("company", user.CompanyId.ToString(), "loginData");
 

@@ -7,6 +7,7 @@ using Core.Services.Contracts;
 using Core.ViewModels.Model;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,6 +22,12 @@ namespace Core.ViewModels
         private ApplicationData data;
 
         #region PROPIEDADES
+        private bool changeStatusEnable;
+        public bool ChangeStatusEnable
+        {
+            get => changeStatusEnable;
+            set => SetProperty(ref changeStatusEnable, value);
+        }
         private bool stackDetail;
         public bool StackDetail
         {
@@ -215,6 +222,18 @@ namespace Core.ViewModels
             get => minimunDate;
             set => SetProperty(ref minimunDate, value);
         }
+        private MvxObservableCollection<StatusOrderNote> selectedStatus;
+        public MvxObservableCollection<StatusOrderNote> OrderStatus
+        {
+            get => selectedStatus;
+            set => SetProperty(ref selectedStatus, value);
+        }
+        private StatusOrderNote status;
+        public StatusOrderNote Status
+        {
+            get => status;
+            set => SetProperty(ref status, value);
+        }
         #endregion
 
         //EVENTS
@@ -265,6 +284,8 @@ namespace Core.ViewModels
                 ETD = DateTime.Now.AddDays(15);
                 MinimunDate = DateTime.Now;
 
+
+                GetStatusToOrderNote();
                 CargarIncoterms();
                 CargarFlete();
 
@@ -274,6 +295,22 @@ namespace Core.ViewModels
                 Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar"); return;
             }
 
+        }
+
+        private async void GetStatusToOrderNote()
+        {
+            var red = await Connection.SeeConnection();
+
+            if (red)
+            {
+                var status = await prometeoApiService.GetStatusOrderNote(data.LoggedUser.Token);
+                OrderStatus = new MvxObservableCollection<StatusOrderNote>(status);
+                data.LoggedUser.StatusOrderNotes = JsonConvert.SerializeObject(status);
+                data.SetLoggedUser(data.LoggedUser);
+            }
+            else
+            {
+            }
         }
 
         private async void CargarIncoterms()
@@ -577,6 +614,7 @@ namespace Core.ViewModels
 
                     SelectedCustomer = Order.customer;
                     Company = Order.company;
+                    ChangeStatusEnable = Company.externalErpId.HasValue ? false : true;
                     //TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     //Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
                     //PaymentMethod = PaymentMethods.FirstOrDefault(x => x.id == Order.PaymentMethodId);
@@ -600,7 +638,7 @@ namespace Core.ViewModels
                     EnableForEdit = true;
 
                     Order = orderNote;
-                    Order.orderStatus = 1;
+                    Order.OrderStatus = 1;
 
                     //AjustarEstado(user.Language, Order.orderStatus);
 
@@ -612,6 +650,7 @@ namespace Core.ViewModels
                     if (Order.company != null)
                     {
                         Company = Order.company;
+                        ChangeStatusEnable = Company.externalErpId.HasValue ? false : true;
                     }
 
                     if (Order.paymentConditionId > 0)

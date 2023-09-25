@@ -168,6 +168,12 @@
   <data name="BusinessName" xml:space="preserve">
     <value>Raz. Soc.</value>
   </data>
+  <data name="ChangeCompany" xml:space="preserve">
+    <value>Cambiar de Empresa</value>
+  </data>
+  <data name="ChangeStatusOrderNote" xml:space="preserve">
+    <value>Cambiar Estado</value>
+  </data>
   <data name="CloseOpportunity" xml:space="preserve">
     <value>Cerrar Oportunidad</value>
   </data>
@@ -349,7 +355,7 @@
     <value>Nuevo Pedido</value>
   </data>
   <data name="NOCCustomer" xml:space="preserve">
-    <value>Nro de CO Cliente</value>
+    <value>N° de Orden de Compra Cliente</value>
   </data>
   <data name="NoContacts" xml:space="preserve">
     <value>No hay contactos</value>

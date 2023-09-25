@@ -1,85 +1,30 @@
 ﻿using Core.Helpers;
+using GalaSoft.MvvmLight.Command;
 using MvvmCross.ViewModels;
 using System;
 using System.Globalization;
+using System.Windows.Input;
 
 namespace Core.Model
 {
-    public class OrderNote 
+    public class OrderNote : MvxNotifyPropertyChanged
     {
         public int  id { get; set; }
         public int? opportunityId { get; set; }
         public string oppDescription { get; set; }
         public string Description { get; set; }
-        public int orderStatus { get; set; }
-        public string orderStatusStr => VerificarStatus(this.orderStatus);
-
-        private string VerificarStatus(int status)
+        private int orderStatus;
+        public int OrderStatus
         {
-            var estado = string.Empty;
-
-            switch (status)
-            {
-                case 1:
-                    estado = "Pendiente";
-                    break;
-                case 2:
-                    estado = "Aprobado";
-                    break;
-                case 3:
-                    estado = "Rechazado";
-                    break;
-                case 4:
-                    estado = "Remitado";
-                    break;
-                case 5:
-                    estado = "Despachado";
-                    break;
-                case 6:
-                    estado = "Entregado";
-                    break;
-                case 7:
-                    estado = "Facturado";
-                    break;
-            }
-
-            return estado;
+            get => orderStatus;
+            set => SetProperty(ref orderStatus, value);
         }
-
-        public string orderColor => AsignarColor(this.orderStatus);
-
-        private string AsignarColor(int orderStatus)
+        private StatusOrderNote statusOrderNote;
+        public StatusOrderNote StatusOrderNote
         {
-            string color = "";
-
-            switch (orderStatus)
-            {
-                case 1:
-                    color = "#D3D3D3";
-                    break;
-                case 2:
-                    color = "#ADD8E6";
-                    break;
-                case 3:
-                    color = "#FF0000";
-                    break;
-                case 4:
-                    color = "#13CD32";
-                    break;
-                case 5:
-                    color = "#131ECD";
-                    break;
-                case 6:
-                    color = "#000000";
-                    break;
-                case 7:
-                    color = "#ADD8E6";
-                    break;
-            }
-
-            return color;
+            get => statusOrderNote;
+            set => SetProperty(ref statusOrderNote, value);
         }
-
         public int currencyId { get; set; }
         public Currency currency { get; set; }
         public int? companyId { get; set; }
@@ -180,6 +125,5 @@ namespace Core.Model
 
         public string error { get; set; }
         public int idOffline { get; set; }
-
     }    
 }

@@ -17,6 +17,7 @@ using Xamarin.Essentials;
 using Core.Model.Extern;
 using Core.Data;
 using Core.Data.Tables;
+using Newtonsoft.Json;
 
 namespace Core.ViewModels
 {
@@ -26,7 +27,12 @@ namespace Core.ViewModels
 
         // Properties
         #region PROPIEDADES
-
+        private bool changeStatusEnable;
+        public bool ChangeStatusEnable
+        {
+            get => changeStatusEnable;
+            set => SetProperty(ref changeStatusEnable, value);
+        }
         private bool stackInfo;
         public bool StackInfo
         {
@@ -69,19 +75,25 @@ namespace Core.ViewModels
             set => SetProperty(ref order, value);
         }
 
-        private MvxObservableCollection<OpportunityStatus> selectedStatus;
-        public MvxObservableCollection<OpportunityStatus> OrderStatus
+        private MvxObservableCollection<StatusOrderNote> selectedStatus;
+        public MvxObservableCollection<StatusOrderNote> OrderStatus
         {
             get => selectedStatus;
             set => SetProperty(ref selectedStatus, value);
         }
-
-        private string orderStatusOrderStr;
-        public string OrderStatusOrderStr
+        private StatusOrderNote status;
+        public StatusOrderNote Status
         {
-            get => orderStatusOrderStr;
-            set => SetProperty(ref orderStatusOrderStr, value);
+            get => status;
+            set => SetProperty(ref status, value);
         }
+
+        //private string orderStatusOrderStr;
+        //public string OrderStatusOrderStr
+        //{
+        //    get => orderStatusOrderStr;
+        //    set => SetProperty(ref orderStatusOrderStr, value);
+        //}
 
         public MvxObservableCollection<TypeStandard> TypeOfRemittances { get; set; } = new MvxObservableCollection<TypeStandard>();
         public MvxObservableCollection<TypeStandard> PlaceOfPayment { get; set; } = new MvxObservableCollection<TypeStandard>();
@@ -128,12 +140,12 @@ namespace Core.ViewModels
             set => SetProperty(ref paymentMethod, value);
         }
 
-        private OpportunityStatus status;
-        public OpportunityStatus Status
-        {
-            get => status;
-            set => SetProperty(ref status, value);
-        }
+        //private OpportunityStatus status;
+        //public OpportunityStatus Status
+        //{
+        //    get => status;
+        //    set => SetProperty(ref status, value);
+        //}
 
         private MvxObservableCollection<Company> companies;
         public MvxObservableCollection<Company> Companies
@@ -370,9 +382,7 @@ namespace Core.ViewModels
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
 
-                OrderStatus = new MvxObservableCollection<OpportunityStatus>();
-
-                CargarEstados();
+                GetStatusToOrderNote();
                 //CargarEmpresas();
                 CargarTipoRemito();
                 CargarLugarPago();
@@ -383,6 +393,20 @@ namespace Core.ViewModels
             catch(Exception e)
             {
                 Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
+            }
+        }
+
+        private async void GetStatusToOrderNote()
+        {
+            var red = await Connection.SeeConnection();
+
+            if (red)
+            {
+                var status = await prometeoApiService.GetStatusOrderNote(data.LoggedUser.Token);
+                OrderStatus = new MvxObservableCollection<StatusOrderNote>(status);
+            }
+            else
+            {
             }
         }
 
@@ -530,7 +554,7 @@ namespace Core.ViewModels
                     {
                         if (Order.commercialAssistantId != null)
                         {
-                            Assistant = Assistants.FirstOrDefault(x => x.IdUser == Order.commercialAssistantId);
+                            Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
                         }
                     }
                 }
@@ -547,7 +571,7 @@ namespace Core.ViewModels
                         {
                             if (Order.commercialAssistantId != null)
                             {
-                                Assistant = Assistants.FirstOrDefault(x => x.IdUser == Order.commercialAssistantId);
+                                Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
                             }
                         }
                     }
@@ -717,7 +741,7 @@ namespace Core.ViewModels
                     customerId = SelectedCustomer.Id,
                     discount = OrderDiscount,
                     fecha = Order.fecha,
-                    orderStatus = 1,
+                    OrderStatus = 1,
                     total = Convert.ToDecimal(Total),
                     //cuenta = SelectedCustomer.externalCustomerId.Value,
                     divisionCuentaId = Company.ExternalId.Value,
@@ -732,7 +756,7 @@ namespace Core.ViewModels
                     PlacePayment = Place?.Id,
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
-                    commercialAssistantId = Assistant.IdUser,
+                    commercialAssistantId = Assistant.Id,
                     ProviderId = Provider?.Id
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
                     
@@ -825,6 +849,8 @@ namespace Core.ViewModels
                 {
                     if (red)
                     {
+                        nuevaOrder.OrderStatus = Status.Id;
+                        nuevaOrder.id = Order.id;
                         await prometeoApiService.UpdateOrderNote(nuevaOrder, data.LoggedUser.Token);
 
                         NewOrderCreated(true);
@@ -832,6 +858,7 @@ namespace Core.ViewModels
                     }
                     else
                     {
+                        nuevaOrder.OrderStatus = Status.Id;
                         nuevaOrder.company = Company;
                         nuevaOrder.customer = SelectedCustomer;
                         nuevaOrder.idOffline = Order.idOffline;
@@ -981,14 +1008,6 @@ namespace Core.ViewModels
             }
         }
 
-        private void CargarEstados()
-        {
-            OrderStatus.Add(new OpportunityStatus { Id = 1, name = "Pendiente" });
-            OrderStatus.Add(new OpportunityStatus { Id = 2, name = "Remitado" });
-            OrderStatus.Add(new OpportunityStatus { Id = 3, name = "Despachado" });
-            OrderStatus.Add(new OpportunityStatus { Id = 4, name = "Entregado" });
-        }
-
         public async override void Prepare(OrderNote theOrder)
         {
             try
@@ -1008,10 +1027,9 @@ namespace Core.ViewModels
 
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
 
-                    AjustarEstado(user.Language.abbreviation, Order.orderStatus);
-
                     SelectedCustomer = Order.customer;
                     Company = Order.company;
+                    ChangeStatusEnable = Company.externalErpId.HasValue ? false : true;
 
                     CargarAsistentes();
 
@@ -1042,9 +1060,9 @@ namespace Core.ViewModels
                     EnableForEdit = true;
 
                     Order = theOrder;
-                    Order.orderStatus = 1;
+                    Order.OrderStatus = 1;
 
-                    AjustarEstado(user.Language.abbreviation, Order.orderStatus);
+                    //AjustarEstado(user.Language.abbreviation, Order.OrderStatus);
 
                     if (Order.customer != null)
                     {
@@ -1053,6 +1071,7 @@ namespace Core.ViewModels
                     if (Order.company != null)
                     {
                         Company = Order.company;
+                        ChangeStatusEnable = Company.externalErpId.HasValue ? false : true;
                         CargarCondiciones();
                         CargarMedioPago();
                     }
@@ -1096,58 +1115,6 @@ namespace Core.ViewModels
             {
                 await Application.Current.MainPage.DisplayAlert("", e.Message, "Aceptar");
                 return;
-            }
-        }
-
-        private void AjustarEstado(string language, int orderStatus)
-        {
-            if (language.ToLower() == "es" || language.Contains("spanish"))
-            {
-                switch (orderStatus)
-                {
-                    case 1:
-                        OrderStatusOrderStr = "Pendiente";
-                        break;
-                    case 2:
-                        OrderStatusOrderStr = "Aprobado";
-                        break;
-                    case 3:
-                        OrderStatusOrderStr = "Rechazado";
-                        break;
-                    case 4:
-                        OrderStatusOrderStr = "Remitado";
-                        break;
-                    case 5:
-                        OrderStatusOrderStr = "Despachado";
-                        break;
-                    case 6:
-                        OrderStatusOrderStr = "Entregado";
-                        break;
-                }
-            }
-            else
-            {
-                switch (orderStatus)
-                {
-                    case 1:
-                        OrderStatusOrderStr = "Pending";
-                        break;
-                    case 2:
-                        OrderStatusOrderStr = "Approved";
-                        break;
-                    case 3:
-                        OrderStatusOrderStr = "Rejected";
-                        break;
-                    case 4:
-                        OrderStatusOrderStr = "Forwarded";
-                        break;
-                    case 5:
-                        OrderStatusOrderStr = "Dispatched";
-                        break;
-                    case 6:
-                        OrderStatusOrderStr = "Delivered";
-                        break;
-                }
             }
         }
 

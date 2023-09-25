@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Transactions;
 using UI.Popups;
+using Xamarin.Forms;
 
 namespace UI.Pages
 {
@@ -133,6 +134,18 @@ namespace UI.Pages
             ViewModel.StackInfo = false;
             ViewModel.StackProductos = false;
             ViewModel.StackAdjunto = true;
+        }
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            cmbStatusOrderNote.Focus();
+        }
+
+        private void cmbStatusOrderNote_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cmb = (Picker)sender;
+
+            ViewModel.Order.StatusOrderNote = cmb.SelectedItem as StatusOrderNote;
+            ViewModel.Order.OrderStatus = (cmb.SelectedItem as StatusOrderNote).Id;
         }
     }
 }

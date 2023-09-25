@@ -107,7 +107,7 @@ namespace Core.ViewModels
         private async void NuevaNotaPedido()
         {
             var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
-            var order = new OrderNote() { orderStatus = 1, fecha= DateTime.Now };
+            var order = new OrderNote() { OrderStatus = 1, fecha= DateTime.Now };
 
             createViewModel.NewOrderCreated += NewSalesSearchAsync;
             await navigationService.Navigate(createViewModel, order);

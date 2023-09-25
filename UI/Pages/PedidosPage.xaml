@@ -70,13 +70,17 @@
                                             <Frame
                                                 Margin="0"
                                                 Padding="0"
-                                                BackgroundColor="{Binding orderColor}"
+                                                BackgroundColor="{Binding StatusOrderNote.ColorHexa}"
                                                 WidthRequest="20"
                                                 MinimumWidthRequest="20"
                                                 HeightRequest="20"
                                                 CornerRadius="10"
                                                 VerticalOptions="Center"
+                                                AutomationId="{Binding id}"
                                                 >
+                                                <Frame.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1"></TapGestureRecognizer>
+                                                </Frame.GestureRecognizers>
                                             </Frame>
                                             <Label
                                             Text="{Binding customer.CompanyName}"
