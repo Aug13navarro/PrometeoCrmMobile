@@ -225,8 +225,16 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
+                var permisions = JsonConvert.DeserializeObject<List<Permission>>(data.LoggedUser.PermissionsStr);
+
+                if(permisions.Any(x => x.Roles.VendingRoleUserTypes.Any(c => c.VendingUserType.Alias != "Vendedor")))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Información", "No posee los permisos necesarios para realizar una Venta.", "Aceptar"); return;
+                }
+
                 if (red)
                 {
+
                     var empresas = await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
 
                     var company = empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value);

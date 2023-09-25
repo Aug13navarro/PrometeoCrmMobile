@@ -257,8 +257,8 @@ namespace Core.ViewModels
                         var user = appData.LoggedUser;
                         user.Token = setCompany.Token;
                         user.CompanyId = companyId;
+                        user.PermissionsStr = JsonConvert.SerializeObject(setCompany.Permissions);
                         appData.SetLoggedUser(user);
-
                     }
 
                     await navigationService.Navigate<HomeViewModel>();
