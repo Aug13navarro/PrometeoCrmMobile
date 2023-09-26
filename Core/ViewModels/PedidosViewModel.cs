@@ -225,9 +225,14 @@ namespace Core.ViewModels
             {
                 var red = await Connection.SeeConnection();
 
+                if (string.IsNullOrWhiteSpace(data.LoggedUser.PermissionsStr))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Información", "No posee los permisos necesarios para realizar una Venta.", "Aceptar"); return;
+                }
+
                 var permisions = JsonConvert.DeserializeObject<List<Permission>>(data.LoggedUser.PermissionsStr);
 
-                if(permisions.Any(x => x.Roles.VendingRoleUserTypes.Any(c => c.VendingUserType.Alias != "Vendedor")))
+                if (!permisions.Any(x => x.Roles.VendingRoleUserTypes.Any(c => c.VendingUserType.Alias == "Vendedor")))
                 {
                     await Application.Current.MainPage.DisplayAlert("Información", "No posee los permisos necesarios para realizar una Venta.", "Aceptar"); return;
                 }
