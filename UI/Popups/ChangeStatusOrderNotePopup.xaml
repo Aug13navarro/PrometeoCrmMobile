@@ -24,18 +24,18 @@
     <page:PopupPage.Content>
         <Frame
             Padding="0"
-            Margin="20"
+            Margin="50"
             BorderColor="{StaticResource PrimaryColor}"
             CornerRadius="10"
             HasShadow="True"
-            VerticalOptions="CenterAndExpand"
-            HorizontalOptions="CenterAndExpand">
+            VerticalOptions="CenterAndExpand">
             <StackLayout
                 Padding="20"
                 x:Name="StackPrincipal">
                 <Label
                     Text="{Static resources:AppResources.ChangeStatusOrderNote}"
-                    Style="{StaticResource DefaultLabel}">
+                    Style="{StaticResource DefaultLabel}"
+                    HorizontalTextAlignment="Center">
                     <!--
                     TextColor="{StaticResource PrimaryColor}"-->
 

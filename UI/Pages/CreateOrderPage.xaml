@@ -393,7 +393,9 @@
                                     IsEnabled="{Binding EnableForEdit}"
                                     HorizontalOptions="FillAndExpand"
                                     Title="{x:Static resources:AppResources.Select}" 
-                                    ItemsSource="{Binding FreightInCharges, Mode=TwoWay}" ItemDisplayBinding="{Binding Transport.Name}" SelectedItem="{Binding FreightInCharge, Mode=TwoWay}">
+                                    ItemsSource="{Binding FreightInCharges, Mode=TwoWay}" 
+                                        ItemDisplayBinding="{Binding TransportName}" 
+                                        SelectedItem="{Binding FreightInCharge, Mode=TwoWay}">
 
                                     </Picker>
                                 </Frame>
