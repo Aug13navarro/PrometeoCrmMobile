@@ -449,7 +449,7 @@ namespace Core.ViewModels
                     }
                 }
 
-                SelectedClosedLostStatusCause = Opportunity.opportunityStatus.name;
+                SelectedClosedLostStatusCause = Opportunity.opportunityStatus.Name;
                 SelectedCustomer = Opportunity.customer;
 
                 OrderDiscount = theOpportunity.Discount.HasValue ? theOpportunity.Discount.Value : 0;
@@ -608,7 +608,7 @@ namespace Core.ViewModels
         {
             var dExport = new DataExport()
             {
-                CompanyId = Company.Id,
+                CompanyId = data.LoggedUser.CompanyId.Value
             };
 
             var customer = await navigationService.Navigate<CustomersViewModel, DataExport, Customer>(dExport);
@@ -638,7 +638,7 @@ namespace Core.ViewModels
             {
                 var dataExport = new DataExport()
                 {
-                    CompanyId = Company.Id
+                    CompanyId = data.LoggedUser.CompanyId.Value
                 };
 
                 var detail = await navigationService.Navigate<ProductsViewModel, DataExport, OpportunityProducts>(dataExport);

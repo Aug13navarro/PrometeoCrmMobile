@@ -5,7 +5,7 @@ namespace Core.Model
     public class OpportunityStatus
     {
         public int Id { get; set; }
-        public string name { get; set; }
+        public string Name { get; set; }
         public string nameCacheEsp => DetectarEstado(this.Id);
         public string nameCacheEn => DetectStatus(this.Id);
 
@@ -22,7 +22,7 @@ namespace Core.Model
                 case 4:
                     return "Closed Won";
                 case 5:
-                    return "losed Loss";
+                    return "Closed Loss";
             }
 
             return "";

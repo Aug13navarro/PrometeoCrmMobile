@@ -73,7 +73,6 @@ namespace Core.ViewModels
                 SetProperty(ref company, value);
                 if (company != null)
                 {
-                    CargarVendedores();
                 }
             }
         }
@@ -136,7 +135,12 @@ namespace Core.ViewModels
 
         #endregion
 
-        public ObservableCollection<OpportunityStatus> OpportunityStatuses { get; set; }
+        private ObservableCollection<OpportunityStatus> opportunityStatuses;
+        public ObservableCollection<OpportunityStatus> OpportunityStatuses
+        {
+            get => opportunityStatuses;
+            set => SetProperty(ref opportunityStatuses, value);
+        }
         public ObservableCollection<Company> Companies { get; set; }
         public ObservableCollection<Customer> Customers { get; set; }
         public ObservableCollection<Product> Products { get; set; }
@@ -203,6 +207,7 @@ namespace Core.ViewModels
                 Vendedores = new ObservableCollection<User>();
 
                 CargarEstados();
+                CargarVendedores();
                 //CargarCompanies();
 
                 IsEnableSeller = true;
@@ -320,7 +325,7 @@ namespace Core.ViewModels
 
                 if (red)
                 {
-                    var users = await prometeoApiService.GetUsersByRol(Company.Id, "vendedor");
+                    var users = await prometeoApiService.GetUsersByRolUserVending(data.LoggedUser.Token, "Vendedor");
 
                     if (users != null)
                     {
@@ -440,11 +445,15 @@ namespace Core.ViewModels
         {
             try
             {
-                if (Company != null)
+                var red = await Connection.SeeConnection();
+
+                if (red)
                 {
+                    //if (Company != null)
+                    //{
                     var dExport = new DataExport()
                     {
-                        CompanyId = Company.Id
+                        CompanyId = data.LoggedUser.CompanyId.Value
                     };
 
                     Product product = await navigationService.Navigate<SelectProductViewModel, DataExport, Product>(dExport);
@@ -453,18 +462,23 @@ namespace Core.ViewModels
                     {
                         Product = product;
                     }
+                    //}
+                    //else
+                    //{
+                    //    if(data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                    //    {
+
+                    //        await Application.Current.MainPage.DisplayAlert("Atención","Seleccione una Empresa para poder buscar los productos", "Aceptar"); return;
+                    //    }
+                    //    else
+                    //    {
+                    //        await Application.Current.MainPage.DisplayAlert("Attention", "Select a Company to be able to search the products.", "Acept"); return;
+                    //    }
+                    //}
                 }
                 else
                 {
-                    if(data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
-                    {
 
-                        await Application.Current.MainPage.DisplayAlert("Atención","Seleccione una Empresa para poder buscar los productos", "Aceptar"); return;
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Attention", "Select a Company to be able to search the products.", "Acept"); return;
-                    }
                 }
             }
             catch (Exception e)
@@ -485,11 +499,23 @@ namespace Core.ViewModels
 
                     foreach (var item in status)
                     {
-                        OpportunityStatuses.Add(new OpportunityStatus
-                        {
-                            Id = item.Id,
-                            name = item.name,
-                        });
+                        //if (data.LoggedUser.Language.abbreviation.ToLower() == "es")
+                        //{
+                        OpportunityStatuses = new ObservableCollection<OpportunityStatus>(status);
+                        //.Add(new OpportunityStatus
+                        //    {
+                        //        Id = item.Id,
+                        //        Name = item.Name,
+                        //    });
+                        //}
+                        //else
+                        //{
+                        //    OpportunityStatuses.Add(new OpportunityStatus
+                        //    {
+                        //        Id = item.Id,
+                        //        name = item.name,
+                        //    });
+                        //}
                     }
                 }
                 else

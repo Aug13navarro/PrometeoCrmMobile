@@ -94,7 +94,6 @@ namespace Core.ViewModels
             set
             {
                 SetProperty(ref company, value);
-                CargarVendedores();
             }
         }
 
@@ -188,6 +187,8 @@ namespace Core.ViewModels
 
 
                 CargarEstados();
+
+                CargarVendedores();
                 //CargarCompanies();
 
                 IsEnableSeller = true;
@@ -248,9 +249,9 @@ namespace Core.ViewModels
 
                 if(red)
                 {
-                    if (Company != null)
-                    {
-                        var users = await prometeoApiService.GetUsersByRol(Company.Id, "vendedor");
+                    //if (Company != null)
+                    //{
+                        var users = await prometeoApiService.GetUsersByRolUserVending(data.LoggedUser.Token, "Vendedor");
 
                         if (users != null)
                         {
@@ -262,7 +263,7 @@ namespace Core.ViewModels
                                 Seller = Vendors.FirstOrDefault(x => x.Id == SellerGuardado.Id);
                             }
                         }
-                    }
+                    //}
                 }
                 else
                 {
@@ -293,32 +294,32 @@ namespace Core.ViewModels
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 1,
-                    name = "Pendiente"
+                    Name = "Pendiente"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 2,
-                    name = "Aprobado"
+                    Name = "Aprobado"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 3,
-                    name = "Rechazado"
+                    Name = "Rechazado"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 4,
-                    name = "Remitado"
+                    Name = "Remitado"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 5,
-                    name = "Despachado"
+                    Name = "Despachado"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 6,
-                    name = "Entregado"
+                    Name = "Entregado"
                 });
             }
             else
@@ -326,32 +327,32 @@ namespace Core.ViewModels
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 1,
-                    name = "Pending"
+                    Name = "Pending"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 2,
-                    name = "Approved"
+                    Name = "Approved"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 3,
-                    name = "Rejected"
+                    Name = "Rejected"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 4,
-                    name = "Forwarded"
+                    Name = "Forwarded"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 5,
-                    name = "Dispatched"
+                    Name = "Dispatched"
                 });
                 OrderStatuses.Add(new OpportunityStatus
                 {
                     Id = 6,
-                    name = "Delivered"
+                    Name = "Delivered"
                 });
             }                
         }

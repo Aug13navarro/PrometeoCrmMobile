@@ -500,15 +500,15 @@ namespace Core.ViewModels
 
                     foreach (var item in opportunities) 
                     {
-                        if(item.opportunityStatus.name == "" || item.opportunityStatus.name == null)
+                        if(item.opportunityStatus.Name == "" || item.opportunityStatus.Name == null)
                         {
                             if(user.Language.abbreviation.ToLower() == "es" || user.Language.abbreviation.Contains("spanish"))
                             {
-                                item.opportunityStatus.name = item.opportunityStatus.nameCacheEsp;
+                                item.opportunityStatus.Name = item.opportunityStatus.nameCacheEsp;
                             }
                             else
                             {
-                                item.opportunityStatus.name = item.opportunityStatus.nameCacheEn;
+                                item.opportunityStatus.Name = item.opportunityStatus.nameCacheEn;
                             }
                         }
                     }
