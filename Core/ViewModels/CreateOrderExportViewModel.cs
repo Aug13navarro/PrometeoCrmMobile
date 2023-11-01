@@ -19,7 +19,7 @@ namespace Core.ViewModels
 {
     public class CreateOrderExportViewModel : MvxViewModel<OrderNote>
     {
-        private ApplicationData data;
+        public ApplicationData data;
 
         #region PROPIEDADES
         private bool changeStatusEnable;
@@ -239,6 +239,7 @@ namespace Core.ViewModels
         //EVENTS
         public event EventHandler<Product> ShowEditProductPopup;
         public delegate void EventHandlerOrder(bool created);
+
         public event EventHandlerOrder NewOrderCreatedd;
 
         //COMMAND
@@ -248,7 +249,7 @@ namespace Core.ViewModels
         public Command RemoveProductCommand { get; }
         public Command SelectClientCommand { get; }
 
-        private readonly IMvxNavigationService navigationService;
+        public readonly IMvxNavigationService navigationService;
         private readonly IPrometeoApiService prometeoApiService;
 
         public OpportunityProducts editingOpportunityDetail { get; set; }
@@ -305,6 +306,11 @@ namespace Core.ViewModels
             {
                 var status = await prometeoApiService.GetStatusOrderNote(data.LoggedUser.Token);
                 OrderStatus = new MvxObservableCollection<StatusOrderNote>(status);
+
+                Order.StatusOrderNote = Order.OrderStatus != 0
+                    ? OrderStatus.FirstOrDefault(x => x.Id == Order.OrderStatus)
+                    : OrderStatus.FirstOrDefault(x => x.Name.Contains("Pend"));
+
                 data.LoggedUser.StatusOrderNotes = JsonConvert.SerializeObject(status);
                 data.SetLoggedUser(data.LoggedUser);
             }
@@ -467,6 +473,8 @@ namespace Core.ViewModels
 
                 if (Order.id == 0)
                 {
+                    nuevaOrder.OrderStatus = Status.Id;
+
                     var red = await Connection.SeeConnection();
 
                     if (red)
@@ -638,7 +646,7 @@ namespace Core.ViewModels
                     EnableForEdit = true;
 
                     Order = orderNote;
-                    Order.OrderStatus = 1;
+                    //Order.OrderStatus = 1;
 
                     //AjustarEstado(user.Language, Order.orderStatus);
 
@@ -951,6 +959,13 @@ namespace Core.ViewModels
         public void ResetTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
             Total = details.Sum(x => x.subtotal);
+        }
+
+        public async void CloseAndBack()
+        {
+            await navigationService.Close(this);
+
+            NewOrderCreatedd?.Invoke(true);
         }
     }
 }

@@ -16,8 +16,13 @@
                    TextColor="{OnPlatform Android=White, iOS=#2b0048}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="20"/>
             <ImageButton Source="guardar.png" Command="{Binding SavePedidoCommand}"
                          BackgroundColor="Transparent" WidthRequest="30"
-                         Margin="5,0,0,0">
-
+                         Margin="5,0,0,0"
+                         Mvx:Bi.nd="IsVisible Company.Id != 7">
+            </ImageButton>
+            <ImageButton Source="guardar.png"  x:Name="SaveOrderBtn"
+                         BackgroundColor="Transparent" WidthRequest="30"
+                         Margin="5,0,0,0"
+                         Mvx:Bi.nd="IsVisible Company.Id == 7">
             </ImageButton>
         </StackLayout>
     </NavigationPage.TitleView>

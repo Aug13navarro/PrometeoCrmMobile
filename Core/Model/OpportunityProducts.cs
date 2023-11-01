@@ -39,6 +39,8 @@ namespace Core.Model
 
         //para pasar company a producto
         public int CompanyId { get; set; }
+        public double SubtotalProducts { get; set; }
+        public double DiscountPrice { get; set; }
 
         private string TransformarStr(double value)
         {

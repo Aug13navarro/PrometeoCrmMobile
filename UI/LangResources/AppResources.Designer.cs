@@ -457,6 +457,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discount $.
+        /// </summary>
+        internal static string DiscountPrice {
+            get {
+                return ResourceManager.GetString("DiscountPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         internal static string Edit {
@@ -1164,6 +1173,24 @@ namespace UI.LangResources {
         internal static string State {
             get {
                 return ResourceManager.GetString("State", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subtotal discount.
+        /// </summary>
+        internal static string SubtotalDiscount {
+            get {
+                return ResourceManager.GetString("SubtotalDiscount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subtotal products.
+        /// </summary>
+        internal static string SubtotalProducts {
+            get {
+                return ResourceManager.GetString("SubtotalProducts", resourceCulture);
             }
         }
         

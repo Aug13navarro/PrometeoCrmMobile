@@ -249,6 +249,9 @@
   <data name="DiscountPopUp" xml:space="preserve">
     <value>Off</value>
   </data>
+  <data name="DiscountPrice" xml:space="preserve">
+    <value>Discount $</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -485,6 +488,12 @@
   </data>
   <data name="State" xml:space="preserve">
     <value>Status</value>
+  </data>
+  <data name="SubtotalDiscount" xml:space="preserve">
+    <value>Subtotal discount</value>
+  </data>
+  <data name="SubtotalProducts" xml:space="preserve">
+    <value>Subtotal products</value>
   </data>
   <data name="TaxCondition" xml:space="preserve">
     <value>TaxCondition</value>

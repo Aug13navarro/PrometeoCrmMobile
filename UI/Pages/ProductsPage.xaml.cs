@@ -53,18 +53,27 @@ namespace UI.Pages
                         price = price,
                         //Discount = discount,
                         //quantity = quantity,
-
                     },
                     //Price = price,
                     Discount = discount,
                     Quantity = quantity,
                     Total = CalcularTotal(price, quantity, discount),
+                    SubtotalProducts = quantity * price,
+                    DiscountPrice = CalcularDescuento(quantity, price, discount)
                 };
 
                 await ViewModel.Close(detail);
             };
             
             await PopupNavigation.Instance.PushAsync(popup);
+        }
+
+        private double CalcularDescuento(int quantity, double price, int discount)
+        {
+            var totalProduct = quantity * price;
+            var descuento = Convert.ToDecimal(discount) / 100;
+
+            return totalProduct * Convert.ToDouble(descuento);
         }
 
         private double CalcularTotal(double price, int quantity, int discount)

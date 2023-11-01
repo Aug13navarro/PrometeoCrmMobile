@@ -22,8 +22,9 @@ namespace Core.ViewModels
     public class PedidosViewModel : MvxViewModel
     {
         private readonly ApplicationData data;
-        
+
         private bool isLoading;
+
         public bool IsLoading
         {
             get => isLoading;
@@ -31,13 +32,14 @@ namespace Core.ViewModels
         }
 
         private string query;
+
         public string Query
         {
             get => query;
             set
             {
                 SetProperty(ref query, value);
-                if(string.IsNullOrWhiteSpace(query))
+                if (string.IsNullOrWhiteSpace(query))
                 {
                     var requestData = new OrdersNotesPaginatedRequest()
                     {
@@ -51,28 +53,29 @@ namespace Core.ViewModels
         }
 
         private decimal total;
+
         public decimal Total
         {
-            get => OrdersNote.Sum( x => x.total);
+            get => OrdersNote.Sum(x => x.total);
             set
             {
                 SetProperty(ref total, value);
                 ConvertirTotalStr(this.total);
             }
         }
+
         private string totalOfOrderStr;
+
         public string TotalOfOrderStr
         {
             get => totalOfOrderStr;
-            set
-            {
-                SetProperty(ref totalOfOrderStr, value);
-            }
+            set { SetProperty(ref totalOfOrderStr, value); }
         }
 
         private void ConvertirTotalStr(decimal total)
         {
-            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 TotalOfOrderStr = Total.ToString("N2", new CultureInfo("es-ES"));
             }
@@ -85,6 +88,7 @@ namespace Core.ViewModels
         }
 
         private string fechaInicioFiltro;
+
         public string FechaInicioFiltro
         {
             get => fechaInicioFiltro;
@@ -92,6 +96,7 @@ namespace Core.ViewModels
         }
 
         private string fechaFinFiltro;
+
         public string FechaFinFiltro
         {
             get => fechaFinFiltro;
@@ -100,7 +105,7 @@ namespace Core.ViewModels
 
         public MvxObservableCollection<OrderNote> OrdersNote { get; set; } = new MvxObservableCollection<OrderNote>();
 
-        public int CurrentPage { get; private set; } = 1; 
+        public int CurrentPage { get; private set; } = 1;
         private const int PageSize = 20;
 
         public Command NuevaNotaPedidoCommand { get; }
@@ -121,14 +126,12 @@ namespace Core.ViewModels
 
         IMapper mapper;
 
-        public PedidosViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//,IToastService toastService, IOfflineDataService offlineDataService
+        public PedidosViewModel(IMvxNavigationService navigationService,
+            IPrometeoApiService prometeoApiService) //,IToastService toastService, IOfflineDataService offlineDataService
         {
             data = new ApplicationData();
             this.CompanyId = data.LoggedUser.CompanyId.Value;
-            var mapperConfig = new MapperConfiguration(m =>
-            {
-                m.AddProfile(new MappingProfile());
-            });
+            var mapperConfig = new MapperConfiguration(m => { m.AddProfile(new MappingProfile()); });
 
             mapper = mapperConfig.CreateMapper();
 
@@ -142,12 +145,10 @@ namespace Core.ViewModels
             SearchQueryCommand = new Command(async () => await SearchQuery());
             RefreshListCommand = new Command(async () => await RefreshList());
 
-            OrdersNote.CollectionChanged += (sender, arg) =>
-            {
-                Total = OrdersNote.Sum(x => x.total);
-            };
+            OrdersNote.CollectionChanged += (sender, arg) => { Total = OrdersNote.Sum(x => x.total); };
 
-            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                data.LoggedUser.Language.abbreviation.Contains("spanish"))
             {
                 FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("dd/MM/yyyy");
                 FechaFinFiltro = DateTime.Now.ToString("dd/MM/yyyy");
@@ -157,7 +158,7 @@ namespace Core.ViewModels
                 FechaInicioFiltro = DateTime.Now.AddMonths(-6).ToString("MM/dd/yyyy");
                 FechaFinFiltro = DateTime.Now.ToString("MM/dd/yyyy");
             }
-            
+
             GetStatusToOrderNote();
         }
 
@@ -187,7 +188,6 @@ namespace Core.ViewModels
             };
 
             await GetOrdersNoteAsync(requestData, true);
-
         }
 
         private async Task SearchQuery()
@@ -214,8 +214,8 @@ namespace Core.ViewModels
 
                 OrdersNote.Clear();
 
-                OrdersNote.AddRange(orderNotes.Where(x => x.customer.CompanyName.ToLower().Contains(Query.ToLower())).ToList());
-
+                OrdersNote.AddRange(orderNotes.Where(x => x.customer.CompanyName.ToLower().Contains(Query.ToLower()))
+                    .ToList());
             }
         }
 
@@ -227,20 +227,24 @@ namespace Core.ViewModels
 
                 if (string.IsNullOrWhiteSpace(data.LoggedUser.PermissionsStr))
                 {
-                    await Application.Current.MainPage.DisplayAlert("Información", "No posee los permisos necesarios para realizar una Venta.", "Aceptar"); return;
+                    await Application.Current.MainPage.DisplayAlert("Información",
+                        "No posee los permisos necesarios para realizar una Venta.", "Aceptar");
+                    return;
                 }
 
                 var permisions = JsonConvert.DeserializeObject<List<Permission>>(data.LoggedUser.PermissionsStr);
 
                 if (!permisions.Any(x => x.Roles.VendingRoleUserTypes.Any(c => c.VendingUserType.Alias == "Vendedor")))
                 {
-                    await Application.Current.MainPage.DisplayAlert("Información", "No posee los permisos necesarios para realizar una Venta.", "Aceptar"); return;
+                    await Application.Current.MainPage.DisplayAlert("Información",
+                        "No posee los permisos necesarios para realizar una Venta.", "Aceptar");
+                    return;
                 }
 
                 if (red)
                 {
-
-                    var empresas = await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
+                    var empresas =
+                        await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
 
                     var company = empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value);
 
@@ -257,7 +261,8 @@ namespace Core.ViewModels
                 {
                     var empresas = OfflineDatabase.GetCompanies();
 
-                    var company = mapper.Map<Company>(empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
+                    var company =
+                        mapper.Map<Company>(empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
 
                     if (company.ExportPv.HasValue)
                     {
@@ -271,16 +276,17 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                await Application.Current.MainPage.DisplayAlert("Error",e.Message,"Aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("Error", e.Message, "Aceptar");
+                return;
             }
         }
 
         public async Task IrNuevaNotaPedido(Company company, bool export)
         {
-            if(export)
+            if (export)
             {
                 var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
-                var order = new OrderNote() { OrderStatus = 1, fecha = DateTime.Now, company = company };
+                var order = new OrderNote() { OrderStatus = 0, fecha = DateTime.Now, company = company };
 
                 createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
                 await navigationService.Navigate(createViewModel, order);
@@ -289,7 +295,7 @@ namespace Core.ViewModels
             else
             {
                 var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
-                var order = new OrderNote() { OrderStatus = 1, fecha = DateTime.Now , company = company};
+                var order = new OrderNote() { OrderStatus = 0, fecha = DateTime.Now, company = company };
 
                 createViewModel.NewOrderCreated += CreateViewModel_NewOrderCreated;
                 await navigationService.Navigate(createViewModel, order);
@@ -341,7 +347,8 @@ namespace Core.ViewModels
                         OrdersNote.Clear();
                     }
 
-                    var ordenNotes = new MvxObservableCollection<OrderNote>(ordersnote.Results.OrderByDescending(x => x.fecha));
+                    var ordenNotes =
+                        new MvxObservableCollection<OrderNote>(ordersnote.Results.OrderByDescending(x => x.fecha));
                     OrdersNote.AddRange(ordenNotes);
 
                     CurrentPage = CurrentPage++;
@@ -358,13 +365,14 @@ namespace Core.ViewModels
                         var orderNotes = new MvxObservableCollection<OrderNote>(mapper.Map<List<OrderNote>>(d));
                         OrdersNote.AddRange(orderNotes);
                     }
+
                     IsLoading = false;
                 }
-
             }
             catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Aceptar"); return;
+                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Aceptar");
+                return;
             }
             finally
             {
@@ -395,21 +403,25 @@ namespace Core.ViewModels
 
                         OrdersNote.Clear();
 
-                        var ordenOportunidad = new MvxObservableCollection<OrderNote>(orders.OrderByDescending(x => x.fecha));
+                        var ordenOportunidad =
+                            new MvxObservableCollection<OrderNote>(orders.OrderByDescending(x => x.fecha));
                         OrdersNote.AddRange(ordenOportunidad);
                     }
                     else
                     {
                         #region MODO OFFLINE
 
-                        if (user.Language.abbreviation.ToLower() == "es" || user.Language.abbreviation.Contains("spanish"))
+                        if (user.Language.abbreviation.ToLower() == "es" ||
+                            user.Language.abbreviation.Contains("spanish"))
                         {
-                            await Application.Current.MainPage.DisplayAlert("Atención", "Revise su conexión a internet.", "Aceptar");
+                            await Application.Current.MainPage.DisplayAlert("Atención",
+                                "Revise su conexión a internet.", "Aceptar");
                             return;
                         }
                         else
                         {
-                            await Application.Current.MainPage.DisplayAlert("Attention", "Check your internet connection.", "Acept");
+                            await Application.Current.MainPage.DisplayAlert("Attention",
+                                "Check your internet connection.", "Acept");
                             return;
                         }
 
@@ -448,17 +460,18 @@ namespace Core.ViewModels
         {
             try
             {
-                var result = await prometeoApiService.UpdateStatusOrderNote(Convert.ToInt32(orderNoteId), statusId, data.LoggedUser.Token);
+                var result = await prometeoApiService.UpdateStatusOrderNote(Convert.ToInt32(orderNoteId), statusId,
+                    data.LoggedUser.Token);
 
                 if (result != null)
                 {
                     OrdersNote.FirstOrDefault(x => x.id == result.id).OrderStatus = 4;
-                    OrdersNote.FirstOrDefault(x => x.id == result.id).StatusOrderNote = new StatusOrderNote { ColorHexa = "#13CD32", Name = "", Id = 4 };
+                    OrdersNote.FirstOrDefault(x => x.id == result.id).StatusOrderNote = new StatusOrderNote
+                        { ColorHexa = "#13CD32", Name = "", Id = 4 };
                 }
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

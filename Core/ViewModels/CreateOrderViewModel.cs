@@ -18,12 +18,14 @@ using Core.Model.Extern;
 using Core.Data;
 using Core.Data.Tables;
 using Newtonsoft.Json;
+using Xamarin.Forms.PlatformConfiguration.TizenSpecific;
+using Application = Xamarin.Forms.Application;
 
 namespace Core.ViewModels
 {
     public class CreateOrderViewModel : MvxViewModel<OrderNote>
     {
-        private ApplicationData data;
+        public ApplicationData data;
 
         // Properties
         #region PROPIEDADES
@@ -344,13 +346,16 @@ namespace Core.ViewModels
         public Command RemoveProductCommand { get; }
         public Command CerrarOportunidad { get; }
         public Command CustomerAddressCommand { get; }
+        public Command OpenGaleryCommand { get; }
 
         public Command SavePedidoCommand { get; }
 
         public OpportunityProducts editingOpportunityDetail { get; set; }
 
-        private readonly IMvxNavigationService navigationService;
-        private readonly IPrometeoApiService prometeoApiService;
+        public readonly IMvxNavigationService navigationService;
+
+        public readonly IPrometeoApiService prometeoApiService;
+
         //private readonly IOfflineDataService offlineDataService;
         IMapper mapper;
         public CreateOrderViewModel(IMvxNavigationService navigationService, IPrometeoApiService prometeoApiService)//, IOfflineDataService offlineDataService
@@ -379,6 +384,7 @@ namespace Core.ViewModels
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
                 CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
+                OpenGaleryCommand = new Command(async () => await OpenGalery());
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
 
@@ -396,6 +402,61 @@ namespace Core.ViewModels
             }
         }
 
+        private async Task OpenGalery()
+        {
+            try
+            {
+                var status = await Permissions.RequestAsync<Permissions.StorageRead>();
+
+                if (status == PermissionStatus.Granted)
+                {
+                    //var files = PickAndShow(default).ContinueWith(
+                    //    (task) => { });
+                }
+                else
+                {
+                    //await App.Current.MainPage.DisplayAlert(
+                    //    Views.LangResources.AppResource.Atention,
+                    //    Views.LangResources.AppResource.AlertFile4,
+                    //    Views.LangResources.AppResource.Acept); return;
+                }
+            }
+            catch
+            {
+                //        //await App.Current.MainPage.DisplayAlert("Error", $"{Views.LangResources.AppResource.AlertFile1} - FL442", Views.LangResources.AppResource.Acept); return;
+                //        return;
+                //    }
+                //    finally
+                //    {
+                //        //IsRefreshing = false;
+            }
+        }
+
+        //async Task<List<AssignmentFilesModel>> PickAndShow(PickOptions options)
+        //{
+        //    try
+        //    {
+        //        var result = await FilePicker.PickMultipleAsync(options); //obtengo lista de imagenes 
+
+        //        var red = await Connection.SeeConnection();
+
+        //        if (result != null)
+        //        {
+        //            //var lista = await EnviarFotos(result);
+        //            //if (lista.Count() > 0)
+        //            //{
+        //            //    SaveFiles(lista, red);
+        //            //}
+        //        }
+
+        //        return null;
+        //    }
+        //    catch
+        //    {
+        //        return null;
+        //    }
+        //}
+
         private async void GetStatusToOrderNote()
         {
             var red = await Connection.SeeConnection();
@@ -404,6 +465,10 @@ namespace Core.ViewModels
             {
                 var status = await prometeoApiService.GetStatusOrderNote(data.LoggedUser.Token);
                 OrderStatus = new MvxObservableCollection<StatusOrderNote>(status);
+
+                Order.StatusOrderNote = Order.OrderStatus != 0
+                    ? OrderStatus.FirstOrDefault(x => x.Id == Order.OrderStatus)
+                    : OrderStatus.FirstOrDefault(x => x.Name.Contains("Pend"));
             }
             else
             {
@@ -654,81 +719,97 @@ namespace Core.ViewModels
                     PaymentMethod == null ||
                     Assistant == null)
                 {
-                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                        data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
-                        await Application.Current.MainPage.DisplayAlert("Atención", "Faltan ingresar datos obligatorios.", "Aceptar");
+                        await Application.Current.MainPage.DisplayAlert("Atención",
+                            "Faltan ingresar datos obligatorios.", "Aceptar");
                         return;
                     }
                     else
                     {
-                        await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.",
+                            "Acept");
                         return;
                     }
                 }
 
-                if(Company.Id != 7)
+                if (Company.Id != 7)
                 {
                     if (Place == null)
                     {
-                        if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                        if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                            data.LoggedUser.Language.abbreviation.Contains("spanish"))
                         {
-                            await Application.Current.MainPage.DisplayAlert("Atención", "Faltan ingresar datos obligatorios.", "Aceptar");
+                            await Application.Current.MainPage.DisplayAlert("Atención",
+                                "Faltan ingresar datos obligatorios.", "Aceptar");
                             return;
                         }
                         else
                         {
-                            await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.", "Acept");
+                            await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.",
+                                "Acept");
                             return;
                         }
                     }
                 }
-                
-                if(Company.externalErpId != null)
+
+                if (Company.externalErpId != null)
                 {
                     if (Condition == null)
                     {
-                        if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                        if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                            data.LoggedUser.Language.abbreviation.Contains("spanish"))
                         {
-                            await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
+                            await Application.Current.MainPage.DisplayAlert("Atención",
+                                "Seleccione una condición de pago.", "Aceptar");
                             return;
                         }
                         else
                         {
-                            await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
+                            await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.",
+                                "Acept");
                             return;
                         }
                     }
                 }
                 else
                 {
-                    if (TypeOfRemittance.Description != "En Consignación" && TypeOfRemittance.Description != "On Consignment")
+                    if (TypeOfRemittance.Description != "En Consignación" &&
+                        TypeOfRemittance.Description != "On Consignment")
                     {
                         if (Condition == null)
                         {
-                            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                            if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                                data.LoggedUser.Language.abbreviation.Contains("spanish"))
                             {
-                                await Application.Current.MainPage.DisplayAlert("Atención", "Seleccione una condición de pago.", "Aceptar");
+                                await Application.Current.MainPage.DisplayAlert("Atención",
+                                    "Seleccione una condición de pago.", "Aceptar");
                                 return;
                             }
                             else
                             {
-                                await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.", "Acept");
+                                await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.",
+                                    "Acept");
                                 return;
                             }
                         }
                     }
-                }                
+                }
 
-                if(Order.products == null || Order.products.Count() == 0)
+                if (Order.products == null || Order.products.Count() == 0)
                 {
-                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                        data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
-                        await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar productos", "Aceptar");
+                        await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar productos",
+                            "Aceptar");
                         return;
                     }
                     else
                     {
-                        await Application.Current.MainPage.DisplayAlert("Attention", "You need to associate products.", "Acept");
+                        await Application.Current.MainPage.DisplayAlert("Attention", "You need to associate products.",
+                            "Acept");
                         return;
                     }
                 }
@@ -741,14 +822,14 @@ namespace Core.ViewModels
                     customerId = SelectedCustomer.Id,
                     discount = OrderDiscount,
                     fecha = Order.fecha,
-                    OrderStatus = 1,
+                    //OrderStatus = 1,
                     total = Convert.ToDecimal(Total),
                     //cuenta = SelectedCustomer.externalCustomerId.Value,
                     divisionCuentaId = Company.ExternalId.Value,
-                    talon = 88,                          //puede ser null
-                    tipoComprobante = 8,                 //puede ser null
-                    tipoCuentaId = 1,                    //puede ser null
-                    tipoServicioId = 50,                  //puede ser null
+                    talon = 88, //puede ser null
+                    tipoComprobante = 8, //puede ser null
+                    tipoCuentaId = 1, //puede ser null
+                    tipoServicioId = 50, //puede ser null
                     DeliveryAddress = Order.DeliveryAddress,
                     DeliveryDate = Order.DeliveryDate,
                     DeliveryResponsible = Order.DeliveryResponsible,
@@ -759,15 +840,14 @@ namespace Core.ViewModels
                     commercialAssistantId = Assistant.Id,
                     ProviderId = Provider?.Id
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
-                    
                 };
 
-                if(Condition != null)
+                if (Condition != null)
                 {
                     nuevaOrder.paymentConditionId = Condition.Id;
                 }
 
-                if(FreightInCharge != null)
+                if (FreightInCharge != null)
                 {
                     nuevaOrder.TransportCompanyId = FreightInCharge.Id;
                 }
@@ -797,6 +877,8 @@ namespace Core.ViewModels
 
                 if (Order.id == 0 && Order.idOffline == 0)
                 {
+                    nuevaOrder.OrderStatus = Status.Id;
+
                     if (red)
                     {
                         var respuesta = await prometeoApiService.CreateOrderNote(nuevaOrder);
@@ -821,9 +903,11 @@ namespace Core.ViewModels
 
                                 var opp = new Opportunity();
 
-                                await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token, opp);
+                                await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token,
+                                    opp);
 
-                                await navigationService.ChangePresentation(new MvxPopPresentationHint(typeof(PedidosViewModel)));
+                                await navigationService.ChangePresentation(
+                                    new MvxPopPresentationHint(typeof(PedidosViewModel)));
                                 await navigationService.Navigate<PedidosViewModel>();
                             }
                             else
@@ -833,7 +917,6 @@ namespace Core.ViewModels
                                 NewOrderCreated(true);
                             }
                         }
-
                     }
                     else
                     {
@@ -875,7 +958,8 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                if (data.LoggedUser.Language.abbreviation.ToLower() == "es" || data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                    data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
                     await Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "Aceptar");
                     return;
@@ -892,7 +976,7 @@ namespace Core.ViewModels
             }
         }
 
-        private List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
+        public List<OpportunityPost.ProductSend> listaProductos(MvxObservableCollection<OpportunityProducts> details)
         {
             var lista = new List<OpportunityPost.ProductSend>();
 
@@ -1060,7 +1144,7 @@ namespace Core.ViewModels
                     EnableForEdit = true;
 
                     Order = theOrder;
-                    Order.OrderStatus = 1;
+                    //Order.OrderStatus = 1;
 
                     //AjustarEstado(user.Language.abbreviation, Order.OrderStatus);
 
@@ -1243,6 +1327,8 @@ namespace Core.ViewModels
                         subtotal = detail.Total,
                         companyProductPresentationId = detail.productId,
                         companyProductPresentation = detail.product,
+                        discountPrice = detail.DiscountPrice,
+                        subtotalProduct = detail.SubtotalProducts,
                     };
 
                     if (Order.products == null)
@@ -1374,6 +1460,13 @@ namespace Core.ViewModels
         public void ResetTotal(MvxObservableCollection<OrderNote.ProductOrder> details)
         {
             Total = details.Sum(x => x.subtotal);
+        }
+
+        public async void CloseAndBack()
+        {
+            await navigationService.Close(this);
+
+            NewOrderCreated(true);
         }
 
         //#region SELECCIONAR ARCHIVO

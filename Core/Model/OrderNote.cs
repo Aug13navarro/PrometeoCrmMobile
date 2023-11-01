@@ -101,11 +101,15 @@ namespace Core.Model
             public double subtotal { get; set; }
             public int arancel { get; set; }
             public int bonificacion { get; set; }
-
+            public double discountPrice { get; set; }
+            public double subtotalProduct { get; set; }
 
 
             public string PriceStr => TransformarStr(this.price);
+            public string DiscountPriceStr => TransformarStr(this.discountPrice);
             public string SubTotalStr => TransformarStr(this.subtotal);
+            public string SubTotalProductsStr => TransformarStr(this.subtotalProduct);
+
             private string TransformarStr(double value)
             {
                 string str = string.Empty;
