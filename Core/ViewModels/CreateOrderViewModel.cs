@@ -347,6 +347,7 @@ namespace Core.ViewModels
         public Command AddProductCommand { get; }
         public Command EditProductCommand { get; }
         public Command RemoveProductCommand { get; }
+        public Command RemoveFileCommand { get; }
         public Command CerrarOportunidad { get; }
         public Command CustomerAddressCommand { get; }
 
@@ -384,6 +385,7 @@ namespace Core.ViewModels
                 SelectClientCommand = new Command(async () => await SelectClientAsync());
                 AddProductCommand = new Command(async () => await AddProductAsync());
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
+                RemoveFileCommand = new Command<AttachFile>(RemoveFile);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
                 CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
 
@@ -1334,6 +1336,20 @@ namespace Core.ViewModels
             catch (Exception e)
             {
                 Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "aceptar"); return;
+            }
+        }
+
+        private void RemoveFile(AttachFile file)
+        {
+            try
+            {
+                AttachFiles.Remove(file);
+                //Order.OpportunityOrderNoteAttachFile.Remove(file);
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar");
+                return;
             }
         }
 

@@ -660,7 +660,8 @@
                 <BoxView BackgroundColor="LightGray" HeightRequest="1" />
             </StackLayout>
             <ListView IsVisible="True"
-                      ItemsSource="{Binding AttachFiles, Mode=TwoWay}">
+                      ItemsSource="{Binding AttachFiles, Mode=TwoWay}"
+                      x:Name="attachFileList">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -679,6 +680,11 @@
                                     </Label>
                                     <Image 
                                            Source="ic_remove_circle.png">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference attachFileList}, Path=BindingContext.RemoveFileCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
                                     </Image>
                                 </StackLayout>
                             </Frame>
