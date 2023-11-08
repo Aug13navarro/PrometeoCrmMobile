@@ -20,6 +20,9 @@ using Core.Data.Tables;
 using Newtonsoft.Json;
 using Xamarin.Forms.PlatformConfiguration.TizenSpecific;
 using Application = Xamarin.Forms.Application;
+using System.Collections;
+using System.IO;
+using System.Text;
 
 namespace Core.ViewModels
 {
@@ -346,7 +349,6 @@ namespace Core.ViewModels
         public Command RemoveProductCommand { get; }
         public Command CerrarOportunidad { get; }
         public Command CustomerAddressCommand { get; }
-        public Command OpenGaleryCommand { get; }
 
         public Command SavePedidoCommand { get; }
 
@@ -384,7 +386,6 @@ namespace Core.ViewModels
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
                 CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
-                OpenGaleryCommand = new Command(async () => await OpenGalery());
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
 
@@ -401,61 +402,6 @@ namespace Core.ViewModels
                 Application.Current.MainPage.DisplayAlert("e",$"{e.Message}","aceptar"); return;
             }
         }
-
-        private async Task OpenGalery()
-        {
-            try
-            {
-                var status = await Permissions.RequestAsync<Permissions.StorageRead>();
-
-                if (status == PermissionStatus.Granted)
-                {
-                    //var files = PickAndShow(default).ContinueWith(
-                    //    (task) => { });
-                }
-                else
-                {
-                    //await App.Current.MainPage.DisplayAlert(
-                    //    Views.LangResources.AppResource.Atention,
-                    //    Views.LangResources.AppResource.AlertFile4,
-                    //    Views.LangResources.AppResource.Acept); return;
-                }
-            }
-            catch
-            {
-                //        //await App.Current.MainPage.DisplayAlert("Error", $"{Views.LangResources.AppResource.AlertFile1} - FL442", Views.LangResources.AppResource.Acept); return;
-                //        return;
-                //    }
-                //    finally
-                //    {
-                //        //IsRefreshing = false;
-            }
-        }
-
-        //async Task<List<AssignmentFilesModel>> PickAndShow(PickOptions options)
-        //{
-        //    try
-        //    {
-        //        var result = await FilePicker.PickMultipleAsync(options); //obtengo lista de imagenes 
-
-        //        var red = await Connection.SeeConnection();
-
-        //        if (result != null)
-        //        {
-        //            //var lista = await EnviarFotos(result);
-        //            //if (lista.Count() > 0)
-        //            //{
-        //            //    SaveFiles(lista, red);
-        //            //}
-        //        }
-
-        //        return null;
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //}
 
         private async void GetStatusToOrderNote()
         {
@@ -838,8 +784,9 @@ namespace Core.ViewModels
                     RemittanceType = typeOfRemittance.Id,
                     PaymentMethodId = PaymentMethod.id,
                     commercialAssistantId = Assistant.Id,
-                    ProviderId = Provider?.Id
+                    ProviderId = Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
+                    OpportunityOrderNoteAttachFile = AttachFiles.ToList(),
                 };
 
                 if (Condition != null)
@@ -1110,6 +1057,8 @@ namespace Core.ViewModels
                     }
 
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
+
+                    AttachFiles = new MvxObservableCollection<AttachFile>(order.OpportunityOrderNoteAttachFile);
 
                     SelectedCustomer = Order.customer;
                     Company = Order.company;
@@ -1501,5 +1450,94 @@ namespace Core.ViewModels
         //    public Filepickerfiletype FileType { get; set; }
         //}
         //#endregion
+
+
+        public void AddFileToOrderNote(IEnumerable<FileResult> result)
+        {
+            try
+            {
+                foreach (FileResult fileResult in result)
+                {
+                    if (fileResult.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
+                        fileResult.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase) ||
+                        fileResult.FileName.EndsWith("jpeg", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Stream stream1 = fileResult.OpenReadAsync().Result;
+
+                        var streamTask = fileResult.OpenReadAsync().ContinueWith(
+                            (task) =>
+                            {
+                                stream1 = task.Result;
+                                var Image1 = ImageSource.FromStream(() => stream1);
+                                var resource = Convert.ToBase64String(ImageSourceToByteArray(Image1));
+
+                                AttachFiles.Add(new AttachFile
+                                {
+                                    //AssignmentId = AssignmentId,
+                                    OpportunityOrderNoteId = Order.id,
+                                    FilePath = $"data:image/jpg;base64," + resource,
+                                    FileName = fileResult.FileName,
+                                    MineType = ".jpeg",
+                                    UploadDate = DateTime.Now
+                                    //FileTypeId = number,
+                                });
+                            });
+
+                        streamTask.Wait();
+                    }
+
+                    if (fileResult.FileName.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Stream stream1 = fileResult.OpenReadAsync().Result;
+
+                        var streamTask = fileResult.OpenReadAsync().ContinueWith(
+                            async (task) =>
+                            {
+                                var pdfFileName = await task;
+                                var pdfBase64 = string.Empty;
+
+                                using (var pdfReader = new StreamReader(pdfFileName))
+                                {
+                                    var fileContents = await pdfReader.ReadToEndAsync();
+                                    pdfBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContents));
+                                }
+
+                                AttachFiles.Add(new AttachFile()
+                                {
+                                    OpportunityOrderNoteId = Order.id,
+                                    FilePath = $"data:application/pdf;base64," + pdfBase64,
+                                    FileName = fileResult.FileName,
+                                    MineType = ".pdf",
+                                    UploadDate = DateTime.Now
+                                });
+                            });
+
+                        streamTask.Wait();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return;
+            }
+        }
+
+        public byte[] ImageSourceToByteArray(ImageSource source)
+        {
+            StreamImageSource streamImageSource = (StreamImageSource)source;
+            System.Threading.CancellationToken cancellationToken = System.Threading.CancellationToken.None;
+            Task<Stream> task = streamImageSource.Stream(cancellationToken);
+            Stream stream = task.Result;
+
+            byte[] b;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                b = ms.ToArray();
+            }
+
+            return b;
+        }
     }
 }

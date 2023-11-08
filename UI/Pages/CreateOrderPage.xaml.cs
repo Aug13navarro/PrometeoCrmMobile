@@ -9,12 +9,16 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Transactions;
+using Core;
 using Core.Data;
 using Core.Data.Tables;
 using Core.Services;
 using MvvmCross.Presenters.Hints;
 using UI.Popups;
+using Xamarin.Essentials;
 using Xamarin.Forms;
+using System.Threading.Tasks;
+using Rg.Plugins.Popup.Extensions;
 
 namespace UI.Pages
 {
@@ -159,8 +163,9 @@ namespace UI.Pages
                     RemittanceType = ViewModel.TypeOfRemittance.Id,
                     PaymentMethodId = ViewModel.PaymentMethod.id,
                     commercialAssistantId = ViewModel.Assistant.Id,
-                    ProviderId = ViewModel.Provider?.Id
+                    ProviderId = ViewModel.Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
+                    OpportunityOrderNoteAttachFile = ViewModel.AttachFiles.ToList()
                 };
 
                 if (ViewModel.Condition != null)
@@ -196,7 +201,7 @@ namespace UI.Pages
 
                 var red = await Connection.SeeConnection();
 
-                nuevaOrder.OrderStatus = ViewModel.Status.Id;
+                nuevaOrder.OrderStatus = ViewModel.Order.StatusOrderNote.Id;
 
                 if (ViewModel.Order.id == 0 && ViewModel.Order.idOffline == 0)
                 {
@@ -386,6 +391,51 @@ namespace UI.Pages
 
             ViewModel.Order.StatusOrderNote = cmb.SelectedItem as StatusOrderNote;
             ViewModel.Order.OrderStatus = (cmb.SelectedItem as StatusOrderNote).Id;
+        }
+
+        private async void ImageButton_OnClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var status = await Permissions.RequestAsync<Permissions.StorageRead>();
+                if (status == PermissionStatus.Denied)
+                {
+                    var files = PickAndShow(default).ContinueWith(
+                        (task) => { });
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        LangResources.AppResources.Attention,
+                        "No se tienen los permisos para acceder a los archivos.",
+                        LangResources.AppResources.Accept);
+                    return;
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                return;
+            }
+        }
+
+        async Task PickAndShow(PickOptions options)
+        {
+            try
+            {
+                var result = await FilePicker.PickMultipleAsync(options); //obtengo lista de imagenes 
+
+                if (result != null && result.Any())
+                {
+                    ViewModel.AddFileToOrderNote(result);
+                    //OnChooseMultiple(2, result);
+                    //await Application.Current.MainPage.Navigation.PopPopupAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }

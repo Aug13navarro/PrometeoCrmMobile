@@ -378,11 +378,19 @@
                                                 <Label Mvx:Bi.nd="Text Format('{0} U', quantity)" />
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
+                                                <Label Text="{x:Static resources:AppResources.SubtotalProducts}" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
+                                                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', SubTotalProductsStr)" TextColor="{StaticResource PrimaryColor}" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
                                                 <Label Text="{x:Static resources:AppResources.Discount}" HorizontalOptions="StartAndExpand" />
                                                 <Label Mvx:Bi.nd="Text Format('{0} %', discount)" />
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
-                                                <Label Text="Subtotal" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
+                                                <Label Text="{x:Static resources:AppResources.DiscountPrice}" HorizontalOptions="StartAndExpand" />
+                                                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', DiscountPriceStr)" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{x:Static resources:AppResources.SubtotalDiscount}" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />
                                                 <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', SubTotalStr)" TextColor="{StaticResource PrimaryColor}" />
                                             </StackLayout>
                                             <BoxView BackgroundColor="LightGray" HeightRequest="1" />

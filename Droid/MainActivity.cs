@@ -1,12 +1,15 @@
 ﻿using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Android;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V4.App;
+using Android.Support.V4.Content;
 using Android.Util;
 using Core;
 using Core.Data;
@@ -61,6 +64,12 @@ namespace PrometeoCrmMobile.Droid
                 //CrossCurrentActivity.Current.Init(this, savedInstanceState);
                 Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
                 base.OnCreate(savedInstanceState);
+
+                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) !=
+                    Permission.Granted)
+                {
+                    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.ReadExternalStorage }, 1);
+                }
 
                 Mvx.IoCProvider.RegisterType<IToastService>(() => new ToastDroidService());
 

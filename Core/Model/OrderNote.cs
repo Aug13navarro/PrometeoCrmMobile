@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Command;
 using MvvmCross.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Input;
 
@@ -129,5 +130,6 @@ namespace Core.Model
 
         public string error { get; set; }
         public int idOffline { get; set; }
+        public List<AttachFile> OpportunityOrderNoteAttachFile { get; set; }
     }    
 }

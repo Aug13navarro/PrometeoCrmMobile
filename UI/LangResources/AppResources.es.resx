@@ -490,7 +490,7 @@
     <value>estado en ingles</value>
   </data>
   <data name="SubtotalDiscount" xml:space="preserve">
-    <value>Subtotal Descuento</value>
+    <value>Subtotal con Descuento</value>
   </data>
   <data name="SubtotalProducts" xml:space="preserve">
     <value>Subtotal de productos</value>

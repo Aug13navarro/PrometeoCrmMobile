@@ -107,7 +107,7 @@ namespace UI.Pages
 
                 if (ViewModel.Order.id == 0)
                 {
-                    nuevaOrder.OrderStatus = ViewModel.Status.Id;
+                    nuevaOrder.OrderStatus = ViewModel.Order.StatusOrderNote.Id;
 
                     var red = await Connection.SeeConnection();
 

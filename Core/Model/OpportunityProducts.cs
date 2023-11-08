@@ -41,6 +41,9 @@ namespace Core.Model
         public int CompanyId { get; set; }
         public double SubtotalProducts { get; set; }
         public double DiscountPrice { get; set; }
+        public string DiscountPriceStr => TransformarStr(this.DiscountPrice);
+        public string SubTotalStr => TransformarStr(this.Total);
+        public string SubTotalProductsStr => TransformarStr(this.SubtotalProducts);
 
         private string TransformarStr(double value)
         {
