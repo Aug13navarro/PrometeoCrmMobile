@@ -165,8 +165,11 @@ namespace UI.Pages
                     commercialAssistantId = ViewModel.Assistant.Id,
                     ProviderId = ViewModel.Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
-                    OpportunityOrderNoteAttachFile = ViewModel.AttachFiles.ToList()
                 };
+
+                nuevaOrder.OpportunityOrderNoteAttachFile = ViewModel.AttachFiles != null
+                    ? ViewModel.AttachFiles.ToList()
+                    : new List<AttachFile>();
 
                 if (ViewModel.Condition != null)
                 {
@@ -398,7 +401,7 @@ namespace UI.Pages
             try
             {
                 var status = await Permissions.RequestAsync<Permissions.StorageRead>();
-                if (status == PermissionStatus.Denied)
+                if (status == PermissionStatus.Granted)
                 {
                     var files = PickAndShow(default).ContinueWith(
                         (task) => { });

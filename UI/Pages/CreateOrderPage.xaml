@@ -586,7 +586,7 @@
                                         </StackLayout>-->
                                             <StackLayout Orientation="Horizontal">
                                             <Label Text="{x:Static resources:AppResources.DiscountPrice}" HorizontalOptions="StartAndExpand" />
-                                                <Label Mvx:Bi.nd="Text Format('US$ {0:N2}', DiscountPriceStr)" />
+                                                <Label Mvx:Bi.nd="Text Format('-US$ {0:N2}', DiscountPriceStr)" />
                                         </StackLayout>
                                             <StackLayout Orientation="Horizontal">
                                                 <Label Text="{x:Static resources:AppResources.SubtotalDiscount}" HorizontalOptions="StartAndExpand" TextColor="{StaticResource PrimaryColor}" />

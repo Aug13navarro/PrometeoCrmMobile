@@ -133,7 +133,7 @@
                                                 <FormattedString>
                                                     <Span Text="{x:Static resources:AppResources.State}" FontAttributes="Bold" />
                                                     <Span Text=": " FontAttributes="Bold" />
-                                                    <Span Text="{Binding opportunityStatus.name}"
+                                                    <Span Text="{Binding opportunityStatus.Name}"
                                                   TextColor="{StaticResource PrimaryColor}" />
                                                 </FormattedString>
                                             </Label.FormattedText>
