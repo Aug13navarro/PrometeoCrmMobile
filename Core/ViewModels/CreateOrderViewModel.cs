@@ -857,7 +857,8 @@ namespace Core.ViewModels
 
                                 var opp = new Opportunity();
 
-                                await prometeoApiService.SaveOpportunityEdit(send, Order.id, data.LoggedUser.Token,
+                                await prometeoApiService.SaveOpportunityEdit(send, respuesta.opportunityId.Value,
+                                    data.LoggedUser.Token,
                                     opp);
 
                                 await navigationService.ChangePresentation(
@@ -1175,11 +1176,20 @@ namespace Core.ViewModels
                     price = item.Price,
                     quantity = item.Quantity,
                     subtotal = item.Total,
-
+                    subtotalProduct = item.Price * item.Quantity,
+                    discountPrice = CalcularDescuento(item.Quantity, item.Price, item.Discount)
                 });
             }
 
             return listaProductos;
+        }
+
+        private double CalcularDescuento(int quantity, double price, int discount)
+        {
+            var totalProduct = quantity * price;
+            var descuento = Convert.ToDecimal(discount) / 100;
+
+            return totalProduct * Convert.ToDouble(descuento);
         }
 
         public void FinishEditProduct((double Price, int Quantity, int Discount) args)

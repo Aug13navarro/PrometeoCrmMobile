@@ -648,6 +648,7 @@ namespace Core.ViewModels
                     detail.product.Id = Opportunity.Details.Any() ? Opportunity.Details.Max(d => d.product.Id) + 1 : 1;
                     detail.Price = detail.product.price;
                     detail.Total = detail.Total;
+
                     Opportunity.Details.Add(detail);
 
                     ActualizarDescuento();
