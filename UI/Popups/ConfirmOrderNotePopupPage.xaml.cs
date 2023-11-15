@@ -74,14 +74,15 @@ namespace UI.Popups
                                 description = respuesta.oppDescription,
                                 opportunityProducts = new List<OpportunityPost.ProductSend>(),
                                 opportunityStatusId = 4,
-                                totalPrice = Convert.ToDouble(respuesta.total)
+                                totalPrice = Convert.ToDouble(respuesta.total),
+                                companyId = respuesta.companyId.Value,
                             };
 
-                            send.opportunityProducts = ListaProductos(respuesta.Details);
+                            send.opportunityProducts = ListaProductos(OrderNote.Details);
 
                             var opp = new Opportunity();
 
-                            await SaveOpportunityEdit(send, respuesta.id, Token, opp);
+                            await SaveOpportunityEdit(send, respuesta.opportunityId.Value, Token, opp);
 
                             ItCreated(respuesta.opportunityId.Value);
                         }
@@ -175,7 +176,7 @@ namespace UI.Popups
 
         public async Task SaveOpportunityEdit(OpportunityPost send, int id, string token, Opportunity opportunity)
         {
-            var cadena = $"api/Opportunity?id={id}";
+            var cadena = $"/api/Opportunity?id={id}";
 
             var objeto = JsonConvert.SerializeObject(send);
 

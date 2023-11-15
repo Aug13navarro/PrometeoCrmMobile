@@ -788,8 +788,12 @@ namespace Core.ViewModels
                     commercialAssistantId = Assistant.Id,
                     ProviderId = Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
-                    OpportunityOrderNoteAttachFile = AttachFiles.ToList(),
+                    OpportunityOrderNoteAttachFile = new List<AttachFile>()
                 };
+
+                nuevaOrder.OpportunityOrderNoteAttachFile = AttachFiles != null
+                    ? AttachFiles.ToList()
+                    : new List<AttachFile>();
 
                 if (Condition != null)
                 {
@@ -826,7 +830,7 @@ namespace Core.ViewModels
 
                 if (Order.id == 0 && Order.idOffline == 0)
                 {
-                    nuevaOrder.OrderStatus = Status.Id;
+                    nuevaOrder.OrderStatus = Order.StatusOrderNote.Id;
 
                     if (red)
                     {
@@ -845,7 +849,8 @@ namespace Core.ViewModels
                                     description = Order.oppDescription,
                                     opportunityProducts = new List<OpportunityPost.ProductSend>(),
                                     opportunityStatusId = 4,
-                                    totalPrice = Total
+                                    totalPrice = Total,
+                                    companyId = respuesta.companyId.Value,
                                 };
 
                                 send.opportunityProducts = listaProductos(Order.Details);
@@ -910,12 +915,15 @@ namespace Core.ViewModels
                 if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
                     data.LoggedUser.Language.abbreviation.Contains("spanish"))
                 {
-                    await Application.Current.MainPage.DisplayAlert("Atención", $"{e.Message}", "Aceptar");
+                    await Application.Current.MainPage.DisplayAlert("Atención",
+                        $"No se pudo guardar el PV, intente nuevamente mas tarde o comuniquese con soporte.",
+                        "Aceptar");
                     return;
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert("Attention", $"{e.Message}", "Acept");
+                    await Application.Current.MainPage.DisplayAlert("Attention",
+                        "No se pudo guardar el PV, intente nuevamente mas tarde o comuniquese con soporte.", "Acept");
                     return;
                 }
             }
@@ -1472,6 +1480,8 @@ namespace Core.ViewModels
         {
             try
             {
+                if (AttachFiles == null) AttachFiles = new MvxObservableCollection<AttachFile>();
+
                 foreach (FileResult fileResult in result)
                 {
                     if (fileResult.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
@@ -1534,7 +1544,7 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Application.Current.MainPage.DisplayAlert("Información", $"No se pudo agregar el archivo.", "aceptar");
                 return;
             }
         }

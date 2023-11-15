@@ -165,6 +165,7 @@ namespace UI.Pages
                     commercialAssistantId = ViewModel.Assistant.Id,
                     ProviderId = ViewModel.Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
+                    OpportunityOrderNoteAttachFile = new List<AttachFile>()
                 };
 
                 nuevaOrder.OpportunityOrderNoteAttachFile = ViewModel.AttachFiles != null
@@ -201,6 +202,8 @@ namespace UI.Pages
                     nuevaOrder.opportunityId = ViewModel.Order.opportunityId;
                     nuevaOrder.products = ViewModel.Order.products;
                 }
+
+                nuevaOrder.Details = ViewModel.Order.Details;
 
                 var red = await Connection.SeeConnection();
 
