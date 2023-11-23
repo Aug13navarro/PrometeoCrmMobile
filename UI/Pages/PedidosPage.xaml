@@ -7,7 +7,8 @@
                       xmlns:Controls="clr-namespace:UI.Controls"
                       xmlns:resources="clr-namespace:UI.LangResources"
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
-                      x:Class="UI.Pages.PedidosPage">
+                      x:Class="UI.Pages.PedidosPage"
+                      xmlns:sk="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton">
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Grid HorizontalOptions="FillAndExpand"
@@ -31,154 +32,182 @@
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>
-        <Grid
-            ColumnDefinitions="*,auto"
-            RowDefinitions="*,auto,auto">
-            <ListView
-                ItemsSource="{Binding OrdersNote}"
-                IsRefreshing="{Binding IsLoading}"
-                Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Grid.RowSpan="2"
-                HasUnevenRows="True"
-                SeparatorVisibility="None"
-                IsPullToRefreshEnabled="True"
-                RefreshCommand="{Binding RefreshListCommand}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Frame
-                                Margin="10,5"
-                                CornerRadius="30"
-                                BorderColor="{StaticResource PrimaryColor}"
-                                Padding="10">
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding .}"></TapGestureRecognizer>
-                                </Frame.GestureRecognizers>
-                                <Grid
-                                    ColumnDefinitions="auto,*,auto">
-                                    <Image
-                                        Grid.Column="0"
-                                        Source="ic_menu_pedidos.png">
+        <StackLayout>
+            <StackLayout
+                HeightRequest="30"
+                Orientation="Horizontal"
+                BackgroundColor="{StaticResource SecondaryColor}"
+                Padding="10,0">
+                <Image
+                    Source="company_30p.png"></Image>
+                <Label Text="{Binding Company.CompanyName}"
+                       VerticalOptions="Center"
+                       FontAttributes="Bold"></Label>
+            </StackLayout>
+            <Grid
+                ColumnDefinitions="*,auto"
+                RowDefinitions="*,auto,auto">
+                <ListView
+                    ItemsSource="{Binding OrdersNote}"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Grid.RowSpan="2"
+                    HasUnevenRows="True"
+                    SeparatorVisibility="None"
+                    IsPullToRefreshEnabled="True"
+                    RefreshCommand="{Binding RefreshListCommand}"
+                    sk:Skeleton.IsParent="True"
+                    sk:Skeleton.IsBusy="{Binding IsLoading, Mode=TwoWay}"
+                    sk:Skeleton.Animation="{sk:DefaultAnimation Fade}"
+                    ItemAppearing="OnOrderListItemAppearing">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame
+                                    Margin="10,5"
+                                    CornerRadius="30"
+                                    BorderColor="{StaticResource PrimaryColor}"
+                                    Padding="10">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" CommandParameter="{Binding .}"></TapGestureRecognizer>
+                                    </Frame.GestureRecognizers>
+                                    <Grid
+                                        ColumnDefinitions="auto,*,auto">
+                                        <Image
+                                            Grid.Column="0"
+                                            Source="ic_menu_pedidos.png">
 
-                                    </Image>
+                                        </Image>
+                                        <StackLayout                                        
+                                            sk:Skeleton.IsParent="True"                                        
+                                            sk:Skeleton.BackgroundColor="Transparent"
+                                            Grid.Column="1">
+                                            <StackLayout
+                                                Orientation="Horizontal">
+                                                <Frame
+                                                    Margin="0"
+                                                    Padding="0"
+                                                    BackgroundColor="{Binding StatusOrderNote.ColorHexa}"
+                                                    WidthRequest="20"
+                                                    MinimumWidthRequest="20"
+                                                    HeightRequest="20"
+                                                    CornerRadius="10"
+                                                    VerticalOptions="Center"
+                                                    AutomationId="{Binding id}"
+                                                    sk:Skeleton.IsBusy="{Binding IsBusy}"
+                                                    sk:Skeleton.BackgroundColor="#c6c6c5"
+                                                    >
+                                                    <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1"></TapGestureRecognizer>
+                                                    </Frame.GestureRecognizers>
+                                                </Frame>
+                                                <Label
+                                                    Text="{Binding customer.CompanyName}"
+                                                    VerticalTextAlignment="Center"
+                                                    FontSize="Medium"
+                                                    TextColor="{StaticResource PrimaryColor}"
+                                                    FontAttributes="Bold"
+                                                    sk:Skeleton.IsBusy="{Binding IsBusy}"
+                                                    sk:Skeleton.BackgroundColor="#c6c6c5">
 
-                                    <StackLayout
-                                        Grid.Column="1">
-                                        <StackLayout
-                                            Orientation="Horizontal">
-                                            <Frame
-                                                Margin="0"
-                                                Padding="0"
-                                                BackgroundColor="{Binding StatusOrderNote.ColorHexa}"
-                                                WidthRequest="20"
-                                                MinimumWidthRequest="20"
-                                                HeightRequest="20"
-                                                CornerRadius="10"
-                                                VerticalOptions="Center"
-                                                AutomationId="{Binding id}"
-                                                >
-                                                <Frame.GestureRecognizers>
-                                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped_1"></TapGestureRecognizer>
-                                                </Frame.GestureRecognizers>
-                                            </Frame>
+                                                </Label>
+                                            </StackLayout>
                                             <Label
-                                            Text="{Binding customer.CompanyName}"
-                                            VerticalTextAlignment="Center"
-                                            FontSize="Medium"
-                                            TextColor="{StaticResource PrimaryColor}"
-                                            FontAttributes="Bold">
+                                                Text="{Binding Seller.CodeFullName}"
+                                                sk:Skeleton.IsBusy="{Binding IsBusy}"
+                                                sk:Skeleton.BackgroundColor="#c6c6c5">
 
                                             </Label>
+
                                         </StackLayout>
-                                        <Label
-                                            Text="{Binding company.BusinessName}">
-
-                                        </Label>
-
-                                    </StackLayout>
                                     
-                                    <StackLayout
-                                        Grid.Column="2"
-                                        VerticalOptions="Center">
-                                        <Label
-                                            HorizontalTextAlignment="End"
-                                            FontSize="Medium"
-                                            FontAttributes="Bold">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="US$"></Span>
-                                                    <!--{Binding currency.name}-->
-                                                    <Span Text=" "></Span>
-                                                    <Span Text="{Binding total}"></Span>
-                                                </FormattedString>
-                                            </Label.FormattedText>
+                                        <StackLayout
+                                            Grid.Column="2"
+                                            VerticalOptions="Center"
+                                            Padding="0,0,10,0">
+                                            <Label
+                                                HorizontalTextAlignment="End"
+                                                FontSize="Medium"
+                                                FontAttributes="Bold"
+                                                sk:Skeleton.IsBusy="{Binding IsBusy}"
+                                                sk:Skeleton.BackgroundColor="#c6c6c5">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="US$"></Span>
+                                                        <!--{Binding currency.name}-->
+                                                        <Span Text=" "></Span>
+                                                        <Span Text="{Binding total}"></Span>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
                                             
-                                        </Label>
-                                        <Label
-                                            Text="{Binding fechaStr}"
-                                            HorizontalTextAlignment="End">
+                                            </Label>
+                                            <Label
+                                                Text="{Binding fechaStr}"
+                                                HorizontalTextAlignment="End"
+                                                sk:Skeleton.IsBusy="{Binding IsBusy}"
+                                                sk:Skeleton.BackgroundColor="#c6c6c5">
                                             
-                                        </Label>
-                                    </StackLayout>
-                                </Grid>
-                            </Frame>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                            </Label>
+                                        </StackLayout>
+                                    </Grid>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
-            <StackLayout 
-                Grid.Row="0" Grid.ColumnSpan="2" VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible OrdersNote.Count == 0">
-                <Image Source="ic_no_orders.png" HorizontalOptions="Center"/>
-                <Label Text="{x:Static resources:AppResources.NoOrdersFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
-            </StackLayout>
+                <StackLayout 
+                    Grid.Row="0" Grid.ColumnSpan="2" VerticalOptions="CenterAndExpand" Mvx:Bi.nd="IsVisible OrdersNote.Count == 0">
+                    <Image Source="ic_no_orders.png" HorizontalOptions="Center"/>
+                    <Label Text="{x:Static resources:AppResources.NoOrdersFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
+                </StackLayout>
             
-            <ImageButton
-                Grid.Row="1"
-                Grid.Column="1"
-                Source="ic_edit_hdpi.png"
-                Margin="10,0"
-                Command="{Binding NuevaNotaPedidoCommand}">                
+                <ImageButton
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Source="ic_edit_hdpi.png"
+                    Margin="10,0"
+                    Command="{Binding NuevaNotaPedidoCommand}">                
                 
-            </ImageButton>
+                </ImageButton>
 
-            <StackLayout
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                BackgroundColor="LightGray"
-                Padding="10,0,10,10">
                 <StackLayout
-                    Orientation="Horizontal">
-                    <Label
-                        Text="Total" TextColor="{StaticResource PrimaryColor}" Style="{StaticResource DefaultLabel}" FontSize="Large"
-                        VerticalOptions="Center">
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    BackgroundColor="LightGray"
+                    Padding="10,0,10,10">
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Label
+                            Text="Total" TextColor="{StaticResource PrimaryColor}" Style="{StaticResource DefaultLabel}" FontSize="Large"
+                            VerticalOptions="Center">
 
-                    </Label>
-                    <Label TextColor="{StaticResource PrimaryColor}" Style="{StaticResource DefaultLabel}" FontSize="Large"
-                        VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+                        </Label>
+                        <Label TextColor="{StaticResource PrimaryColor}" Style="{StaticResource DefaultLabel}" FontSize="Large"
+                            VerticalOptions="Center" HorizontalOptions="EndAndExpand">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="US$"></Span>
+                                    <Span Text="{Binding TotalOfOrderStr}"></Span> 
+                                    <!--<Span Text="{Binding Total}"></Span>-->
+                                </FormattedString>
+                            </Label.FormattedText>
+
+                        </Label>
+                    </StackLayout>
+                    <Label
+                            VerticalOptions="Center">
                         <Label.FormattedText>
                             <FormattedString>
-                                <Span Text="US$"></Span>
-                                <Span Text="{Binding TotalOfOrderStr}"></Span> 
-                                <!--<Span Text="{Binding Total}"></Span>-->
+                                <Span Text="{Binding FechaInicioFiltro}"></Span>
+                                <Span Text=" - "></Span>
+                                <Span Text="{Binding FechaFinFiltro}"></Span>
                             </FormattedString>
                         </Label.FormattedText>
-
                     </Label>
                 </StackLayout>
-                <Label
-                        VerticalOptions="Center">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="{Binding FechaInicioFiltro}"></Span>
-                            <Span Text=" - "></Span>
-                            <Span Text="{Binding FechaFinFiltro}"></Span>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
-            </StackLayout>
-        </Grid>
+            </Grid>
+        </StackLayout>
     </ContentPage.Content>
 </Views:MvxContentPage>

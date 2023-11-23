@@ -204,7 +204,65 @@
                                              Grid.Column="2"/>
                             </Grid>
                         </StackLayout><!--Cliente-->
-                        
+
+                        <StackLayout Margin="0,5">
+                            <Grid
+                                ColumnDefinitions=".3*,*">
+                                <Label Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
+                                       Grid.Column="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{x:Static resources:AppResources.Seller}"></Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Frame
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    Padding="0"
+                                    HorizontalOptions="FillAndExpand">
+                                    <Picker IsEnabled="{Binding EnableForEdit}"
+                                            Title="{x:Static resources:AppResources.Select}" 
+                                            ItemsSource="{Binding Sellers, Mode=TwoWay}" 
+                                            ItemDisplayBinding="{Binding CodeFullName}"
+                                            SelectedItem="{Binding Seller, Mode=TwoWay}">
+
+                                    </Picker>
+                                </Frame>
+                            </Grid>
+                        </StackLayout>
+                        <!--Vendedor-->
+
+                        <StackLayout Margin="0,5">
+                            <Grid
+                                ColumnDefinitions=".3*,*">
+                                <Label Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
+                                       Grid.Column="0">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Deposito"></Span>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Frame
+                                    Grid.Column="1"
+                                    Margin="0"
+                                    Padding="0"
+                                    HorizontalOptions="FillAndExpand">
+                                    <Picker IsEnabled="{Binding EnableForEdit}"
+                                            Title="{x:Static resources:AppResources.Select}" 
+                                            ItemsSource="{Binding Deposits, Mode=TwoWay}" 
+                                            ItemDisplayBinding="{Binding Name}"
+                                            SelectedItem="{Binding Deposit, Mode=TwoWay}">
+                                        
+                                    </Picker>
+                                </Frame>
+                            </Grid>
+                        </StackLayout>
+                        <!--Deposito-->
+
                         <StackLayout Margin="0,5">
                             <Grid
                                 ColumnDefinitions="auto,*">
@@ -697,7 +755,7 @@
                 IsVisible="False"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="CenterAndExpand"
-                Mvx:Bi.nd="!IsVisible AttachFiles.Count > 0">
+                Mvx:Bi.nd="IsVisible AttachFiles.Count == 0">
                 <Image
                     Source="upLoad.png"
                     WidthRequest="150"

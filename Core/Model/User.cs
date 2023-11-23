@@ -19,5 +19,6 @@ namespace Core.Model
         public List<Permission> Permissions { get; set; }
         public string PermissionsStr { get; set; }
         public string StatusOrderNotes { get; set; }
+        public string CodeFullName { get; set; }
     }
 }

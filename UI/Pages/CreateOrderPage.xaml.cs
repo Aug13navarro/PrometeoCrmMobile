@@ -165,7 +165,9 @@ namespace UI.Pages
                     commercialAssistantId = ViewModel.Assistant.Id,
                     ProviderId = ViewModel.Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
-                    OpportunityOrderNoteAttachFile = new List<AttachFile>()
+                    OpportunityOrderNoteAttachFile = new List<AttachFile>(),
+                    SellerId = ViewModel.Seller?.Id,
+                    DepositId = ViewModel.Deposit?.Id,
                 };
 
                 nuevaOrder.OpportunityOrderNoteAttachFile = ViewModel.AttachFiles != null

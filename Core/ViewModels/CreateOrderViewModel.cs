@@ -23,6 +23,7 @@ using Application = Xamarin.Forms.Application;
 using System.Collections;
 using System.IO;
 using System.Text;
+using System.ComponentModel.Design;
 
 namespace Core.ViewModels
 {
@@ -182,6 +183,34 @@ namespace Core.ViewModels
         {
             get => assistant;
             set => SetProperty(ref assistant, value);
+        }
+
+        private MvxObservableCollection<User> sellers;
+        public MvxObservableCollection<User> Sellers
+        {
+            get => sellers;
+            set => SetProperty(ref sellers, value);
+        }
+
+        private User seller;
+        public User Seller
+        {
+            get => seller;
+            set => SetProperty(ref seller, value);
+        }
+
+        private MvxObservableCollection<Deposit> deposits;
+        public MvxObservableCollection<Deposit> Deposits
+        {
+            get => deposits;
+            set => SetProperty(ref deposits, value);
+        }
+
+        private Deposit deposit;
+        public Deposit Deposit
+        {
+            get => deposit;
+            set => SetProperty(ref deposit, value);
         }
 
         private string selectedClosedLostStatusCause;
@@ -391,12 +420,9 @@ namespace Core.ViewModels
 
                 SavePedidoCommand = new Command(async () => await SaveOrder());
 
-                GetStatusToOrderNote();
-                //CargarEmpresas();
                 CargarTipoRemito();
                 CargarLugarPago();
                 CargarFleteCargo();
-                CargarProviders();
 
             }
             catch(Exception e)
@@ -405,21 +431,112 @@ namespace Core.ViewModels
             }
         }
 
+        private async void CargarSellers()
+        {
+            try
+            {
+                if (Company == null) return;
+
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var sellers = await prometeoApiService.GetUserListByCompanyId($"User/GetUserListByCompanyId?companyId={Company.Id}", data.LoggedUser.Token);
+
+                    if (sellers != null)
+                    {
+                        Sellers = new MvxObservableCollection<User>(sellers.OrderBy(x => x.CodeFullName));
+
+                        if (Order.SellerId.HasValue)
+                        {
+                            Seller = Sellers.FirstOrDefault(x => x.IdUser == Order.SellerId.Value);
+                        }
+                    }
+                }
+                else
+                {
+
+                    var providersTable = OfflineDatabase.GetProviders();
+
+                    if (providersTable != null)
+                    {
+                        Providers = new MvxObservableCollection<Provider>(mapper.Map<List<Provider>>(providersTable
+                            .Where(x => x.IdCompany == data.LoggedUser.CompanyId)).OrderBy(x => x.Name));
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+
+        private async void CargarDepositos()
+        {
+            try
+            {
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var deposits = await prometeoApiService.GetDeposits($"Deposit/Mobile/GetByCompanyId", data.LoggedUser.Token);
+
+                    if (deposits != null)
+                    {
+                        Deposits = new MvxObservableCollection<Deposit>(deposits.OrderBy(x => x.Name));
+
+                        if (Order.DepositId.HasValue)
+                        {
+                            Deposit = Deposits.FirstOrDefault(x => x.Id == Order.DepositId.Value);
+                        }
+                    }
+                }
+                else
+                {
+
+                    //var providersTable = OfflineDatabase.GetProviders();
+
+                    //if (providersTable != null)
+                    //{
+                    //    Providers = new MvxObservableCollection<Provider>(mapper.Map<List<Provider>>(providersTable
+                    //        .Where(x => x.IdCompany == data.LoggedUser.CompanyId)).OrderBy(x => x.Name));
+                    //}
+
+                }
+
+            }
+            catch (Exception)
+            {
+                return;
+            }
+        }
+
+
         private async void GetStatusToOrderNote()
         {
-            var red = await Connection.SeeConnection();
-
-            if (red)
+            try
             {
-                var status = await prometeoApiService.GetStatusOrderNote(data.LoggedUser.Token);
-                OrderStatus = new MvxObservableCollection<StatusOrderNote>(status);
 
-                Order.StatusOrderNote = Order.OrderStatus != 0
-                    ? OrderStatus.FirstOrDefault(x => x.Id == Order.OrderStatus)
-                    : OrderStatus.FirstOrDefault(x => x.Name.Contains("Pend"));
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var status = await prometeoApiService.GetStatusOrderNote(data.LoggedUser.Token);
+                    OrderStatus = new MvxObservableCollection<StatusOrderNote>(status);
+
+                    Order.StatusOrderNote = Order.OrderStatus != 0
+                        ? OrderStatus.FirstOrDefault(x => x.Id == Order.OrderStatus)
+                        : OrderStatus.FirstOrDefault(x => x.Name.Contains("Pend"));
+                }
+                else
+                {
+                }
             }
-            else
+            catch (Exception e)
             {
+                var m = e.Message;
+                return;
             }
         }
 
@@ -570,6 +687,7 @@ namespace Core.ViewModels
                             Assistant = Assistants.FirstOrDefault(x => x.Id == Order.commercialAssistantId);
                         }
                     }
+
                 }
                 else
                 {
@@ -788,7 +906,9 @@ namespace Core.ViewModels
                     commercialAssistantId = Assistant.Id,
                     ProviderId = Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
-                    OpportunityOrderNoteAttachFile = new List<AttachFile>()
+                    OpportunityOrderNoteAttachFile = new List<AttachFile>(),
+                    SellerId = Seller?.Id,
+                    DepositId = Deposit?.Id,
                 };
 
                 nuevaOrder.OpportunityOrderNoteAttachFile = AttachFiles != null
@@ -1075,7 +1195,12 @@ namespace Core.ViewModels
                     Company = Order.company;
                     ChangeStatusEnable = Company.externalErpId.HasValue ? false : true;
 
+
+                    GetStatusToOrderNote();
                     CargarAsistentes();
+                    CargarSellers();
+                    CargarProviders();
+                    CargarDepositos();
 
                     TypeOfRemittance = TypeOfRemittances.FirstOrDefault(x => x.Id == Order.RemittanceType);
                     Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
@@ -1116,11 +1241,16 @@ namespace Core.ViewModels
                     {
                         Company = Order.company;
                         ChangeStatusEnable = Company.externalErpId.HasValue ? false : true;
+                        CargarSellers();
                         CargarCondiciones();
                         CargarMedioPago();
                     }
 
-                    if(Order.PlacePayment > 0)
+                    GetStatusToOrderNote();
+                    CargarProviders();
+                    CargarDepositos();
+
+                    if (Order.PlacePayment > 0)
                     {
                         Place = PlaceOfPayment.FirstOrDefault(x => x.Id == Order.PlacePayment);
                     }
@@ -1262,6 +1392,7 @@ namespace Core.ViewModels
             {
                 IsLoading = true;
                 SelectedCustomer = customer;
+                if(SelectedCustomer.AccountOwnerId.HasValue) Seller = Sellers.FirstOrDefault(x => x.Id == SelectedCustomer.AccountOwnerId.Value);
             }
             catch (Exception ex)
             {

@@ -2,7 +2,7 @@
 using Rg.Plugins.Popup.Pages;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,12 +11,16 @@ namespace UI.Popups
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChangeCompanyPopupPage : PopupPage
 	{
-		public delegate void ChangeHandler(int companyId);
+		public delegate void ChangeHandler(Company companyId);
 		public event ChangeHandler ItChanged;
 
-		public ChangeCompanyPopupPage (List<Company> companies)
+        public List<Company> Emrpesas { get; set; }
+
+        public ChangeCompanyPopupPage (List<Company> companies)
 		{
 			InitializeComponent();
+			Emrpesas = companies;
+
 			CargarListaFront(companies);
 		}
 
@@ -48,7 +52,7 @@ namespace UI.Popups
 		{
 			var frame = (Frame)sender;
 
-			ItChanged(Convert.ToInt32(frame.AutomationId));
+			ItChanged(Emrpesas.FirstOrDefault(x => x.Id == Convert.ToInt32(frame.AutomationId)));
 		}
 	}
 }

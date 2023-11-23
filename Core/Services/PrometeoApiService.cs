@@ -890,5 +890,27 @@ namespace Core.Services
 
             return JsonConvert.DeserializeObject<OrderNote>(resultado);
         }
+
+        public async Task<List<User>> GetUserListByCompanyId(string cadena, string token)
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"/api/{cadena}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<List<User>>(resultado);
+        }
+
+        public async Task<List<Deposit>> GetDeposits(string cadena, string token)
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"/api/{cadena}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<List<Deposit>>(resultado);
+        }
     }
 }

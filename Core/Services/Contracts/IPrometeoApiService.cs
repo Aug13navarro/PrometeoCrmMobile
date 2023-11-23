@@ -54,5 +54,7 @@ namespace Core.Services.Contracts
         Task<IEnumerable<User>> GetUsersByRolUserVending(string token, string rol);
         Task<IEnumerable<StatusOrderNote>> GetStatusOrderNote(string token);
         Task<OrderNote> UpdateStatusOrderNote(int orderNoteId, int statusId, string token);
+        Task<List<User>> GetUserListByCompanyId(string cadena, string token);
+        Task<List<Deposit>> GetDeposits(string cadena, string token);
     }
 }

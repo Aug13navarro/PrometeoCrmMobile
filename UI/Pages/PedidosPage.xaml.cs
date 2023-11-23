@@ -90,5 +90,23 @@ namespace UI.Pages
                 await PopupNavigation.Instance.PushAsync(popup);
             }
         }
+        private void OnOrderListItemAppearing(object sender, ItemVisibilityEventArgs e)
+        {
+            if (ViewModel.IsLoading ||
+                ViewModel.OrdersNote == null ||
+                ViewModel.OrdersNote.Count == 0 ||
+                ViewModel.CurrentPage == ViewModel.TotalPages)
+            {
+                return;
+            }
+
+            var opportunity = (OrderNote)e.Item;
+            OrderNote lastOpportunityInList = ViewModel.OrdersNote[ViewModel.OrdersNote.Count - 1];
+
+            if (opportunity.id == lastOpportunityInList.id)
+            {
+                ViewModel.LoadMoreOrder();
+            }
+        }
     }
 }

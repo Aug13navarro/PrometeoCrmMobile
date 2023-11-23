@@ -138,7 +138,7 @@ namespace Core.ViewModels
 
                         Identity.UniqueCompany = true;
 
-                        SetearEmpresa(ListOfCompanies.FirstOrDefault().Id, appData.LoggedUser.Token);
+                        SetearEmpresa(ListOfCompanies.FirstOrDefault(), appData.LoggedUser.Token);
                     }
                     else
                     {
@@ -244,11 +244,11 @@ namespace Core.ViewModels
                 IsLogging = false;
             }
         }
-        public async void SetearEmpresa(int companyId, string token)
+        public async void SetearEmpresa(Company company, string token)
         {
             try
             {
-                var setCompany = await prometeoApiService.SetCompany(companyId, token);
+                var setCompany = await prometeoApiService.SetCompany(company.Id, token);
 
                 if (setCompany != null)
                 {
@@ -256,10 +256,12 @@ namespace Core.ViewModels
                     {
                         var user = appData.LoggedUser;
                         user.Token = setCompany.Token;
-                        user.CompanyId = companyId;
+                        user.CompanyId = company.Id;
                         user.PermissionsStr = JsonConvert.SerializeObject(setCompany.Permissions);
                         appData.SetLoggedUser(user);
                     }
+
+                    Identity.Company = company.CompanyName;
 
                     await navigationService.Navigate<HomeViewModel>();
                     await navigationService.Navigate<MenuViewModel>();
@@ -281,7 +283,7 @@ namespace Core.ViewModels
                 {
                     if (appData.LoggedUser != null)
                     {
-                        SetearEmpresa(Company.Id, appData.LoggedUser.Token);
+                        SetearEmpresa(Company, appData.LoggedUser.Token);
                     }
                 }
             }

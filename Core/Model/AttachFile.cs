@@ -13,7 +13,7 @@ namespace Core.Model
         public int Height { get; set; }
         public int? Orientation { get; set; }
         public string MineType { get; set; }
-        public string FileIconName => SetIcon(FileName);
+        public string FileIconName => FileName != string.Empty ? SetIcon(FileName) : "";
 
         public string SetIcon(string fileName)
         {

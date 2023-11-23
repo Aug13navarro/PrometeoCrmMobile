@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -106,7 +107,8 @@ namespace Core.ViewModels
         public MvxObservableCollection<OrderNote> OrdersNote { get; set; } = new MvxObservableCollection<OrderNote>();
 
         public int CurrentPage { get; private set; } = 1;
-        private const int PageSize = 20;
+        private const int PageSize = 10;
+        public int TotalPages { get; private set; }
 
         public Command NuevaNotaPedidoCommand { get; }
         public Command FilterOrdersCommand { get; }
@@ -115,6 +117,12 @@ namespace Core.ViewModels
         public Command RefreshListCommand { get; }
 
         public int CompanyId { get; set; }
+        public Company company;
+        public Company Company
+        {
+            get => company;
+            set => SetProperty(ref company, value);
+        }
 
         //EVENTS
         public event EventHandler<Company> NewOrderPopup;
@@ -129,6 +137,10 @@ namespace Core.ViewModels
         public PedidosViewModel(IMvxNavigationService navigationService,
             IPrometeoApiService prometeoApiService) //,IToastService toastService, IOfflineDataService offlineDataService
         {
+            IsLoading = true;
+
+            OrdersNote = new MvxObservableCollection<OrderNote>(SetListLoading());
+
             data = new ApplicationData();
             this.CompanyId = data.LoggedUser.CompanyId.Value;
             var mapperConfig = new MapperConfiguration(m => { m.AddProfile(new MappingProfile()); });
@@ -159,7 +171,87 @@ namespace Core.ViewModels
                 FechaFinFiltro = DateTime.Now.ToString("MM/dd/yyyy");
             }
 
+            GetCompanies();
+
             GetStatusToOrderNote();
+        }
+
+        private async void GetCompanies()
+        {
+            var red = await Connection.SeeConnection();
+
+            if (red)
+            {
+                var empresas =
+                    await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
+
+                Company = empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value);
+            }
+            else
+            {
+                var empresas = OfflineDatabase.GetCompanies();
+
+                Company =
+                    mapper.Map<Company>(empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
+            }
+        }
+
+        private IEnumerable<OrderNote> SetListLoading()
+        {
+            var list = new MvxObservableCollection<OrderNote>();
+
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx"},
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+            list.Add(new OrderNote
+            {
+                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                IsBusy = true,
+            });
+
+            return list;
         }
 
         private async void GetStatusToOrderNote()
@@ -223,8 +315,6 @@ namespace Core.ViewModels
         {
             try
             {
-                var red = await Connection.SeeConnection();
-
                 if (string.IsNullOrWhiteSpace(data.LoggedUser.PermissionsStr))
                 {
                     await Application.Current.MainPage.DisplayAlert("Información",
@@ -241,37 +331,13 @@ namespace Core.ViewModels
                     return;
                 }
 
-                if (red)
+                if (Company.ExportPv.HasValue)
                 {
-                    var empresas =
-                        await prometeoApiService.GetCompaniesByUserId(data.LoggedUser.Id, data.LoggedUser.Token);
-
-                    var company = empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value);
-
-                    if (company.ExportPv.HasValue)
-                    {
-                        NewOrderPopup?.Invoke(this, company);
-                    }
-                    else
-                    {
-                        await IrNuevaNotaPedido(company, false);
-                    }
+                    NewOrderPopup?.Invoke(this, Company);
                 }
                 else
                 {
-                    var empresas = OfflineDatabase.GetCompanies();
-
-                    var company =
-                        mapper.Map<Company>(empresas.FirstOrDefault(x => x.Id == data.LoggedUser.CompanyId.Value));
-
-                    if (company.ExportPv.HasValue)
-                    {
-                        NewOrderPopup?.Invoke(this, company);
-                    }
-                    else
-                    {
-                        await IrNuevaNotaPedido(company, false);
-                    }
+                    await IrNuevaNotaPedido(Company, false);
                 }
             }
             catch (Exception e)
@@ -323,7 +389,7 @@ namespace Core.ViewModels
                 PageSize = PageSize,
             };
 
-            await GetOrdersNoteAsync(requestData);
+            await GetOrdersNoteAsync(requestData, true);
         }
 
         private async Task GetOrdersNoteAsync(OrdersNotesPaginatedRequest requestData, bool newSearch = false)
@@ -345,6 +411,7 @@ namespace Core.ViewModels
                     if (newSearch)
                     {
                         OrdersNote.Clear();
+                        TotalPages = ordersnote.TotalPages;
                     }
 
                     var ordenNotes =
@@ -352,7 +419,6 @@ namespace Core.ViewModels
                     OrdersNote.AddRange(ordenNotes);
 
                     CurrentPage = CurrentPage++;
-                    IsLoading = false;
                 }
                 else
                 {
@@ -365,8 +431,6 @@ namespace Core.ViewModels
                         var orderNotes = new MvxObservableCollection<OrderNote>(mapper.Map<List<OrderNote>>(d));
                         OrdersNote.AddRange(orderNotes);
                     }
-
-                    IsLoading = false;
                 }
             }
             catch (Exception ex)
@@ -442,17 +506,20 @@ namespace Core.ViewModels
 
         private async Task AbrirNota(OrderNote orderNote)
         {
-            if (orderNote.IsExport)
+            if (orderNote.id != 0)
             {
-                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
-                createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
-                await navigationService.Navigate(createViewModel, orderNote);
-            }
-            else
-            {
-                var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
-                createViewModel.NewOrderCreated += CreateViewModel_NewOrderCreated;
-                await navigationService.Navigate(createViewModel, orderNote);
+                if (orderNote.IsExport)
+                {
+                    var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderExportViewModel>();
+                    createViewModel.NewOrderCreatedd += CreateViewModel_NewOrderCreated;
+                    await navigationService.Navigate(createViewModel, orderNote);
+                }
+                else
+                {
+                    var createViewModel = MvxIoCProvider.Instance.IoCConstruct<CreateOrderViewModel>();
+                    createViewModel.NewOrderCreated += CreateViewModel_NewOrderCreated;
+                    await navigationService.Navigate(createViewModel, orderNote);
+                }
             }
         }
 
@@ -460,19 +527,66 @@ namespace Core.ViewModels
         {
             try
             {
-                var result = await prometeoApiService.UpdateStatusOrderNote(Convert.ToInt32(orderNoteId), statusId,
+                if (!string.IsNullOrEmpty(orderNoteId))
+                {
+                    var result = await prometeoApiService.UpdateStatusOrderNote(Convert.ToInt32(orderNoteId), statusId,
                     data.LoggedUser.Token);
 
-                if (result != null)
-                {
-                    OrdersNote.FirstOrDefault(x => x.id == result.id).OrderStatus = 4;
-                    OrdersNote.FirstOrDefault(x => x.id == result.id).StatusOrderNote = new StatusOrderNote
+                    if (result != null)
+                    {
+                        OrdersNote.FirstOrDefault(x => x.id == result.id).OrderStatus = 4;
+                        OrdersNote.FirstOrDefault(x => x.id == result.id).StatusOrderNote = new StatusOrderNote
                         { ColorHexa = "#13CD32", Name = "", Id = 4 };
+                    }
                 }
             }
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public async void LoadMoreOrder()
+        {
+            var red = await Connection.SeeConnection();
+
+            if (red)
+            {
+
+                CurrentPage++;
+                await CargarOrdenes();
+            }
+            else
+            {
+                    await Application.Current.MainPage.DisplayAlert("Atención",
+                        "Revise su conexión a internet.", "Aceptar");
+                    return;
+            }
+        }
+        private async Task CargarOrdenes()
+        {
+            var red = await Connection.SeeConnection();
+
+            if (red)
+            {
+                var requestData = new OrdersNotesPaginatedRequest()
+                {
+                    CurrentPage = CurrentPage,
+                    PageSize = 10,
+                };
+
+                await GetOrdersNoteAsync(requestData);
+            }
+            else
+            {
+                var d = OfflineDatabase.GetOrderNotes();
+
+                var orderNotes = new MvxObservableCollection<OrderNote>(mapper.Map<List<OrderNote>>(d));
+
+                OrdersNote.Clear();
+
+                OrdersNote.AddRange(orderNotes.Where(x => x.customer.CompanyName.ToLower().Contains(Query.ToLower()))
+                    .ToList());
             }
         }
     }

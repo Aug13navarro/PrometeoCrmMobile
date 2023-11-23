@@ -243,19 +243,19 @@ namespace Core.ViewModels
             }
         }
 
-        public async void SetCurrentCompany(int companyId)
+        public async void SetCurrentCompany(Company company)
         {
             try
             {
-                if (companyId != appData.LoggedUser.CompanyId)
+                if (company.Id != appData.LoggedUser.CompanyId)
                 {
                     var red = await Connection.SeeConnection();
                     if (red)
                     {
-                        var user = await prometeoApiService.SetCompany(companyId, appData.LoggedUser.Token);
+                        var user = await prometeoApiService.SetCompany(company.Id, appData.LoggedUser.Token);
                         var userSaved = appData.LoggedUser;
                         userSaved.Token = user.Token;
-                        userSaved.CompanyId = companyId;
+                        userSaved.CompanyId = company.Id;
                         appData.SetLoggedUser(userSaved);
 
                         await navigationService.Navigate<HomeViewModel>();
@@ -264,7 +264,7 @@ namespace Core.ViewModels
                     else
                     {
                         var userSaved = appData.LoggedUser;
-                        userSaved.CompanyId = companyId;
+                        userSaved.CompanyId = company.Id;
                         appData.SetLoggedUser(userSaved);
 
                         await navigationService.Navigate<HomeViewModel>();

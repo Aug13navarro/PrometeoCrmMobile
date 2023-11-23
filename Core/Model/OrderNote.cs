@@ -91,6 +91,7 @@ namespace Core.Model
         public int? commercialAssistantId { get; set; }
         public bool? sentToErp { get; set; }
         public int? ProviderId { get; set; }
+        public User Seller { get; set; }
 
         public class ProductOrder
         {
@@ -131,5 +132,8 @@ namespace Core.Model
         public string error { get; set; }
         public int idOffline { get; set; }
         public List<AttachFile> OpportunityOrderNoteAttachFile { get; set; }
+        public bool IsBusy { get; set; }
+        public int? SellerId { get; set; }
+        public int? DepositId { get; set; }
     }    
 }
