@@ -907,7 +907,7 @@ namespace Core.ViewModels
                     ProviderId = Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
                     OpportunityOrderNoteAttachFile = new List<AttachFile>(),
-                    SellerId = Seller?.Id,
+                    SellerId = Seller?.IdUser,
                     DepositId = Deposit?.Id,
                 };
 
@@ -1392,7 +1392,7 @@ namespace Core.ViewModels
             {
                 IsLoading = true;
                 SelectedCustomer = customer;
-                if(SelectedCustomer.AccountOwnerId.HasValue) Seller = Sellers.FirstOrDefault(x => x.Id == SelectedCustomer.AccountOwnerId.Value);
+                if(SelectedCustomer.AccountOwnerId.HasValue) Seller = Sellers.FirstOrDefault(x => x.IdUser == SelectedCustomer.AccountOwnerId.Value);
             }
             catch (Exception ex)
             {

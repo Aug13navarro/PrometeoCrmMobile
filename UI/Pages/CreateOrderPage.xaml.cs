@@ -166,7 +166,7 @@ namespace UI.Pages
                     ProviderId = ViewModel.Provider?.Id,
                     //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
                     OpportunityOrderNoteAttachFile = new List<AttachFile>(),
-                    SellerId = ViewModel.Seller?.Id,
+                    SellerId = ViewModel.Seller?.IdUser,
                     DepositId = ViewModel.Deposit?.Id,
                 };
 
