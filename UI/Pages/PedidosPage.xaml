@@ -8,7 +8,13 @@
                       xmlns:resources="clr-namespace:UI.LangResources"
                       xmlns:Mvx="clr-namespace:MvvmCross.Forms.Bindings;assembly=MvvmCross.Forms"
                       x:Class="UI.Pages.PedidosPage"
-                      xmlns:sk="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton">
+                      xmlns:sk="clr-namespace:Xamarin.Forms.Skeleton;assembly=Xamarin.Forms.Skeleton"
+                      xmlns:local="clr-namespace:UI.ValueConverters">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:LabelSellerOfOpportunityOrderNoteConverter x:Key="LabelSeller"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <NavigationPage.TitleView>
         <StackLayout Orientation="Horizontal" Margin="0,0,10,0">
             <Grid HorizontalOptions="FillAndExpand"
@@ -113,7 +119,7 @@
                                                 </Label>
                                             </StackLayout>
                                             <Label
-                                                Text="{Binding Seller.CodeFullName}"
+                                                Text="{Binding Seller, Converter={StaticResource LabelSeller}}"
                                                 sk:Skeleton.IsBusy="{Binding IsBusy}"
                                                 sk:Skeleton.BackgroundColor="#c6c6c5">
 
