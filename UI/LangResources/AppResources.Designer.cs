@@ -862,6 +862,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Seller.
+        /// </summary>
+        internal static string NoSeller {
+            get {
+                return ResourceManager.GetString("NoSeller", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OC Customer.
         /// </summary>
         internal static string OCCustomer {

@@ -381,6 +381,9 @@
   <data name="NoProductsFound" xml:space="preserve">
     <value>No Products found</value>
   </data>
+  <data name="NoSeller" xml:space="preserve">
+    <value>No Seller</value>
+  </data>
   <data name="No_Associated_Products" xml:space="preserve">
     <value>There are no associated products</value>
   </data>

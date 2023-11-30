@@ -534,9 +534,8 @@ namespace Core.ViewModels
 
                     if (result != null)
                     {
-                        OrdersNote.FirstOrDefault(x => x.id == result.id).OrderStatus = 4;
-                        OrdersNote.FirstOrDefault(x => x.id == result.id).StatusOrderNote = new StatusOrderNote
-                        { ColorHexa = "#13CD32", Name = "", Id = 4 };
+                        OrdersNote.FirstOrDefault(x => x.id == result.id).OrderStatus = result.OrderStatus;
+                        OrdersNote.FirstOrDefault(x => x.id == result.id).StatusOrderNote = result.StatusOrderNote;
                     }
                 }
             }

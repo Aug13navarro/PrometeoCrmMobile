@@ -378,6 +378,9 @@
   <data name="NoProductsFound" xml:space="preserve">
     <value>No se encontraron productos</value>
   </data>
+  <data name="NoSeller" xml:space="preserve">
+    <value>Sin Vendedor</value>
+  </data>
   <data name="No_Associated_Products" xml:space="preserve">
     <value>No hay prodcutos asociados</value>
   </data>

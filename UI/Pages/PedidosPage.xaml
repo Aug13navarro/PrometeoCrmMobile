@@ -13,6 +13,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:LabelSellerOfOpportunityOrderNoteConverter x:Key="LabelSeller"/>
+            <local:ColorStatusOfOpportunityOrderNoteConverter x:Key="ColorStatus"/>
         </ResourceDictionary>
     </ContentPage.Resources>
     <NavigationPage.TitleView>
@@ -93,7 +94,7 @@
                                                 <Frame
                                                     Margin="0"
                                                     Padding="0"
-                                                    BackgroundColor="{Binding StatusOrderNote.ColorHexa}"
+                                                    BackgroundColor="{Binding StatusOrderNote, Converter={StaticResource ColorStatus}}"
                                                     WidthRequest="20"
                                                     MinimumWidthRequest="20"
                                                     HeightRequest="20"
