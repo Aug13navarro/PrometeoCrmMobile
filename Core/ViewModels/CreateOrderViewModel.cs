@@ -24,6 +24,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.ComponentModel.Design;
+using MvvmCross.IoC;
 
 namespace Core.ViewModels
 {
@@ -370,6 +371,7 @@ namespace Core.ViewModels
         public delegate void EventHandlerOrder(bool created);
         public event EventHandlerOrder NewOrderCreated;
         public event EventHandler<List<CustomerAddress>> ShowAddressPopup;
+        public event EventHandler<OrderNote> ShowConfirmPopup;
 
         // Commands
         public Command SelectClientCommand { get; }
@@ -884,7 +886,7 @@ namespace Core.ViewModels
                 {
                     companyId = Company.Id,
                     Description = Order.Description,
-                    currencyId = 1,
+                    currencyId = 2,
                     customerId = SelectedCustomer.Id,
                     discount = OrderDiscount,
                     fecha = Order.fecha,
@@ -946,6 +948,19 @@ namespace Core.ViewModels
                     nuevaOrder.products = Order.products;
                 }
 
+                ShowConfirmPopup?.Invoke(this, nuevaOrder);
+
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+        }
+
+        public async Task ConfirmaOrderNote(OrderNote nuevaOrder)
+        {
+            try
+            {
                 var red = await Connection.SeeConnection();
 
                 if (Order.id == 0 && Order.idOffline == 0)

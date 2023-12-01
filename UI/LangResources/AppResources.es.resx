@@ -168,6 +168,9 @@
   <data name="BusinessName" xml:space="preserve">
     <value>Raz. Soc.</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
   <data name="ChangeCompany" xml:space="preserve">
     <value>Cambiar de Empresa</value>
   </data>
@@ -182,6 +185,12 @@
   </data>
   <data name="Company" xml:space="preserve">
     <value>Empresa</value>
+  </data>
+  <data name="ConfirmText" xml:space="preserve">
+    <value>¿Desea confirmar el pedido?</value>
+  </data>
+  <data name="ConfirmTitle" xml:space="preserve">
+    <value>Confirmación de Peido</value>
   </data>
   <data name="Contacts" xml:space="preserve">
     <value>Contactos</value>
@@ -233,6 +242,9 @@
   </data>
   <data name="DeliveryResponsible" xml:space="preserve">
     <value>Resp. Entrega</value>
+  </data>
+  <data name="Deposit" xml:space="preserve">
+    <value>Deposito</value>
   </data>
   <data name="DescribeWhoDelivers" xml:space="preserve">
     <value>Describir quien entrega</value>
@@ -449,6 +461,9 @@
   </data>
   <data name="Sales" xml:space="preserve">
     <value>Ventas</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Guardar</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Buscar...</value>

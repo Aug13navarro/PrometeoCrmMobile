@@ -16,13 +16,7 @@
                    TextColor="{OnPlatform Android=White, iOS=#2b0048}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" FontSize="20"/>
             <ImageButton Source="guardar.png" 
                          BackgroundColor="Transparent" WidthRequest="30"
-                         Margin="5,0,0,0" x:Name="SaveOrderBtn"
-                         Mvx:Bi.nd="IsVisible Company.Id == 7">
-            </ImageButton>
-            <ImageButton Source="guardar.png" 
-                         BackgroundColor="Transparent" WidthRequest="30"
-                         Margin="5,0,0,0" Command="{Binding SavePedidoCommand}"
-                         Mvx:Bi.nd="IsVisible Company.Id != 7">
+                         Margin="5,0,0,0" Command="{Binding SavePedidoCommand}">
             </ImageButton>
         </StackLayout>
     </NavigationPage.TitleView>
@@ -205,7 +199,8 @@
                             </Grid>
                         </StackLayout><!--Cliente-->
 
-                        <StackLayout Margin="0,5">
+                        <StackLayout Margin="0,5"
+                            Mvx:Bi.nd="IsVisible Company.Id == 7">
                             <Grid
                                 ColumnDefinitions=".3*,*">
                                 <Label Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
@@ -234,14 +229,15 @@
                         </StackLayout>
                         <!--Vendedor-->
 
-                        <StackLayout Margin="0,5">
+                        <StackLayout Margin="0,5"
+                            Mvx:Bi.nd="IsVisible Company.Id == 7">
                             <Grid
                                 ColumnDefinitions=".3*,*">
                                 <Label Style="{StaticResource DefaultLabel}" VerticalOptions="Center"
                                        Grid.Column="0">
                                     <Label.FormattedText>
                                         <FormattedString>
-                                            <Span Text="Deposito"></Span>
+                                            <Span Text="{x:Static resources:AppResources.Deposit}"></Span>
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>

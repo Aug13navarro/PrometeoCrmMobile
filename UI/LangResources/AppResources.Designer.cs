@@ -214,6 +214,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change Company.
         /// </summary>
         internal static string ChangeCompany {
@@ -255,6 +264,24 @@ namespace UI.LangResources {
         internal static string Company {
             get {
                 return ResourceManager.GetString("Company", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to confirm the sale?.
+        /// </summary>
+        internal static string ConfirmText {
+            get {
+                return ResourceManager.GetString("ConfirmText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sale Confirmation.
+        /// </summary>
+        internal static string ConfirmTitle {
+            get {
+                return ResourceManager.GetString("ConfirmTitle", resourceCulture);
             }
         }
         
@@ -408,6 +435,15 @@ namespace UI.LangResources {
         internal static string DeliveryResponsible {
             get {
                 return ResourceManager.GetString("DeliveryResponsible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deposit.
+        /// </summary>
+        internal static string Deposit {
+            get {
+                return ResourceManager.GetString("Deposit", resourceCulture);
             }
         }
         
@@ -1065,6 +1101,15 @@ namespace UI.LangResources {
         internal static string Sales {
             get {
                 return ResourceManager.GetString("Sales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         

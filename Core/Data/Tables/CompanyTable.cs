@@ -6,6 +6,7 @@ namespace Core.Data.Tables
     public class CompanyTable
     {
         public int Id { get; set; }
+        public string CompanyName { get; set; }    
         public string BusinessName { get; set; }
         public int? ExternalId { get; set; }
         public int? externalErpId { get; set; }

@@ -28,252 +28,6 @@ namespace UI.Pages
         public CreateOrderPage()
         {
             InitializeComponent();
-
-            SaveOrderBtn.Clicked += SaveOrderBtn_Clicked;
-        }
-
-        private async void SaveOrderBtn_Clicked(object sender, EventArgs e)
-        {
-            try
-            {
-                //ViewModel.IsLoading = true;
-
-                if (ViewModel.Company == null ||
-                    ViewModel.SelectedCustomer == null ||
-                    ViewModel.TypeOfRemittance == null ||
-                    ViewModel.PaymentMethod == null ||
-                    ViewModel.Assistant == null)
-                {
-                    if (ViewModel.data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
-                        ViewModel.data.LoggedUser.Language.abbreviation.Contains("spanish"))
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Atención",
-                            "Faltan ingresar datos obligatorios.", "Aceptar");
-                        return;
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.",
-                            "Acept");
-                        return;
-                    }
-                }
-
-                if (ViewModel.Company.Id != 7)
-                {
-                    if (ViewModel.Place == null)
-                    {
-                        if (ViewModel.data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
-                            ViewModel.data.LoggedUser.Language.abbreviation.Contains("spanish"))
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Atención",
-                                "Faltan ingresar datos obligatorios.", "Aceptar");
-                            return;
-                        }
-                        else
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.",
-                                "Acept");
-                            return;
-                        }
-                    }
-                }
-
-                if (ViewModel.Company.externalErpId != null)
-                {
-                    if (ViewModel.Condition == null)
-                    {
-                        if (ViewModel.data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
-                            ViewModel.data.LoggedUser.Language.abbreviation.Contains("spanish"))
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Atención",
-                                "Seleccione una condición de pago.", "Aceptar");
-                            return;
-                        }
-                        else
-                        {
-                            await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.",
-                                "Acept");
-                            return;
-                        }
-                    }
-                }
-                else
-                {
-                    if (ViewModel.TypeOfRemittance.Description != "En Consignación" &&
-                        ViewModel.TypeOfRemittance.Description != "On Consignment")
-                    {
-                        if (ViewModel.Condition == null)
-                        {
-                            if (ViewModel.data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
-                                ViewModel.data.LoggedUser.Language.abbreviation.Contains("spanish"))
-                            {
-                                await Application.Current.MainPage.DisplayAlert("Atención",
-                                    "Seleccione una condición de pago.", "Aceptar");
-                                return;
-                            }
-                            else
-                            {
-                                await Application.Current.MainPage.DisplayAlert("Attention", "Select a payment term.",
-                                    "Acept");
-                                return;
-                            }
-                        }
-                    }
-                }
-
-                if (ViewModel.Order.products == null || !ViewModel.Order.products.Any())
-                {
-                    if (ViewModel.data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
-                        ViewModel.data.LoggedUser.Language.abbreviation.Contains("spanish"))
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Atención", "Necesita asociar productos",
-                            "Aceptar");
-                        return;
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert("Attention", "You need to associate products.",
-                            "Acept");
-                        return;
-                    }
-                }
-
-                var nuevaOrder = new OrderNote
-                {
-                    companyId = ViewModel.Company.Id,
-                    Description = ViewModel.Order.Description,
-                    currencyId = 1,
-                    customerId = ViewModel.SelectedCustomer.Id,
-                    discount = ViewModel.OrderDiscount,
-                    fecha = ViewModel.Order.fecha,
-                    //OrderStatus = 1,
-                    total = Convert.ToDecimal(ViewModel.Total),
-                    //cuenta = SelectedCustomer.externalCustomerId.Value,
-                    divisionCuentaId = ViewModel.Company.ExternalId.Value,
-                    talon = 88, //puede ser null
-                    tipoComprobante = 8, //puede ser null
-                    tipoCuentaId = 1, //puede ser null
-                    tipoServicioId = 50, //puede ser null
-                    DeliveryAddress = ViewModel.Order.DeliveryAddress,
-                    DeliveryDate = ViewModel.Order.DeliveryDate,
-                    DeliveryResponsible = ViewModel.Order.DeliveryResponsible,
-                    OCCustomer = ViewModel.Order.OCCustomer,
-                    PlacePayment = ViewModel.Place?.Id,
-                    RemittanceType = ViewModel.TypeOfRemittance.Id,
-                    PaymentMethodId = ViewModel.PaymentMethod.id,
-                    commercialAssistantId = ViewModel.Assistant.Id,
-                    ProviderId = ViewModel.Provider?.Id,
-                    //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
-                    OpportunityOrderNoteAttachFile = new List<AttachFile>(),
-                    SellerId = ViewModel.Seller?.IdUser,
-                    DepositId = ViewModel.Deposit?.Id,
-                };
-
-                nuevaOrder.OpportunityOrderNoteAttachFile = ViewModel.AttachFiles != null
-                    ? ViewModel.AttachFiles.ToList()
-                    : new List<AttachFile>();
-
-                if (ViewModel.Condition != null)
-                {
-                    nuevaOrder.paymentConditionId = ViewModel.Condition.Id;
-                }
-
-                if (ViewModel.FreightInCharge != null)
-                {
-                    nuevaOrder.TransportCompanyId = ViewModel.FreightInCharge.Id;
-                }
-
-                if (nuevaOrder.DeliveryDate == null)
-                {
-                    nuevaOrder.DeliveryDate = DateTime.Now.Date;
-                    nuevaOrder.ETD = DateTime.Now.Date;
-                }
-                else
-                {
-                    nuevaOrder.ETD = ViewModel.Order.DeliveryDate.Value;
-                }
-
-                if (ViewModel.Order.opportunityId == 0 || ViewModel.Order.opportunityId == null)
-                {
-                    nuevaOrder.opportunityId = null;
-                    nuevaOrder.products = ViewModel.Order.products;
-                }
-                else
-                {
-                    nuevaOrder.opportunityId = ViewModel.Order.opportunityId;
-                    nuevaOrder.products = ViewModel.Order.products;
-                }
-
-                nuevaOrder.Details = ViewModel.Order.Details;
-
-                var red = await Connection.SeeConnection();
-
-                nuevaOrder.OrderStatus = ViewModel.Order.StatusOrderNote.Id;
-
-                if (ViewModel.Order.id == 0 && ViewModel.Order.idOffline == 0)
-                {
-                    nuevaOrder.company = ViewModel.Company;
-                    nuevaOrder.customer = ViewModel.SelectedCustomer;
-                    var popup = new ConfirmOrderNotePopupPage(nuevaOrder, ViewModel.data.LoggedUser.Token, red);
-
-                    popup.ItCreated += async order =>
-                    {
-                        await PopupNavigation.Instance.PopAsync(true);
-
-                        Popup_ItCreated(order);
-                    };
-                    await PopupNavigation.Instance.PushAsync(popup);
-                }
-                else
-                {
-                    nuevaOrder.company = ViewModel.Company;
-                    nuevaOrder.customer = ViewModel.SelectedCustomer;
-                    nuevaOrder.idOffline = ViewModel.Order.idOffline;
-                    nuevaOrder.id = ViewModel.Order.id;
-                    var popup = new ConfirmOrderNotePopupPage(nuevaOrder, ViewModel.data.LoggedUser.Token, red);
-
-                    popup.ItCreated += async order =>
-                    {
-                        await PopupNavigation.Instance.PopAsync(true);
-
-                        Popup_ItCreated(order);
-                    };
-                    await PopupNavigation.Instance.PushAsync(popup);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (ViewModel.data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
-                    ViewModel.data.LoggedUser.Language.abbreviation.Contains("spanish"))
-                {
-                    await Application.Current.MainPage.DisplayAlert("Atención", $"{ex.Message}", "Aceptar");
-                    return;
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert("Attention", $"{ex.Message}", "Acept");
-                    return;
-                }
-            }
-            finally
-            {
-                //ViewModel.IsLoading = false;
-            }
-        }
-
-        private async void Popup_ItCreated(int? order)
-        {
-            if (order.HasValue)
-            {
-                await ViewModel.navigationService.ChangePresentation(
-                    new MvxPopPresentationHint(typeof(PedidosViewModel)));
-                await ViewModel.navigationService.Navigate<PedidosViewModel>();
-            }
-            else
-            {
-                ViewModel.CloseAndBack();
-            }
         }
 
         protected override void OnViewModelSet()
@@ -281,7 +35,23 @@ namespace UI.Pages
             base.OnViewModelSet();
             ViewModel.ShowEditProductPopup += OnShowEditProductPopup;
             ViewModel.ShowAddressPopup += OnShowCustomerAddressPopup;
+            ViewModel.ShowConfirmPopup += OnShowConfirmPopup;
+        }
 
+        private async void OnShowConfirmPopup(object sender, OrderNote e)
+        {
+            var popup = new ConfirmOrderNotePopupPage();
+            popup.OkTapped += async (s, args) =>
+            {
+                await PopupNavigation.Instance.PopAsync(false);
+
+                if (args.confirmed && args.notConfirmed == false)
+                {
+                    await ViewModel.ConfirmaOrderNote(e);
+                }
+            };
+
+            await PopupNavigation.Instance.PushAsync(popup);
         }
 
         private async void OnShowCustomerAddressPopup(object sender, List<CustomerAddress> addresses)
