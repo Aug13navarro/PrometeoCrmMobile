@@ -1407,7 +1407,7 @@ namespace Core.ViewModels
             {
                 IsLoading = true;
                 SelectedCustomer = customer;
-                if(SelectedCustomer.AccountOwnerId.HasValue) Seller = Sellers.FirstOrDefault(x => x.IdUser == SelectedCustomer.AccountOwnerId.Value);
+                if(SelectedCustomer.AccountOwnerId.HasValue && Sellers != null) Seller = Sellers.FirstOrDefault(x => x.IdUser == SelectedCustomer.AccountOwnerId.Value);
             }
             catch (Exception ex)
             {
@@ -1721,5 +1721,34 @@ namespace Core.ViewModels
 
             return b;
         }
+        public void AddPictureToOrderNote(string filePath, string fileResource)
+        {
+            try
+            {
+                if (AttachFiles == null) AttachFiles = new MvxObservableCollection<AttachFile>();
+
+                if (filePath.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
+                    filePath.EndsWith("png", StringComparison.OrdinalIgnoreCase) ||
+                    filePath.EndsWith("jpeg", StringComparison.OrdinalIgnoreCase))
+                {
+                    AttachFiles.Add(new AttachFile
+                    {
+                        //AssignmentId = AssignmentId,
+                        OpportunityOrderNoteId = Order.id,
+                        FilePath = $"data:image/jpg;base64," + fileResource,
+                        FileName = filePath,
+                        MineType = ".jpeg",
+                        UploadDate = DateTime.Now
+                        //FileTypeId = number,
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Application.Current.MainPage.DisplayAlert("Información", $"No se pudo agregar el archivo.", "aceptar");
+                return;
+            }
+        }
+
     }
 }

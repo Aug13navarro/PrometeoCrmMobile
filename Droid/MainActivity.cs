@@ -71,6 +71,18 @@ namespace PrometeoCrmMobile.Droid
                     ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.ReadExternalStorage }, 1);
                 }
 
+                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage) !=
+                    Permission.Granted)
+                {
+                    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage }, 1);
+                }
+
+                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.Camera) !=
+                    Permission.Granted)
+                {
+                    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.Camera }, 1);
+                }
+
                 Mvx.IoCProvider.RegisterType<IToastService>(() => new ToastDroidService());
 
                 Xamarin.Essentials.Platform.Init(this, savedInstanceState);

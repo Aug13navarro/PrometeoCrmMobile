@@ -214,6 +214,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Camera.
+        /// </summary>
+        internal static string Camera {
+            get {
+                return ResourceManager.GetString("Camera", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Cancel {
@@ -439,7 +448,7 @@ namespace UI.LangResources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deposit.
+        ///   Looks up a localized string similar to Withdraw in.
         /// </summary>
         internal static string Deposit {
             get {
@@ -691,6 +700,15 @@ namespace UI.LangResources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Galery.
+        /// </summary>
+        internal static string Galery {
+            get {
+                return ResourceManager.GetString("Galery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generate proposal.
         /// </summary>
         internal static string Generate_proposal {
@@ -885,6 +903,15 @@ namespace UI.LangResources {
         internal static string NoOrdersFound {
             get {
                 return ResourceManager.GetString("NoOrdersFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You do not have permissions to access the files..
+        /// </summary>
+        internal static string NoPermissionsToFiles {
+            get {
+                return ResourceManager.GetString("NoPermissionsToFiles", resourceCulture);
             }
         }
         

@@ -703,10 +703,10 @@
             VerticalOptions="FillAndExpand">
             <StackLayout>
                 <StackLayout Orientation="Horizontal">
-                    <Label Text="{x:Static resources:AppResources.AttachFile}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" />
-                    <ImageButton IsEnabled="{Binding EnableForEdit}"  Source="adjuntar.png" VerticalOptions="End"
-                                  BackgroundColor="Transparent" Clicked="ImageButton_OnClicked">
-                        <!--Command="{Binding OpenGaleryCommand}" -->
+                    <Label Text="{x:Static resources:AppResources.AttachFile}" Style="{StaticResource DefaultLabel}" Margin="0,10,0,0" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center"/>
+                    <ImageButton IsEnabled="{Binding EnableForEdit}"  Source="ic_more_vert.png" VerticalOptions="End" Margin="0,5,0,0"
+                                  BackgroundColor="Transparent" Clicked="ImageButton_OnClicked"
+                                 WidthRequest="40" HeightRequest="40">
 
                     </ImageButton>
                 </StackLayout>

@@ -1,6 +1,5 @@
 ﻿using Core.Model;
 using Core.ViewModels;
-using MvvmCross.Base;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
 using Rg.Plugins.Popup.Services;
@@ -8,17 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Transactions;
-using Core;
-using Core.Data;
-using Core.Data.Tables;
-using Core.Services;
-using MvvmCross.Presenters.Hints;
 using UI.Popups;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using System.Threading.Tasks;
-using Rg.Plugins.Popup.Extensions;
+using Plugin.Permissions;
+using Plugin.Media;
+using Plugin.Media.Abstractions;
+using System.IO;
 
 namespace UI.Pages
 {
@@ -175,25 +171,89 @@ namespace UI.Pages
         {
             try
             {
-                var status = await Permissions.RequestAsync<Permissions.StorageRead>();
-                if (status == PermissionStatus.Granted)
+                string action = await DisplayActionSheet(null, null, null, LangResources.AppResources.Camera, LangResources.AppResources.Galery);
+
+                if (action != null && action == LangResources.AppResources.Galery)
                 {
-                    var files = PickAndShow(default).ContinueWith(
-                        (task) => { });
+                    var status = await Permissions.RequestAsync<Permissions.StorageRead>();
+                    if (status == PermissionStatus.Granted)
+                    {
+                        var files = PickAndShow(default).ContinueWith(
+                            (task) => { });
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert(
+                            LangResources.AppResources.Attention,
+                            LangResources.AppResources.NoPermissionsToFiles,
+                            LangResources.AppResources.Accept);
+                        return;
+                    }
+                }
+                else
+                if (action != null && action == LangResources.AppResources.Camera)
+                {
+                    var cameraOK = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Camera);
+                    var storageOK = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Storage);
+
+                    var FilePath = string.Empty;
+                    var FileResource = string.Empty;
+
+                    var file = await TakePhoto(cameraOK, storageOK) as MediaFile;
+
+                    if (file != null)
+                    {
+                        var Photo = ImageSource.FromStream(() => file.GetStream());
+
+                        if (Photo != null)
+                        {
+                            FilePath = $"{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}-{DateTime.Now.Hour}{DateTime.Now.Minute}.jpg";
+                            FileResource = Convert.ToBase64String(ImageSourceToByteArray(Photo));
+
+                            ViewModel.AddPictureToOrderNote(FilePath, FileResource);
+                        }
+                    }
                 }
                 else
                 {
-                    await Application.Current.MainPage.DisplayAlert(
-                        LangResources.AppResources.Attention,
-                        "No se tienen los permisos para acceder a los archivos.",
-                        LangResources.AppResources.Accept);
                     return;
                 }
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception);
-                return;
+                await Application.Current.MainPage.DisplayAlert("Atención", $"{exception.Message}", "aceptar"); return;
+            }
+        }
+
+        private async Task<object> TakePhoto(Plugin.Permissions.Abstractions.PermissionStatus a, Plugin.Permissions.Abstractions.PermissionStatus b)
+        {
+            if (a == Plugin.Permissions.Abstractions.PermissionStatus.Granted
+                && b == Plugin.Permissions.Abstractions.PermissionStatus.Granted
+                && CrossMedia.Current.IsCameraAvailable
+                && CrossMedia.Current.IsTakePhotoSupported)
+            {
+                var options = new StoreCameraMediaOptions
+                {
+                    DefaultCamera = CameraDevice.Rear, // Doesn't always work on Android, depends on Device
+                    AllowCropping = true, // UWP & iOS only,
+                    PhotoSize = PhotoSize.Medium, // if Custom, you can set CustomPhotoSize = percentage_value 
+                    CompressionQuality = 90,
+                    Directory = "Prometeo",
+                    Name = $"{Guid.NewGuid()}.jpg",
+                    SaveToAlbum = false,
+                };
+                var file = await CrossMedia.Current.TakePhotoAsync(options);
+
+                if (file == null)
+                {
+                    return null;
+                }
+
+                return file;
+            }
+            else
+            {
+                return new Exception("No se pudo acceder a la camara, revise de tener los permisos activados");
             }
         }
 
@@ -206,14 +266,29 @@ namespace UI.Pages
                 if (result != null && result.Any())
                 {
                     ViewModel.AddFileToOrderNote(result);
-                    //OnChooseMultiple(2, result);
-                    //await Application.Current.MainPage.Navigation.PopPopupAsync();
                 }
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
+        }
+
+        public byte[] ImageSourceToByteArray(ImageSource source)
+        {
+            StreamImageSource streamImageSource = (StreamImageSource)source;
+            System.Threading.CancellationToken cancellationToken = System.Threading.CancellationToken.None;
+            Task<Stream> task = streamImageSource.Stream(cancellationToken);
+            Stream stream = task.Result;
+
+            byte[] b;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                stream.CopyTo(ms);
+                b = ms.ToArray();
+            }
+
+            return b;
         }
     }
 }

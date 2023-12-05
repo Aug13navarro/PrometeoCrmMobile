@@ -168,6 +168,9 @@
   <data name="BusinessName" xml:space="preserve">
     <value>Raz. Soc.</value>
   </data>
+  <data name="Camera" xml:space="preserve">
+    <value>Camara</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancelar</value>
   </data>
@@ -244,7 +247,7 @@
     <value>Resp. Entrega</value>
   </data>
   <data name="Deposit" xml:space="preserve">
-    <value>Deposito</value>
+    <value>Retira en</value>
   </data>
   <data name="DescribeWhoDelivers" xml:space="preserve">
     <value>Describir quien entrega</value>
@@ -327,6 +330,9 @@
   <data name="FromPrice" xml:space="preserve">
     <value>Precio Desde</value>
   </data>
+  <data name="Galery" xml:space="preserve">
+    <value>Galeria</value>
+  </data>
   <data name="Generate_proposal" xml:space="preserve">
     <value>Generar propuesta</value>
   </data>
@@ -386,6 +392,9 @@
   </data>
   <data name="NoOrdersFound" xml:space="preserve">
     <value>No se encontraron ordenes</value>
+  </data>
+  <data name="NoPermissionsToFiles" xml:space="preserve">
+    <value>No se tienen los permisos para acceder a los archivos.</value>
   </data>
   <data name="NoProductsFound" xml:space="preserve">
     <value>No se encontraron productos</value>
