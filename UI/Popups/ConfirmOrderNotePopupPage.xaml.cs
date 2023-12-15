@@ -22,7 +22,8 @@ namespace UI.Popups
 
         private async void Button_OnClicked_Cancel(object sender, EventArgs e)
         {
-            await PopupNavigation.Instance.PopAsync(true);
+            (bool confirmed, bool notConfirmed) result = (confirmed: false, notConfirmed: true);
+            OkTapped?.Invoke(this, result);
         }
     }
 }

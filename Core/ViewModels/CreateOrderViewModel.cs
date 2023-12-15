@@ -787,6 +787,8 @@ namespace Core.ViewModels
                     PaymentMethod == null ||
                     Assistant == null)
                 {
+                    IsLoading = false;
+
                     if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
                         data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
@@ -806,6 +808,8 @@ namespace Core.ViewModels
                 {
                     if (Place == null)
                     {
+                        IsLoading = false;
+
                         if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
                             data.LoggedUser.Language.abbreviation.Contains("spanish"))
                         {
@@ -826,6 +830,8 @@ namespace Core.ViewModels
                 {
                     if (Condition == null)
                     {
+                        IsLoading = false;
+
                         if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
                             data.LoggedUser.Language.abbreviation.Contains("spanish"))
                         {
@@ -848,6 +854,8 @@ namespace Core.ViewModels
                     {
                         if (Condition == null)
                         {
+                            IsLoading = false;
+
                             if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
                                 data.LoggedUser.Language.abbreviation.Contains("spanish"))
                             {
@@ -867,6 +875,8 @@ namespace Core.ViewModels
 
                 if (Order.products == null || Order.products.Count() == 0)
                 {
+                    IsLoading = false;
+
                     if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
                         data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
@@ -1204,7 +1214,7 @@ namespace Core.ViewModels
 
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
 
-                    AttachFiles = new MvxObservableCollection<AttachFile>(order.OpportunityOrderNoteAttachFile);
+                    AttachFiles = new MvxObservableCollection<AttachFile>(Order.OpportunityOrderNoteAttachFile);
 
                     SelectedCustomer = Order.customer;
                     Company = Order.company;
@@ -1750,5 +1760,16 @@ namespace Core.ViewModels
             }
         }
 
+        public void Cancel()
+        {
+            try
+            {
+                IsLoading = false;
+            }
+            catch (Exception)
+            {
+                IsLoading = false;
+            }
+        }
     }
 }

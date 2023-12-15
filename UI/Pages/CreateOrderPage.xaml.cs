@@ -45,6 +45,10 @@ namespace UI.Pages
                 {
                     await ViewModel.ConfirmaOrderNote(e);
                 }
+                else
+                {
+                    ViewModel.Cancel();
+                }
             };
 
             await PopupNavigation.Instance.PushAsync(popup);
@@ -175,31 +179,35 @@ namespace UI.Pages
 
                 if (action != null && action == LangResources.AppResources.Galery)
                 {
-                    var status = await Permissions.RequestAsync<Permissions.StorageRead>();
-                    if (status == PermissionStatus.Granted)
-                    {
-                        var files = PickAndShow(default).ContinueWith(
+                    var files = PickAndShow(default).ContinueWith(
                             (task) => { });
-                    }
-                    else
-                    {
-                        await Application.Current.MainPage.DisplayAlert(
-                            LangResources.AppResources.Attention,
-                            LangResources.AppResources.NoPermissionsToFiles,
-                            LangResources.AppResources.Accept);
-                        return;
-                    }
+
+                    // ESTE CÓDIGO SE COMENTÓ PORQUE EXISTE UN BUG AL COLICITAR EL PERMISO A LOS ARCHIVOS 
+
+                    //var status = await Permissions.RequestAsync<Permissions.StorageRead>();
+                    //if (status == PermissionStatus.Granted)
+                    //{
+                    //    var files = PickAndShow(default).ContinueWith(
+                    //        (task) => { });
+                    //}
+                    //else
+                    //{
+                    //    await Application.Current.MainPage.DisplayAlert(
+                    //        LangResources.AppResources.Attention,
+                    //        LangResources.AppResources.NoPermissionsToFiles,
+                    //        LangResources.AppResources.Accept);
+                    //    return;
+                    //}
                 }
                 else
                 if (action != null && action == LangResources.AppResources.Camera)
                 {
                     var cameraOK = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Camera);
-                    var storageOK = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Storage);
 
                     var FilePath = string.Empty;
                     var FileResource = string.Empty;
 
-                    var file = await TakePhoto(cameraOK, storageOK) as MediaFile;
+                    var file = await TakePhoto(cameraOK/*, storageOK*/) as MediaFile;
 
                     if (file != null)
                     {
@@ -225,10 +233,10 @@ namespace UI.Pages
             }
         }
 
-        private async Task<object> TakePhoto(Plugin.Permissions.Abstractions.PermissionStatus a, Plugin.Permissions.Abstractions.PermissionStatus b)
+        private async Task<object> TakePhoto(Plugin.Permissions.Abstractions.PermissionStatus a/*, Plugin.Permissions.Abstractions.PermissionStatus b*/)
         {
             if (a == Plugin.Permissions.Abstractions.PermissionStatus.Granted
-                && b == Plugin.Permissions.Abstractions.PermissionStatus.Granted
+                //&& b == Plugin.Permissions.Abstractions.PermissionStatus.Granted
                 && CrossMedia.Current.IsCameraAvailable
                 && CrossMedia.Current.IsTakePhotoSupported)
             {

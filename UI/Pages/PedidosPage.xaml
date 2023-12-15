@@ -168,13 +168,14 @@
                     <Image Source="ic_no_orders.png" HorizontalOptions="Center"/>
                     <Label Text="{x:Static resources:AppResources.NoOrdersFound}" TextColor="#969696" HorizontalOptions="CenterAndExpand" FontSize="Medium" />
                 </StackLayout>
-            
+
                 <ImageButton
                     Grid.Row="1"
                     Grid.Column="1"
                     Source="ic_edit_hdpi.png"
                     Margin="10,0"
-                    Command="{Binding NuevaNotaPedidoCommand}">                
+                    Clicked="ImageButton_Clicked">
+                    <!--Command="{Binding NuevaNotaPedidoCommand}"-->                
                 
                 </ImageButton>
 

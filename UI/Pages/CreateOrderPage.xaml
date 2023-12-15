@@ -713,7 +713,7 @@
 
                 <BoxView BackgroundColor="LightGray" HeightRequest="1" />
             </StackLayout>
-            <ListView IsVisible="True"
+            <ListView Mvx:Bi.nd="IsVisible AttachFiles.Count > 0"
                       ItemsSource="{Binding AttachFiles, Mode=TwoWay}"
                       x:Name="attachFileList">
                 <ListView.ItemTemplate>
@@ -748,7 +748,6 @@
             </ListView>
 
             <StackLayout
-                IsVisible="False"
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="CenterAndExpand"
                 Mvx:Bi.nd="IsVisible AttachFiles.Count == 0">

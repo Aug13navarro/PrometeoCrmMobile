@@ -6,11 +6,13 @@ using Core.Model;
 using Core.ViewModels;
 using MvvmCross.Forms.Presenters.Attributes;
 using MvvmCross.Forms.Views;
+using Plugin.Permissions;
 using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UI.Popups;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -61,11 +63,24 @@ namespace UI.Pages
             }
         }
 
-        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
             var label = (Frame)sender;
             object parameter = ((TapGestureRecognizer)label.GestureRecognizers[0]).CommandParameter;
-            
+
+            var cameraOK = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Camera);
+            if (cameraOK != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+            {
+                Permissions.RequestAsync<Xamarin.Essentials.Permissions.Camera>();
+
+                //ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.Camera }, 1);
+            }
+            var storageOK = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Storage);
+            if (storageOK != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+            {
+                Permissions.RequestAsync<Xamarin.Essentials.Permissions.StorageRead>();
+            }
+
             ViewModel.OpenOrderNoteCommand.Execute(parameter);
         }
 
@@ -107,6 +122,26 @@ namespace UI.Pages
             {
                 ViewModel.LoadMoreOrder();
             }
+        }
+
+        private async void ImageButton_Clicked(object sender, EventArgs e)
+        {
+            var cameraOK = await CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Camera);
+            if (cameraOK != Plugin.Permissions.Abstractions.PermissionStatus.Granted)
+            {
+                await Permissions.RequestAsync<Xamarin.Essentials.Permissions.Camera>();
+
+                //ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.Camera }, 1);
+            }
+            //var storageOK = await Permissions.RequestAsync<Permissions.StorageRead>();
+            var storageOK = await Permissions.RequestAsync<Permissions.StorageRead>();
+
+            if (storageOK != PermissionStatus.Granted)
+            {
+                await Permissions.RequestAsync<Xamarin.Essentials.Permissions.StorageRead>();
+            }
+
+            await ViewModel.NuevaNotaPedido();
         }
     }
 }

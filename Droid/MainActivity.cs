@@ -18,11 +18,13 @@ using Core.Services.Contracts;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Forms.Platforms.Android.Views;
+using Plugin.Permissions.Abstractions;
 using PrometeoCrmMobile.Droid.Notification;
 using PrometeoCrmMobile.Droid.Services;
 using Rg.Plugins.Popup.Services;
 using UI;
 using UI.Popups;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace PrometeoCrmMobile.Droid
@@ -63,29 +65,25 @@ namespace PrometeoCrmMobile.Droid
                 //CrossCurrentActivity.Current.Activity = this;
                 //CrossCurrentActivity.Current.Init(this, savedInstanceState);
                 Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
+                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
                 base.OnCreate(savedInstanceState);
 
-                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) !=
-                    Permission.Granted)
-                {
-                    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.ReadExternalStorage }, 1);
-                }
+                //if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) !=
+                //    Android.Content.PM.Permission.Granted)
+                //{
+                //    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.ReadExternalStorage }, 1);
+                //}
 
-                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage) !=
-                    Permission.Granted)
-                {
-                    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage }, 1);
-                }
+                //if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.Camera) !=
+                //   Android.Content.PM.Permission.Granted)
+                //{
+                //    Permissions.RequestAsync<Xamarin.Essentials.Permissions.Camera>();
 
-                if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.Camera) !=
-                    Permission.Granted)
-                {
-                    ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.Camera }, 1);
-                }
+                //    //ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.Camera }, 1);
+                //}
 
                 Mvx.IoCProvider.RegisterType<IToastService>(() => new ToastDroidService());
 
-                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
                 //global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
                 CreateNotificationFromIntent(Intent);
@@ -138,8 +136,9 @@ namespace PrometeoCrmMobile.Droid
             base.OnPause();
         }
 
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
+            //base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);

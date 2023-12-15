@@ -311,7 +311,7 @@ namespace Core.ViewModels
             }
         }
 
-        private async Task NuevaNotaPedido()
+        public async Task NuevaNotaPedido()
         {
             try
             {
