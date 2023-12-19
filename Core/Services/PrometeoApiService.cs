@@ -140,22 +140,35 @@ namespace Core.Services
 
         public async Task<PaginatedList<Customer>> GetCustomers(CustomersPaginatedRequest requestData)
         {
-            const string url = "api/Customer/GetList";
-            var body = new
+            try
             {
-                requestData.UserId,
-                requestData.CurrentPage,
-                requestData.PageSize,
-                requestData.Query,
-            };
+                const string url = "api/Customer/GetList";
+                var body = new
+                {
+                    requestData.UserId,
+                    requestData.CurrentPage,
+                    requestData.PageSize,
+                    requestData.Query,
+                };
 
-            using (var request = new HttpRequestMessage(HttpMethod.Post, url))
-            using (var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"))
+                var objeto = JsonConvert.SerializeObject(body);
+
+                HttpContent httpContent = new StringContent(objeto);
+
+                httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+                var respuesta = await client.PostAsync(string.Format(url), httpContent);
+
+                var resultado = await respuesta.Content.ReadAsStringAsync();
+
+                var r = JsonConvert.DeserializeObject<PaginatedList<Customer>>(resultado);
+
+                return r;
+            }
+            catch(Exception e)
             {
-                request.Content = content;
-                PaginatedList<Customer> result = await client.SendAsyncAs<PaginatedList<Customer>>(request);
-
-                return result;
+                var m = e.Message;
+                return null;
             }
         }
 

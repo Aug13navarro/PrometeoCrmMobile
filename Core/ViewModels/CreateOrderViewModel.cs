@@ -1417,7 +1417,7 @@ namespace Core.ViewModels
             {
                 IsLoading = true;
                 SelectedCustomer = customer;
-                if(SelectedCustomer.AccountOwnerId.HasValue && Sellers != null) Seller = Sellers.FirstOrDefault(x => x.IdUser == SelectedCustomer.AccountOwnerId.Value);
+                if(SelectedCustomer != null && SelectedCustomer.AccountOwnerId.HasValue && Sellers != null) Seller = Sellers.FirstOrDefault(x => x.IdUser == SelectedCustomer.AccountOwnerId.Value);
             }
             catch (Exception ex)
             {
