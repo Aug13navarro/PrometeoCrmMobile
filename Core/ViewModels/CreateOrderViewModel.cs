@@ -443,7 +443,7 @@ namespace Core.ViewModels
 
                 if (red)
                 {
-                    var sellers = await prometeoApiService.GetUserListByCompanyId($"User/GetUserListByCompanyId?companyId={Company.Id}", data.LoggedUser.Token);
+                    var sellers = await prometeoApiService.GetUsersByRolUserVending(data.LoggedUser.Token, "Vendedor");
 
                     if (sellers != null)
                     {
@@ -458,13 +458,13 @@ namespace Core.ViewModels
                 else
                 {
 
-                    var providersTable = OfflineDatabase.GetProviders();
+                    //var providersTable = OfflineDatabase.GetProviders();
 
-                    if (providersTable != null)
-                    {
-                        Providers = new MvxObservableCollection<Provider>(mapper.Map<List<Provider>>(providersTable
-                            .Where(x => x.IdCompany == data.LoggedUser.CompanyId)).OrderBy(x => x.Name));
-                    }
+                    //if (providersTable != null)
+                    //{
+                    //    Providers = new MvxObservableCollection<Provider>(mapper.Map<List<Provider>>(providersTable
+                    //        .Where(x => x.IdCompany == data.LoggedUser.CompanyId)).OrderBy(x => x.Name));
+                    //}
 
                 }
             }

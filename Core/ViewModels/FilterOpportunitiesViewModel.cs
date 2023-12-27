@@ -251,56 +251,6 @@ namespace Core.ViewModels
             }
         }
 
-        //private async void CargarCompanies()
-        //{
-        //    try
-        //    {
-        //        var user = data.LoggedUser;
-
-        //        var red = await Connection.SeeConnection();
-
-        //        if (red)
-        //        {
-        //            var d = await prometeoApiService.GetCompaniesByUserId(user.Id, user.Token);
-
-        //            foreach (var item in d)
-        //            {
-        //                Companies.Add(item);
-        //            }
-
-        //            CargarFiltroGuardado();
-        //        }
-        //        else
-        //        {
-        //            var mapperConfig = new MapperConfiguration(m =>
-        //            {
-        //                m.AddProfile(new MappingProfile());
-        //            });
-
-        //            IMapper mapper = mapperConfig.CreateMapper();
-
-        //            if (!offlineDataService.IsDataLoadedCompanies)
-        //            {
-        //                await offlineDataService.LoadCompanies();
-        //            }
-
-        //            var empresas = await offlineDataService.SearchCompanies();
-
-        //            var e = mapper.Map<List<Company>>(empresas);
-
-        //            foreach (var item in e)
-        //            {
-        //                Companies.Add(item);
-        //            }
-        //        }
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "Aceptar"); return;
-        //    }
-        //}
-
         private Task ClearFilter()
         {
             BeginDate = DateTime.Now.AddMonths(-6);
