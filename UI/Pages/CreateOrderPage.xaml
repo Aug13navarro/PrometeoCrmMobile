@@ -208,6 +208,7 @@
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="{x:Static resources:AppResources.Seller}"></Span>
+                                            <Span Text="*"></Span>
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>

@@ -785,7 +785,8 @@ namespace Core.ViewModels
                     SelectedCustomer == null ||
                     TypeOfRemittance == null ||
                     PaymentMethod == null ||
-                    Assistant == null)
+                    Assistant == null ||
+                    Seller == null)
                 {
                     IsLoading = false;
 
@@ -900,9 +901,7 @@ namespace Core.ViewModels
                     customerId = SelectedCustomer.Id,
                     discount = OrderDiscount,
                     fecha = Order.fecha,
-                    //OrderStatus = 1,
                     total = Convert.ToDecimal(Total),
-                    //cuenta = SelectedCustomer.externalCustomerId.Value,
                     divisionCuentaId = Company.ExternalId.Value,
                     talon = 88, //puede ser null
                     tipoComprobante = 8, //puede ser null
@@ -917,9 +916,8 @@ namespace Core.ViewModels
                     PaymentMethodId = PaymentMethod.id,
                     commercialAssistantId = Assistant.Id,
                     ProviderId = Provider?.Id,
-                    //products = new MvxObservableCollection<OrderNote.ProductOrder>(Order.products),
                     OpportunityOrderNoteAttachFile = new List<AttachFile>(),
-                    SellerId = Seller?.IdUser,
+                    SellerId = Seller?.Id,
                     DepositId = Deposit?.Id,
                 };
 
@@ -1032,7 +1030,7 @@ namespace Core.ViewModels
                 {
                     if (red)
                     {
-                        nuevaOrder.OrderStatus = Status.Id;
+                        nuevaOrder.OrderStatus = Order.StatusOrderNote.Id;
                         nuevaOrder.id = Order.id;
                         await prometeoApiService.UpdateOrderNote(nuevaOrder, data.LoggedUser.Token);
 
@@ -1041,7 +1039,7 @@ namespace Core.ViewModels
                     }
                     else
                     {
-                        nuevaOrder.OrderStatus = Status.Id;
+                        nuevaOrder.OrderStatus = Order.StatusOrderNote.Id;
                         nuevaOrder.company = Company;
                         nuevaOrder.customer = SelectedCustomer;
                         nuevaOrder.idOffline = Order.idOffline;
