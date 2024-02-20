@@ -451,7 +451,7 @@ namespace Core.ViewModels
 
                         if (Order.SellerId.HasValue)
                         {
-                            Seller = Sellers.FirstOrDefault(x => x.IdUser == Order.SellerId.Value);
+                            Seller = Sellers.FirstOrDefault(x => x.Id == Order.SellerId.Value);
                         }
                     }
                 }
@@ -790,6 +790,23 @@ namespace Core.ViewModels
                 {
                     IsLoading = false;
 
+                    if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
+                        data.LoggedUser.Language.abbreviation.Contains("spanish"))
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Atención",
+                            "Faltan ingresar datos obligatorios.", "Aceptar");
+                        return;
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Attention", "Required data to be entered.",
+                            "Acept");
+                        return;
+                    }
+                }
+
+                if (Company.Id == 7 && Seller == null)
+                {
                     if (data.LoggedUser.Language.abbreviation.ToLower() == "es" ||
                         data.LoggedUser.Language.abbreviation.Contains("spanish"))
                     {
@@ -1640,7 +1657,7 @@ namespace Core.ViewModels
         //#endregion
 
 
-        public void AddFileToOrderNote(IEnumerable<FileResult> result)
+        public async void AddFileToOrderNote(IEnumerable<FileResult> result)
         {
             try
             {
@@ -1675,35 +1692,132 @@ namespace Core.ViewModels
 
                         streamTask.Wait();
                     }
-
-                    if (fileResult.FileName.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
+                    else
                     {
-                        Stream stream1 = fileResult.OpenReadAsync().Result;
+                        Stream stream1 = await fileResult.OpenReadAsync();
 
-                        var streamTask = fileResult.OpenReadAsync().ContinueWith(
-                            async (task) =>
+                        var fileName = fileResult.FileName;
+                        var base64 = string.Empty;
+
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            await stream1.CopyToAsync(ms);
+                            byte[] bytes = ms.ToArray();
+                            base64 = Convert.ToBase64String(bytes);
+                        }
+
+                        if (fileResult.FileName.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
+                        {
+                            AttachFiles.Add(new AttachFile()
                             {
-                                var pdfFileName = await task;
-                                var pdfBase64 = string.Empty;
-
-                                using (var pdfReader = new StreamReader(pdfFileName))
-                                {
-                                    var fileContents = await pdfReader.ReadToEndAsync();
-                                    pdfBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContents));
-                                }
-
-                                AttachFiles.Add(new AttachFile()
-                                {
-                                    OpportunityOrderNoteId = Order.id,
-                                    FilePath = $"data:application/pdf;base64," + pdfBase64,
-                                    FileName = fileResult.FileName,
-                                    MineType = ".pdf",
-                                    UploadDate = DateTime.Now
-                                });
+                                OpportunityOrderNoteId = Order.id,
+                                FilePath = $"data:application/pdf;base64," + base64,
+                                FileName = fileResult.FileName,
+                                MineType = ".pdf",
+                                UploadDate = DateTime.Now
                             });
+                        }
 
-                        streamTask.Wait();
+                        if (fileResult.FileName.EndsWith("docx", StringComparison.OrdinalIgnoreCase) ||
+                        fileResult.FileName.EndsWith("doc", StringComparison.OrdinalIgnoreCase))
+                        {
+                            AttachFiles.Add(new AttachFile()
+                            {
+                                OpportunityOrderNoteId = Order.id,
+                                FilePath = $"application/msword;base64," + base64,
+                                FileName = fileResult.FileName,
+                                MineType = ".docx",
+                                UploadDate = DateTime.Now
+                            });
+                        }
+
+                        if (fileResult.FileName.EndsWith("xlsx", StringComparison.OrdinalIgnoreCase) ||
+                        fileResult.FileName.EndsWith("xls", StringComparison.OrdinalIgnoreCase))
+                        {
+                            AttachFiles.Add(new AttachFile()
+                            {
+                                OpportunityOrderNoteId = Order.id,
+                                FilePath = $"application/vnd.ms-excel;base64," + base64,
+                                FileName = fileResult.FileName,
+                                MineType = ".xlsx",
+                                UploadDate = DateTime.Now
+                            });
+                        }
                     }
+
+                    //if (fileResult.FileName.EndsWith("pdf", StringComparison.OrdinalIgnoreCase))
+                    //{
+                    //    Stream stream1 = await fileResult.OpenReadAsync();
+
+                    //    var pdfFileName = fileResult.FileName;
+                    //    var pdfBase64 = string.Empty;
+
+                    //    using (MemoryStream ms = new MemoryStream())
+                    //    {
+                    //        await stream1.CopyToAsync(ms);
+                    //        byte[] pdfBytes = ms.ToArray();
+                    //        pdfBase64 = Convert.ToBase64String(pdfBytes);
+                    //    }
+
+                    //    AttachFiles.Add(new AttachFile()
+                    //    {
+                    //        OpportunityOrderNoteId = Order.id,
+                    //        FilePath = $"data:application/pdf;base64," + pdfBase64,
+                    //        FileName = fileResult.FileName,
+                    //        MineType = ".pdf",
+                    //        UploadDate = DateTime.Now
+                    //    });
+                    //}
+
+                    //if (fileResult.FileName.EndsWith("docx", StringComparison.OrdinalIgnoreCase) ||
+                    //    fileResult.FileName.EndsWith("doc", StringComparison.OrdinalIgnoreCase))
+                    //{
+                    //    var stream1 = await fileResult.OpenReadAsync();
+
+                    //    var docFileName = fileResult.FileName;
+                    //    var docBase64 = string.Empty;
+
+                    //    using (MemoryStream ms = new MemoryStream())
+                    //    {
+                    //        await stream1.CopyToAsync(ms);
+                    //        byte[] docBytes = ms.ToArray();
+                    //        docBase64 = Convert.ToBase64String(docBytes);
+                    //    }
+
+                    //    AttachFiles.Add(new AttachFile()
+                    //    {
+                    //        OpportunityOrderNoteId = Order.id,
+                    //        FilePath = $"application/msword;base64," + docBase64,
+                    //        FileName = fileResult.FileName,
+                    //        MineType = ".docx",
+                    //        UploadDate = DateTime.Now
+                    //    });
+                    //}
+
+                    //if (fileResult.FileName.EndsWith("xlsx", StringComparison.OrdinalIgnoreCase) ||
+                    //    fileResult.FileName.EndsWith("xls", StringComparison.OrdinalIgnoreCase))
+                    //{
+                    //    var stream1 = await fileResult.OpenReadAsync();
+
+                    //    var excelFileName = fileResult.FileName;
+                    //    var excelBase64 = string.Empty;
+
+                    //    using (MemoryStream ms = new MemoryStream())
+                    //    {
+                    //        await stream1.CopyToAsync(ms);
+                    //        byte[] excelBytes = ms.ToArray();
+                    //        excelBase64 = Convert.ToBase64String(excelBytes);
+                    //    }
+
+                    //    AttachFiles.Add(new AttachFile()
+                    //    {
+                    //        OpportunityOrderNoteId = Order.id,
+                    //        FilePath = $"application/vnd.ms-excel;base64," + excelBase64,
+                    //        FileName = fileResult.FileName,
+                    //        MineType = ".xlsx",
+                    //        UploadDate = DateTime.Now
+                    //    });
+                    //}
                 }
             }
             catch (Exception e)
