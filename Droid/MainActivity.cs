@@ -8,23 +8,19 @@ using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.V4.App;
-using Android.Support.V4.Content;
 using Android.Util;
 using Core;
-using Core.Data;
 using Core.Notification;
 using Core.Services.Contracts;
 using MvvmCross;
 using MvvmCross.Forms.Platforms.Android.Core;
 using MvvmCross.Forms.Platforms.Android.Views;
-using Plugin.Permissions.Abstractions;
+//using Plugin.Permissions.Abstractions;
 using PrometeoCrmMobile.Droid.Notification;
 using PrometeoCrmMobile.Droid.Services;
 using Rg.Plugins.Popup.Services;
 using UI;
 using UI.Popups;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace PrometeoCrmMobile.Droid
@@ -34,7 +30,7 @@ namespace PrometeoCrmMobile.Droid
         Theme = "@style/MainTheme",
     MainLauncher = false,
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-    LaunchMode = LaunchMode.SingleTask)]
+    LaunchMode = LaunchMode.SingleTop)]
     public class MainActivity : MvxFormsAppCompatActivity<MvxFormsAndroidSetup<App, FormsApp>, App, FormsApp>
     {
         private ApplicationData data;
@@ -53,7 +49,6 @@ namespace PrometeoCrmMobile.Droid
         {
             try
             {
-
                 initFontScale();
 
                 TabLayoutResource = Resource.Layout.Tabbar;
@@ -124,6 +119,20 @@ namespace PrometeoCrmMobile.Droid
                 Thread.CurrentThread.CurrentUICulture = language;
                 MessagingCenter.Send(this, "LangChanged", language);
             }
+
+            const int requestLocationId = 0;
+
+            string[] notiPermission =
+            {
+                Manifest.Permission.AccessNotificationPolicy
+            };
+
+            if ((int)Build.VERSION.SdkInt < 33) return;
+
+            if (this.CheckSelfPermission(Manifest.Permission.AccessNotificationPolicy) != Permission.Granted)
+            {
+                this.RequestPermissions(notiPermission, requestLocationId);
+            }
         }
 
         protected override void OnResume() //cuando se inicia
@@ -153,6 +162,11 @@ namespace PrometeoCrmMobile.Droid
 
                 popupPage.NotifyDismiss();
             }
+        }
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            CreateNotificationFromIntent(intent);
         }
     }
 }

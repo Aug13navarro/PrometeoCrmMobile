@@ -200,57 +200,15 @@ namespace Core.ViewModels
         {
             var list = new MvxObservableCollection<OrderNote>();
 
-            list.Add(new OrderNote
+            for (int i = 0; i < 10; i++)
             {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx"},
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-            list.Add(new OrderNote
-            {
-                customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
-                IsBusy = true,
-            });
-
+                list.Add(new OrderNote
+                {
+                    customer = new Customer { CompanyName = "xxxxxxxxxxxxxxxxxx" },
+                    IsBusy = true,
+                });
+            }
+            
             return list;
         }
 

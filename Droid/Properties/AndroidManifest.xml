@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="64" android:versionName="1.6.3" package="com.companyname.prometeocrmmobile" android:installLocation="internalOnly">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="65" android:versionName="1.6.4" package="com.companyname.prometeocrmmobile" android:installLocation="internalOnly">
 	<uses-sdk android:minSdkVersion="28" android:targetSdkVersion="33" />
 	<application android:label="PrometeoCrmMobile">
 		<provider android:name="androidx.core.content.FileProvider" android:authorities="${applicationId}.fileprovider" android:exported="false" android:grantUriPermissions="true">
@@ -11,5 +11,7 @@
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+	<uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 	<uses-feature android:name="android.hardware.location" android:required="false" />
 </manifest>

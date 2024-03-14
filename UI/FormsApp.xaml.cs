@@ -116,7 +116,7 @@ namespace UI
 
                     string title = $"Aviso de Conexión";
                     string message = $"'Prometeo Suite' se conectó a internet.";
-                    notificationManager.SendNotification(title, message, 0, false);
+                    notificationManager.SendNotification(title, message);//, 0, false);
 
                     var s = SincronizacionService();
 
@@ -128,14 +128,14 @@ namespace UI
 
                     string title = $"Aviso de Conexión";
                     string message = $"'Prometeo Suite' perdió conexión a internet, seguira trabajando de manera Offline.";
-                    notificationManager.SendNotification(title, message, 0, false);
+                    notificationManager.SendNotification(title, message);//, 0, false);
                 }
             }
             catch (Exception ex)
             {
                 string title = $"Aviso de Conexión";
                 string message = $"Sincronización interrumpida.";
-                notificationManager.SendNotification(title, message, 10, true);
+                notificationManager.SendNotification(title, message);
 
                 await Application.Current.MainPage.DisplayAlert("Sincronizando", $"Ocurrio un error al sincronizar los dotos locales con el Servicio - {ex.Message}", "Aceptar"); return;
             }
@@ -151,7 +151,7 @@ namespace UI
                 {
                     string title = $"Aviso de Sincronización";
                     string message = $"'Sincronizando datos almacenados de manera Offline.";
-                    notificationManager.SendNotification(title, message, 0, false);
+                    notificationManager.SendNotification(title, message);
 
                     var service = new SincronizacionService();
 
@@ -162,7 +162,7 @@ namespace UI
                         // notificacion de exito
                         string titleE = $"Aviso de Sincronización";
                         string messageE = $"'Sincronización completada con Exito";
-                        notificationManager.SendNotification(titleE, messageE, 0, false);
+                        notificationManager.SendNotification(titleE, messageE);
 
                         // borrar todos lo PV creados de manera Offline
                         await OfflineDatabase.DeleteAllOrderNote();
@@ -180,7 +180,7 @@ namespace UI
                 //mostrar mensaje de error 
                 string title = $"Aviso de Sincronización fallida";
                 string message = $"'Ocurrió un error al sincronizar uno o mas registros.";
-                notificationManager.SendNotification(title, message, 0, false);
+                notificationManager.SendNotification(title, message);
 
                 //borrar aquellos pedidos que fueron sincronizados y dejar solamente aquellos que tiraron error 
                 if (message.Contains("["))

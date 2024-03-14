@@ -8,7 +8,7 @@ namespace Core.Notification
 
         void Initialize();
 
-        void SendNotification(string title, string message, int timeToClose, bool autoCancel);
+        void SendNotification(string title, string message, DateTime? notifyTime = null);
 
         void ReceiveNotification(string title, string message);
     }

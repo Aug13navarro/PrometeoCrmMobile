@@ -182,7 +182,7 @@ namespace UI.Pages
                     var files = PickAndShow(default).ContinueWith(
                             (task) => { });
 
-                    // ESTE CÓDIGO SE COMENTÓ PORQUE EXISTE UN BUG AL COLICITAR EL PERMISO A LOS ARCHIVOS 
+                    // ESTE CÓDIGO SE COMENTÓ PORQUE EXISTE UN BUG AL SOLICITAR EL PERMISO A LOS ARCHIVOS 
 
                     //var status = await Permissions.RequestAsync<Permissions.StorageRead>();
                     //if (status == PermissionStatus.Granted)
