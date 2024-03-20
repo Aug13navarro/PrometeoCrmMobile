@@ -379,6 +379,7 @@ namespace Core.ViewModels
         public Command EditProductCommand { get; }
         public Command RemoveProductCommand { get; }
         public Command RemoveFileCommand { get; }
+        public Command DownloadFileCommand { get; }
         public Command CerrarOportunidad { get; }
         public Command CustomerAddressCommand { get; }
 
@@ -417,6 +418,7 @@ namespace Core.ViewModels
                 AddProductCommand = new Command(async () => await AddProductAsync());
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
                 RemoveFileCommand = new Command<AttachFile>(RemoveFile);
+                DownloadFileCommand = new Command<AttachFile>(DownloadFile);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
                 CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
 
@@ -1537,7 +1539,40 @@ namespace Core.ViewModels
             }
             catch (Exception e)
             {
-                Application.Current.MainPage.DisplayAlert("e", $"{e.Message}", "aceptar");
+                Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "aceptar");
+                return;
+            }
+        }
+
+        private async void DownloadFile(AttachFile file)
+        {
+            try
+            {
+                var red = await Connection.SeeConnection();
+
+                if (red)
+                {
+                    var cameraService = new DownloadHelper();
+                    await cameraService.DescargarArchivo(file.FilePath, file.FileName);
+                    //var s = await cameraService.GuardarImagen(this);
+
+                    //if (s != string.Empty)
+                    //{
+                    await Application.Current.MainPage.DisplayAlert("Archivo Descargado", $"El archivo se ha guardado en: ", "OK");
+                    //};
+                }
+                else
+                {
+                    //await Application.Current.MainPage.DisplayAlert(
+                    //Views.LangResources.AppResource.Atention,
+                    //Views.LangResources.AppResource.AlertNoOffline,
+                    //Views.LangResources.AppResource.Acept);
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "aceptar");
                 return;
             }
         }

@@ -18,6 +18,7 @@ using MvvmCross.Forms.Platforms.Android.Views;
 //using Plugin.Permissions.Abstractions;
 using PrometeoCrmMobile.Droid.Notification;
 using PrometeoCrmMobile.Droid.Services;
+using PrometeoCrmMobile.Droid.Services.IService;
 using Rg.Plugins.Popup.Services;
 using UI;
 using UI.Popups;
@@ -60,8 +61,9 @@ namespace PrometeoCrmMobile.Droid
                 //CrossCurrentActivity.Current.Activity = this;
                 //CrossCurrentActivity.Current.Init(this, savedInstanceState);
                 Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
-                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+
                 base.OnCreate(savedInstanceState);
+                Xamarin.Essentials.Platform.Init(this, savedInstanceState);
 
                 //if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.ReadExternalStorage) !=
                 //    Android.Content.PM.Permission.Granted)
@@ -78,6 +80,7 @@ namespace PrometeoCrmMobile.Droid
                 //}
 
                 Mvx.IoCProvider.RegisterType<IToastService>(() => new ToastDroidService());
+                Mvx.IoCProvider.RegisterType<IAlmacenamientoExterno>(() => new AlmacenamientoExternoAndroid());
 
                 //global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 

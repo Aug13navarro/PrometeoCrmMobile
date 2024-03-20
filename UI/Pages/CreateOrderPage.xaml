@@ -734,6 +734,14 @@
 
                                     </Label>
                                     <Image 
+                                        Source="descargar.png">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference attachFileList}, Path=BindingContext.DownloadFileCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <Image 
                                            Source="ic_remove_circle.png">
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer
