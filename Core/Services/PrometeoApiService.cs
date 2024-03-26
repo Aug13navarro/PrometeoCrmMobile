@@ -925,5 +925,16 @@ namespace Core.Services
 
             return JsonConvert.DeserializeObject<List<Deposit>>(resultado);
         }
+
+        public async Task<Sequence> GetSequenseToOpportunity(string code, int? companyId, string token)
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var respuesta = await client.GetAsync($"/api/Assignment/GetConsecutiveByCode?code={code}&&idCompany={companyId}");
+
+            var resultado = await respuesta.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Sequence>(resultado);
+        }
     }
 }

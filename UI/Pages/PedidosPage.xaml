@@ -120,6 +120,17 @@
                                                 </Label>
                                             </StackLayout>
                                             <Label
+                                                sk:Skeleton.IsBusy="{Binding IsBusy}"
+                                                sk:Skeleton.BackgroundColor="#c6c6c5">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="Id: "></Span>
+                                                        <Span Text="{Binding Consecutive}"></Span>
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+
+                                            </Label>
+                                            <Label
                                                 Text="{Binding Seller, Converter={StaticResource LabelSeller}}"
                                                 sk:Skeleton.IsBusy="{Binding IsBusy}"
                                                 sk:Skeleton.BackgroundColor="#c6c6c5">

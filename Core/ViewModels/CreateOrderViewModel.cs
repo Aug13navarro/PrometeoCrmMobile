@@ -14,17 +14,11 @@ using Core.ViewModels.Model;
 using AutoMapper;
 using Core.Helpers;
 using Xamarin.Essentials;
-using Core.Model.Extern;
 using Core.Data;
 using Core.Data.Tables;
-using Newtonsoft.Json;
-using Xamarin.Forms.PlatformConfiguration.TizenSpecific;
 using Application = Xamarin.Forms.Application;
-using System.Collections;
 using System.IO;
-using System.Text;
-using System.ComponentModel.Design;
-using MvvmCross.IoC;
+using System.Net.Http;
 
 namespace Core.ViewModels
 {
@@ -380,6 +374,7 @@ namespace Core.ViewModels
         public Command RemoveProductCommand { get; }
         public Command RemoveFileCommand { get; }
         public Command DownloadFileCommand { get; }
+        public Command PreviewFileCommand { get; }
         public Command CerrarOportunidad { get; }
         public Command CustomerAddressCommand { get; }
 
@@ -419,6 +414,7 @@ namespace Core.ViewModels
                 RemoveProductCommand = new Command<OrderNote.ProductOrder>(RemoveProduct);
                 RemoveFileCommand = new Command<AttachFile>(RemoveFile);
                 DownloadFileCommand = new Command<AttachFile>(DownloadFile);
+                PreviewFileCommand = new Command<AttachFile>(PreviewFile);
                 EditProductCommand = new Command<OrderNote.ProductOrder>(EditProduct);
                 CustomerAddressCommand = new Command(async () => await CustomerAddressMethod());
 
@@ -1231,6 +1227,18 @@ namespace Core.ViewModels
 
                     Order = await prometeoApiService.GetOrdersById(theOrder.id, user.Token);
 
+                    if (Order.companyId != 26)
+                    {
+                        if (Order.StatusOrderNote.Name == "Pendiente" || Order.StatusOrderNote.Name == "Pending")
+                        {
+                            EnableForEdit = true;
+                        }
+                        else
+                        {
+                            EnableForEdit = false;
+                        }
+                    }
+                    
                     AttachFiles = new MvxObservableCollection<AttachFile>(Order.OpportunityOrderNoteAttachFile);
 
                     SelectedCustomer = Order.customer;
@@ -1271,6 +1279,9 @@ namespace Core.ViewModels
                     EnableForEdit = true;
 
                     Order = theOrder;
+
+                    var sequence = await prometeoApiService.GetSequenseToOpportunity("VEN", Order.company.Id, data.LoggedUser.Token);
+                    Order.Consecutive = $"VEN{DateTime.Now.Year}{sequence.ActualValue.ToString().PadLeft(5, '0')}";
                     //Order.OrderStatus = 1;
 
                     //AjustarEstado(user.Language.abbreviation, Order.OrderStatus);
@@ -1558,7 +1569,7 @@ namespace Core.ViewModels
 
                     //if (s != string.Empty)
                     //{
-                    await Application.Current.MainPage.DisplayAlert("Archivo Descargado", $"El archivo se ha guardado en: ", "OK");
+                    await Application.Current.MainPage.DisplayAlert("", $"Archivo Descargado con éxito", "OK");
                     //};
                 }
                 else
@@ -1573,6 +1584,61 @@ namespace Core.ViewModels
             catch (Exception e)
             {
                 await Application.Current.MainPage.DisplayAlert("Error", $"{e.Message}", "aceptar");
+                return;
+            }
+        }
+
+        private async void PreviewFile(AttachFile file)
+        {
+            if(file.FileName.EndsWith("jpg") || file.FileName.EndsWith("jpeg") || file.FileName.EndsWith("png") || file.FileName.EndsWith("pdf"))
+            {
+                if (file.FilePath.Contains("blob"))
+                {
+                    using (var httpClient = new HttpClient())
+                    {
+                        var response = await httpClient.GetAsync(file.FilePath);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var imageStream = await response.Content.ReadAsStreamAsync();
+
+                            // Guardar la imagen en el almacenamiento temporal
+                            var tempFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), file.FileName);
+                            using (var fileStream = File.Create(tempFilePath))
+                            {
+                                await imageStream.CopyToAsync(fileStream);
+                            }
+
+                            // Mostrar la imagen
+                            await Launcher.OpenAsync(new OpenFileRequest
+                            {
+                                File = new ReadOnlyFile(tempFilePath)
+                            });
+                        }
+                        else
+                        {
+                            // Manejar el error de descarga
+                        }
+                    }
+                }
+                else
+                {
+                    // Supongamos que tienes los datos de la imagen en un byte[]
+                    byte[] imageData = Convert.FromBase64String(file.FilePath.Split(',')[1]);
+
+                    // Guardar los datos de la imagen en un archivo temporal
+                    var tempFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), file.FileName);
+                    File.WriteAllBytes(tempFilePath, imageData);
+
+                    // Abrir el archivo con el visor predeterminado
+                    await Launcher.OpenAsync(new OpenFileRequest
+                    {
+                        File = new ReadOnlyFile(tempFilePath)
+                    });
+                }
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Información", $"No se puede previsualizar el archivos office.", "aceptar");
                 return;
             }
         }

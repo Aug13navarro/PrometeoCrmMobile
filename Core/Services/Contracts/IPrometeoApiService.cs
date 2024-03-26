@@ -56,5 +56,6 @@ namespace Core.Services.Contracts
         Task<OrderNote> UpdateStatusOrderNote(int orderNoteId, int statusId, string token);
         Task<List<User>> GetUserListByCompanyId(string cadena, string token);
         Task<List<Deposit>> GetDeposits(string cadena, string token);
+        Task<Sequence> GetSequenseToOpportunity(string code, int? companyId, string token);
     }
 }

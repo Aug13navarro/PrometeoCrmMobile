@@ -1,16 +1,20 @@
 ﻿using Core.Helpers;
-using GalaSoft.MvvmLight.Command;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Windows.Input;
 
 namespace Core.Model
 {
     public class OrderNote : MvxNotifyPropertyChanged
     {
         public int  id { get; set; }
+        private string consecutive;
+        public string Consecutive
+        {
+            get => consecutive;
+            set => SetProperty(ref consecutive, value);
+        }
         public int? opportunityId { get; set; }
         public string oppDescription { get; set; }
         public string Description { get; set; }
